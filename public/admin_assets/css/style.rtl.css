@@ -1,0 +1,341 @@
+/*@font-face {
+    font-family: ArabicFont-Regular;
+    src: url('../plugins/global/fonts/fonts/ArabicFont-Regular.ttf');
+}*/
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&family=Tajawal:wght@200;300;400;500;700;800;900&display=swap');
+:root{
+    --buttonColor:#009688; /*Main Color*/
+    --mainColor:#103349;            /*#48A8A6*/
+    --subColor:#0E8F90;   /*#ef9e5c*/
+    --mainfontColor:#00132F;
+    --subFontColor:#4D565C;
+   --bgHover:#0E8F90;
+   --white:#ffffff;
+   --inputs-Gray:#dddcdc;
+  }
+html{
+    direction: rtl;
+    overflow-x: hidden;
+   /* font-family: ArabicFont-Regular !important;*/
+     /* font-family: 'Cairo', sans-serif !important; */
+    font-family: 'Tajawal', sans-serif !important;
+}
+body{
+   /* font-family: ArabicFont-Regular !important;*/
+    /* font-family: 'Cairo', sans-serif !important; */
+    font-family: 'Tajawal', sans-serif !important;
+}
+.text-start {
+    text-align: right !important;
+}
+/******************************************Sign in page***************************/
+#kt_sign_in_form .form-control,
+#kt_sign_up_form .form-control,
+#kt_new_password_form .form-control,
+#kt_password_reset_form .form-control{
+    padding-left: 0 !important;
+    padding-right: 45px !important;
+}
+#kt_sign_in_form .form-content a.forget-password{
+    margin-left: unset;
+    margin-right: auto !important;
+}
+#kt_sign_up_form .translate-middle,
+#kt_new_password_form .translate-middle {
+    transform: translate(-1050%, -50%) !important;
+}
+.languge-nav .dropdown-menu{
+    left: 0;
+    right: unset;
+   }
+   .form-check-custom .form-check-label{
+    margin-left: unset;
+    margin-right: 0.55rem;
+   }
+.authanticationImage{
+    direction: rtl;
+    transform: scaleX(-1);
+    filter: FlipH;
+    -ms-filter: "FlipH";
+    float: none;
+
+}
+/*****************************************Sign in page****************************/
+/***********************************************Index Page**************************/
+.top-Notification {
+    margin-right: 0;
+    margin-left: 10px;
+   }
+   .top-Notification svg{
+          direction: ltr;
+   }
+.aside-menu .menu .menu-item .menu-link.new-link .new-feature{
+    right: 72%;
+}
+/***********************************************Add Role*****************************/
+.add-role table.dataTable thead th, .add-role table.dataTable thead td, .add-role table.dataTable tfoot th, .add-role table.dataTable tfoot td {
+    text-align: right;
+}
+
+.new-user-form .add-user .form-check{
+    padding-right: 0;
+  }
+
+  .users-page .card-toolbar .btn{
+    margin-right: 0;
+    margin-left: 10px;
+  }
+  .users-page .page-content-header .links{
+    display: flex;
+    justify-content: end;
+  }
+
+
+  .right {
+    text-align: left;
+}
+
+
+/************************addcustumer***************************************/
+.addcustumer .linksList li a.active{
+    margin-right: -15px;
+}
+
+
+.passwordStrength .me-2{
+    margin-right: 0 !important;
+    margin-left: 0.5rem !important;
+}
+
+/************************************************Mobile**********************************/
+@media (min-width: 300px) and (max-width: 766.5px){
+    #kt_sign_in_form .form-content a.forget-password{
+        margin-right: 8px;
+    }
+
+    #kt_sign_up_form .translate-middle,
+    #kt_new_password_form .translate-middle {
+        transform: translate(-700%, -50%) !important;
+    }
+.form .recoverpasword .translate-middle{
+    transform: translate(-850%, -50%) !important;
+}
+    .dropdown-menu[data-bs-popper]{
+        left: 0;
+        right: unset;
+      }
+      .card .card-header .card-title.headerInput .form-control.w-250px{
+        padding-right: 3rem !important;
+        padding-left: 1rem !important;
+      }
+}
+
+
+/**********************************************ibad********************************/
+@media(min-width:768px) and (max-width:1024px){
+    .dropdown-menu[data-bs-popper]{
+        left: 0;
+        right: unset;
+      }
+      #kt_sign_up_form .translate-middle,
+      #kt_new_password_form .translate-middle {
+          transform: translate(-1750%, -50%) !important;
+      }
+      .form .recoverpasword .translate-middle{
+        transform: translate(-1750%, -50%) !important;
+    }
+}
+
+/*rtl - fixed*/
+.right {
+    text-align: left !important;
+}
+input {
+    direction: rtl !important;
+}
+.select2-container--bootstrap5.select2-container--focus .form-select:not(.form-select-solid):not(.form-select-transparent), .select2-container--bootstrap5.select2-container--open .form-select:not(.form-select-solid):not(.form-select-transparent) {
+    direction: rtl !important;
+}
+/*phone number*/
+.iti {
+    width: 100%;
+}
+.iti__country-list {
+    right: auto !important;
+    left: 0 !important;
+    overflow-x: scroll !important;
+}
+/*.iti__flag-container {*/
+/*    right: 0 !important;*/
+/*    left: auto !important;*/
+/*}*/
+.iti__country {
+    direction: ltr;
+    text-align: left;
+}
+
+
+/****************************************************Index (Customer veiw)***********************/
+/*.customerView .btn .svg-icon {
+    /*margin-right: 0.5rem !important;
+    margin-left: 0.5rem !important;
+}*/
+.customerView .accountTable .table > thead th{
+    text-align: center !important;
+}
+.customerView  .form-check-custom{
+  justify-content: center !important;
+}
+/* some fix */
+div.dataTables_length + div.dataTables_info {
+    margin-right: 1rem !important;
+}
+.select2-container--bootstrap5 .select2-selection--single.form-select-solid .select2-selection__rendered {
+    margin-left: auto;
+}
+table.dataTable thead > tr > th.sorting, table.dataTable thead > tr > th.sorting_asc, table.dataTable thead > tr > th.sorting_desc, table.dataTable thead > tr > th.sorting_asc_disabled, table.dataTable thead > tr > th.sorting_desc_disabled, table.dataTable thead > tr > td.sorting, table.dataTable thead > tr > td.sorting_asc, table.dataTable thead > tr > td.sorting_desc, table.dataTable thead > tr > td.sorting_asc_disabled, table.dataTable thead > tr > td.sorting_desc_disabled {
+    padding-right: 16px !important;
+}
+.select2-container .select2-selection--single .select2-selection__clear{
+    display: none !important;
+  }
+ /**************************addProduct***********************/
+ .addProduct .ql-toolbar.ql-snow .ql-formats{
+    margin-right: 0 !important;
+ } 
+ .addProduct .ql-snow .ql-picker:not(.ql-color-picker):not(.ql-icon-picker) svg{
+    right: 55%;
+ }
+ .addProduct .ql-editor.ql-blank:before{
+    right: 2% !important;
+ }
+ .addProduct .inlineSelect .btn .svg-icon{
+ 
+    margin-left:  0 !important;
+  }
+
+
+/***********************تعديلات جديدة للالوان و المسافات*******/
+  /*********************************************/
+  @media (min-width: 992px){
+.wrapper {
+    padding-left: 0 !important;
+    /* padding-right: 220px !important; */
+}
+[data-kt-aside-minimize=on] .wrapper {
+    transition: padding-left 0.3s ease;
+    padding-right: 0 !important;
+}
+}
+
+/****************************/
+  .topNav-items .ms-5 {
+    margin-left: 0rem !important;
+	margin-right: 0.5rem !important;
+}
+.top-Notification{
+    margin-right: 0 !important;
+    margin-left: 0.5rem !important;
+}
+.user-menu{
+    transform: translate(-1197.22px, 50px) !important;
+}
+.table td:first-child {
+    padding-left: 0 !important;
+    padding-right:15px !important;
+  }
+  .checkColumn .me-3 {
+    margin-left: 0 !important;
+    margin-right: 0.75rem !important;
+  }
+  /****Product page**/
+  .addProduct .btn.delete{
+    margin-right:0px ;
+    margin-left: 5px;
+ }
+ .addProduct .btn.delete .svg-icon{
+    margin-left:0 !important;
+ }
+
+
+ /******************************************/
+ .dataTable-actions .action-bulk .form-check,
+ .table > thead > tr.search > th:first-child .svg-icon{
+    border-right: none;
+    border-left: 1px solid #DBDBDB;
+ }
+ .table > thead > tr.search > th:first-child .svg-icon{
+    padding-right: 0px;
+    padding-left: 5px;
+  
+}
+table.dataTable thead > tr.checkColumn > th:first-child,
+.table > thead > tr.search > th:first-child,
+.table td:first-child{
+  padding-right: 2.7rem;
+  padding-left: 0;
+}
+.iti__arrow{
+    margin-left: 0;
+    margin-right: 4px;
+}
+
+ @media (min-width: 992px){
+    .content {
+    padding: 0 !important;
+ }
+
+}
+/********************************/
+.dataTable-actions .card-toolbar .btn.btn-primary.import-btn{
+    border-left: 1px solid #DBDBDB !important;
+    border-right: none !important;
+  }
+  .dataTable-actions .form-select {
+    padding: 0.77rem 0.5rem 0.775rem 2.32rem !important;
+}
+.aside-menu .menu .menu-sub.menu-sub-accordion {
+    border-right: 0.2px solid rgba(213, 213, 213, 0.5);
+    border-left: none;
+    margin-left: 0px;
+    margin-right: 20px;
+    padding-left: 0px;
+    padding-right: 10px;
+}
+
+.page-title svg{
+    display: inline-block !important;
+    /* padding: 0 5px; */
+    margin: 0 0px 0 5px !important;
+  }
+
+/* ------------Select2 rtl-------------- */
+.form-select {
+    text-align: right;
+    direction: rtl;
+    position: relative;
+}
+.form-select .select2-container--open + .select2-container--open {
+    left: auto;
+    right: 0;
+    width: 100%;
+}
+.select2-selection{
+    text-align: right;
+}
+.select2-container--bootstrap5 .select2-dropdown .select2-results__option.select2-results__option--selected,
+.select2-container--bootstrap5 .select2-dropdown .select2-results__option.select2-results__option--highlighted,
+.select2-container--bootstrap5 .select2-dropdown .select2-results__option{
+    text-align: right !important;
+    padding-right: 33px !important;
+}
+/* ------------Select2 rtl-------------- */
+.invoiceInput {
+    text-align: right;
+}
+.general .addCustomerOptions .menu-item .menu-link .menu-title {
+    font-size: 0.9485rem !important;
+}
+.general-table-report .select2-container--bootstrap5 .select2-selection--single .select2-selection__rendered {
+    color: #009688;
+}

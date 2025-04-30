@@ -1,0 +1,90 @@
+<?php
+
+namespace App\Http\Controllers\Frontend;
+
+use App\Http\Controllers\Controller;
+use App\Mail\AdminNotification;
+use App\Models\About;
+use App\Models\Booking;
+use App\Models\Category;
+use App\Models\Client;
+use App\Models\Consultation;
+use App\Models\Contact;
+use App\Models\Event;
+use App\Models\Instagram;
+use App\Models\Newsletter;
+use App\Models\Slider;
+use App\Models\Testimonial;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
+
+class HomeController extends Controller
+{
+    public function home()
+    {
+        $data['sliders'] = Slider::get();
+        $data['clients'] = Client::get();
+        $data['instagrams'] = Instagram::get();
+        $data['categories'] = Category::get();
+        $data['testimonials'] = Testimonial::get();
+        $data['events'] = Event::get();
+        $data['about'] = About::first();
+        return view('frontend.home', $data);
+    }
+
+    public function storeConsultation(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name'    => 'required|string|max:255',
+            'email'   => 'required|email|max:255',
+            'phone'   => 'required|string|max:20',
+            'service' => 'required', // تأكد من اختيار خدمة صحيحة
+            'message' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $message = Consultation::create($request->all());
+       
+        Mail::to(config('mail.admin_email'))->send(new AdminNotification($message, 'consultation'));
+
+        return response()->json([
+            'message' => 'Your consultation request has been received successfully!'
+        ]);
+    }
+
+    public function storeNewsletter(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|unique:newsletters,email',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => 'error', 'message' => $validator->errors()->first()], 422);
+        }
+
+        Newsletter::create([
+            'email' => $request->email,
+        ]);
+
+        return response()->json(['status' => 'success', 'message' => 'Thanks for subscribing!']);
+    }
+
+    public function storeBooking(Request $request)
+    {
+        $validated = $request->validate([
+            'persons' => 'required|integer|min:1|max:6',
+            'date' => 'required|date',
+            'time' => 'required|date_format:H:i',
+        ]);
+
+        Booking::create($validated);
+
+        return response()->json(['message' => 'Booking saved successfully.']);
+    }
+}
