@@ -14,18 +14,18 @@ class AboutSeeder extends Seeder
     public function run(): void
     {
         About::create([
-            'title' => 'Around the world, one plate at a time',
-            'description' => null,
-            'image1' => 'about/about1.jpg',
-            'image2' => 'about/about2.jpg',
-            'tab1_title' => 'Dance',
-            'tab1_content' => '<p>Welcome to <span>La.Revi</span>, one of the best restaurants in the country. This is the place where food meets passion...</p>',
-            'tab2_title' => 'Drink',
-            'tab2_content' => '<p>Welcome to <span>La.Revi</span>, one of the best restaurants in the country. This is the place where food meets passion...</p>',
-            'tab3_title' => 'Enjoy',
-            'tab3_content' => '<p>Welcome to <span>La.Revi</span>, one of the best restaurants in the country. This is the place where food meets passion...</p>',
-            'button_text' => 'find a table',
-            'button_link' => '#'
+            'title' => 'Repairing Your House for Looks as a New Home',
+            'description' => 'Competently repurpose go forward benefits without goal-oriented ROI the conveniently target business opportunities whereas proactive',
+            'image1' => 'about.png',
+            'image2' => 'about-icn.png',
+            'tab1_title' => 'Smart Repair System',
+            'tab1_content' => 'Conveniently target business opportunities market-driven solutions',
+            'tab2_title' => 'Repairing Roofing and Door',
+            'tab2_content' => 'List item one',
+            'tab3_title' => 'Repairing Roofing and Door',
+            'tab3_content' => 'List item two',
+            'button_text' => 'Get An Estimate',
+            'button_link' => 'about.html',
         ]);
     }
 }

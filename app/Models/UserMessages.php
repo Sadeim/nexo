@@ -11,6 +11,7 @@ class UserMessages extends Model
     protected $table = 'user_messages';
     protected $fillable = [
         'name', 
+        'phone', 
         'email', 
         'subject', 
         'message',

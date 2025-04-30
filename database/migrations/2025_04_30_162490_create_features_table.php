@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_messages', function (Blueprint $table) {
+        Schema::create('features', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('phone')->nullable();
-            $table->string('email');
-            $table->string('subject');
-            $table->longText('message');
-            $table->string('number')->nullable();
+            $table->string('title');
+            $table->string('icon')->nullable(); // icon image
+            $table->string('image')->nullable(); // background/feature image
+            $table->string('link')->nullable(); // optional
             $table->timestamps();
         });
     }
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('subscriptions');
+        Schema::dropIfExists('instagrams');
     }
 };

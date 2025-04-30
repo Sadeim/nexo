@@ -16,7 +16,7 @@ class TeamSeeder extends Seeder
         Team::create([
             'name' => 'PeGuy Hawekins',
             'position' => 'Interior Designer',
-            'image' => 'team/team-1.webp',
+            'image' => '/frontend_assets/assets/images/resource/team2.png',
             'social_links' => json_encode([
                 'facebook' => 'https://www.facebook.com/',
                 'instagram' => 'https://www.instagram.com/',
@@ -28,36 +28,36 @@ class TeamSeeder extends Seeder
         Team::create([
             'name' => 'Dianne Russell',
             'position' => 'Founder & CEO',
-            'image' => 'team/team-2.webp',
+            'image' => '/frontend_assets/assets/images/resource/team2.png',
             'social_links' => json_encode([
-                'facebook' => 'https://www.facebook.com/',
-                'instagram' => 'https://www.instagram.com/',
-                'linkedin' => 'https://www.linkedin.com/',
-                'twitter' => 'https://x.com/'
+                'facebook' => 'https://www.facebook.com/Dianne',
+                'instagram' => 'https://www.instagram.com/Dianne',
+                'linkedin' => 'https://www.linkedin.com/Dianne',
+                'twitter' => 'https://x.com/Dianne'
             ]),
         ]);
 
         Team::create([
             'name' => 'Kristin Watson',
             'position' => 'Project Manager',
-            'image' => 'team/team-3.webp',
+            'image' => '/frontend_assets/assets/images/resource/team2.png',
             'social_links' => json_encode([
-                'facebook' => 'https://www.facebook.com/',
-                'instagram' => 'https://www.instagram.com/',
-                'linkedin' => 'https://www.linkedin.com/',
-                'twitter' => 'https://x.com/'
+                'facebook' => 'https://www.facebook.com/Kristin',
+                'instagram' => 'https://www.instagram.com/Kristin',
+                'linkedin' => 'https://www.linkedin.com/Kristin',
+                'twitter' => 'https://x.com/Kristin'
             ]),
         ]);
 
         Team::create([
             'name' => 'Darlene Robertson',
             'position' => 'Master Carpenter',
-            'image' => 'team/team-4.webp',
+            'image' => '/frontend_assets/assets/images/resource/team2.png',
             'social_links' => json_encode([
-                'facebook' => 'https://www.facebook.com/',
-                'instagram' => 'https://www.instagram.com/',
-                'linkedin' => 'https://www.linkedin.com/',
-                'twitter' => 'https://x.com/'
+                'facebook' => 'https://www.facebook.com/Darlene',
+                'instagram' => 'https://www.instagram.com/Darlene',
+                'linkedin' => 'https://www.linkedin.com/Darlene',
+                'twitter' => 'https://x.com/Darlene'
             ]),
         ]);
     }

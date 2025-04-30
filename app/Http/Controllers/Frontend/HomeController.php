@@ -11,10 +11,15 @@ use App\Models\Client;
 use App\Models\Consultation;
 use App\Models\Contact;
 use App\Models\Event;
+use App\Models\Feature;
 use App\Models\Instagram;
 use App\Models\Newsletter;
+use App\Models\Reason;
+use App\Models\Service;
 use App\Models\Slider;
+use App\Models\Team;
 use App\Models\Testimonial;
+use App\Models\Work;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -23,13 +28,23 @@ class HomeController extends Controller
 {
     public function home()
     {
+        // $data['sliders'] = Slider::get();
+        // $data['clients'] = Client::get();
+        // $data['instagrams'] = Instagram::get();
+        // $data['categories'] = Category::get();
+        // $data['testimonials'] = Testimonial::get();
+        // $data['events'] = Event::get();
+        // $data['about'] = About::first();
+
         $data['sliders'] = Slider::get();
-        $data['clients'] = Client::get();
-        $data['instagrams'] = Instagram::get();
-        $data['categories'] = Category::get();
-        $data['testimonials'] = Testimonial::get();
-        $data['events'] = Event::get();
+        $data['features'] = Feature::get();
         $data['about'] = About::first();
+        $data['services'] = Service::get();
+        $data['reasons'] = Reason::get();
+        $data['works'] = Work::get();
+        $data['teams'] = Team::get();
+        $data['testimonials'] = Testimonial::get();
+
         return view('frontend.home', $data);
     }
 

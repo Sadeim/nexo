@@ -29,17 +29,18 @@ class MessageController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
+            'phone' => ['required'],
             'email' => ['required', 'string', 'email', 'max:255'],
             'subject' => ['required', 'string', 'max:255'],
             'message' => ['required', 'string'],
-            'number' => 'required|string|max:20',
+            // 'number' => 'required|string|max:20',
         ]);
 
         if ($validator->fails()) {
             return $this->response_api(400, $validator->errors()->first(), '');
         }
 
-        $dataR = $request->only(['name','email','subject','message', 'number']);
+        $dataR = $request->only(['name', 'phone', 'email','subject','message']);
         $message = UserMessages::create($dataR);
         
         // Mail::to(config('mail.admin_email'))->send(new AdminNotification($message, 'contact'));

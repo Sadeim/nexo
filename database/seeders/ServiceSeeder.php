@@ -14,19 +14,19 @@ class ServiceSeeder extends Seeder
     public function run(): void
     {
         Service::create([
-            'name' => 'Web Development',
-            'icon' => 'code',
-            'description' => 'We build professional websites using the latest technologies.',
-            'image' => 'web_development.jpg', 
-            'is_featured' => 1,
+            'name' => 'Home Renovation',
+            'description' => 'Complete renovation and remodeling for your home with modern solutions.',
+            'icon' => 'bi-house-gear', // يمكن تستخدم bootstrap icon
+            'image' => 'service1.jpg',
+            'is_featured' => true,
         ]);
 
         Service::create([
-            'name' => 'Graphic Design',
-            'icon' => 'brush',
-            'description' => 'We offer creative and modern graphic designs tailored to your needs.',
-            'image' => 'service.png', 
-            'is_featured' => 1,
+            'name' => 'Commercial Repairing',
+            'description' => 'Repurpose go forward benefits without goal conveniently targeted to business',
+            'image' => 'service1.jpg',
+            'icon' => 'service-icn1.png',
+            'is_featured' => true,
         ]);
     }
 }
