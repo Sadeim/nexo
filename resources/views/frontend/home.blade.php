@@ -42,11 +42,11 @@
 				<div class="col-lg-4 col-md-6">
 					<div class="feature-contact-info">
 						<div class="feature-ctn-icon">
-							<img src="assets/images/resource/icon.png" alt="">
+							<img src="{{ asset('frontend_assets/assets/images/resource/icon.png') }}" alt="">
 						</div>
 						<div class="feature-contact">
 							<span class="feature-ask">For Enquery :</span>
-							<h2 class="feature-phone-number">+980 987 (0986) 030</h2>
+							<h2 class="feature-phone-number">{{ $settings->valueOf('phone') }}</h2>
 						</div>
 					</div>
 				</div>
@@ -79,7 +79,7 @@
 			<div class="row align-items-center">
 				<div class="col-lg-6 col-md-12">
 					<div class="about-right-thumb">
-						<img src="{{ asset('assets/images/resource/' . $about->image1) }}" alt="">
+						<img src="{{ asset($about->image1) }}" alt="">
 						<div class="about-counter">
 							<h2 class="counter">795</h2>
 							<h2 class="counter1">+</h2>
@@ -95,7 +95,7 @@
 					</div>
 					<div class="about-items">
 						<div class="about-icon">
-							<img src="{{ asset('assets/images/resource/' . $about->image2) }}" alt="">
+							<img src="{{ asset($about->image2) }}" alt="">
 						</div>
 						<div class="about-item-content">
 							<h2 class="about-item-title">{{ $about->tab1_title }}</h2>
@@ -150,11 +150,11 @@
 						<div class="col-lg-12">
 							<div class="single-service-box">
 								<div class="service-thumb">
-									<img src="{{ asset('assets/images/resource/' . $service->image) }}" alt="">
+									<img src="{{ asset($service->image) }}" alt="">
 								</div>
 								<div class="service-content">
 									<div class="service-icon">
-										<img src="{{ asset('assets/images/resource/' . $service->icon) }}" alt="">
+										<img src="{{ asset($service->icon) }}" alt="">
 									</div>
 									<h3 class="service-title">{{ $service->name }}</h3>
 									<p class="service-desc">{{ $service->description }}</p>
@@ -175,170 +175,77 @@
 			<div class="row align-items-center">
 				<div class="col-lg-12">
 					<div class="hendre-section-title text-center padding-lg">
-						<h4> why choose us </h4>
-						<h1> Some Reason for Choose <span> Hendre </span></h1>
-						<h1 class="sections"> Repairing Your Home </h1>
+						<h4>{{ $sectionTitle ?? 'Why choose us' }}</h4>
+						<h1>Some Reason for Choose <span> HRS </span></h1>
+						<h1 class="sections">Repairing Your Home</h1>
 						<div class="rs-video2">
-						<div class="animate-border">
-							<a class="video-vemo-icon venobox vbox-item" data-vbtype="youtube" data-autoplay="true" href="https://youtu.be/BS4TUd7FJSg">
-							Play</a>
+							<div class="animate-border">
+								<a class="video-vemo-icon venobox vbox-item" data-vbtype="youtube" data-autoplay="true"
+									href="{{ $videoUrl ?? 'https://youtu.be/BS4TUd7FJSg' }}">
+									Play
+								</a>
+							</div>
 						</div>
 					</div>
+				</div>
+			</div>
+	
+			@if($tabs->count())
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="tab">
+						<ul class="tabs">
+							@foreach($tabs as $index => $tab)
+							<li><a href="#"><span>{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}.</span> {{ $tab->title }}</a></li>
+							@endforeach
+						</ul>
+	
+						<div class="tab_content">
+							@foreach($tabs as $tab)
+							<div class="tabs_item">
+								<div class="row">
+									<div class="col-lg-6 col-md-6">
+										<div class="tab-thumb">
+											<img src="{{ asset($tab->image) }}" alt="">
+										</div>
+									</div>
+									<div class="col-lg-6 col-md-6 tab-right">
+										<div class="hendre-section-title">
+											<h4>{{ $tab->title }}</h4>
+											<h1>{!! $tab->subtitle !!}</h1>
+											<h1 class="sections">Looks as a New Home</h1>
+											<p>{{ $tab->description }}</p>
+										</div>
+	
+										<div class="row">
+											@foreach(array_chunk($tab->features, ceil(count($tab->features)/2)) as $featureColumn)
+											<div class="col-lg-6 col-md-6">
+												<div class="about-item-list">
+													<ul>
+														@foreach($featureColumn as $feature)
+														<li><i class="bi bi-check-circle-fill"></i> {{ $feature }}</li>
+														@endforeach
+													</ul>
+												</div>
+											</div>
+											@endforeach
+										</div>
+	
+										<div class="hendre-button">
+											<a href="route('service.details')">Get An Estimate <i class="bi bi-plus"></i></a>
+										</div>
+									</div>
+								</div>
+							</div>
+							@endforeach
+						</div>
 					</div>
 				</div>
 			</div>
-			<div class="row">
-				<div class="col-lg-12">
-					<!-- Tab  -->
-					<div class="tab">
-
-						<ul class="tabs">
-							<li><a href="#"> <span>01.</span> Why Choose Us ? </a></li>
-							<li><a href="#"> <span>02.</span> Hendre Missions </a></li>
-							<li><a href="#"> <span>03.</span> Mission & Vission </a></li>
-						</ul> <!-- / tabs -->
-
-						<div class="tab_content">
-
-							<!-- / tabs_item -->
-
-							<div class="tabs_item">
-								<div class="row">
-									<div class="col-lg-6 col-md-6">
-										<div class="tab-thumb">
-											<img src="assets/images/resource/tab_1.jpg" alt="">
-										</div>
-									</div>
-
-									<div class="col-lg-6 col-md-6 tab-right">
-										<div class="hendre-section-title">
-											<h4> Why Choose Us ? </h4>
-											<h1> Repairing Your <span> House for </span> </h1>
-											<h1 class="sections">Looks as a New Home</h1>
-											<p>Competently repurpose go forward benefits without goal-oriented ROI the conveniently target business opportunities whereas proactive</p>
-										</div>
-
-										<div class="row">
-											<div class="col-lg-6 col-md-6">
-												<div class="about-item-list">
-													<ul>
-														<li><i class="bi bi-check-circle-fill"></i> Repairing Roofing and Door</li>
-														<li><i class="bi bi-check-circle-fill"></i> Repairing Roofing and Door</li>
-													</ul>
-												</div>
-											</div>
-
-											<div class="col-lg-6 col-md-6">
-												<div class="about-item-list">
-													<ul>
-														<li><i class="bi bi-check-circle-fill"></i> Repairing Roofing and Door</li>
-														<li><i class="bi bi-check-circle-fill"></i> Repairing Roofing and Door</li>
-													</ul>
-												</div>
-											</div>
-										</div>
-										<div class="hendre-button">
-											<a href="service-details.html">Get An Estimate <i class="bi bi-plus"></i></a>
-										</div>
-									</div>
-								</div>
-							</div> 
-
-							<!-- / tabs_item -->
-
-							<div class="tabs_item">
-								<div class="row">
-									<div class="col-lg-6 col-md-6">
-										<div class="tab-thumb">
-											<img src="assets/images/resource/tab_2.jpg" alt="">
-										</div>
-									</div>
-
-									<div class="col-lg-6 col-md-6 tab-right">
-										<div class="hendre-section-title">
-											<h4> hendre missions </h4>
-											<h1> Repairing Your <span> House for </span> </h1>
-											<h1 class="sections">Looks as a New Home</h1>
-											<p>Competently repurpose go forward benefits without goal-oriented ROI the conveniently target business opportunities whereas proactive</p>
-										</div>
-
-										<div class="row">
-											<div class="col-lg-6 col-md-6">
-												<div class="about-item-list">
-													<ul>
-														<li><i class="bi bi-check-circle-fill"></i> Repairing Roofing and Door</li>
-														<li><i class="bi bi-check-circle-fill"></i> Repairing Roofing and Door</li>
-													</ul>
-												</div>
-											</div>
-
-											<div class="col-lg-6 col-md-6">
-												<div class="about-item-list">
-													<ul>
-														<li><i class="bi bi-check-circle-fill"></i> Repairing Roofing and Door</li>
-														<li><i class="bi bi-check-circle-fill"></i> Repairing Roofing and Door</li>
-													</ul>
-												</div>
-											</div>
-										</div>
-										<div class="hendre-button">
-											<a href="service-details.html">Get An Estimate <i class="bi bi-plus"></i></a>
-										</div>
-									</div>
-								</div>
-							</div> 
-
-							<!-- / tabs_item -->
-
-							<div class="tabs_item">
-								<div class="row">
-									<div class="col-lg-6 col-md-6">
-										<div class="tab-thumb">
-											<img src="assets/images/resource/tab_3.jpg" alt="">
-										</div>
-									</div>
-
-									<div class="col-lg-6 col-md-6 tab-right">
-										<div class="hendre-section-title">
-											<h4> Mission & Vission </h4>
-											<h1> Repairing Your <span> House for </span> </h1>
-											<h1 class="sections">Looks as a New Home</h1>
-											<p>Competently repurpose go forward benefits without goal-oriented ROI the conveniently target business opportunities whereas proactive</p>
-										</div>
-
-										<div class="row">
-											<div class="col-lg-6 col-md-6">
-												<div class="about-item-list">
-													<ul>
-														<li><i class="bi bi-check-circle-fill"></i> Repairing Roofing and Door</li>
-														<li><i class="bi bi-check-circle-fill"></i> Repairing Roofing and Door</li>
-													</ul>
-												</div>
-											</div>
-
-											<div class="col-lg-6 col-md-6">
-												<div class="about-item-list">
-													<ul>
-														<li><i class="bi bi-check-circle-fill"></i> Repairing Roofing and Door</li>
-														<li><i class="bi bi-check-circle-fill"></i> Repairing Roofing and Door</li>
-													</ul>
-												</div>
-											</div>
-										</div>
-										<div class="hendre-button">
-											<a href="service-details.html">Get An Estimate <i class="bi bi-plus"></i></a>
-										</div>
-									</div>
-								</div>
-							</div> 
-
-						</div> 
-					</div> 
-					<!-- End tab -->
-				</div>
-			</div>
+			@endif
 		</div>
 	</div>
+	
 
 	<div class="team-section">
 		<div class="container">
@@ -485,72 +392,29 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-lg-3 col-md-6">
-					<div class="single-process-box">
-						<div class="process-thumb">
-							<img src="assets/images/resource/process1.png" alt="">
-							<div class="process-number">
-								<span>01</span>
+				@foreach ($works as $key => $work)
+					<div class="col-lg-3 col-md-6">
+						<div class="single-process-box">
+							<div class="process-thumb">
+								<img src="{{ asset($work->image) }}" alt="">
+								<div class="process-number">
+									<span>0{{ $key + 1 }}</span>
+								</div>
+							</div>
+							<div class="process-content">
+								<h4 class="process-title">{{ $work->title }}</h4>
+								<p class="process-desc">{{ $work->description }}</p>
 							</div>
 						</div>
-						<div class="process-content">
-							<h4 class="process-title">Booking Online</h4>
-							<p class="process-desc">Competently repurpose forward conveniently target fixed</p>
-						</div>
 					</div>
-				</div>
-
-				<div class="col-lg-3 col-md-6">
-					<div class="single-process-box">
-						<div class="process-thumb">
-							<img src="assets/images/resource/process2.png" alt="">
-							<div class="process-number">
-								<span>02</span>
-							</div>
-						</div>
-						<div class="process-content">
-							<h4 class="process-title">Confirmation</h4>
-							<p class="process-desc">Competently repurpose forward conveniently target fixed</p>
-						</div>
-					</div>
-				</div>
-
-				<div class="col-lg-3 col-md-6">
-					<div class="single-process-box">
-						<div class="process-thumb">
-							<img src="assets/images/resource/process3.png" alt="">
-							<div class="process-number">
-								<span>03</span>
-							</div>
-						</div>
-						<div class="process-content">
-							<h4 class="process-title">Estimate Details</h4>
-							<p class="process-desc">Competently repurpose forward conveniently target fixed</p>
-						</div>
-					</div>
-				</div>
-
-				<div class="col-lg-3 col-md-6">
-					<div class="single-process-box">
-						<div class="process-thumb">
-							<img src="assets/images/resource/process4.png" alt="">
-							<div class="process-number">
-								<span>04</span>
-							</div>
-						</div>
-						<div class="process-content">
-							<h4 class="process-title">Complete Works</h4>
-							<p class="process-desc">Competently repurpose forward conveniently target fixed</p>
-						</div>
-					</div>
-				</div>
+				@endforeach
 			</div>
 		</div>
 	</div>
 @endsection
 
 @section('js')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> --}}
 <script>
 	$(document).ready(function() {
 		$('#dreamit-form').on('submit', function(e) {
@@ -589,4 +453,6 @@
 		});
 	});
 </script>
+
+
 @endsection

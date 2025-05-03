@@ -4,10 +4,10 @@
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
-	<title>Hendre</title>
+	<title>HRS</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="icon" type="image/png" sizes="56x56" href="{{ asset('frontend_assets/assets/images/fav-icon/icon.png') }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ url($settings->valueOf('company_logo')) }}">
 	<link rel="stylesheet" href="{{ asset('frontend_assets/assets/css/bootstrap.min.css') }}" type="text/css" media="all">
 	<link rel="stylesheet" href="{{ asset('frontend_assets/assets/css/owl.carousel.min.css') }}" type="text/css" media="all">
 	<link rel="stylesheet" href="{{ asset('frontend_assets/assets/css/animate.css') }}" type="text/css" media="all">
@@ -75,7 +75,7 @@
 				<div class="col-lg-2">
 					<div class="logo">
 						<a class="logo_img" href="{{ route('home') }}" style="width: 73px" title="hendre">
-							<img src="{{ url($settings->valueOf('company_logo')) }}" alt="logo">
+							<img src="{{ url($settings->valueOf('company_logo')) }}" style="width:65px;" alt="logo">
 						</a>
 						<a class="main_sticky" href="{{ route('home') }}" title="hendre">
 							<img src="{{ url($settings->valueOf('company_logo')) }}" style="width:65px;" alt="logo">
@@ -87,12 +87,11 @@
 						<ul class="nav_scroll">
 							<li><a href="#">Home <span><i class="fas fa-chevron-down"></i></span></a>
 								<ul class="sub-menu">
-									<li><a href="{{ route('home') }}">Hendre Home Page</a></li>
-									<li><a href="home-landing.html">Hendre Landing Page</a></li>
+									<li><a href="{{ route('home') }}">HRS</a></li>
 								</ul>
 							</li>
 
-							<li><a href="about.html">About</a></li>
+							<li><a href="">About</a></li>
 							{{-- <li><a href="#">Services <span><i class="fas fa-chevron-down"></i></span></a>
 								<ul class="sub-menu">
 									<li><a href="service.html">Our Service</a></li>
@@ -126,7 +125,7 @@
 									<li><a href="blog-details.html">Blog Details</a></li>
 								</ul>
 							</li> --}}
-							<li><a href="contact.html">Contact</a></li>
+							<li><a href="">Contact</a></li>
 						</ul>
 						<div class="header-menu-right-btn">
 							<!--header-search-->
@@ -135,7 +134,7 @@
 							</div>
 							<!-- header button -->
 							<div class="header-button">
-								<a href="contact.html">Get a Free Quote</a>
+								<a href="#">Get a Free Quote</a>
 							</div>
 						</div>
 					</nav>
@@ -155,7 +154,7 @@
 							<li><a href="home-landing.html">Hendre Landing Page</a></li>
 						</ul> --}}
 					</li>
-					<li><a href="about.html">About Us</a></li>
+					<li><a href="#">About Us</a></li>
 					{{-- <li><a href="#">Services <span><i class="fas fa-chevron-down"></i></span></a>
 						<ul class="sub-menu">
 							<li><a href="service.html">Our Service</a></li>
@@ -189,7 +188,7 @@
 							<li><a href="blog-details.html">Blog Details</a></li>
 						</ul>
 					</li> --}}
-					<li><a href="contact.html">Contact Us</a></li>
+					<li><a href="#">Contact Us</a></li>
 				</ul>
 			</nav>
 		</div>
@@ -226,11 +225,11 @@
 				</div>
 				<div class="col-lg-4 col-md-12">
 					<div class="subscribe-widget">
-						<form action="#" method="get">
-							<input type="text" class="src-input-box" placeholder="Search Here" name="s" value=""
-								title="src-input-box">
+						<form id="subscribe-form" method="POST">
+							@csrf
+							<input type="text" class="src-input-box" placeholder="Enter your email" name="email" id="email">
 							<button class="subscribe-btn" type="submit">
-								<span>Subcribe</span>
+								<span>Subscribe</span>
 							</button>
 						</form>
 					</div>
@@ -314,7 +313,7 @@
 				<div class="col-lg-6 col-md-6">
 					<div class="footer-bottom-content">
 						<div class="footer-bottom-content-copy">
-							<p>Copyright © 2023 <span>Hendre</span>. All rights reserved.</p>
+							<p>Copyright © 2025 <span>HRS</span>. All rights reserved.</p>
 						</div>
 					</div>
 				</div>
@@ -394,7 +393,51 @@
 	<script src="{{ asset('frontend_assets/assets/js/jquery.scrollUp.js') }}"></script>
 	<script src="{{ asset('frontend_assets/assets/js/jquery.barfiller.js') }}"></script>
 	<script src="{{ asset('frontend_assets/assets/js/theme.js') }}"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
    @yield('js')
+   <script>
+    $(document).ready(function () {
+        $('#subscribe-form').on('submit', function (e) {
+            e.preventDefault();
+
+            let email = $('#email').val().trim();
+            if (!email) {
+                toastr.error('Email is required.');
+                return;
+            }
+
+            let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                toastr.error('Please enter a valid email address.');
+                return;
+            }
+
+            $.ajax({
+                url: "{{ route('newsletter.subscribe') }}",
+                method: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    email: email
+                },
+                success: function (response) {
+                    toastr.success(response.message);
+                    $('#subscribe-form')[0].reset();
+                },
+                error: function (xhr) {
+                    if (xhr.status === 422) {
+                        let errors = xhr.responseJSON.errors;
+                        if (errors.email) {
+                            toastr.error(errors.email[0]);
+                        }
+                    } else {
+                        toastr.error('Something went wrong.');
+                    }
+                }
+            });
+        });
+    });
+</script>
 </body>
 
 </html>

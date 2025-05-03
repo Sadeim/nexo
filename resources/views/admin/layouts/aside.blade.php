@@ -182,7 +182,7 @@
                         </span>
                     </div>
                 @endif --}}
-                {{-- @if (auth()->user()->can('view_blogs'))
+                @if (auth()->user()->can('view_blogs'))
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'blogs' ? 'here show' : '' }}">
                         <span class="menu-link {{ $is_active == 'blogs' ? 'active' : '' }}">
                             <span class="menu-icon">
@@ -198,7 +198,7 @@
                             </span>
                         </span>
                     </div>
-                @endif --}}
+                @endif
                 @if (auth()->user()->can('view_clients'))
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'clients' ? 'here show' : '' }}">
                         <span class="menu-link {{ $is_active == 'clients' ? 'active' : '' }}">
@@ -270,7 +270,23 @@
                         </span>
                     </div>
                 @endif
-
+                @if (auth()->user()->can('view_features'))
+                    <div class="menu-item menu-accordion {{ $is_active_parent == 'features' ? 'here show' : '' }}">
+                        <span class="menu-link {{ $is_active == 'features' ? 'active' : '' }}">
+                            <span class="menu-icon">
+                                <span class="svg-icon svg-icon-2">
+                                    <i class="fa-solid fa-calendar-days"></i>
+                                </span>
+                            </span>
+                            <span class="menu-title">
+                                <a class="{{ $is_active == 'features' ? 'active' : '' }}"
+                                    href="{{ route('admin.features.index') }}">
+                                    <span class="menu-title">{{ __('admin.global.features') }}</span>
+                                </a>
+                            </span>
+                        </span>
+                    </div>
+                @endif
                 @if (auth()->user()->can('view_instagrams'))
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'instagrams' ? 'here show' : '' }}">
                         <span class="menu-link {{ $is_active == 'instagrams' ? 'active' : '' }}">

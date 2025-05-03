@@ -15,6 +15,7 @@ use App\Models\Feature;
 use App\Models\Instagram;
 use App\Models\Newsletter;
 use App\Models\Reason;
+use App\Models\ReasonTab;
 use App\Models\Service;
 use App\Models\Slider;
 use App\Models\Team;
@@ -44,6 +45,7 @@ class HomeController extends Controller
         $data['works'] = Work::get();
         $data['teams'] = Team::get();
         $data['testimonials'] = Testimonial::get();
+        $data['tabs'] = ReasonTab::orderBy('order')->get();
 
         return view('frontend.home', $data);
     }

@@ -17,7 +17,7 @@ class WorkSeeder extends Seeder
         Work::create([
             'title'       => 'Industrial Facility Power Upgrade',
             'slug'        => Str::slug('Industrial Facility Power Upgrade'),
-            'image'       => 'work/work-1.webp',
+            'image'       => 'frontend_assets/assets/images/resource/process1.png',
             'category'    => 'Electrical',
             'description' => 'Upgrading power systems in an industrial facility for improved efficiency and safety.',
         ]);
@@ -25,7 +25,7 @@ class WorkSeeder extends Seeder
         Work::create([
             'title'       => 'Outdoor Lighting for Urban Parks',
             'slug'        => Str::slug('Outdoor Lighting for Urban Parks'),
-            'image'       => 'work/work-2.webp',
+            'image'       => 'frontend_assets/assets/images/resource/process2.png',
             'category'    => 'Electrical',
             'description' => 'Installing energy-efficient outdoor lighting to beautify urban parks.',
         ]);
@@ -33,7 +33,7 @@ class WorkSeeder extends Seeder
         Work::create([
             'title'       => 'Residential Solar Installation',
             'slug'        => Str::slug('Residential Solar Installation'),
-            'image'       => 'work/work-3.webp',
+            'image'       => 'frontend_assets/assets/images/resource/process3.png',
             'category'    => 'Electrical',
             'description' => 'Solar panel installation for a residential property to save on energy bills.',
         ]);
@@ -41,7 +41,7 @@ class WorkSeeder extends Seeder
         Work::create([
             'title'       => 'Revamping Modern Office Lighting',
             'slug'        => Str::slug('Revamping Modern Office Lighting'),
-            'image'       => 'work/work-4.webp',
+            'image'       => 'frontend_assets/assets/images/resource/process4.png',
             'category'    => 'Electrical',
             'description' => 'Updating office lighting systems to modern, energy-efficient solutions.',
         ]);

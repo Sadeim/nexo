@@ -17,14 +17,14 @@ class ServiceSeeder extends Seeder
             'name' => 'Home Renovation',
             'description' => 'Complete renovation and remodeling for your home with modern solutions.',
             'icon' => 'bi-house-gear', // يمكن تستخدم bootstrap icon
-            'image' => 'service1.jpg',
+            'image' => 'frontend_assets/assets/images/resource/service1.jpg',
             'is_featured' => true,
         ]);
 
         Service::create([
             'name' => 'Commercial Repairing',
             'description' => 'Repurpose go forward benefits without goal conveniently targeted to business',
-            'image' => 'service1.jpg',
+            'image' => 'frontend_assets/assets/images/resource/service1.jpg',
             'icon' => 'service-icn1.png',
             'is_featured' => true,
         ]);
