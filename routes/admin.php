@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\FaqController;
+use App\Http\Controllers\Admin\FeatureController;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\InstagramController;
 use App\Http\Controllers\Admin\MenuItemController;
@@ -134,6 +135,13 @@ use Illuminate\Support\Facades\Route;
         });
         /* ------------------------------------- client Routes --------------------------------- */
                
+        /* ------------------------------------- feature Routes --------------------------------- */
+        Route::resource('features', FeatureController::class);
+        Route::group(['prefix' => 'features', 'as' => 'features.'], function () {
+            Route::get('data/datatables', [FeatureController::class , 'datatable'])->name('datatable');
+        });
+        /* ------------------------------------- feature Routes --------------------------------- */
+                       
         /* ------------------------------------- faq Routes --------------------------------- */
         Route::resource('faqs', FaqController::class);
         Route::group(['prefix' => 'faqs', 'as' => 'faqs.'], function () {
@@ -182,14 +190,7 @@ use Illuminate\Support\Facades\Route;
             Route::get('data/datatables', [BookingController::class , 'datatable'])->name('datatable');
         });
         /* ------------------------------------- booking Routes --------------------------------- */
-            
-        /* ------------------------------------- contact Routes --------------------------------- */
-        Route::resource('contacts', ContactController::class);
-        Route::group(['prefix' => 'contacts', 'as' => 'contacts.'], function () {
-            Route::get('data/datatables', [ContactController::class , 'datatable'])->name('datatable');
-        });
-        /* ------------------------------------- contact Routes --------------------------------- */
-             
+ 
         /* ------------------------------------- event Routes --------------------------------- */
         Route::resource('events', EventController::class);
         Route::group(['prefix' => 'events', 'as' => 'events.'], function () {

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Frontend\BlogController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\MessageController;
 use Illuminate\Support\Facades\Auth;
@@ -21,6 +22,9 @@ use Illuminate\Support\Facades\Route;
     Route::get('/', [HomeController::class, 'home'])->name('home');
 
     Route::get('about_us', [MessageController::class, 'aboutUs'])->name('about_us');
+    Route::get('blog', [BlogController::class, 'index'])->name('blog.index');
+    Route::get('blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
+    Route::get('search', [BlogController::class, 'search'])->name('blog.search');
     Route::get('contact_us', [MessageController::class, 'contactUs'])->name('contact');
     Route::post('contact_us/store', [MessageController::class, 'contactStore'])->name('contact.submit');
     Route::post('consult', [HomeController::class, 'storeConsultation'])->name('consult.store');

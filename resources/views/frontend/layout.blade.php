@@ -91,7 +91,7 @@
 								</ul>
 							</li>
 
-							<li><a href="">About</a></li>
+							<li><a href="{{ route('about_us') }}">About</a></li>
 							{{-- <li><a href="#">Services <span><i class="fas fa-chevron-down"></i></span></a>
 								<ul class="sub-menu">
 									<li><a href="service.html">Our Service</a></li>
@@ -125,7 +125,8 @@
 									<li><a href="blog-details.html">Blog Details</a></li>
 								</ul>
 							</li> --}}
-							<li><a href="">Contact</a></li>
+							<li><a href="{{ route('contact') }}">Contact</a></li>
+							<li><a href="{{ route('blog.index') }}">Blog</a></li>
 						</ul>
 						<div class="header-menu-right-btn">
 							<!--header-search-->
@@ -148,13 +149,13 @@
 		<div class="mobile-menu">
 			<nav class="hendre_menu">
 				<ul class="nav_scroll">
-					<li><a href="#home">Home <span><i class="fas fa-chevron-down"></i></span></a>
+					<li><a href="{{ route('home') }}">Home <span><i class="fas fa-chevron-down"></i></span></a>
 						{{-- <ul class="sub-menu">
 							<li><a href="{{ route('home') }}">Hendre Home Page</a></li>
 							<li><a href="home-landing.html">Hendre Landing Page</a></li>
 						</ul> --}}
 					</li>
-					<li><a href="#">About Us</a></li>
+					<li><a href="{{ route('about_us') }}">About Us</a></li>
 					{{-- <li><a href="#">Services <span><i class="fas fa-chevron-down"></i></span></a>
 						<ul class="sub-menu">
 							<li><a href="service.html">Our Service</a></li>
@@ -244,7 +245,7 @@
 						</a>
 					</div>
 						<div class="company-info-desc">
-							<p> Professionally develop long-term performance based architectures metrics rather than </p>
+							<p> {{ $settings->valueOf('site_description') }}</p>
 						</div>
 						<div class="follow-company-icon">
 							<a href="{{ $settings->valueOf('facebook') }}"> <i class="fab fa-facebook-f"></i> </a>
@@ -259,11 +260,11 @@
 						<h4 class="widget-title">Popular Services</h4>
 						<div class="menu-quick-link-content">
 							<ul class="footer-menu">
-								<li><a href="#"> Kitchen Cleaning </a></li>
-								<li><a href="#"> Carpet Clean </a></li>
-								<li><a href="#"> House Cleaning </a></li>
-								<li><a href="#"> Office Cleaning </a></li>
-								<li><a href="#"> Floor Cleaning </a></li>
+								@forelse ($shared_services as $service)
+									<li><a href="#"> <i class="bi bi-check-lg"></i> {{ $service->name }} </a></li>
+								@empty
+									<li><a href="#"> No Services </a></li>
+								@endforelse
 							</ul>
 						</div>
 					</div>
@@ -273,10 +274,8 @@
 						<h4 class="widget-title"> Useful Links </h4>
 						<div class="menu-quick-link-content">
 							<ul class="footer-menu">
-								<li><a href="#"> About Us </a></li>
-								<li><a href="#"> Contact Us </a></li>
-								<li><a href="#"> Testimonial </a></li>
-								<li><a href="#"> Appoinment </a></li>
+								<li><a href="{{ route('about_us') }}"> About Us </a></li>
+								<li><a href="{{ route('contact') }}"> Contact Us </a></li>
 								<li><a href="#"> FAQ’s </a></li>
 							</ul>
 						</div>
@@ -297,12 +296,12 @@
 						</div>
 					</div>
 				</div>
-				<div class="footer-shape">
+				{{-- <div class="footer-shape">
 					<img src="{{ asset('frontend_assets/assets/images/resource/footer-shp.png') }}" alt="">
 				</div>
 				<div class="footer-shape2">
 					<img src="{{ asset('frontend_assets/assets/images/resource/footer-shp2.png') }}" alt="">
-				</div>
+				</div> --}}
 			</div>
 		</div>
 	</div>	

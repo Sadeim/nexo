@@ -133,6 +133,15 @@
                                             </div>
                                             <div class="row mb-8">
                                                 <div class="col-xl-3">
+                                                    <div class="fs-6 fw-semibold mt-2 mb-3">Site description</div>
+                                                </div>
+                                                <div class="col-xl-9 fv-row fv-plugins-icon-container">
+                                                    <input type="text" class="form-control" name="site_description" value="{{ $settings->valueOf('site_description') }}">
+                                                    <div class="fv-plugins-message-container invalid-feedback"></div>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-8">
+                                                <div class="col-xl-3">
                                                     <div class="fs-6 fw-semibold mt-2 mb-3">Map Embed</div>
                                                 </div>
                                                 <div class="col-xl-9 fv-row fv-plugins-icon-container">

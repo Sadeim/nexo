@@ -1,5 +1,5 @@
 <div class="tableActions">
-    <a class="btn" href="{{route('admin.blogs.edit', ['category' => $instance->id])}}">
+    <a class="btn" href="{{route('admin.blogs.edit', ['blog' => $instance->id])}}">
         <span class="svg-icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="20"
                     height="20" viewBox="0 0 20 20">

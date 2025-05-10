@@ -235,7 +235,7 @@
                     </div>
                 @endif
 
-                @if (auth()->user()->can('view_contacts'))
+                {{-- @if (auth()->user()->can('view_contacts'))
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'contacts' ? 'here show' : '' }}">
                         <span class="menu-link {{ $is_active == 'contacts' ? 'active' : '' }}">
                             <span class="menu-icon">
@@ -251,7 +251,7 @@
                             </span>
                         </span>
                     </div>
-                @endif
+                @endif --}}
 
                 @if (auth()->user()->can('view_events'))
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'events' ? 'here show' : '' }}">

@@ -1,22 +1,39 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\UpdateAdminRequest;
-use App\Http\Requests\Admin\CreateAdminRequest;
-use App\Models\Admin;
 use App\Models\Blog;
-use App\Models\Role;
+use App\Models\Category;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
- 
+
 class BlogController extends Controller
 {
     public function index()
     {
-        $blogs = Blog::latest()->take(3)->get(); // للواجهة الرئيسية
-        return view('frontend.home', compact('blogs'));
+        $data['blogs'] = Blog::latest()->paginate(6);
+        $data['popular_posts'] = Blog::limit(3)->get();
+        $data['categories'] = Category::active()->get();
+        return view('frontend.blog.index', $data);
+    }
+
+    public function show()
+    {
+        $data['blog'] = Blog::where('slug', request()->slug)->firstOrFail();
+        $data['popular_posts'] = Blog::limit(3)->get();
+        $data['categories'] = Category::active()->get();
+        return view('frontend.blog.show', $data);
+    }
+
+    public function search(Request $request)
+    {
+        $query = $request->get('q');
+
+        $results = Blog::where('title', 'LIKE', "%{$query}%")
+                    ->orWhere('content', 'LIKE', "%{$query}%")
+                    ->take(10)
+                    ->get();
+    
+        return view('frontend.blog.partials.search_results', compact('results'))->render();
     }
 }

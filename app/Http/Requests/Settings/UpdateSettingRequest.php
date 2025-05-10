@@ -38,7 +38,8 @@ class UpdateSettingRequest extends BaseRequest
             'twitter'               => ['nullable', 'max:255'],
             'address'               => ['nullable', 'max:255'],
             'web_address'           => ['nullable', 'max:255'],
-            'map_embed'           => ['nullable', 'max:255'],
+            'map_embed'             => ['nullable', 'max:255'],
+            'site_description'      => ['nullable', 'max:255'],
         ];
     }
 }
