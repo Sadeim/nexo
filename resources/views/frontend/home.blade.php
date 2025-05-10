@@ -80,11 +80,11 @@
 				<div class="col-lg-6 col-md-12">
 					<div class="about-right-thumb">
 						<img src="{{ asset($about->image1) }}" alt="">
-						<div class="about-counter">
+						{{-- <div class="about-counter">
 							<h2 class="counter">795</h2>
 							<h2 class="counter1">+</h2>
 							<span class="counter-text">Project Completed</span>
-						</div>
+						</div> --}}
 					</div>
 				</div>
 				<div class="col-lg-6 col-md-12">

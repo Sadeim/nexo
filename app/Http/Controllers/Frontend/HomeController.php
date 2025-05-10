@@ -20,6 +20,7 @@ use App\Models\Service;
 use App\Models\Slider;
 use App\Models\Team;
 use App\Models\Testimonial;
+use App\Models\UserMessages;
 use App\Models\Work;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -29,14 +30,6 @@ class HomeController extends Controller
 {
     public function home()
     {
-        // $data['sliders'] = Slider::get();
-        // $data['clients'] = Client::get();
-        // $data['instagrams'] = Instagram::get();
-        // $data['categories'] = Category::get();
-        // $data['testimonials'] = Testimonial::get();
-        // $data['events'] = Event::get();
-        // $data['about'] = About::first();
-
         $data['sliders'] = Slider::get();
         $data['features'] = Feature::get();
         $data['about'] = About::first();
@@ -103,5 +96,43 @@ class HomeController extends Controller
         Booking::create($validated);
 
         return response()->json(['message' => 'Booking saved successfully.']);
+    }
+
+    public function contactUs() 
+    {
+        $data['instagrams'] = Instagram::get();
+        $data['about'] = About::first();
+        return view('frontend.contact_us', $data);
+    }
+
+    public function contactStore(Request $request) 
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => ['required', 'string', 'max:255'],
+            'phone' => ['required'],
+            'email' => ['required', 'string', 'email', 'max:255'],
+            'subject' => ['required', 'string', 'max:255'],
+            'message' => ['required', 'string'],
+            // 'number' => 'required|string|max:20',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->response_api(400, $validator->errors()->first(), '');
+        }
+
+        $dataR = $request->only(['name', 'phone', 'email','subject','message']);
+        $message = UserMessages::create($dataR);
+        
+        // Mail::to(config('mail.admin_email'))->send(new AdminNotification($message, 'contact'));
+
+        return $this->response_api(200, 'Done Successfully', '');
+    }
+
+    public function aboutUs() 
+    {
+        $data['about'] = About::first();
+        $data['testimonials'] = Testimonial::get();
+        $data['teams'] = Team::get();
+        return view('frontend.about_us', $data);
     }
 }

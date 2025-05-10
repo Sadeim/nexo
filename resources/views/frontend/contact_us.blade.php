@@ -3,14 +3,14 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
 @endsection
 @section('content')
-    <div class="breatcam-section style-two d-flex align-items-center">
+    <div class="breatcam-section style-two d-flex align-items-center" style="background-image: url('{{ asset($about->image1) }}');">
         <div class="container">
             <div class="row d-flex align-items-center">
                 <div class="col-lg-12">
                     <div class="breatcam-content">
                         <h1> Contact Us </h1>
                         <ul>
-                            <li><a href="index.html"> <i class="fas fa-home"></i> Home</a></li>
+                            <li><a href="{{ route('home') }}"> <i class="fas fa-home"></i> Home</a></li>
                             <li> Contact us </li>
                         </ul>
                     </div>
