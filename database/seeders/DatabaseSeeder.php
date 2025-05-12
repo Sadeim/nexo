@@ -12,7 +12,7 @@ class DatabaseSeeder extends Seeder
      * Seed the application's database.
      */
     public function run(): void
-    { 
+    {
         $this->call(PermissionSeeder::class);
         $this->call(RoleSeeder::class);
         $this->call(AdminSeeder::class);
@@ -36,7 +36,7 @@ class DatabaseSeeder extends Seeder
         // $this->call(EventSeeder::class);
         // $this->call(InstagramSeeder::class);
         // $this->call(MenuItemSeeder::class);
-        $this->call(SliderSeeder::class);
+//        $this->call(SliderSeeder::class);
         $this->call(ReasonTabSeeder::class);
         $this->call(FeatureSeeder::class);
     }
