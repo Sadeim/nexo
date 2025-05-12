@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Mail\AdminNotification;
 use App\Models\About;
+use App\Models\Blog;
 use App\Models\Booking;
 use App\Models\Category;
 use App\Models\Client;
 use App\Models\Consultation;
 use App\Models\Contact;
 use App\Models\Event;
+use App\Models\Faq;
 use App\Models\Feature;
 use App\Models\Instagram;
 use App\Models\Newsletter;
@@ -31,14 +33,16 @@ class HomeController extends Controller
     public function home()
     {
         $data['sliders'] = Slider::get();
-        $data['features'] = Feature::get();
+        // $data['features'] = Feature::get();
         $data['about'] = About::first();
         $data['services'] = Service::get();
-        $data['reasons'] = Reason::get();
+        // $data['reasons'] = Reason::get();
         $data['works'] = Work::get();
         $data['teams'] = Team::get();
         $data['testimonials'] = Testimonial::get();
-        $data['tabs'] = ReasonTab::orderBy('order')->get();
+        $data['faqs'] = Faq::get();
+        $data['blogs'] = Blog::get();
+        // $data['tabs'] = ReasonTab::orderBy('order')->get();
 
         return view('frontend.home', $data);
     }
