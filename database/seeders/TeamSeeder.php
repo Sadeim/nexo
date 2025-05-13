@@ -16,7 +16,7 @@ class TeamSeeder extends Seeder
         Team::create([
             'name' => 'PeGuy Hawekins',
             'position' => 'Interior Designer',
-            'image' => '/frontend_assets/assets/images/resource/team2.png',
+            'image' => '/frontend_assets/images/team-1.jpg',
             'social_links' => json_encode([
                 'facebook' => 'https://www.facebook.com/',
                 'instagram' => 'https://www.instagram.com/',
@@ -28,7 +28,7 @@ class TeamSeeder extends Seeder
         Team::create([
             'name' => 'Dianne Russell',
             'position' => 'Founder & CEO',
-            'image' => '/frontend_assets/assets/images/resource/team2.png',
+            'image' => '/frontend_assets/images/team-2.jpg',
             'social_links' => json_encode([
                 'facebook' => 'https://www.facebook.com/Dianne',
                 'instagram' => 'https://www.instagram.com/Dianne',
@@ -40,7 +40,7 @@ class TeamSeeder extends Seeder
         Team::create([
             'name' => 'Kristin Watson',
             'position' => 'Project Manager',
-            'image' => '/frontend_assets/assets/images/resource/team2.png',
+            'image' => '/frontend_assets/images/team-3.jpg',
             'social_links' => json_encode([
                 'facebook' => 'https://www.facebook.com/Kristin',
                 'instagram' => 'https://www.instagram.com/Kristin',
@@ -52,7 +52,7 @@ class TeamSeeder extends Seeder
         Team::create([
             'name' => 'Darlene Robertson',
             'position' => 'Master Carpenter',
-            'image' => '/frontend_assets/assets/images/resource/team2.png',
+            'image' => '/frontend_assets/images/team-4.jpg',
             'social_links' => json_encode([
                 'facebook' => 'https://www.facebook.com/Darlene',
                 'instagram' => 'https://www.instagram.com/Darlene',

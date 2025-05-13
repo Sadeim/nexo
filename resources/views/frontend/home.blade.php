@@ -53,7 +53,7 @@
                                     @forelse ($clients as $client)
                                         <div class="swiper-slide">
                                             <div class="client-logo">
-                                                <img src="{{ asset($client->image) }}" alt="">
+                                                <img src="{{ asset($client->logo) }}" alt="">
                                             </div>
                                         </div>
                                     @empty
@@ -91,7 +91,7 @@
                                     @forelse ($clients as $client)
                                         <div class="swiper-slide">
                                             <div class="client-logo">
-                                                <img src="{{ asset($client->image) }}" alt="">
+                                                <img src="{{ asset($client->logo) }}" alt="">
                                             </div>
                                         </div>
                                     @empty
@@ -679,53 +679,15 @@
                         <div class="testimonial-company-slider">
                             <div class="swiper">
                                 <div class="swiper-wrapper">
-                                    <!-- Agency Support Logo Start -->
-                                    <div class="swiper-slide">
-                                        <div class="company-logo">
-                                            <img src="{{ asset('frontend_assets/images/company-logo-1.svg') }}" alt="">
+                                    @forelse ($clients as $client)
+                                        <div class="swiper-slide">
+                                            <div class="company-logo">
+                                                <img src="{{ asset($client->logo) }}" alt="">
+                                            </div>
                                         </div>
-                                    </div>
-                                    <!-- Agency Support Logo End -->
-    
-                                    <!-- Agency Support Logo Start -->
-                                    <div class="swiper-slide">
-                                        <div class="company-logo">
-                                            <img src="{{ asset('frontend_assets/images/company-logo-2.svg') }}" alt="">
-                                        </div>
-                                    </div>
-                                    <!-- Agency Support Logo End -->
-    
-                                    <!-- Agency Support Logo Start -->
-                                    <div class="swiper-slide">
-                                        <div class="company-logo">
-                                            <img src="{{ asset('frontend_assets/images/company-logo-3.svg') }}" alt="">
-                                        </div>
-                                    </div>
-                                    <!-- Agency Support Logo End -->
-                                    
-                                    <!-- Agency Support Logo Start -->
-                                    <div class="swiper-slide">
-                                        <div class="company-logo">
-                                            <img src="{{ asset('frontend_assets/images/company-logo-4.svg') }}" alt="">
-                                        </div>
-                                    </div>
-                                    <!-- Agency Support Logo End -->
-                                    
-                                    <!-- Agency Support Logo Start -->
-                                    <div class="swiper-slide">
-                                        <div class="company-logo">
-                                            <img src="{{ asset('frontend_assets/images/company-logo-5.svg') }}" alt="">
-                                        </div>
-                                    </div>
-                                    <!-- Agency Support Logo End -->
-                                    
-                                    <!-- Agency Support Logo Start -->
-                                    <div class="swiper-slide">
-                                        <div class="company-logo">
-                                            <img src="{{ asset('frontend_assets/images/company-logo-1.svg') }}" alt="">
-                                        </div>
-                                    </div>
-                                    <!-- Agency Support Logo End -->
+                                    @empty
+                                        No Data
+                                    @endforelse
                                 </div>
                             </div>
                         </div>
