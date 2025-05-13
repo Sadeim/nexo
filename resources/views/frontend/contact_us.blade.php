@@ -3,89 +3,165 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
 @endsection
 @section('content')
-    <div class="breatcam-section style-two d-flex align-items-center" style="background-image: url('{{ asset($about->image1) }}');">
-        <div class="container">
-            <div class="row d-flex align-items-center">
-                <div class="col-lg-12">
-                    <div class="breatcam-content">
-                        <h1> Contact Us </h1>
-                        <ul>
-                            <li><a href="{{ route('home') }}"> <i class="fas fa-home"></i> Home</a></li>
-                            <li> Contact us </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- Page Header Start -->
+	<div class="page-header parallaxie">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<!-- Page Header Box Start -->
+					<div class="page-header-box">
+						<h1 class="text-anime-style-3" data-cursor="-opaque">contact us</h1>
+						<nav class="wow fadeInUp">
+							<ol class="breadcrumb">
+								<li class="breadcrumb-item"><a href="{{ route('home') }}">home</a></li>
+								<li class="breadcrumb-item active" aria-current="page">contact us</li>
+							</ol>
+						</nav>
+					</div>
+					<!-- Page Header Box End -->
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Page Header End -->
 
-    <div class="map-section">
+    <!-- Page Contact Us Start -->
+    <div class="page-contact-us bg-radius-section">
         <div class="container">
-            <div class="row map-bg">
-                <div class="col-lg-12">
-                    <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3596.6194043224186!2d89.61168491495718!3d25.650754283687256!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39fd33c03fbe69cb%3A0x273671e159f8b39e!2sRDRS%20Ulipur!5e0!3m2!1sen!2sbd!4v1636872467628!5m2!1sen!2sbd"
-                        width="1320" height="552" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-                </div>
-            </div>
-        </div>
-    </div>
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <!-- Contact Details Box Start -->
+                    <div class="contact-details-box">
+                        <!-- Contact Us Image Start -->
+                        <div class="contact-us-image">
+                            <figure class="image-anime">
+                                <img src="{{ $about->image1 }}" alt="">
+                            </figure>
+                        </div>
+                        <!-- Contact Us Image End -->
 
-    <div class="contact-us">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="hendre-section-title padding-lg">
-                        <h1>Contact <span>Form</span></h1>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="contact_from_box">
-                        <form id="contact_form" method="POST">
-                            <div class="row">
-                                <div class="col-lg-6 col-md-6">
-                                    <div class="row">
-                                        <div class="col-lg-6 col-md-6">
-                                            <div class="form-box mb-30">
-                                                <input type="text" name="name" placeholder="Name:">
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6">
-                                            <div class="form-box mb-30">
-                                                <input type="email" name="email" placeholder="Email:">
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-12">
-                                            <div class="form-box mb-30">
-                                                <input type="text" name="subject" placeholder="Subject:">
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-12">
-                                            <div class="form-box">
-                                                <input type="text" name="phone" placeholder="Phone Number:">
-                                            </div>
-                                        </div>
-                                    </div>
+                        <!-- Contact Info List Start -->
+                        <div class="contact-info-list">
+                            <!-- Conatct Info Item Start -->
+                            <div class="contact-info-item wow fadeInUp">
+                                <!-- Icon Box Start -->
+                                <div class="icon-box">
+                                    <img src="images/icon-phone-white.svg" alt="">
                                 </div>
-                                <div class="col-lg-6 col-md-6">
-                                    <div class="form-box mb-30">
-                                        <textarea name="message" id="message" cols="30" rows="10" placeholder="Your Message"></textarea>
-                                    </div>
+                                <!-- Icon Box End -->
+
+                                <!-- Contact Info Content Start -->
+                                <div class="contact-info-content">
+                                    <p>contact:</p>
+                                    <h3>{{ $settings->valueOf('phone') }}</h3>
                                 </div>
-                                <div class="contact-form">
-                                    <button type="submit">Contact Us <i class="bi bi-arrow-right"></i></button>
-                                </div>
+                                <!-- Contact Info Content End -->
                             </div>
-                        </form>
-                        <div id="status"></div>
+                            <!-- Conatct Info Item End -->
 
+                            <!-- Conatct Info Item Start -->
+                            <div class="contact-info-item wow fadeInUp" data-wow-delay="0.2s">
+                                <!-- Icon Box Start -->
+                                <div class="icon-box">
+                                    <img src="images/icon-mail-white.svg" alt="">
+                                </div>
+                                <!-- Icon Box End -->
+
+                                <!-- Contact Info Content Start -->
+                                <div class="contact-info-content">
+                                    <p>email:</p>
+                                    <h3>{{ $settings->valueOf('email') }}</h3>
+                                </div>
+                                <!-- Contact Info Content End -->
+                            </div>
+                            <!-- Conatct Info Item End -->
+
+                            <!-- Conatct Info Item Start -->
+                            <div class="contact-info-item location-info-item wow fadeInUp" data-wow-delay="0.4s">
+                                <!-- Icon Box Start -->
+                                <div class="icon-box">
+                                    <img src="images/icon-location-white.svg" alt="">
+                                </div>
+                                <!-- Icon Box End -->
+
+                                <!-- Contact Info Content Start -->
+                                <div class="contact-info-content">
+                                    <p>location:</p>
+                                    <h3>{{ $settings->valueOf('address') }}</h3>
+                                </div>
+                                <!-- Contact Info Content End -->
+                            </div>
+                            <!-- Conatct Info Item End -->
+                        </div>
+                        <!-- Contact Info List End -->
                     </div>
+                    <!-- Contact Details Box End -->
+                </div>
+
+                <div class="col-lg-6">
+                    <!-- Contact Form Start -->
+                    <div class="contact-form">
+                        <!-- Section Title Start -->
+                        <div class="section-title">
+                            <h3 class="wow fadeInUp">contact us</h3>
+                            <h2 class="text-anime-style-3" data-cursor="-opaque">get in touch with us</h2>
+                            <p class="wow fadeInUp" data-wow-delay="0.2s">Have questions or need assistance? Reach out to us today! We're here to provide expert solutions and friendly support.</p>
+                        </div>
+                        <!-- Section Title End -->
+
+                        <!-- Contact Form Start -->
+                        <div class="member-contect-form contact-form">
+                            <!-- Contact Form Start -->
+                            <form id="contact_form" method="POST" class="wow fadeInUp" data-wow-delay="0.4s">
+                                <div class="row">
+                                    <div class="form-group col-md-12 mb-4">
+                                        <input type="text" name="name" class="form-control" id="fname" placeholder="First name" required>
+                                    </div>
+                            
+                                    <div class="form-group col-md-6 mb-4">
+                                        <input type="text" name="phone" class="form-control" id="phone" placeholder="Phone no" required>
+                                    </div>
+                            
+                                    <div class="form-group col-md-6 mb-4">
+                                        <input type="email" name="email" class="form-control" id="email" placeholder="E-mail address" required>
+                                    </div>
+                            
+                                    <div class="form-group col-md-12 mb-5">
+                                        <textarea name="message" class="form-control" id="message" rows="4" placeholder="Message"></textarea>
+                                    </div>
+                            
+                                    <div class="col-md-12">
+                                        <button type="submit" class="btn-default">Send Message</button>
+                                    </div>
+                                </div>
+                            </form>
+                            
+                            <!-- Contact Form End -->
+                        </div>
+                        <!-- Contact Form End -->
+                    </div>
+                    <!-- Contact Form End -->
                 </div>
             </div>
         </div>
     </div>
+    <!-- Page Contact Us End -->
+
+    <!-- Google Map Start -->
+    <div class="google-map bg-radius-section">
+        <div class="container-flude">
+            <div class="row">
+                <div class="col-lg-12">
+                    <!-- Google Map Start -->
+                    <div class="google-map-iframe">
+                        <iframe src="{{ $settings->valueOf('map_embed') }}" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                    <!-- Google Map End -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Google Map End -->  
 
 @endsection 
 
@@ -147,6 +223,4 @@
             });
         });
     </script>
-
-
 @endsection

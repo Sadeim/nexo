@@ -116,7 +116,7 @@ class HomeController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'phone' => ['required'],
             'email' => ['required', 'string', 'email', 'max:255'],
-            'subject' => ['required', 'string', 'max:255'],
+            // 'subject' => ['required', 'string', 'max:255'],
             'message' => ['required', 'string'],
             // 'number' => 'required|string|max:20',
         ]);
