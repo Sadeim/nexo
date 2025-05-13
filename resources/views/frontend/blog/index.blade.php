@@ -35,7 +35,7 @@
                             <!-- Post Featured Image Start-->
                             <div class="post-featured-image">
                                 <figure>
-                                    <a href="blog-single.html" class="image-anime" data-cursor-text="View">
+                                    <a href="{{ route('blog.show', $blog->slug) }}" class="image-anime" data-cursor-text="View">
                                         <img src="{{ asset($blog->image) }}" alt="">
                                     </a>
                                 </figure>
@@ -46,7 +46,7 @@
                             <div class="post-item-body">
                                 <!-- Post Item Content Start -->
                                 <div class="post-item-content">
-                                    <h3><a href="blog-single.html">{{ $blog->title }}</a></h3>
+                                    <h3><a href="{{ route('blog.show', $blog->slug) }}">{{ $blog->title }}</a></h3>
                                 </div>
                                 <!-- Post Item Content End -->
 

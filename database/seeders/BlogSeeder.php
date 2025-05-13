@@ -16,7 +16,7 @@ class BlogSeeder extends Seeder
         Blog::create([
             'title' => 'The Importance of Digital Marketing',
             'slug' => 'digital-marketing',
-            'image' => 'blog1.jpg',
+            'image' => 'frontend_assets/images/post-1.jpg',
             'category' => 'Marketing',
             'author' => 'Admin',
             'content' => 'An article discussing the importance of digital marketing in today’s business world.',
@@ -25,7 +25,7 @@ class BlogSeeder extends Seeder
         Blog::create([
             'title' => 'Top Growth Strategies',
             'slug' => 'growth-strategies',
-            'image' => 'blog2.jpg',
+            'image' => 'frontend_assets/images/post-1.jpg',
             'category' => 'Business',
             'author' => 'Ahmed',
             'content' => 'This post outlines the best strategies to grow your business efficiently.',

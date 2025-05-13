@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\About;
 use App\Models\Blog;
 use App\Models\Category;
 use Illuminate\Http\Request;
@@ -12,16 +13,17 @@ class BlogController extends Controller
     public function index()
     {
         $data['blogs'] = Blog::latest()->paginate(6);
-        $data['popular_posts'] = Blog::limit(3)->get();
-        $data['categories'] = Category::active()->get();
+        $data['about'] = About::first();
+        // $data['popular_posts'] = Blog::limit(3)->get();
+        // $data['categories'] = Category::active()->get();
         return view('frontend.blog.index', $data);
     }
 
     public function show()
     {
         $data['blog'] = Blog::where('slug', request()->slug)->firstOrFail();
-        $data['popular_posts'] = Blog::limit(3)->get();
-        $data['categories'] = Category::active()->get();
+        // $data['popular_posts'] = Blog::limit(3)->get();
+        // $data['categories'] = Category::active()->get();
         return view('frontend.blog.show', $data);
     }
 
