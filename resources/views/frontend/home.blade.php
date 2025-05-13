@@ -556,7 +556,7 @@
                 <div class="col-lg-6">
                     <!-- Section Title Button Start -->
                     <div class="section-btn wow fadeInUp" data-wow-delay="0.2s">
-                        <a href="projects.html" class="btn-default">explore more work</a>
+                        <a href="#" class="btn-default">explore more work</a>
                     </div>
                     <!-- Section Title Button End -->
                 </div>
@@ -728,7 +728,7 @@
 						<div class="team-item wow fadeInUp" data-wow-delay="{{ $index * 0.2 }}s">
 							<!-- team Image Start -->
 							<div class="team-image">
-								<a href="" data-cursor-text="View">
+								<a href="#" data-cursor-text="View">
 									<figure class="image-anime">
 										<img src="{{ asset($team->image) }}" alt="">
 									</figure>
