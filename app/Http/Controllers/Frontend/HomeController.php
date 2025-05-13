@@ -138,6 +138,7 @@ class HomeController extends Controller
         $data['about'] = About::first();
         $data['testimonials'] = Testimonial::get();
         $data['teams'] = Team::get();
+        $data['clients'] = Client::get();
         return view('frontend.about_us', $data);
     }
 }
