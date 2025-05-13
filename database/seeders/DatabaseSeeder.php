@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
         $this->call(CountrySeeder::class);
         // $this->call(BannerSeeder::class);
         $this->call(BlogSeeder::class);
-        // $this->call(FaqSeeder::class);
+        $this->call(FaqSeeder::class);
         $this->call(ServiceSeeder::class);
         // $this->call(ReasonSeeder::class);
         $this->call(ClientSeeder::class);
@@ -36,7 +36,7 @@ class DatabaseSeeder extends Seeder
         // $this->call(EventSeeder::class);
         // $this->call(InstagramSeeder::class);
         // $this->call(MenuItemSeeder::class);
-//        $this->call(SliderSeeder::class);
+       $this->call(SliderSeeder::class);
         $this->call(ReasonTabSeeder::class);
         $this->call(FeatureSeeder::class);
     }

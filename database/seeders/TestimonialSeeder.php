@@ -16,7 +16,7 @@ class TestimonialSeeder extends Seeder
         Testimonial::create([
             'name' => 'John Smith',
             'position' => 'Company Director',
-            'photo' => 'john.jpg',
+            'photo' => 'frontend_assets/images/author-1.jpg',
             'rating' => 5,
             'message' => 'Excellent service and great support. Highly recommended!',
         ]);
@@ -24,7 +24,7 @@ class TestimonialSeeder extends Seeder
         Testimonial::create([
             'name' => 'Emily Johnson',
             'position' => 'Digital Marketer',
-            'photo' => 'emily.jpg',
+            'photo' => 'frontend_assets/images/author-3.jpg',
             'rating' => 5,
             'message' => 'Very professional design and quick delivery. Thank you team!',
         ]);

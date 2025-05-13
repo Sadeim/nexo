@@ -16,15 +16,31 @@ class ServiceSeeder extends Seeder
         Service::create([
             'name' => 'Home Renovation',
             'description' => 'Complete renovation and remodeling for your home with modern solutions.',
-            'icon' => 'bi-house-gear', // يمكن تستخدم bootstrap icon
-            'image' => 'frontend_assets/assets/images/resource/service1.jpg',
+            'icon' => 'bi-house-gear',
+            'image' => 'frontend_assets/images/icon-service-1.svg',
             'is_featured' => true,
         ]);
 
         Service::create([
             'name' => 'Commercial Repairing',
             'description' => 'Repurpose go forward benefits without goal conveniently targeted to business',
-            'image' => 'frontend_assets/assets/images/resource/service1.jpg',
+            'image' => 'frontend_assets/images/icon-service-2.svg',
+            'icon' => 'service-icn1.png',
+            'is_featured' => true,
+        ]);
+
+        Service::create([
+            'name' => 'Commercial Repairing',
+            'description' => 'Repurpose go forward benefits without goal conveniently targeted to business',
+            'image' => 'frontend_assets/images/icon-service-3.svg',
+            'icon' => 'service-icn1.png',
+            'is_featured' => true,
+        ]);
+
+        Service::create([
+            'name' => 'Commercial Repairing',
+            'description' => 'Repurpose go forward benefits without goal conveniently targeted to business',
+            'image' => 'frontend_assets/images/icon-service-4.svg',
             'icon' => 'service-icn1.png',
             'is_featured' => true,
         ]);

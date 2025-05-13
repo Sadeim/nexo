@@ -32,7 +32,7 @@ class HomeController extends Controller
 {
     public function home()
     {
-        $data['sliders'] = Slider::get();
+        $data['slider'] = Slider::first();
         // $data['features'] = Feature::get();
         $data['about'] = About::first();
         $data['services'] = Service::get();
@@ -42,6 +42,7 @@ class HomeController extends Controller
         $data['testimonials'] = Testimonial::get();
         $data['faqs'] = Faq::get();
         $data['blogs'] = Blog::get();
+        $data['clients'] = Client::get();
         // $data['tabs'] = ReasonTab::orderBy('order')->get();
 
         return view('frontend.home', $data);

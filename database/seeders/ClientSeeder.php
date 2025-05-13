@@ -16,19 +16,19 @@ class ClientSeeder extends Seeder
     {
         Client::create([
             'name' => 'TechCorp Inc.',
-            'logo' => 'clients/techcorp.png',
+            'logo' => 'frontend_assets/images/client-logo-1.svg',
             'link' => 'https://www.techcorp.com',
         ]);
 
         Client::create([
             'name' => 'Global Solutions',
-            'logo' => 'clients/globalsolutions.png',
+            'logo' => 'frontend_assets/images/client-logo-2.svg',
             'link' => 'https://www.globalsolutions.com',
         ]);
 
         Client::create([
             'name' => 'Smart Innovations',
-            'logo' => 'clients/smartinnovations.png',
+            'logo' => 'frontend_assets/images/client-logo-1.svg',
             'link' => 'https://www.smartinnovations.io',
         ]);
     }

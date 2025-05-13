@@ -16,8 +16,8 @@ class AboutSeeder extends Seeder
         About::create([
             'title' => 'Repairing Your House for Looks as a New Home',
             'description' => 'Competently repurpose go forward benefits without goal-oriented ROI the conveniently target business opportunities whereas proactive',
-            'image1' => 'frontend_assets/assets/images/resource/about.png',
-            'image2' => 'about-icn.png',
+            'image1' => 'frontend_assets/images/about-img-1.jpg',
+            'image2' => 'frontend_assets/images/about-img-2.jpg',
             'tab1_title' => 'Smart Repair System',
             'tab1_content' => 'Conveniently target business opportunities market-driven solutions',
             'tab2_title' => 'Repairing Roofing and Door',

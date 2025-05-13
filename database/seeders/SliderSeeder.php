@@ -17,7 +17,7 @@ class SliderSeeder extends Seeder
             'title' => 'Heighst Quality',
             'subtitle' => '100% Satisfaction Guarantee',
             'description' => 'Truly exotic and appetizing cuisine for those special moments in life',
-            'image' => 'slider/img.png',
+            'image' => 'frontend_assets/images/hero-bg.jpg',
             'button_text' => 'Get An Estimate',
             'button_link' => '/about',
             'order' => 1,

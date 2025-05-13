@@ -4,7 +4,7 @@
 @endsection
 @section('content')
     <!-- Hero Section Start -->
-    <div class="hero parallaxie">
+    <div class="hero parallaxie" style="background-image: url({{ asset($slider->image) }}) !important;">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-12">
@@ -12,23 +12,22 @@
                     <div class="hero-content">
                         <!-- Section Title Start -->
                         <div class="section-title dark-section">
-                            <h3 class="wow fadeInUp">welcome to handyman</h3>
-                            <h1 class="text-anime-style-3" data-cursor="-opaque">Your home's trusted repair experts</h1>
+                            <h3 class="wow fadeInUp">{{ $slider->subtitle }}</h3>
+                            <h1 class="text-anime-style-3" data-cursor="-opaque">{{ $slider->title }}</h1>
                         </div>
                         <!-- Section Title End -->
 
                         <!-- Hero Button Start -->
                         <div class="hero-btn wow fadeInUp" data-wow-delay="0.2s">
-                            <a href="#" class="btn-default">get started</a>
-                            <a href="contact.html" class="btn-default btn-highlighted">contact now</a>
+                            <a href="{{ $slider->button_link }}" class="btn-default">{{ $slider->button_text }}</a>
+                            <a href="{{ route('contact') }}" class="btn-default btn-highlighted">contact now</a>
                         </div>
                         <!-- Hero Button End --> 
                         
                         <!-- Hero List Start -->
                         <div class="hero-list wow fadeInUp" data-wow-delay="0.4s">
                             <ul>
-                                <li>24/7 emergency services</li>
-                                <li>online booking and scheduling</li>
+                                <li>{{ $slider->description }}</li>
                             </ul>
                         </div>
                         <!-- Hero List End -->
@@ -41,51 +40,73 @@
     <!-- Hero Section End -->
 
     <!-- Client Slider Section Start -->
-	<div class="client-slider bg-radius-section">
-		<div class="container">
-			<div class="row align-items-center">
-				<div class="col-lg-12">
-					<!-- Client Slider Boxes Start -->
-					<div class="client-slider-boxes">
-						<!-- Client Slider Box Start -->
-						<div class="client-slider-box">
-							<div class="swiper">
-								<div class="swiper-wrapper">
-									@foreach($sliders as $slider)
-										<div class="swiper-slide">
-											<div class="client-logo">
-												<img src="{{ asset($slider->image) }}" alt="{{ $slider->title }}">
-											</div>
-										</div>
-									@endforeach
-								</div>
-							</div>
-						</div>
-						<!-- Client Slider Box End -->
-	
-						<!-- Scroll Down Circle Box Start -->
-						<div class="scroll-down-circle-box">
-							<div class="scroll-circle-text">
-								<figure>
-									<img src="{{ asset('frontend_assets/images/scroll-circle-text.svg') }}" alt="">
-								</figure>
-								<div class="scroll-down-arrow">
-									<a href="#about-us">
-										<i class="fa-solid fa-arrow-down"></i>
-									</a>
-								</div>
-							</div>
-						</div>
-						<!-- Scroll Down Circle Box End -->
-	
-						<!-- يمكنك نسخ نفس صندوق السلايدر مرة أخرى إن كان مطلوب التكرار مرتين -->
-					</div>  
-					<!-- Client Slider Boxes End -->                  
-				</div>
-			</div>
-		</div>
-	</div>
-	
+    <div class="client-slider bg-radius-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-12">
+                    <!-- Client Slider Boxes Start -->
+                    <div class="client-slider-boxes">
+                        <!-- Client Slider Box Start -->
+                        <div class="client-slider-box">
+                            <div class="swiper">
+                                <div class="swiper-wrapper">
+                                    @forelse ($clients as $client)
+                                        <div class="swiper-slide">
+                                            <div class="client-logo">
+                                                <img src="{{ asset($client->image) }}" alt="">
+                                            </div>
+                                        </div>
+                                    @empty
+                                        No Data
+                                    @endforelse
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Client Slider Box End -->
+
+                        <!-- Scroll Down Circle Box Start -->
+                        <div class="scroll-down-circle-box">
+                            <!-- Scroll Circle Text Start -->
+                            <div class="scroll-circle-text">
+                                <figure>
+                                    <img src="{{ url($settings->valueOf('company_logo')) }}" alt="">
+                                </figure>
+
+                                <!-- Scroll Down Arrow Start -->
+                                <div class="scroll-down-arrow">
+                                    <a href="#about-us">
+                                        <i class="fa-solid fa-arrow-down"></i>
+                                    </a>
+                                </div>
+                                <!-- Scroll Down Arrow End -->
+                            </div>
+                            <!-- Scroll Circle Text End -->
+                        </div>
+                        <!-- Scroll Down Circle Box End -->
+
+                        <!-- Client Slider Box Start -->
+                        <div class="client-slider-box">
+                            <div class="swiper">
+                                <div class="swiper-wrapper">
+                                    @forelse ($clients as $client)
+                                        <div class="swiper-slide">
+                                            <div class="client-logo">
+                                                <img src="{{ asset($client->image) }}" alt="">
+                                            </div>
+                                        </div>
+                                    @empty
+                                        No Data
+                                    @endforelse
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Client Slider Box End -->
+                    </div>  
+                    <!-- Client Slider Boxes End -->                  
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Client Slider Section End -->
 
     <!-- About Us Section Start -->
@@ -476,7 +497,7 @@
                             <div class="best-services-body">
                                 <!-- Contact Now Circle Start -->
                                 <div class="contact-now-circle">
-                                    <img src="{{ asset('frontend_assets/images/contact-now-circle.svg') }}" alt="">
+                                    <img src="{{ url($settings->valueOf('company_logo')) }}" alt="">
                                 </div>
                                 <!-- Contact Now Circle End -->
 
@@ -527,7 +548,7 @@
                     <!-- Section Title Start -->
                     <div class="section-title">
                         <h3 class="wow fadeInUp">Our work</h3>
-                        <h2 class="text-anime-style-3" data-cursor="-opaque">Showcasing our handyman projects</h2>
+                        <h2 class="text-anime-style-3" data-cursor="-opaque">Showcasing our projects</h2>
                     </div>
                     <!-- Section Title End -->
                 </div>

@@ -32,7 +32,7 @@
 	<div class="preloader">
 		<div class="loading-container">
 			<div class="loading"></div>
-			<div id="loading-icon"><img src="{{ asset('frontend_assets/images/loader.svg') }}" alt=""></div>
+			<div id="loading-icon"><img src="{{ url($settings->valueOf('company_logo')) }}" alt=""></div>
 		</div>
 	</div>
 	<!-- Preloader End -->
@@ -44,7 +44,7 @@
 				<div class="container">
 					<!-- Logo Start -->
 					<a class="navbar-brand" href="./">
-						<img src="{{ asset('frontend_assets/images/logo.svg') }}" alt="Logo">
+						<img src="{{ asset($settings->valueOf('company_logo')) }}" alt="Logo">
 					</a>
 					<!-- Logo End -->
 
@@ -52,38 +52,15 @@
 					<div class="collapse navbar-collapse main-menu">
                         <div class="nav-menu-wrapper">
                             <ul class="navbar-nav mr-auto" id="menu">
-                                <li class="nav-item submenu"><a class="nav-link" href="./">Home</a>
-                                    <ul>
-                                        <li class="nav-item"><a class="nav-link" href="index.html">Home - Image</a></li>
-                                        <li class="nav-item"><a class="nav-link" href="index-video.html">Home - Video</a></li>
-                                        <li class="nav-item"><a class="nav-link" href="index-slider.html">Home - Slider</a></li>
-                                    </ul>
-                                </li>                                
-                                <li class="nav-item"><a class="nav-link" href="about.html">About Us</a>
-                                <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
-                                <li class="nav-item"><a class="nav-link" href="blog.html">Blog</a></li>
-                                <li class="nav-item submenu"><a class="nav-link" href="#">Pages</a>
-                                    <ul>                                        
-                                        <li class="nav-item"><a class="nav-link" href="service-single.html">Service Details</a></li>
-                                        <li class="nav-item"><a class="nav-link" href="blog-single.html">Blog Details</a></li>
-                                        <li class="nav-item"><a class="nav-link" href="projects.html">Projects</a></li>
-                                        <li class="nav-item"><a class="nav-link" href="project-single.html">Project Details</a></li>
-                                        <li class="nav-item"><a class="nav-link" href="team.html">Our Team</a></li>
-                                        <li class="nav-item"><a class="nav-link" href="team-single.html">Team Details</a></li>
-                                        <li class="nav-item"><a class="nav-link" href="pricing.html">Pricing Plan</a></li>
-                                        <li class="nav-item"><a class="nav-link" href="testimonial.html">Testimonials</a></li>
-                                        <li class="nav-item"><a class="nav-link" href="image-gallery.html">Image Gallery</a></li>
-                                        <li class="nav-item"><a class="nav-link" href="video-gallery.html">Video Gallery</a></li>
-                                        <li class="nav-item"><a class="nav-link" href="faqs.html">FAQs</a></li>
-                                        <li class="nav-item"><a class="nav-link" href="404.html">404</a></li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item"><a class="nav-link" href="contact.html">Contact Us</a></li>                         
+                                <li class="nav-item"><a class="nav-link" href="{{ route('home') }}">Home</a>
+                                <li class="nav-item"><a class="nav-link" href="{{ route('about_us') }}">About Us</a>
+                                <li class="nav-item"><a class="nav-link" href="{{ route('blog.index') }}">Blog</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ route('contact') }}">Contact Us</a></li>                         
                             </ul>
                         </div>
                         <!-- Header Btn Start -->
                         <div class="header-btn d-inline-flex">
-                            <a href="contact.html" class="btn-default">Get a Quote</a>
+                            <a href="#" class="btn-default">Get a Quote</a>
                         </div>
                         <!-- Header Btn End -->
 					</div>
@@ -121,7 +98,7 @@
 
                                 <div class="footer-contact-content">
                                     <h3>contact</h3>
-                                    <p>+1.809.120.6705</p>
+                                    <p>{{ $settings->valueOf('phone') }}</p>
                                 </div>
                             </div>
                             <!-- Footer Contact Item End -->
@@ -134,7 +111,7 @@
 
                                 <div class="footer-contact-content">
                                     <h3>email</h3>
-                                    <p>info@domain.com</p>
+                                    <p>{{ $settings->valueOf('email') }}</p>
                                 </div>
                             </div>
                             <!-- Footer Contact Item End -->
@@ -148,7 +125,7 @@
                     <!-- About Footer Start -->
                     <div class="about-footer footer-links">
                         <h3>About Company</h3>
-                        <p>Your go-to handyman for reliable, efficient, and expert home and business repair solutions.</p>
+                        <p>{{ $settings->valueOf('site_description') }}</p>
                     </div>
                     <!-- About Footer End -->
                 </div>
@@ -158,10 +135,10 @@
                     <div class="footer-links">
                         <h3>quick link</h3>
                         <ul>
-                            <li><a href="index.html">home</a></li>
-                            <li><a href="about.html">about Us</a></li>
-                            <li><a href="services.html">services</a></li>
-                            <li><a href="blog.html">blog</a></li>
+                            <li><a href="{{ route('home') }}">home</a></li>
+                            <li><a href="{{ route('about_us') }}">about Us</a></li>
+                            <li><a href="#">services</a></li>
+                            <li><a href="{{ route('blog.index') }}">blog</a></li>
                         </ul>
                     </div>
                     <!-- Footer Links End -->
@@ -175,7 +152,7 @@
                             <li><a href="#">help</a></li>
                             <li><a href="#">term's & condition</a></li>
                             <li><a href="#">privacy policy</a></li>
-                            <li><a href="contact.html">contact</a></li>
+                            <li><a href="{{ route('contact') }}">contact</a></li>
                         </ul>
                     </div>
                     <!-- Footer Links End -->
@@ -186,10 +163,10 @@
                     <div class="footer-links">
                         <h3>follow us</h3>
                         <ul>
-                            <li><a href="#">facebook</a></li>
-                            <li><a href="#">instagram</a></li>
-                            <li><a href="#">twitter</a></li>
-                            <li><a href="#">linkedin</a></li>
+                            <li><a href="{{ $settings->valueOf('facebook') }}">facebook</a></li>
+                            <li><a href="{{ $settings->valueOf('instagram') }}">instagram</a></li>
+                            <li><a href="{{ $settings->valueOf('twitter') }}">twitter</a></li>
+                            <li><a href="{{ $settings->valueOf('linkedin') }}">linkedin</a></li>
                         </ul>
                     </div>
                     <!-- Footer Links End -->

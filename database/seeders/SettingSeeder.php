@@ -14,7 +14,7 @@ class SettingSeeder extends Seeder
     public function run()
     {
         $settings = [
-            'company_logo' => asset('admin_assets/media/svg/brand-logos/volicity-9.svg'),
+            'company_logo' => asset('frontend_assets/images/logo.svg'),
             'email'        => 'example@example.com',
             'phone'        => '+1 (009) 544-7818',
             'whatsapp'     => '+1 (009) 544-7818',
