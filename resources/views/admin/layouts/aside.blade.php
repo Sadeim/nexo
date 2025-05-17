@@ -96,7 +96,7 @@
                         </span>
                     </div>
                 @endif
-                {{-- @if (auth()->user()->can('view_services'))
+                @if (auth()->user()->can('view_services'))
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'services' ? 'here show' : '' }}">
                         <span class="menu-link {{ $is_active == 'services' ? 'active' : '' }}">
                             <span class="menu-icon">
@@ -112,7 +112,7 @@
                             </span>
                         </span>
                     </div>
-                @endif --}}
+                @endif
                 @if (auth()->user()->can('view_testimonials'))
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'testimonials' ? 'here show' : '' }}">
                         <span class="menu-link {{ $is_active == 'testimonials' ? 'active' : '' }}">
