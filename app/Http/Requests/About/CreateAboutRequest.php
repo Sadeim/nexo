@@ -28,19 +28,11 @@ class CreateAboutRequest extends BaseRequest
     public function rules()
     {
         return [
-            'company_name'       => 'required|string|max:255',
-            'sub_title'          => 'nullable|string|max:255',
+
             'title'              => 'required|string|max:255',
             'description'        => 'nullable|string',
             'image1'             => 'nullable|image|mimes:jpeg,png,jpg,webp',
             'image2'             => 'nullable|image|mimes:jpeg,png,jpg,webp',
-            'image3'             => 'nullable|image|mimes:jpeg,png,jpg,webp',
-            'circle_text_image'  => 'nullable|image|mimes:jpeg,png,jpg,webp',
-            'logo_icon'          => 'nullable|image|mimes:jpeg,png,jpg,webp',
-            'author_name'        => 'nullable|string|max:255',
-            'author_position'    => 'nullable|string|max:255',
-            'author_image'       => 'nullable|image|mimes:jpeg,png,jpg,webp',
-            'signature_image'    => 'nullable|image|mimes:jpeg,png,jpg,webp',
             'check1'             => 'nullable|string|max:255',
             'check2'             => 'nullable|string|max:255',
             'check3'             => 'nullable|string|max:255',
