@@ -23,251 +23,409 @@
     </div>
     <!-- Page Header End -->
 
-    <!-- About Us Section Start -->
-    <div class="about-us bg-radius-section">
+    <!-- Our Approch Section Start -->
+    <div class="our-approch bg-radius-section">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-6">
-                    <!-- About Us Content Start -->
-                    <div class="about-us-content">
+                    <!-- Our Approch Image Start -->
+                    <div class="our-approch-image">
+                        <div class="our-approch-img-1">
+                            <figure class="image-anime">
+                                <img src="images/our-approch-img-1.jpg" alt="">
+                            </figure>
+                        </div>
+
+                        <div class="our-approch-img-2">
+                            <figure class="image-anime">
+                                <img src="images/our-approch-img-2.jpg" alt="">
+                            </figure>
+                        </div>
+                    </div>
+                    <!-- Our Approch Image End -->
+                </div>
+                
+                <div class="col-lg-6">
+                    <!-- Our Approch Content Start -->
+                    <div class="our-approch-content">
                         <!-- Section Title Start -->
                         <div class="section-title">
-                            <h3 class="wow fadeInUp">about us</h3>
-                            <h2 class="text-anime-style-3" data-cursor="-opaque">{{ $about->title }}</h2>
-                            <p class="wow fadeInUp" data-wow-delay="0.2s">{{ $about->description }}</p>
+                            <h3 class="wow fadeInUp">our approach</h3>
+                            <h2 class="text-anime-style-3" data-cursor="-opaque">Handyman services with personal touch</h2>
                         </div>
                         <!-- Section Title End -->
 
-                        <!-- About Us Info List Start -->
-                        <div class="about-us-info-list">
-                            <div class="about-us-info-item wow fadeInUp" data-wow-delay="0.4s">
-                                <h3>{{ $about->tab1_title }}</h3>
-                                <p>{{ $about->tab1_content }}</p>
+                        <!-- Our Approch Tab Start -->
+                        <div class="our-approch-tab">
+                            <!-- Sidebar Our Approch Nav start -->
+                            <div class="our-approch-tab-nav wow fadeInUp" data-wow-delay="0.2s">
+                                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link btn-default btn-highlighted active" id="mission-tab" data-bs-toggle="tab" data-bs-target="#mission" type="button" role="tab" aria-selected="true">our mission</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link btn-default btn-highlighted" id="vision-tab" data-bs-toggle="tab" data-bs-target="#vision" type="button" role="tab" aria-selected="false">our vision</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link btn-default btn-highlighted" id="value-tab" data-bs-toggle="tab" data-bs-target="#value" type="button" role="tab" aria-selected="false">our value</button>
+                                    </li>
+                                </ul>
                             </div>
+                            <!-- Sidebar Our Approch Nav End -->
 
-                            <div class="about-us-info-item wow fadeInUp" data-wow-delay="0.6s">
-                                <h3>{{ $about->tab2_title }}</h3>
-                                <p>{{ $about->tab2_content }}</p>
+                            <!-- Approch Box Start -->
+                            <div class="approch-box tab-content" id="myTabContent">
+                                <!-- Approch Item Start -->
+                                <div class="approch-item tab-pane fade show active" id="mission" role="tabpanel">
+                                    <div class="row align-items-center">
+                                        <div class="col-lg-12">
+                                            <!-- Approch Tab Content Start -->
+                                            <div class="approch-tab-content">
+                                                <div class="approch-tab-content-header">
+                                                    <p>Our mission is to provide reliable, high-quality handyman services that enhance homes and simplify lives, delivering craftsmanship with integrity and care.</p>
+                                                </div>
+
+                                                <div class="approch-tab-content-list">
+                                                    <ul>
+                                                        <li>dependable repairs, every time</li>
+                                                        <li>improving homes, enhancing lives</li>
+                                                        <li>customer-centered approach</li>
+                                                    </ul>
+                                                </div>                                    
+                                            </div>
+                                            <!-- Approch Tab Content End -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Approch Item End -->
+
+                                <!-- Approch Item Start -->
+                                <div class="approch-item tab-pane fade" id="vision" role="tabpanel">
+                                    <div class="row align-items-center">
+                                        <div class="col-lg-12">
+                                            <!-- Approch Tab Content Start -->
+                                            <div class="approch-tab-content">
+                                                <div class="approch-tab-content-header">
+                                                    <p>Our vision is to provide reliable, high-quality handyman services that enhance homes and simplify lives, delivering craftsmanship with integrity and care.</p>
+                                                </div>
+
+                                                <div class="approch-tab-content-list">
+                                                    <ul>
+                                                        <li>dependable repairs, every time</li>
+                                                        <li>improving homes, enhancing lives</li>
+                                                        <li>customer-centered approach</li>
+                                                    </ul>
+                                                </div>                                    
+                                            </div>
+                                            <!-- Approch Tab Content End -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Approch Item End -->
+
+                                <!-- Approch Item Start -->
+                                <div class="approch-item tab-pane fade" id="value" role="tabpanel">
+                                    <div class="row align-items-center">
+                                        <div class="col-lg-12">
+                                            <!-- Approch Tab Content Start -->
+                                            <div class="approch-tab-content">
+                                                <div class="approch-tab-content-header">
+                                                    <p>Our value is to provide reliable, high-quality handyman services that enhance homes and simplify lives, delivering craftsmanship with integrity and care.</p>
+                                                </div>
+
+                                                <div class="approch-tab-content-list">
+                                                    <ul>
+                                                        <li>dependable repairs, every time</li>
+                                                        <li>improving homes, enhancing lives</li>
+                                                        <li>customer-centered approach</li>
+                                                    </ul>
+                                                </div>                                    
+                                            </div>
+                                            <!-- Approch Tab Content End -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Approch Item End -->
                             </div>
+                            <!-- Approch Box End -->
                         </div>
-                        <!-- About Us Info List End -->
-
-                        <!-- About Us Button Start -->
-                        <div class="about-us-btn wow fadeInUp" data-wow-delay="0.8s">
-                            <a href="{{ $about->button_link }}" class="btn-default">{{ $about->button_text }}</a>
-                        </div>
-                        <!-- About Us Button End -->
+                        <!-- Our Approch Tab End -->
                     </div>
-                    <!-- About Us Content End -->
-                </div>
-
-                <div class="col-lg-6">
-                    <!-- About Us Images Start -->
-                    <div class="about-us-images">
-                        <!-- About Image 1 Start -->
-                        <div class="about-img-1">
-                            <figure class="image-anime">
-                                <img src="{{ asset($about->image1) }}" alt="About Image 1">
-                            </figure>
-                        </div>
-                        <!-- About Image 1 End -->
-
-                        <!-- About Image 2 Start -->
-                        <div class="about-img-2">
-                            <figure class="image-anime">
-                                <img src="{{ asset($about->image2) }}" alt="About Image 2">
-                            </figure>
-                        </div>
-                        <!-- About Image 2 End -->
-
-                        <!-- Company Timing Start -->
-                        <div class="company-timing">
-                            <h3>Opening hours</h3>
-                            <ul>
-                                <li>Mon to Fri <span>09:30 - 07:30</span></li>
-                                <li>Saturday <span>09:30 - 07:30</span></li>
-                                <li>Sunday <span>closed</span></li>
-                            </ul>
-                            <figure>
-                                <img src="{{ asset('frontend_assets/images/icon-clock.svg') }}" alt="">
-                            </figure>
-                        </div>
-                        <!-- Company Timing End -->
-                    </div>
-                    <!-- About Us Images End -->
+                    <!-- Our Approch Content End -->
                 </div>
             </div>
         </div>
     </div>
-    <!-- About Us Section End -->
+    <!-- Our Approch Section End -->
 
-    <!-- Our Team Section Start -->
-    <div class="our-team bg-radius-section">
+    <!-- Our Skill Section Start -->
+    <div class="our-skill bg-radius-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="our-skill-content">
+                        <!-- Section Title Start -->
+                        <div class="section-title">
+                            <h3 class="wow fadeInUp">our skill</h3>
+                            <h2 class="text-anime-style-3" data-cursor="-opaque">Handyman expertise for every task</h2>
+                            <p class="wow fadeInUp" data-wow-delay="0.2s">Our skilled professionals bring versatile expertise to handle a wide range of repairs, installations, and improvements, ensuring every task is completed with precision and care.</p>
+                        </div>
+                        <!-- Section Title End -->
+
+                        <!-- About SkillBar Start -->
+                        <div class="our-skillbars">
+                            <!-- Skills Progress Bar Start -->
+                            <div class="skills-progress-bar">
+                                <!-- Skill Item Start -->
+                                <div class="skillbar" data-percent="66%">
+                                    <div class="skill-data">
+                                        <div class="skill-title">carpentry</div>
+                                        <div class="skill-no">66%</div>
+                                    </div>
+                                    <div class="skill-progress">
+                                        <div class="count-bar"></div>
+                                    </div>
+                                </div>
+                                <!-- Skill Item End -->
+                            </div>
+                            <!-- Skills Progress Bar End -->
+                        
+                            <!-- Skills Progress Bar Start -->
+                            <div class="skills-progress-bar">
+                                <!-- Skill Item Start -->
+                                <div class="skillbar" data-percent="97%">
+                                    <div class="skill-data">
+                                        <div class="skill-title">plumbing repairs</div>
+                                        <div class="skill-no">97%</div>
+                                    </div>
+                                    <div class="skill-progress">
+                                        <div class="count-bar"></div>
+                                    </div>
+                                </div>
+                                <!-- Skill Item End -->
+                            </div>
+                            <!-- Skills Progress Bar End -->
+                            
+                            <!-- Skills Progress Bar Start -->
+                            <div class="skills-progress-bar">
+                                <!-- Skill Item Start -->
+                                <div class="skillbar" data-percent="85%">
+                                    <div class="skill-data">
+                                        <div class="skill-title">electrical maintenance</div>
+                                        <div class="skill-no">85%</div>
+                                    </div>
+                                    <div class="skill-progress">
+                                        <div class="count-bar"></div>
+                                    </div>
+                                </div>
+                                <!-- Skill Item End -->
+                            </div>
+                            <!-- Skills Progress Bar End -->
+                        </div>
+                        <!-- About SkillBar End -->
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <!-- Our Skill Image Start -->
+                    <div class="our-skill-image">
+                        <div class="our-skill-img-1">
+                            <figure class="image-anime">
+                                <img src="images/our-skill-img-1.jpg" alt="">
+                            </figure>
+                        </div>
+                
+                        <div class="our-skill-img-2">
+                            <figure class="image-anime">
+                                <img src="images/our-skill-img-2.jpg" alt="">
+                            </figure>
+                        </div>
+                
+                        <div class="our-skill-img-3">
+                            <figure class="image-anime">
+                                <img src="images/our-skill-img-3.jpg" alt="">
+                            </figure>
+                        </div>
+                    </div>
+                    <!-- Our Skill Image End -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Our Skill Section End -->
+
+    <!-- Quick Fact Section Start -->
+    <div class="quick-facts bg-radius-section">
         <div class="container">
             <div class="row section-row align-items-center">
                 <div class="col-lg-6">
                     <!-- Section Title Start -->
-                    <div class="section-title">
-                        <h3 class="wow fadeInUp">Team member</h3>
-                        <h2 class="text-anime-style-3" data-cursor="-opaque">Meet our skilled handyman team</h2>
+                    <div class="section-title dark-section">
+                        <h3 class="wow fadeInUp">Some facts</h3>
+                        <h2 class="text-anime-style-3" data-cursor="-opaque">Quick facts about our services</h2>
                     </div>
                     <!-- Section Title End -->
                 </div>
-
+                
                 <div class="col-lg-6">
-                    <!-- Section Title Button Start -->
-                    <div class="section-btn wow fadeInUp" data-wow-delay="0.2s">
-                        <a href="#" class="btn-default">view all member</a>
+                    <!-- Section Title Content Start -->
+                    <div class="section-title-content dark-section wow fadeInUp" data-wow-delay="0.2s">
+                        <p>From repairs to home improvements, our comprehensive handyman services cover everything you</p>
                     </div>
-                    <!-- Section Title Button End -->
+                    <!-- Section Title Content End -->
                 </div>
             </div>
 
-            <div class="row">
-                @forelse ($teams as $index => $team)
-                    <div class="col-lg-4 col-md-6">
-                        <!-- Team Member Item Start -->
-                        <div class="team-item wow fadeInUp" data-wow-delay="{{ $index * 0.2 }}s">
-                            <!-- team Image Start -->
-                            <div class="team-image">
-                                <a href="" data-cursor-text="View">
-                                    <figure class="image-anime">
-                                        <img src="{{ asset($team->image) }}" alt="">
-                                    </figure>
-                                </a>
-                            </div>
-                            <!-- team Image End -->
-
-                            <!-- Team Body Start -->
-                            <div class="team-body">
-                                <!-- Team Content Start -->
-                                <div class="team-content">
-                                    <h3><a href="#">{{ $team->name }}</a></h3>
-                                    <p>{{ $team->position }}</p>
-                                </div>
-                                <!-- Team Content End -->
-
-                                <!-- Team Social List Start -->
-                                <div class="team-social-list">
-                                    <ul>
-                                        @foreach (json_decode($team->social_links, true) as $platform => $link)
-                                            <li><a href="{{ $link }}"><i
-                                                        class="fa-brands fa-{{ $platform }}-p"></i></a></li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                                <!-- Team Social List End -->
-                            </div>
-                            <!-- Team Body End -->
+            <div class="row align-items-center">
+                <div class="col-lg-3 col-md-6 col-6 order-lg-1 order-md-1 order-1">
+                    <!-- Fact Counter Box Start -->
+                    <div class="fact-counter-box">
+                        <!-- Fact Counter Item Start -->
+                        <div class="fact-counter-item">
+                            <h3>experience</h3>
+                            <h2><span class="counter">25</span>+</h2>
+                            <p>years of experience</p>
                         </div>
-                        <!-- Team Member Item End -->
+                        <!-- Fact Counter Item End -->
+
+                        <!-- Fact Counter Item Start -->
+                        <div class="fact-counter-item">
+                            <h3>people</h3>
+                            <h2><span class="counter">320</span>k</h2>
+                            <p>working staff</p>
+                        </div>
+                        <!-- Fact Counter Item End -->
                     </div>
-                @empty
-                    No team member found
-                @endforelse
+                    <!-- Fact Counter Box End -->
+                </div>
+                
+                <div class="col-lg-6 order-lg-2 order-md-3 order-3">
+                    <!-- Quick Fact image Start -->
+                    <div class="quick-fact-image">
+                        <img src="images/quick-fact-img.png" alt="">
+                    </div>
+                    <!-- Quick Fact image End -->
+                </div>
+                
+                <div class="col-lg-3 col-md-6 col-6 order-lg-3 order-md-2 order-2">
+                    <!-- Fact Counter Box Start -->
+                    <div class="fact-counter-box">
+                        <!-- Fact Counter Item Start -->
+                        <div class="fact-counter-item">
+                            <h3>work</h3>
+                            <h2><span class="counter">8</span>k+</h2>
+                            <p>project complete</p>
+                        </div>
+                        <!-- Fact Counter Item End -->
+
+                        <!-- Fact Counter Item Start -->
+                        <div class="fact-counter-item">
+                            <h3>client</h3>
+                            <h2><span class="counter">100</span>%</h2>
+                            <p>satisfaction guarante</p>
+                        </div>
+                        <!-- Fact Counter Item End -->
+                    </div>
+                    <!-- Fact Counter Box End -->
+                </div>
             </div>
         </div>
     </div>
-    <!-- Our Team Section End -->
-
-    <!-- Our Testimonial Section Start -->
-    <div class="our-testimonial">
-        <div class="our-testimonial-box bg-radius-section">
+    <!-- Quick Fact Section End -->
+    
+    <!-- Why Choose Us Section Start -->
+    <div class="why-choose-us">
+        <div class="why-choose-box bg-radius-section">
             <div class="container">
-                <div class="row align-items-center">
+                <div class="row section-row align-items-end">
                     <div class="col-lg-6">
-                        <!-- Our Testimonial Image Start -->
-                        <div class="our-testimonial-image">
+                        <!-- Section Title Start -->
+                        <div class="section-title">
+                            <h3 class="wow fadeInUp">why choose us</h3>
+                            <h2 class="text-anime-style-3" data-cursor="-opaque">Showcasing our handyman projects</h2>
+                        </div>
+                        <!-- Section Title End -->
+                    </div>
+
+                    <div class="col-lg-6">
+                        <!-- Why Choose Image Start -->
+                        <div class="why-choose-image">
                             <figure class="image-anime">
-                                <img src="{{ asset('frontend_assets/images/testimonial-image.jpg') }}" alt="">
+                                <img src="images/why-choose-img.jpg" alt="">
                             </figure>
                         </div>
-                        <!-- Our Testimonial Image End -->
+                        <!-- Why Choose Image End -->
                     </div>
+                </div>
 
-                    <div class="col-lg-6">
-                        <!-- Testimonial Slider Start -->
-                        <div class="testimonial-slider">
-                            <div class="swiper">
-                                <div class="swiper-wrapper" data-cursor-text="Drag">
-                                    @foreach ($testimonials as $testimonial)
-                                        <div class="swiper-slide">
-                                            <!-- Testimonial Item Start -->
-                                            <div class="testimonial-item">
-                                                <!-- Testimonial Author Information Start -->
-                                                <div class="testimonial-author-info">
-                                                    <!-- Testimonial Author Start -->
-                                                    <div class="testimonial-author">
-                                                        <div class="author-image">
-                                                            <figure class="image-anime">
-                                                                <img src="{{ asset($testimonial->photo) }}" alt="">
-                                                            </figure>
-                                                        </div>
-
-                                                        <div class="author-content">
-                                                            <h3>{{ $testimonial->name }}</h3>
-                                                            <p>{{ $testimonial->position }}</p>
-                                                        </div>
-                                                    </div>
-                                                    <!-- Testimonial Author End -->
-
-                                                    <!-- Testimonial Quotes Start -->
-                                                    <div class="testimonial-quotes">
-                                                        <img src="{{ asset('frontend_assets/images/testimonial-quotes.svg') }}"
-                                                            alt="">
-                                                    </div>
-                                                    <!-- Testimonial Quotes End -->
-                                                </div>
-                                                <!-- Testimonial Author Information End -->
-
-                                                <!-- Testimonial Rating Start -->
-                                                <div class="testimonial-rating">
-                                                    @for ($i = 1; $i <= 5; $i++)
-                                                        <i
-                                                            class="fa-solid fa-star{{ $i <= $testimonial->rating ? '' : '-o' }}"></i>
-                                                    @endfor
-                                                </div>
-                                                <!-- Testimonial Rating End -->
-
-                                                <!-- Testimonial Content Start -->
-                                                <div class="testimonial-content">
-                                                    <p>“{{ $testimonial->message }}”</p>
-                                                </div>
-                                                <!-- Testimonial Content End -->
-                                            </div>
-                                            <!-- Testimonial Item End -->
-                                        </div>
-                                    @endforeach
-                                </div>
-                                <div class="testimonial-pagination"></div>
-                            </div>
-                        </div>
-                        <!-- Testimonial Slider End -->
-                    </div>
-
+                <div class="row">    
                     <div class="col-lg-12">
-                        <!-- Agency Support Slider Start -->
-                        <div class="testimonial-company-slider">
-                            <div class="swiper">
-                                <div class="swiper-wrapper">
-                                    @forelse ($clients as $client)
-                                        <div class="swiper-slide">
-                                            <div class="company-logo">
-                                                <img src="{{ asset($client->logo) }}" alt="">
-                                            </div>
-                                        </div>
-                                    @empty
-                                        No Data
-                                    @endforelse
+                        <!-- Why Choose Project Box Start -->
+                        <div class="why-choose-project-box">
+                            <!-- Why Choose Project Item Start -->
+                            <div class="why-choose-project-item wow fadeInUp">
+                                <div class="icon-box">
+                                    <img src="images/icon-service-1.svg" alt="">
+                                </div>
+    
+                                <div class="why-choose-project-content">
+                                    <h3>locally owned</h3>
+                                    <p>As a local business, we care about our community and take pride in serving our.</p>
                                 </div>
                             </div>
+                            <!-- Why Choose Project Item End -->
+    
+                            <!-- Why Choose Project Item Start -->
+                            <div class="why-choose-project-item wow fadeInUp" data-wow-delay="0.2s">
+                                <div class="icon-box">
+                                    <img src="images/icon-service-2.svg" alt="">
+                                </div>
+    
+                                <div class="why-choose-project-content">
+                                    <h3>on-time service</h3>
+                                    <p>As a local business, we care about our community and take pride in serving our.</p>
+                                </div>
+                            </div>
+                            <!-- Why Choose Project Item End -->
+    
+                            <!-- Why Choose Project Item Start -->
+                            <div class="why-choose-project-item wow fadeInUp" data-wow-delay="0.4s">
+                                <div class="icon-box">
+                                    <img src="images/icon-service-3.svg" alt="">
+                                </div>
+    
+                                <div class="why-choose-project-content">
+                                    <h3>transparent pricing</h3>
+                                    <p>As a local business, we care about our community and take pride in serving our.</p>
+                                </div>
+                            </div>
+                            <!-- Why Choose Project Item End -->
+    
+                            <!-- Why Choose Project Item Start -->
+                            <div class="why-choose-project-item wow fadeInUp" data-wow-delay="0.6s">
+                                <div class="icon-box">
+                                    <img src="images/icon-service-4.svg" alt="">
+                                </div>
+    
+                                <div class="why-choose-project-content">
+                                    <h3>quality assurance</h3>
+                                    <p>As a local business, we care about our community and take pride in serving our.</p>
+                                </div>
+                            </div>
+                            <!-- Why Choose Project Item End -->
                         </div>
-                        <!-- Agency Support Slider End -->
+                        <!-- Why Choose Project Box End -->
+    
+                        <!-- Why Choose Footer Start -->
+                        <div class="why-choose-footer wow fadeInUp" data-wow-delay="0.8s">
+                            <p>Our construction company is the perfect choice for your dream. <a href="contact.html">Contact us now today!</a></p>
+                        </div>
+                        <!-- Why Choose Footer End -->
                     </div>
                 </div>
             </div>
-        </div>
+        </div>        
     </div>
-    <!-- Our Testimonial Section End -->
+    <!-- Why Choose Us Section End -->
 
 @endsection

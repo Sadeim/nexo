@@ -214,6 +214,43 @@
 
                 </div>
 
+                <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ $is_active_parent == 'about' ? 'here show' : '' }}">
+                    <span class="menu-link menu-accordion">
+                        <span class="menu-icon">
+                            <span class="svg-icon svg-icon-2">
+                                <i class="fa-solid fa-home"></i>
+                            </span>
+                        </span>
+                        <span class="menu-title">About Page</span>
+                        <span class="menu-arrow"></span>
+                    </span>
+                    @if (auth()->user()->can('view_skills'))
+                        <div class="menu-sub menu-sub-accordion">
+                            <div class="menu-item">
+                                <a class="menu-link {{ $is_active == 'skills' ? 'active' : '' }}"
+                                    href="{{ route('admin.skills.index') }}">
+                                    <span class="menu-bullet">
+                                        <i class="fa-solid fa-skills"></i>
+                                    </span>
+                                    <span class="menu-title">{{ __('admin.global.skills') }}</span>
+                                </a>
+                            </div>
+                        </div>
+                    @endif
+                    @if (auth()->user()->can('view_reasons'))
+                        <div class="menu-sub menu-sub-accordion">
+                            <div class="menu-item">
+                                <a class="menu-link {{ $is_active == 'reasons' ? 'active' : '' }}"
+                                    href="{{ route('admin.reasons.index') }}">
+                                    <span class="menu-bullet">
+                                        <i class="fa-solid fa-reasons"></i>
+                                    </span>
+                                    <span class="menu-title">{{ __('admin.global.reasons') }}</span>
+                                </a>
+                            </div>
+                        </div>
+                    @endif
+                </div>
                 {{-- @if (auth()->user()->can('view_achievements'))
                     <div
                         class="menu-item menu-accordion {{ $is_active_parent == 'achievements' ? 'here show' : '' }}">
