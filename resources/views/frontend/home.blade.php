@@ -73,11 +73,11 @@
                                 </figure>
 
                                 <!-- Scroll Down Arrow Start -->
-                                <div class="scroll-down-arrow">
+                                {{-- <div class="scroll-down-arrow">
                                     <a href="#about-us">
                                         <i class="fa-solid fa-arrow-down"></i>
                                     </a>
-                                </div>
+                                </div> --}}
                                 <!-- Scroll Down Arrow End -->
                             </div>
                             <!-- Scroll Circle Text End -->
