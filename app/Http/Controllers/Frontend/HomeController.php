@@ -18,6 +18,7 @@ use App\Models\Instagram;
 use App\Models\Newsletter;
 use App\Models\Reason;
 use App\Models\ReasonTab;
+use App\Models\Section;
 use App\Models\Service;
 use App\Models\Setting;
 use App\Models\Slider;
@@ -34,18 +35,26 @@ class HomeController extends Controller
     public function home()
     {
         $data['slider'] = Slider::first();
-        // $data['features'] = Feature::get();
         $data['about'] = About::first();
         $data['services'] = Service::get();
-        // $data['reasons'] = Reason::get();
         $data['works'] = Work::get();
         $data['teams'] = Team::get();
         $data['testimonials'] = Testimonial::get();
         $data['faqs'] = Faq::get();
         $data['blogs'] = Blog::get();
         $data['clients'] = Client::get();
-        // $data['tabs'] = ReasonTab::orderBy('order')->get();
-
+        $data['sections'] = Section::whereIn('key', [
+            'services_section',
+            'testimonials_section',
+            'works_section',
+            'about_section',
+            'teams_section',
+            'faqs_section',
+            'sliders_section',
+            'clients_section',
+            'blog_section',
+        ])->get()->keyBy('key');
+        
         return view('frontend.home', $data);
     }
 

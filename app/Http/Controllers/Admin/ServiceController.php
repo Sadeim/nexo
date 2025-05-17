@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Service\CreateServiceRequest;
+use App\Models\Section;
 use Illuminate\Http\Request;
 use App\Models\Service;
 use App\Traits\SaveImageTrait;
@@ -22,7 +23,8 @@ class ServiceController extends Controller
 
     public function index()
     {
-        return view('admin.services.index');
+        $data['section'] = Section::where('key', 'services_section')->first();
+        return view('admin.services.index', $data);
     }
 
     public function datatable(Request $request)

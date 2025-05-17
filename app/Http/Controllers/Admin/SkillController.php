@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Skill\CreateSkillRequest;
+use App\Models\Section;
 use App\Models\Skill;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -20,7 +21,8 @@ class SkillController extends Controller
     
     public function index()
     {
-        return view('admin.skills.index');
+        $data['section'] = Section::where('key', 'skills_section')->first();
+        return view('admin.skills.index', $data);
     }
     
     public function datatable(Request $request) 

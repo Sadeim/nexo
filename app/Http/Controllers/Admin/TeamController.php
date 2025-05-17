@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Team\CreateTeamRequest;
+use App\Models\Section;
 use App\Models\Team;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -24,7 +25,8 @@ class TeamController extends Controller
 
     public function index()
     {
-        return view('admin.teams.index');
+        $data['section'] = Section::where('key', 'teams_section')->first();
+        return view('admin.teams.index', $data);
     }
 
     public function datatable(Request $request) 

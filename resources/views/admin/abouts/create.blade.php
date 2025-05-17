@@ -1,5 +1,5 @@
 @extends('admin.layouts.master', ['is_active_parent' => 'home', 'is_active' => 'abouts'])
-@section('title', isset($about) ? __('admin.global.edit_about') : __('admin.global.add_new_about'))
+@section('title', isset($about) ? 'Edit about' : __('admin.global.add_new_about'))
 
 @section('content')
     <form id="kt_form" class="form row d-flex flex-column flex-lg-row addForm"

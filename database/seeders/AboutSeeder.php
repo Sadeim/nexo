@@ -22,9 +22,9 @@ class AboutSeeder extends Seeder
             'tab1_content' => 'Conveniently target business opportunities market-driven solutions',
             'tab2_title' => 'Repairing Roofing and Door',
             'tab2_content' => 'List item one',
-            'tab3_title' => 'Repairing Roofing and Door',
-            'tab3_content' => 'List item two',
-            'button_text' => 'Get An Estimate',
+            // 'tab3_title' => 'Repairing Roofing and Door',
+            // 'tab3_content' => 'List item two',
+            'button_text' => 'Call Us',
             'button_link' => 'about.html',
         ]);
     }

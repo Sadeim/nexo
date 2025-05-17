@@ -3,7 +3,54 @@
     {{ __('admin.global.services') }}
 @endsection
 @section('content')
-
+    @if ($section)
+        <div class="container-xxl">
+            <div class="card card-flush mb-5" id="sectionCard">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="card-title">
+                            <span id="sectionTitleText">Title: {{ $section->title }}</span>
+                            <input type="text" class="form-control d-none" id="sectionTitleInput" value="{{ $section->title }}">
+                        </h2>
+                    </div>
+        
+                    <div class="d-flex align-items-center gap-4">
+                        <!-- Toggle -->
+                        <div class="form-check form-switch form-check-custom form-check-solid">
+                            <input class="form-check-input" type="checkbox" id="section_toggle"
+                                {{ $section->is_active ? 'checked' : '' }}
+                                data-url="{{ route('admin.sections.toggle', $section->id) }}" />
+                            <label class="form-check-label" for="section_toggle">
+                                {{ $section->is_active ? 'Visible' : 'Hidden' }}
+                            </label>
+                        </div>
+        
+                        <!-- Edit/Save Buttons -->
+                        <button class="btn btn-sm btn-light-warning" id="editBtn">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="btn btn-sm btn-light-success d-none" id="saveBtn" data-url="{{ route('admin.sections.update', $section->id) }}">
+                            <i class="fas fa-save"></i> Save
+                        </button>
+                    </div>
+                </div>
+        
+                <div class="card-body">
+                    <div class="mb-4">
+                        <label><strong>Description:</strong></label>
+                        <p id="sectionDescriptionText" class="fs-5 text-gray-700 m-0">{{ $section->description }}</p>
+                        <textarea class="form-control d-none" id="sectionDescriptionInput">{{ $section->description }}</textarea>
+                    </div>
+        
+                    <div>
+                        <label><strong>Note:</strong></label>
+                        <p id="sectionNoteText" class="fs-6 text-muted m-0">{{ $section->note }}</p>
+                        <textarea class="form-control d-none" id="sectionNoteInput">{{ $section->note }}</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
     <div class="d-flex flex-column flex-column-fluid customerView" id="kt_content">
         <!--begin::Post-->
         <div class="post d-flex flex-column-fluid chartAccount customView" id="kt_post">
@@ -98,7 +145,6 @@
             </div>
         </div>
     </div>
-
 @endsection
 @push('scripts')
     <script>
@@ -107,7 +153,93 @@
     <script src="{{ asset('admin_assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
     <script src="{{ asset('admin_assets/js_resources/services.js') }}"></script>
     <script src="{{ asset('admin_assets/js/dashboard/handleDataTable.js') }}"></script>
+
+    <script>
+        const editBtn = document.getElementById('editBtn');
+        const saveBtn = document.getElementById('saveBtn');
+    
+        editBtn?.addEventListener('click', () => {
+            // إظهار حقول الإدخال
+            document.getElementById('sectionTitleText').classList.add('d-none');
+            document.getElementById('sectionTitleInput').classList.remove('d-none');
+    
+            document.getElementById('sectionDescriptionText').classList.add('d-none');
+            document.getElementById('sectionDescriptionInput').classList.remove('d-none');
+    
+            document.getElementById('sectionNoteText').classList.add('d-none');
+            document.getElementById('sectionNoteInput').classList.remove('d-none');
+    
+            editBtn.classList.add('d-none');
+            saveBtn.classList.remove('d-none');
+        });
+    
+        saveBtn?.addEventListener('click', () => {
+            const url = saveBtn.dataset.url;
+            const title = document.getElementById('sectionTitleInput').value;
+            const description = document.getElementById('sectionDescriptionInput').value;
+            const note = document.getElementById('sectionNoteInput').value;
+    
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ title, description, note })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // تحديث النصوص
+                    document.getElementById('sectionTitleText').textContent = 'Title: ' + title;
+                    document.getElementById('sectionDescriptionText').textContent = description;
+                    document.getElementById('sectionNoteText').textContent = note;
+    
+                    // إرجاع الحقول للنص العادي
+                    document.getElementById('sectionTitleText').classList.remove('d-none');
+                    document.getElementById('sectionTitleInput').classList.add('d-none');
+    
+                    document.getElementById('sectionDescriptionText').classList.remove('d-none');
+                    document.getElementById('sectionDescriptionInput').classList.add('d-none');
+    
+                    document.getElementById('sectionNoteText').classList.remove('d-none');
+                    document.getElementById('sectionNoteInput').classList.add('d-none');
+    
+                    editBtn.classList.remove('d-none');
+                    saveBtn.classList.add('d-none');
+    
+                    toastr.success('Section updated successfully');
+                } else {
+                    toastr.error('Failed to update section');
+                }
+            })
+            .catch(() => {
+                toastr.error('Error updating section');
+            });
+        });
+    </script>
+    <script>
+        document.getElementById('section_toggle')?.addEventListener('change', function () {
+            const url = this.dataset.url;
+    
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                const label = this.nextElementSibling;
+                label.textContent = data.is_active ? 'Visible' : 'Hidden';
+            });
+        });
+    </script>
 @endpush
 @push('modals')
  
 @endpush
+ 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Event\CreateEventRequest;
 use App\Models\Event;
+use App\Models\Section;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Traits\SaveImageTrait;
@@ -23,7 +24,8 @@ class EventController extends Controller
 
     public function index()
     {
-        return view('admin.events.index');
+        $data['section'] = Section::where('key', 'events_section')->first();
+        return view('admin.events.index', $data);
     }
 
     public function datatable(Request $request) 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Achievement\CreateAchievementRequest;
 use App\Models\Achievement;
+use App\Models\Section;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -20,8 +21,8 @@ class AchievementController extends Controller
     
     public function index()
     {
-        $achievements = Achievement::orderBy('id','DESC')->get();
-        return view('admin.achievements.index', compact('achievements'));
+        $data['section'] = Section::where('key', 'achievements_section')->first();
+        return view('admin.achievements.index', $data);
     }
     
     public function datatable(Request $request) 

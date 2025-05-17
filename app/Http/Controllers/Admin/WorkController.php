@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Work\CreateWorkRequest;
+use App\Models\Section;
 use App\Models\Work;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -24,7 +25,8 @@ class WorkController extends Controller
 
     public function index()
     {
-        return view('admin.works.index');
+        $data['section'] = Section::where('key', 'works_section')->first();
+        return view('admin.works.index', $data);
     }
 
     public function datatable(Request $request) 

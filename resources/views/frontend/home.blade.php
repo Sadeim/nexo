@@ -109,6 +109,7 @@
     </div>
     <!-- Client Slider Section End -->
 
+
     <!-- About Us Section Start -->
 	<div class="about-us" id="about-us">
 		<div class="container">
@@ -187,73 +188,74 @@
 	</div>
 	
     <!-- About Us Section End -->
-
-    <!-- Our Services Section Start -->
-    <div class="our-services bg-radius-section">
-        <div class="container">
-            <div class="row section-row align-items-center">
-                <div class="col-lg-6">
-                    <!-- Section Title Start -->
-                    <div class="section-title">
-                        <h3 class="wow fadeInUp">services</h3>
-                        <h2 class="text-anime-style-3" data-cursor="-opaque">Comprehensive handyman services</h2>
+    @if ($sections['services_section']?->is_active)
+        <!-- Our Services Section Start -->
+        <div class="our-services bg-radius-section">
+            <div class="container">
+                <div class="row section-row align-items-center">
+                    <div class="col-lg-6">
+                        <!-- Section Title Start -->
+                        <div class="section-title">
+                            <h3 class="wow fadeInUp">Our Services</h3>
+                            <h2 class="text-anime-style-3" data-cursor="-opaque">{{ $sections['services_section']->title }}</h2>
+                        </div>
+                        <!-- Section Title End -->
                     </div>
-                    <!-- Section Title End -->
+
+                    <div class="col-lg-6">
+                        <!-- Section Title Content Start -->
+                        <div class="section-title-content wow fadeInUp" data-wow-delay="0.2s">
+                            <p>{{ $sections['services_section']->description }}</p>
+                        </div>
+                        <!-- Section Title Content End -->
+                    </div>
                 </div>
 
-                <div class="col-lg-6">
-                    <!-- Section Title Content Start -->
-                    <div class="section-title-content wow fadeInUp" data-wow-delay="0.2s">
-                        <p>From repairs to home improvement, our comprehensive handyman services cover everything you need to keep your home in top shape.</p>
-                    </div>
-                    <!-- Section Title Content End -->
+                <div class="row">
+                    @foreach ($services as $index => $service)
+                        <div class="col-lg-3 col-md-6">
+                            <!-- Service Item Start -->
+                            <div class="service-item wow fadeInUp" data-wow-delay="{{ $index * 0.2 }}s">
+                                <!-- Service Item Header Start -->
+                                <div class="service-item-header">
+                                    <div class="icon-box">
+                                        <img src="{{ asset($service->icon) }}" alt="{{ $service->name }}">
+                                    </div>
+                    
+                                    <div class="service-item-content">
+                                        <h3><a href="#">{{ $service->name }}</a></h3>
+                                        <p>{{ \Illuminate\Support\Str::limit($service->description, 80) }}</p>
+                                    </div>
+                                </div>
+                                <!-- Service Item Header End -->
+                    
+                                <!-- Service Image Start -->
+                                <div class="service-image">
+                                    <a href="#" data-cursor-text="View">
+                                        <figure class="image-anime">
+                                            <img src="{{ asset($service->image) }}" alt="{{ $service->name }}">
+                                        </figure>
+                                    </a>
+                                </div>
+                                <!-- Service Image End -->
+                            </div>
+                            <!-- Service Item End -->
+                        </div>
+                    @endforeach
                 </div>
-            </div>
 
-            <div class="row">
-				@foreach ($services as $index => $service)
-					<div class="col-lg-3 col-md-6">
-						<!-- Service Item Start -->
-						<div class="service-item wow fadeInUp" data-wow-delay="{{ $index * 0.2 }}s">
-							<!-- Service Item Header Start -->
-							<div class="service-item-header">
-								<div class="icon-box">
-									<img src="{{ asset($service->icon) }}" alt="{{ $service->name }}">
-								</div>
-				
-								<div class="service-item-content">
-									<h3><a href="#">{{ $service->name }}</a></h3>
-									<p>{{ \Illuminate\Support\Str::limit($service->description, 80) }}</p>
-								</div>
-							</div>
-							<!-- Service Item Header End -->
-				
-							<!-- Service Image Start -->
-							<div class="service-image">
-								<a href="#" data-cursor-text="View">
-									<figure class="image-anime">
-										<img src="{{ asset($service->image) }}" alt="{{ $service->name }}">
-									</figure>
-								</a>
-							</div>
-							<!-- Service Image End -->
-						</div>
-						<!-- Service Item End -->
-					</div>
-				@endforeach
-			</div>
-
-                <div class="col-lg-12">
-                    <!-- Service Footer Start -->
-                    <div class="service-footer wow fadeInUp" data-wow-delay="0.8s">
-                        <p>You will be satisfy with our work. Contact us today <a href="tel:123456789">(+91) 123 - 456 789</a></p>
+                    <div class="col-lg-12">
+                        <!-- Service Footer Start -->
+                        <div class="service-footer wow fadeInUp" data-wow-delay="0.8s">
+                            <p>{{ $sections['services_section']->note }}</p>
+                        </div>
+                        <!-- Service Footer End -->
                     </div>
-                    <!-- Service Footer End -->
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Our Services Section End -->
+        <!-- Our Services Section End -->
+    @endif
 
     <!-- How It Work Start -->
     {{-- <div class="how-it-work bg-radius-section">
@@ -477,408 +479,420 @@
     </div> --}}
     <!-- Quick Fact End -->
 
-    <!-- Best Services Section Start -->
-    <div class="best-services bg-radius-section">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <!-- Best Services Box Content Start -->
-                    <div class="best-services-box-content">
-                        <!-- Best Services Content Start -->
-                        <div class="best-services-content">
-                            <!-- Section Title Start -->
-                            <div class="section-title">
-                                <h3 class="wow fadeInUp">what we do</h3>
-                                <h2 class="text-anime-style-3" data-cursor="-opaque">Reliable handyman services for you</h2>
-                            </div>
-                            <!-- Section Title End -->
-
-                            <!-- Best Services Body Start -->
-                            <div class="best-services-body">
-                                <!-- Contact Now Circle Start -->
-                                <div class="contact-now-circle">
-                                    <img src="{{ url($settings->valueOf('company_logo')) }}" alt="">
-                                </div>
-                                <!-- Contact Now Circle End -->
-
-                                <!-- Best Services Box Start -->
-                                <div class="best-services-box">
-									@foreach ($services as $index => $service)
-									<!-- Best Services Item Start -->
-									<div class="best-services-item wow fadeInUp" data-wow-delay="{{ $index * 0.2 }}s">
-										<div class="icon-box">
-											<img src="{{ asset($service->icon) }}" alt="{{ $service->name }}">
-										</div>
-								
-										<div class="best-services-item-content">
-											<h3>{{ $service->name }}</h3>
-											<p>{{ $service->description }}</p>
-										</div>
-									</div>
-									<!-- Best Services Item End -->
-									@endforeach
-								</div>
-								
-                                <!-- Best Services Box End -->
-                            </div>
-                            <!-- Best Services Body End -->
-                        </div>
-                        <!-- Best Services Content End -->
-
-                        <!-- Best Services Image Start -->
-                        <div class="best-services-image">
-                            <figure class="image-anime">
-                                <img src="{{ asset('frontend_assets/images/what-we-do-img.jpg') }}" alt="">
-                            </figure>
-                        </div>
-                        <!-- Best Services Image End -->
-                    </div>
-                    <!-- Best Services Box Content End -->
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Best Services Section End -->
-
-    <!-- Our Projects Start -->
-    <div class="our-projects bg-radius-section">
-        <div class="container">
-            <div class="row section-row align-items-center">
-                <div class="col-lg-6">
-                    <!-- Section Title Start -->
-                    <div class="section-title">
-                        <h3 class="wow fadeInUp">Our work</h3>
-                        <h2 class="text-anime-style-3" data-cursor="-opaque">Showcasing our projects</h2>
-                    </div>
-                    <!-- Section Title End -->
-                </div>
-
-                <div class="col-lg-6">
-                    <!-- Section Title Button Start -->
-                    <div class="section-btn wow fadeInUp" data-wow-delay="0.2s">
-                        <a href="#" class="btn-default">explore more work</a>
-                    </div>
-                    <!-- Section Title Button End -->
-                </div>
-            </div>
-
-            <div class="row">
-                @foreach ($works as $index => $work)
-					<div class="col-lg-4 col-md-6">
-						<!-- Project Item Start -->
-						<div class="project-item wow fadeInUp" data-wow-delay="{{ $index * 0.2 }}s">
-							<!-- Project Image Start -->
-							<div class="project-image">
-								<a href="#" data-cursor-text="View">
-									<figure class="image-anime">
-										<img src="{{ asset($work->image) }}" alt="{{ $work->title }}">
-									</figure>
-								</a>
-							</div>
-							<!-- Project Image End -->
-
-							<!-- Project Content Start -->
-							<div class="project-content">
-								<!-- Project Title Start -->
-								<div class="project-title">
-									<h3><a href="#">{{ $work->title }}</a></h3>
-								</div>
-								<!-- Project Title End -->
-
-								<!-- Project Tag Start -->
-								<div class="project-tag">
-									<a href="#" class="btn-default btn-highlighted">{{ $work->category }}</a>
-								</div>
-								<!-- Project Tag End -->
-							</div>
-							<!-- Project Content End -->
-						</div>
-						<!-- Project Item End -->
-					</div>
-				@endforeach
-            </div>
-        </div>
-    </div>
-    <!-- Our Projects End -->
-
-    <!-- Our Testimonial Section Start -->
-    <div class="our-testimonial">
-        <div class="our-testimonial-box bg-radius-section">
+    @if ($sections['services_section']?->is_active)
+        <!-- Best Services Section Start -->
+        <div class="best-services bg-radius-section">
             <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-lg-6">
-                        <!-- Our Testimonial Image Start -->
-                        <div class="our-testimonial-image">
-                            <figure class="image-anime">
-                                <img src="{{ asset('frontend_assets/images/testimonial-image.jpg') }}" alt="">
-                            </figure>
-                        </div>
-                        <!-- Our Testimonial Image End -->
-                    </div>
-    
-                    <div class="col-lg-6">
-                        <!-- Testimonial Slider Start -->
-                        <div class="testimonial-slider">
-                            <div class="swiper">
-								<div class="swiper-wrapper" data-cursor-text="Drag">
-									@foreach ($testimonials as $testimonial)
-										<div class="swiper-slide">
-											<!-- Testimonial Item Start -->
-											<div class="testimonial-item">
-												<!-- Testimonial Author Information Start -->
-												<div class="testimonial-author-info">
-													<!-- Testimonial Author Start -->
-													<div class="testimonial-author">
-														<div class="author-image">
-															<figure class="image-anime">
-																<img src="{{ asset($testimonial->photo) }}" alt="">
-															</figure>
-														</div>
-									
-														<div class="author-content">
-															<h3>{{ $testimonial->name }}</h3>
-															<p>{{ $testimonial->position }}</p>
-														</div>
-													</div>
-													<!-- Testimonial Author End -->
-									
-													<!-- Testimonial Quotes Start -->
-													<div class="testimonial-quotes">
-														<img src="{{ asset('frontend_assets/images/testimonial-quotes.svg') }}" alt="">
-													</div>
-													<!-- Testimonial Quotes End -->
-												</div>
-												<!-- Testimonial Author Information End -->
-									
-												<!-- Testimonial Rating Start -->
-												<div class="testimonial-rating">
-													@for ($i = 1; $i <= 5; $i++)
-														<i class="fa-solid fa-star{{ $i <= $testimonial->rating ? '' : '-o' }}"></i>
-													@endfor
-												</div>
-												<!-- Testimonial Rating End -->
-									
-												<!-- Testimonial Content Start -->
-												<div class="testimonial-content">
-													<p>“{{ $testimonial->message }}”</p>
-												</div>
-												<!-- Testimonial Content End -->
-											</div>
-											<!-- Testimonial Item End -->
-										</div>
-									@endforeach
-								</div>
-                                <div class="testimonial-pagination"></div>
-                            </div>
-                        </div>
-                        <!-- Testimonial Slider End -->
-                    </div>
-
+                <div class="row">
                     <div class="col-lg-12">
-                        <!-- Agency Support Slider Start -->
-                        <div class="testimonial-company-slider">
-                            <div class="swiper">
-                                <div class="swiper-wrapper">
-                                    @forelse ($clients as $client)
-                                        <div class="swiper-slide">
-                                            <div class="company-logo">
-                                                <img src="{{ asset($client->logo) }}" alt="">
+                        <!-- Best Services Box Content Start -->
+                        <div class="best-services-box-content">
+                            <!-- Best Services Content Start -->
+                            <div class="best-services-content">
+                                <!-- Section Title Start -->
+                                <div class="section-title">
+                                    <h3 class="wow fadeInUp">what we do</h3>
+                                    <h2 class="text-anime-style-3" data-cursor="-opaque">Reliable handyman services for you</h2>
+                                </div>
+                                <!-- Section Title End -->
+
+                                <!-- Best Services Body Start -->
+                                <div class="best-services-body">
+                                    <!-- Contact Now Circle Start -->
+                                    <div class="contact-now-circle">
+                                        <img src="{{ url($settings->valueOf('company_logo')) }}" alt="">
+                                    </div>
+                                    <!-- Contact Now Circle End -->
+
+                                    <!-- Best Services Box Start -->
+                                    <div class="best-services-box">
+                                        @foreach ($services as $index => $service)
+                                        <!-- Best Services Item Start -->
+                                        <div class="best-services-item wow fadeInUp" data-wow-delay="{{ $index * 0.2 }}s">
+                                            <div class="icon-box">
+                                                <img src="{{ asset($service->icon) }}" alt="{{ $service->name }}">
+                                            </div>
+                                    
+                                            <div class="best-services-item-content">
+                                                <h3>{{ $service->name }}</h3>
+                                                <p>{{ $service->description }}</p>
                                             </div>
                                         </div>
-                                    @empty
-                                        No Data
-                                    @endforelse
+                                        <!-- Best Services Item End -->
+                                        @endforeach
+                                    </div>
+                                    
+                                    <!-- Best Services Box End -->
+                                </div>
+                                <!-- Best Services Body End -->
+                            </div>
+                            <!-- Best Services Content End -->
+
+                            <!-- Best Services Image Start -->
+                            <div class="best-services-image">
+                                <figure class="image-anime">
+                                    <img src="{{ asset('frontend_assets/images/what-we-do-img.jpg') }}" alt="">
+                                </figure>
+                            </div>
+                            <!-- Best Services Image End -->
+                        </div>
+                        <!-- Best Services Box Content End -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Best Services Section End -->
+    @endif
+
+    @if ($sections['works_section']?->is_active)
+        <!-- Our Projects Start -->
+        <div class="our-projects bg-radius-section">
+            <div class="container">
+                <div class="row section-row align-items-center">
+                    <div class="col-lg-6">
+                        <!-- Section Title Start -->
+                        <div class="section-title">
+                            <h3 class="wow fadeInUp">{{ $sections['works_section']->title }}</h3>
+                            <h2 class="text-anime-style-3" data-cursor="-opaque">{{ $sections['services_section']->description }}</h2>
+                        </div>
+                        <!-- Section Title End -->
+                    </div>
+
+                    <div class="col-lg-6">
+                        <!-- Section Title Button Start -->
+                        <div class="section-btn wow fadeInUp" data-wow-delay="0.2s">
+                            <a href="#" class="btn-default">explore more work</a>
+                        </div>
+                        <!-- Section Title Button End -->
+                    </div>
+                </div>
+
+                <div class="row">
+                    @foreach ($works as $index => $work)
+                        <div class="col-lg-4 col-md-6">
+                            <!-- Project Item Start -->
+                            <div class="project-item wow fadeInUp" data-wow-delay="{{ $index * 0.2 }}s">
+                                <!-- Project Image Start -->
+                                <div class="project-image">
+                                    <a href="#" data-cursor-text="View">
+                                        <figure class="image-anime">
+                                            <img src="{{ asset($work->image) }}" alt="{{ $work->title }}">
+                                        </figure>
+                                    </a>
+                                </div>
+                                <!-- Project Image End -->
+
+                                <!-- Project Content Start -->
+                                <div class="project-content">
+                                    <!-- Project Title Start -->
+                                    <div class="project-title">
+                                        <h3><a href="#">{{ $work->title }}</a></h3>
+                                    </div>
+                                    <!-- Project Title End -->
+
+                                    <!-- Project Tag Start -->
+                                    <div class="project-tag">
+                                        <a href="#" class="btn-default btn-highlighted">{{ $work->category }}</a>
+                                    </div>
+                                    <!-- Project Tag End -->
+                                </div>
+                                <!-- Project Content End -->
+                            </div>
+                            <!-- Project Item End -->
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+        <!-- Our Projects End -->
+    @endif
+
+    @if ($sections['testimonials_section']?->is_active)
+        <!-- Our Testimonial Section Start -->
+        <div class="our-testimonial">
+            <div class="our-testimonial-box bg-radius-section">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6">
+                            <!-- Our Testimonial Image Start -->
+                            <div class="our-testimonial-image">
+                                <figure class="image-anime">
+                                    <img src="{{ asset('frontend_assets/images/testimonial-image.jpg') }}" alt="">
+                                </figure>
+                            </div>
+                            <!-- Our Testimonial Image End -->
+                        </div>
+        
+                        <div class="col-lg-6">
+                            <!-- Testimonial Slider Start -->
+                            <div class="testimonial-slider">
+                                <div class="swiper">
+                                    <div class="swiper-wrapper" data-cursor-text="Drag">
+                                        @foreach ($testimonials as $testimonial)
+                                            <div class="swiper-slide">
+                                                <!-- Testimonial Item Start -->
+                                                <div class="testimonial-item">
+                                                    <!-- Testimonial Author Information Start -->
+                                                    <div class="testimonial-author-info">
+                                                        <!-- Testimonial Author Start -->
+                                                        <div class="testimonial-author">
+                                                            <div class="author-image">
+                                                                <figure class="image-anime">
+                                                                    <img src="{{ asset($testimonial->photo) }}" alt="">
+                                                                </figure>
+                                                            </div>
+                                        
+                                                            <div class="author-content">
+                                                                <h3>{{ $testimonial->name }}</h3>
+                                                                <p>{{ $testimonial->position }}</p>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Testimonial Author End -->
+                                        
+                                                        <!-- Testimonial Quotes Start -->
+                                                        <div class="testimonial-quotes">
+                                                            <img src="{{ asset('frontend_assets/images/testimonial-quotes.svg') }}" alt="">
+                                                        </div>
+                                                        <!-- Testimonial Quotes End -->
+                                                    </div>
+                                                    <!-- Testimonial Author Information End -->
+                                        
+                                                    <!-- Testimonial Rating Start -->
+                                                    <div class="testimonial-rating">
+                                                        @for ($i = 1; $i <= 5; $i++)
+                                                            <i class="fa-solid fa-star{{ $i <= $testimonial->rating ? '' : '-o' }}"></i>
+                                                        @endfor
+                                                    </div>
+                                                    <!-- Testimonial Rating End -->
+                                        
+                                                    <!-- Testimonial Content Start -->
+                                                    <div class="testimonial-content">
+                                                        <p>“{{ $testimonial->message }}”</p>
+                                                    </div>
+                                                    <!-- Testimonial Content End -->
+                                                </div>
+                                                <!-- Testimonial Item End -->
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                    <div class="testimonial-pagination"></div>
                                 </div>
                             </div>
+                            <!-- Testimonial Slider End -->
                         </div>
-                        <!-- Agency Support Slider End -->
+
+                        <div class="col-lg-12">
+                            <!-- Agency Support Slider Start -->
+                            <div class="testimonial-company-slider">
+                                <div class="swiper">
+                                    <div class="swiper-wrapper">
+                                        @forelse ($clients as $client)
+                                            <div class="swiper-slide">
+                                                <div class="company-logo">
+                                                    <img src="{{ asset($client->logo) }}" alt="">
+                                                </div>
+                                            </div>
+                                        @empty
+                                            No Data
+                                        @endforelse
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Agency Support Slider End -->
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>        
-    </div>
-    <!-- Our Testimonial Section End -->
-
-    <!-- Our Team Section Start -->
-    <div class="our-team bg-radius-section">
-        <div class="container">
-            <div class="row section-row align-items-center">
-                <div class="col-lg-6">
-                    <!-- Section Title Start -->
-                    <div class="section-title">
-                        <h3 class="wow fadeInUp">Team member</h3>
-                        <h2 class="text-anime-style-3" data-cursor="-opaque">Meet our skilled handyman team</h2>
-                    </div>
-                    <!-- Section Title End -->
-                </div>
-
-                <div class="col-lg-6">
-                    <!-- Section Title Button Start -->
-                    <div class="section-btn wow fadeInUp" data-wow-delay="0.2s">
-                        <a href="#" class="btn-default">view all member</a>
-                    </div>
-                    <!-- Section Title Button End -->
-                </div>
-            </div>
-
-            <div class="row">
-				@forelse ($teams as $index => $team)
-					<div class="col-lg-4 col-md-6">
-						<!-- Team Member Item Start -->
-						<div class="team-item wow fadeInUp" data-wow-delay="{{ $index * 0.2 }}s">
-							<!-- team Image Start -->
-							<div class="team-image">
-								<a href="#" data-cursor-text="View">
-									<figure class="image-anime">
-										<img src="{{ asset($team->image) }}" alt="">
-									</figure>
-								</a>
-							</div>
-							<!-- team Image End -->
-					
-							<!-- Team Body Start -->
-							<div class="team-body">
-								<!-- Team Content Start -->
-								<div class="team-content">
-									<h3><a href="#">{{ $team->name }}</a></h3>
-									<p>{{ $team->position }}</p>
-								</div>
-								<!-- Team Content End -->
-
-								<!-- Team Social List Start -->
-								<div class="team-social-list">
-									<ul>
-										@foreach(json_decode($team->social_links, true) as $platform => $link)
-											<li><a href="{{ $link }}"><i class="fa-brands fa-{{ $platform }}-p"></i></a></li>										
-										@endforeach
-									</ul>
-								</div>
-								<!-- Team Social List End -->
-							</div>
-							<!-- Team Body End -->
-						</div>
-						<!-- Team Member Item End -->
-					</div>
-				@empty
-					No team member found
-				@endforelse
-            </div>
+            </div>        
         </div>
-    </div>
-    <!-- Our Team Section End -->
+        <!-- Our Testimonial Section End -->
+    @endif
 
-    <!-- Our FAQs Section Start -->
-    <div class="our-faqs parallaxie">        
-        <div class="container">
-            <div class="row section-row">
-                <div class="col-lg-6">
-                    <!-- Section Title Start -->
-                    <div class="section-title">
-                        <h3 class="wow fadeInUp">FAQs</h3>
-                        <h2 class="text-anime-style-3" data-cursor="-opaque">Frequently asked questions</h2>
+    @if ($sections['teams_section']?->is_active)
+        <!-- Our Team Section Start -->
+        <div class="our-team bg-radius-section">
+            <div class="container">
+                <div class="row section-row align-items-center">
+                    <div class="col-lg-6">
+                        <!-- Section Title Start -->
+                        <div class="section-title">
+                            <h3 class="wow fadeInUp">{{ $sections['teams_section']->title }}</h3>
+                            <h2 class="text-anime-style-3" data-cursor="-opaque">{{ $sections['teams_section']->title }}</h2>
+                        </div>
+                        <!-- Section Title End -->
                     </div>
-                    <!-- Section Title End -->
+
+                    <div class="col-lg-6">
+                        <!-- Section Title Button Start -->
+                        <div class="section-btn wow fadeInUp" data-wow-delay="0.2s">
+                            <a href="#" class="btn-default">view all member</a>
+                        </div>
+                        <!-- Section Title Button End -->
+                    </div>
                 </div>
-                
-                <div class="col-lg-6">
-                    <!-- FAQ Accordion Start -->
-                    <div class="faq-accordion" id="accordion">
-						@forelse ($faqs as $faq)
-							<!-- FAQ Item Start -->
-							<div class="accordion-item wow fadeInUp" data-wow-delay="{{ $index * 0.2 }}s">
-								<h2 class="accordion-header" id="heading{{ $faq->id }}">
-									<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $faq->id }}" aria-expanded="false" aria-controls="collapse{{ $faq->id }}">
-										{{ $loop->iteration }}. {{ $faq->question }}
-									</button>
-								</h2>
-								<div id="collapse{{ $faq->id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ $faq->id }}" data-bs-parent="#accordion">
-									<div class="accordion-body">
-										<p>{{ $faq->answer }}</p>
-									</div>
-								</div>
-							</div>
-							<!-- FAQ Item End -->
-						@empty
-							No faq found
-						@endforelse
-                    </div>
-                    <!-- FAQ Accordion End -->
+
+                <div class="row">
+                    @forelse ($teams as $index => $team)
+                        <div class="col-lg-4 col-md-6">
+                            <!-- Team Member Item Start -->
+                            <div class="team-item wow fadeInUp" data-wow-delay="{{ $index * 0.2 }}s">
+                                <!-- team Image Start -->
+                                <div class="team-image">
+                                    <a href="#" data-cursor-text="View">
+                                        <figure class="image-anime">
+                                            <img src="{{ asset($team->image) }}" alt="">
+                                        </figure>
+                                    </a>
+                                </div>
+                                <!-- team Image End -->
+                        
+                                <!-- Team Body Start -->
+                                <div class="team-body">
+                                    <!-- Team Content Start -->
+                                    <div class="team-content">
+                                        <h3><a href="#">{{ $team->name }}</a></h3>
+                                        <p>{{ $team->position }}</p>
+                                    </div>
+                                    <!-- Team Content End -->
+
+                                    <!-- Team Social List Start -->
+                                    <div class="team-social-list">
+                                        <ul>
+                                            @foreach(json_decode($team->social_links, true) as $platform => $link)
+                                                <li><a href="{{ $link }}"><i class="fa-brands fa-{{ $platform }}-p"></i></a></li>										
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                    <!-- Team Social List End -->
+                                </div>
+                                <!-- Team Body End -->
+                            </div>
+                            <!-- Team Member Item End -->
+                        </div>
+                    @empty
+                        No team member found
+                    @endforelse
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Our FAQs Section End -->
+        <!-- Our Team Section End -->
+    @endif
 
-    <!-- Our Blog Start -->
-    <div class="our-blog bg-radius-section">
-        <div class="container">
-            <div class="row section-row align-items-center">
-                <div class="col-lg-6">
-                    <!-- Section Title Start -->
-                    <div class="section-title">
-                        <h3 class="wow fadeInUp">latest blog</h3>
-                        <h2 class="text-anime-style-3" data-cursor="-opaque">Explore our latest handy tips</h2>
+    @if ($sections['faqs_section']?->is_active)
+        <!-- Our FAQs Section Start -->
+        <div class="our-faqs parallaxie">        
+            <div class="container">
+                <div class="row section-row">
+                    <div class="col-lg-6">
+                        <!-- Section Title Start -->
+                        <div class="section-title">
+                            <h3 class="wow fadeInUp">{{ $sections['faqs_section']->title }}</h3>
+                            <h2 class="text-anime-style-3" data-cursor="-opaque">{{ $sections['faqs_section']->description }}</h2>
+                        </div>
+                        <!-- Section Title End -->
                     </div>
-                    <!-- Section Title End -->
-                </div>
-
-                <div class="col-lg-6">
-                    <!-- Section Title Button Start -->
-                    <div class="section-btn wow fadeInUp" data-wow-delay="0.2s">
-                        <a href="{{ route('blog.index') }}" class="btn-default">view all post</a>
+                    
+                    <div class="col-lg-6">
+                        <!-- FAQ Accordion Start -->
+                        <div class="faq-accordion" id="accordion">
+                            @forelse ($faqs as $index => $faq)
+                                <!-- FAQ Item Start -->
+                                <div class="accordion-item wow fadeInUp" data-wow-delay="{{ $index * 0.2 }}s">
+                                    <h2 class="accordion-header" id="heading{{ $faq->id }}">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $faq->id }}" aria-expanded="false" aria-controls="collapse{{ $faq->id }}">
+                                            {{ $loop->iteration }}. {{ $faq->question }}
+                                        </button>
+                                    </h2>
+                                    <div id="collapse{{ $faq->id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ $faq->id }}" data-bs-parent="#accordion">
+                                        <div class="accordion-body">
+                                            <p>{{ $faq->answer }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- FAQ Item End -->
+                            @empty
+                                No faq found
+                            @endforelse
+                        </div>
+                        <!-- FAQ Accordion End -->
                     </div>
-                    <!-- Section Title Button End -->
                 </div>
-            </div>
-
-            <div class="row">
-				@forelse ($blogs as $blog)
-					<div class="col-lg-4 col-md-6">
-						<!-- Post Item Start -->
-						<div class="post-item wow fadeInUp">
-							<!-- Post Featured Item Start -->
-							<div class="post-featured-image">
-								<a href="{{ route('blog.show', $blog->slug) }}" data-cursor-text="View">
-									<figure class="image-anime">
-										<img src="{{ asset($blog->image) }}" alt="">
-									</figure>
-								</a>
-							</div>
-							<!-- Post Featured Image End -->
-					
-							<!-- Team Item Body Start -->
-							<div class="post-item-body">
-								<!-- Post Meta Start -->
-								<div class="post-meta">
-									<ul>
-										<li>{{ strtoupper(\Carbon\Carbon::parse($blog->created_at)->format('d M, Y')) }}</li>
-									</ul>
-								</div>
-								<!-- Post Meta End -->
-
-								<!-- Team Item Content Start -->
-								<div class="post-item-content">
-									<h3><a href="{{ route('blog.show', $blog->slug) }}">{{ $blog->title }}</a></h3>
-								</div>
-								<!-- Team Item Content End -->
-
-								<!-- Post Item Button Start -->
-								<div class="post-item-btn">
-									<a href="{{ route('blog.show', $blog->slug) }}" class="btn-default">read more</a>
-								</div>
-								<!-- Post Item Button End -->
-							</div>
-							<!-- Team Item Body End -->
-						</div>
-						<!-- Post Item End -->
-					</div>
-				@empty
-					No blog found
-				@endforelse
             </div>
         </div>
-    </div>
-    <!-- Our Blog End -->
+        <!-- Our FAQs Section End -->
+    @endif
+
+    @if ($sections['blog_section']?->is_active)
+        <!-- Our Blog Start -->
+        <div class="our-blog bg-radius-section">
+            <div class="container">
+                <div class="row section-row align-items-center">
+                    <div class="col-lg-6">
+                        <!-- Section Title Start -->
+                        <div class="section-title">
+                            <h3 class="wow fadeInUp">{{ $sections['blog_section']->title }}</h3>
+                            <h2 class="text-anime-style-3" data-cursor="-opaque">{{ $sections['blog_section']->description }}</h2>
+                        </div>
+                        <!-- Section Title End -->
+                    </div>
+
+                    <div class="col-lg-6">
+                        <!-- Section Title Button Start -->
+                        <div class="section-btn wow fadeInUp" data-wow-delay="0.2s">
+                            <a href="{{ route('blog.index') }}" class="btn-default">view all post</a>
+                        </div>
+                        <!-- Section Title Button End -->
+                    </div>
+                </div>
+
+                <div class="row">
+                    @forelse ($blogs as $blog)
+                        <div class="col-lg-4 col-md-6">
+                            <!-- Post Item Start -->
+                            <div class="post-item wow fadeInUp">
+                                <!-- Post Featured Item Start -->
+                                <div class="post-featured-image">
+                                    <a href="{{ route('blog.show', $blog->slug) }}" data-cursor-text="View">
+                                        <figure class="image-anime">
+                                            <img src="{{ asset($blog->image) }}" alt="">
+                                        </figure>
+                                    </a>
+                                </div>
+                                <!-- Post Featured Image End -->
+                        
+                                <!-- Team Item Body Start -->
+                                <div class="post-item-body">
+                                    <!-- Post Meta Start -->
+                                    <div class="post-meta">
+                                        <ul>
+                                            <li>{{ strtoupper(\Carbon\Carbon::parse($blog->created_at)->format('d M, Y')) }}</li>
+                                        </ul>
+                                    </div>
+                                    <!-- Post Meta End -->
+
+                                    <!-- Team Item Content Start -->
+                                    <div class="post-item-content">
+                                        <h3><a href="{{ route('blog.show', $blog->slug) }}">{{ $blog->title }}</a></h3>
+                                    </div>
+                                    <!-- Team Item Content End -->
+
+                                    <!-- Post Item Button Start -->
+                                    <div class="post-item-btn">
+                                        <a href="{{ route('blog.show', $blog->slug) }}" class="btn-default">read more</a>
+                                    </div>
+                                    <!-- Post Item Button End -->
+                                </div>
+                                <!-- Team Item Body End -->
+                            </div>
+                            <!-- Post Item End -->
+                        </div>
+                    @empty
+                        No blog found
+                    @endforelse
+                </div>
+            </div>
+        </div>
+        <!-- Our Blog End -->
+    @endif
 @endsection
 
 @section('js')

@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\MenuItemController;
 use App\Http\Controllers\Admin\NewsletterController;
 use App\Http\Controllers\Admin\ReasonController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\SectionController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\SkillController;
@@ -218,5 +219,8 @@ use Illuminate\Support\Facades\Route;
             Route::get('data/datatables', [SliderController::class , 'datatable'])->name('datatable');
         });
         /* ------------------------------------- slider Routes --------------------------------- */
-                    
+        
+        Route::post('sections/{id}/toggle', [SectionController::class, 'toggle'])->name('sections.toggle');
+        Route::post('sections/{section}/update', [SectionController::class, 'update'])->name('sections.update');
+
 });
