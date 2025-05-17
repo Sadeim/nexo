@@ -19,6 +19,7 @@ use App\Models\Newsletter;
 use App\Models\Reason;
 use App\Models\ReasonTab;
 use App\Models\Service;
+use App\Models\Setting;
 use App\Models\Slider;
 use App\Models\Team;
 use App\Models\Testimonial;
@@ -65,7 +66,7 @@ class HomeController extends Controller
         }
 
         $message = Consultation::create($request->all());
-       
+
         Mail::to(config('mail.admin_email'))->send(new AdminNotification($message, 'consultation'));
 
         return response()->json([
@@ -103,14 +104,14 @@ class HomeController extends Controller
         return response()->json(['message' => 'Booking saved successfully.']);
     }
 
-    public function contactUs() 
+    public function contactUs()
     {
         $data['instagrams'] = Instagram::get();
         $data['about'] = About::first();
         return view('frontend.contact_us', $data);
     }
 
-    public function contactStore(Request $request) 
+    public function contactStore(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
@@ -127,13 +128,13 @@ class HomeController extends Controller
 
         $dataR = $request->only(['name', 'phone', 'email','subject','message']);
         $message = UserMessages::create($dataR);
-        
-        // Mail::to(config('mail.admin_email'))->send(new AdminNotification($message, 'contact'));
+        $email = Setting::where('key', 'email')->first()->value;
+         Mail::to($email)->send(new AdminNotification($message, 'contact'));
 
-        return $this->response_api(200, 'Done Successfully', '');
+        return $this->response_api(200, 'Done Successfully');
     }
 
-    public function aboutUs() 
+    public function aboutUs()
     {
         $data['about'] = About::first();
         $data['testimonials'] = Testimonial::get();
