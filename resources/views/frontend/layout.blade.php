@@ -44,7 +44,7 @@
 				<div class="container">
 					<!-- Logo Start -->
 					<a class="navbar-brand" href="./">
-						<img src="{{ asset($settings->valueOf('company_logo')) }}" alt="Logo">
+						<img src="{{ asset($settings->valueOf('company_logo')) }}" alt="Logo" style="height: 90px;">
 					</a>
 					<!-- Logo End -->
 
