@@ -1,4 +1,4 @@
-@extends('admin.layouts.master', ['is_active_parent' => 'clients','is_active'=> 'clients'])
+@extends('admin.layouts.master', ['is_active_parent' => 'home','is_active'=> 'clients'])
 @section('title')
     {{ __('admin.global.clients') }}
 @endsection

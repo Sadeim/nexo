@@ -1,4 +1,4 @@
-@extends('admin.layouts.master', ['is_active_parent' => 'achievements','is_active'=> 'achievements'])
+@extends('admin.layouts.master', ['is_active_parent' => 'home','is_active'=> 'achievements'])
 @section('title', isset($achievement) ? __('admin.global.edit_achievement') : __('admin.global.add_new_achievement'))
 
 @section('content')

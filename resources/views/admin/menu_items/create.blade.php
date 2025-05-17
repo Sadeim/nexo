@@ -1,4 +1,4 @@
-@extends('admin.layouts.master', ['is_active_parent' => 'menu_items','is_active'=> 'menu_items'])
+@extends('admin.layouts.master', ['is_active_parent' => 'home','is_active'=> 'menu_items'])
 @section('title', isset($menu_item) ? __('admin.global.edit_menu_item') : __('admin.global.add_new_menu_item'))
 
 @section('content')

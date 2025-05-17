@@ -1,4 +1,4 @@
-@extends('admin.layouts.master', ['is_active_parent' => 'faqs','is_active'=> 'faqs'])
+@extends('admin.layouts.master', ['is_active_parent' => 'home','is_active'=> 'faqs'])
 @section('title', isset($faq) ? __('admin.global.edit_faq') : __('admin.global.add_new_faq'))
 
 @section('content')

@@ -1,4 +1,4 @@
-@extends('admin.layouts.master', ['is_active_parent' => 'categories','is_active'=> 'categories'])
+@extends('admin.layouts.master', ['is_active_parent' => 'home','is_active'=> 'categories'])
 @section('title')
     {{ __('admin.global.add_new_category') }}
 @endsection

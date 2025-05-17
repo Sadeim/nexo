@@ -1,4 +1,4 @@
-@extends('admin.layouts.master', ['is_active_parent' => 'works', 'is_active'=> 'works'])
+@extends('admin.layouts.master', ['is_active_parent' => 'home', 'is_active'=> 'works'])
 
 @section('title')
     {{ __('admin.global.add_new_work') }}

@@ -1,4 +1,4 @@
-@extends('admin.layouts.master', ['is_active_parent' => 'reasons', 'is_active' => 'reasons'])
+@extends('admin.layouts.master', ['is_active_parent' => 'home', 'is_active' => 'reasons'])
 @section('title', isset($reason) ? __('admin.global.edit_reason') : __('admin.global.add_new_reason'))
 
 @section('content')
