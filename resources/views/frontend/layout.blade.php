@@ -40,11 +40,11 @@
     <!-- Header Start -->
 	<header class="main-header">
 		<div class="header-sticky">
-			<nav class="navbar navbar-expand-lg">
+			<nav class="navbar navbar-expand-lg" style="align-items: center; margin: 0; padding: 0;">
 				<div class="container">
 					<!-- Logo Start -->
 					<a class="navbar-brand" href="./">
-						<img src="{{ asset($settings->valueOf('company_logo')) }}" alt="Logo">
+						<img src="{{ asset($settings->valueOf('company_logo')) }}" alt="Logo" style="height: 90px;">
 					</a>
 					<!-- Logo End -->
 
@@ -55,7 +55,7 @@
                                 <li class="nav-item"><a class="nav-link" href="{{ route('home') }}">Home</a>
                                 <li class="nav-item"><a class="nav-link" href="{{ route('about_us') }}">About Us</a>
                                 <li class="nav-item"><a class="nav-link" href="{{ route('blog.index') }}">Blog</a></li>
-                                <li class="nav-item"><a class="nav-link" href="{{ route('contact') }}">Contact Us</a></li>                         
+                                <li class="nav-item"><a class="nav-link" href="{{ route('contact') }}">Contact Us</a></li>
                             </ul>
                         </div>
                         <!-- Header Btn Start -->
@@ -87,7 +87,7 @@
                             <img src="{{ asset('frontend_assets/images/footer-logo.svg') }}" alt="">
                         </div>
                         <!-- Footer Logo End -->
-                    
+
                         <!-- Footer Contact Box Start -->
                         <div class="footer-contact-box">
                             <!-- Footer Contact Item Start -->
