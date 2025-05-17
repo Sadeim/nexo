@@ -12,7 +12,7 @@
         <div class="page-content-header">
             <h2 class="table-title">{{ isset($blog) ? __('admin.global.edit_blog') : __('admin.global.add_new_blog') }}</h2>
         </div>
-        
+
         <!-- Sidebar: Status and Image Section -->
         <div class="d-flex flex-column gap-5 col-lg-3 mb-7">
             <div class="card card-flush">
@@ -23,7 +23,7 @@
                     <div class="card-toolbar">
                         <label class="form-check form-switch form-check-custom form-check-solid">
                             <input type="hidden" name="status" value="0">
-                            <input class="form-check-input btn active_operation" type="checkbox" name="status" 
+                            <input class="form-check-input btn active_operation" type="checkbox" name="status"
                                 @if(isset($blog) && $blog->status == 1) checked @endif value="1">
                         </label>
                     </div>
@@ -47,7 +47,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Main Content: Blog Details -->
         <div class="d-flex flex-column flex-row-fluid gap-3 col-lg-9">
             <div class="card card-flush generalDataTap">
@@ -69,7 +69,7 @@
                     </div>
                     <div class="mb-5">
                         <label class="form-label">{{ __('admin.form.published_at') }}</label>
-                        <input type="date" name="published_at" class="form-control" value="{{ old('published_at', isset($blog->published_at) ? $blog->published_at->format('Y-m-d') : '') }}">
+                        <input type="date" name="published_at" class="form-control" value="{{ old('published_at', isset($blog->created_at) ? $blog->created_at->format('Y-m-d') : '') }}">
                     </div>
                     <div class="mb-5">
                         <label class="form-label">{{ __('admin.form.content') }}</label>
@@ -78,7 +78,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Submit Buttons -->
         <div class="page-buttuns mt-5">
             <div class="row justify-content-between">
