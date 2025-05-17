@@ -373,7 +373,7 @@
                         </span>
                     </div>
                 @endif --}}
-                {{-- @if (auth()->user()->can('view_teams'))
+                @if (auth()->user()->can('view_teams'))
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'teams' ? 'here show' : '' }}">
                         <span class="menu-link {{ $is_active == 'teams' ? 'active' : '' }}">
                             <span class="menu-icon">
@@ -389,7 +389,7 @@
                             </span>
                         </span>
                     </div>
-                @endif --}}
+                @endif
                 {{-- @if (auth()->user()->can('view_skills'))
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'skills' ? 'here show' : '' }}">
                         <span class="menu-link {{ $is_active == 'skills' ? 'active' : '' }}">
@@ -407,7 +407,7 @@
                         </span>
                     </div>
                 @endif --}}
-                {{-- @if (auth()->user()->can('view_works'))
+                @if (auth()->user()->can('view_works'))
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'works' ? 'here show' : '' }}">
                         <span class="menu-link {{ $is_active == 'works' ? 'active' : '' }}">
                             <span class="menu-icon">
@@ -423,7 +423,7 @@
                             </span>
                         </span>
                     </div>
-                @endif --}}
+                @endif
                 @if (auth()->user()->can('view_static_pages'))
                     <div
                         class="menu-item menu-accordion {{ $is_active_parent == 'static_pages' ? 'here show' : '' }}">
