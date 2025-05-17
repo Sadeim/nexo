@@ -14,6 +14,7 @@ use App\Models\Contact;
 use App\Models\Event;
 use App\Models\Faq;
 use App\Models\Feature;
+use App\Models\How;
 use App\Models\Instagram;
 use App\Models\Newsletter;
 use App\Models\Reason;
@@ -54,7 +55,7 @@ class HomeController extends Controller
             'clients_section',
             'blog_section',
         ])->get()->keyBy('key');
-        
+        $data['how'] = How::first();
         return view('frontend.home', $data);
     }
 

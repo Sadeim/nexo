@@ -187,11 +187,26 @@ return [
         'choose_role' => 'Choose role',
         'value' => 'Value',
         'registered_on' => 'Registered on',
-        '' => '',
+        'tap1_name' => 'Tap Name 1',
+        'tap1_number'=>'Tap Number 1',
+        'tap1_content'=>'Tap Content 1',
+
+        'tap2_name' => 'Tap Name 2',
+        'tap2_number'=>'Tap Number 2',
+        'tap2_content'=>'Tap Content 2',
+
+        'tap3_name' => 'Tap Name 3',
+        'tap3_number'=>'Tap Number 3',
+        'tap3_content'=>'Tap Content 3',
+        'tap4_name' => 'Tap Name 4',
+        'tap4_number'=>'Tap Number 4',
+        'tap4_content'=>'Tap Content 4',
     ],
 
     'global' => [
         'addresses' => 'Addresses',
+        'how'=>'How We Work',
+
         'type' => 'Type',
         'cant_edit' => 'Cannot be edited',
         'active' => 'Active',
@@ -277,7 +292,7 @@ return [
         'product_name'  => 'Product name',
         'product_description'  => 'Product description',
         'product_category'  => 'Product category',
-        
+
         'coupon'  => 'Coupon',
         'coupons'  => 'Coupons',
         'add_new_coupon'  => 'Add new coupon',

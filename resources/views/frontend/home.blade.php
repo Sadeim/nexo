@@ -22,8 +22,8 @@
                             <a href="{{ $slider->button_link }}" class="btn-default">{{ $slider->button_text }}</a>
                             <a href="{{ route('contact') }}" class="btn-default btn-highlighted">contact now</a>
                         </div>
-                        <!-- Hero Button End --> 
-                        
+                        <!-- Hero Button End -->
+
                         <!-- Hero List Start -->
                         <div class="hero-list wow fadeInUp" data-wow-delay="0.4s">
                             <ul>
@@ -101,8 +101,8 @@
                             </div>
                         </div>
                         <!-- Client Slider Box End -->
-                    </div>  
-                    <!-- Client Slider Boxes End -->                  
+                    </div>
+                    <!-- Client Slider Boxes End -->
                 </div>
             </div>
         </div>
@@ -124,21 +124,21 @@
 							<p class="wow fadeInUp" data-wow-delay="0.2s">{{ $about->description }}</p>
 						</div>
 						<!-- Section Title End -->
-	
+
 						<!-- About Us Info List Start -->
 						<div class="about-us-info-list">
 							<div class="about-us-info-item wow fadeInUp" data-wow-delay="0.4s">
 								<h3>{{ $about->tab1_title }}</h3>
 								<p>{{ $about->tab1_content }}</p>
 							</div>
-	
+
 							<div class="about-us-info-item wow fadeInUp" data-wow-delay="0.6s">
 								<h3>{{ $about->tab2_title }}</h3>
 								<p>{{ $about->tab2_content }}</p>
 							</div>
 						</div>
 						<!-- About Us Info List End -->
-	
+
 						<!-- About Us Button Start -->
 						<div class="about-us-btn wow fadeInUp" data-wow-delay="0.8s">
 							<a href="{{ $about->button_link }}" class="btn-default">{{ $about->button_text }}</a>
@@ -147,7 +147,7 @@
 					</div>
 					<!-- About Us Content End -->
 				</div>
-	
+
 				<div class="col-lg-6">
 					<!-- About Us Images Start -->
 					<div class="about-us-images">
@@ -158,7 +158,7 @@
 							</figure>
 						</div>
 						<!-- About Image 1 End -->
-	
+
 						<!-- About Image 2 Start -->
 						<div class="about-img-2">
 							<figure class="image-anime">
@@ -166,7 +166,7 @@
 							</figure>
 						</div>
 						<!-- About Image 2 End -->
-	
+
 						<!-- Company Timing Start -->
 						<div class="company-timing">
 							<h3>Opening hours</h3>
@@ -186,7 +186,7 @@
 			</div>
 		</div>
 	</div>
-	
+
     <!-- About Us Section End -->
     @if ($sections['services_section']?->is_active)
         <!-- Our Services Section Start -->
@@ -244,179 +244,70 @@
                     @endforeach
                 </div>
 
-                    <div class="col-lg-12">
-                        <!-- Service Footer Start -->
-                        <div class="service-footer wow fadeInUp" data-wow-delay="0.8s">
-                            <p>{{ $sections['services_section']->note }}</p>
-                        </div>
-                        <!-- Service Footer End -->
+            <div class="row">
+				@foreach ($services as $index => $service)
+					<div class="col-lg-3 col-md-6">
+						<!-- Service Item Start -->
+						<div class="service-item wow fadeInUp" data-wow-delay="{{ $index * 0.2 }}s">
+							<!-- Service Item Header Start -->
+							<div class="service-item-header">
+								<div class="icon-box">
+									<img src="{{ asset($service->icon) }}" alt="{{ $service->name }}">
+								</div>
+
+								<div class="service-item-content">
+									<h3><a href="#">{{ $service->name }}</a></h3>
+									<p>{{ \Illuminate\Support\Str::limit($service->description, 80) }}</p>
+								</div>
+							</div>
+							<!-- Service Item Header End -->
+
+							<!-- Service Image Start -->
+							<div class="service-image">
+								<a href="#" data-cursor-text="View">
+									<figure class="image-anime">
+										<img src="{{ asset($service->image) }}" alt="{{ $service->name }}">
+									</figure>
+								</a>
+							</div>
+							<!-- Service Image End -->
+						</div>
+						<!-- Service Item End -->
+					</div>
+				@endforeach
+			</div>
+
+                <div class="col-lg-12">
+                    <!-- Service Footer Start -->
+                    <div class="service-footer wow fadeInUp" data-wow-delay="0.8s">
+                        <p>You will be satisfy with our work. Contact us today <a href="tel:123456789">(+91) 123 - 456 789</a></p>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Our Services Section End -->
-    @endif
+    </div>
 
-    <!-- How It Work Start -->
-    {{-- <div class="how-it-work bg-radius-section">
-        <div class="container">
-            <div class="row section-row align-items-center">
-                <div class="col-lg-6">
-                    <!-- Section Title Start -->
-                    <div class="section-title">
-                        <h3 class="wow fadeInUp">how it work</h3>
-                        <h2 class="text-anime-style-3" data-cursor="-opaque">Our simple service process</h2>
-                    </div>
-                    <!-- Section Title End -->
-                </div>
+    <!-- Our Services Section End -->
 
-                <div class="col-lg-6">
-                    <!-- Trusted Client Content Start -->
-                    <div class="trusted-client-content">
-                        <!-- Trusted Client Box Start -->
-                        <div class="trusted-client-box">
-                            <!-- Trusted Client Images Start -->
-                            <div class="trusted-client-images">
-                                <!-- Client Image Start -->
-                                <div class="client-image">
-                                    <figure class="image-anime">
-                                        <img src="{{ asset('frontend_assets/images/trusted-client-img-1.jpg') }}" alt="">
-                                    </figure>
-                                </div>
-                                <!-- Client Image End -->
 
-                                <!-- Client Image Start -->
-                                <div class="client-image">
-                                    <figure class="image-anime">
-                                        <img src="{{ asset('frontend_assets/images/trusted-client-img-2.jpg') }}" alt="">
-                                    </figure>
-                                </div>
-                                <!-- Client Image End -->
-
-                                <!-- Client Image Start -->
-                                <div class="client-image">
-                                    <figure class="image-anime">
-                                        <img src="{{ asset('frontend_assets/images/trusted-client-img-3.jpg') }}" alt="">
-                                    </figure>
-                                </div>
-                                <!-- Client Image End -->
-
-                                <!-- Client Counter Start -->
-                                <div class="client-image add-more">
-                                    <h3><span class="counter">60</span>+</h3>
-                                </div>
-                                <!-- Client Counter End -->
-                            </div>
-                            <!-- Trusted Client Images End -->
-                            
-                            <!-- Trusted Client Title Start -->
-                            <div class="trusted-client-title">
-                                <h3>Trusted from our <span class="counter">1500</span> client</h3>
-                            </div>
-                            <!-- Trusted Client Title End -->
-                        </div>
-                        <!-- Trusted Client Box End -->
-                    </div>
-                    <!-- Trusted Client Content End -->
-                </div>
-            </div>
-
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <!-- How Work Image Start -->
-                    <div class="how-work-image">
-                        <!-- How Work Image Title Start -->
-                        <div class="how-work-image-title">
-                            <h2>handyman</h2>
-                        </div>
-                        <!-- How Work Image Title End -->
-
-                        <figure class="image-anime">
-                            <img src="{{ asset('frontend_assets/images/how-work-image.jpg') }}" alt="">
-                        </figure>
-                    </div>
-                    <!-- How Work Image End -->
-                </div>
-                
-                <div class="col-lg-6">
-                    <!-- How Work Steps Start -->
-                    <div class="how-work-steps">
-                        <!-- How Work Steps Item Start -->
-                        <div class="how-work-step-item wow fadeInUp">
-                            <div class="icon-box">
-                                <img src="{{ asset('frontend_assets/images/icon-service-1.svg') }}" alt="">
-                            </div>
-
-                            <div class="how-work-step-content">
-                                <h3><span>01.</span> electrical repairs</h3>
-                                <p>Electrical Repairs involve diagnosing and fixing issues in electrical systems to ensure.</p>
-                            </div>
-                        </div>
-                        <!-- How Work Steps Item End -->
-
-                        <!-- How Work Steps Item Start -->
-                        <div class="how-work-step-item wow fadeInUp" data-wow-delay="0.2s">
-                            <div class="icon-box">
-                                <img src="{{ asset('frontend_assets/images/icon-service-2.svg') }}" alt="">
-                            </div>
-
-                            <div class="how-work-step-content">
-                                <h3><span>02.</span> Professional Service Delivery</h3>
-                                <p>Our skilled handyman arrives on time with the necessary tools and expertise, completing.</p>
-                            </div>
-                        </div>
-                        <!-- How Work Steps Item End -->
-
-                        <!-- How Work Steps Item Start -->
-                        <div class="how-work-step-item wow fadeInUp" data-wow-delay="0.4s">
-                            <div class="icon-box">
-                                <img src="{{ asset('frontend_assets/images/icon-service-3.svg') }}" alt="">
-                            </div>
-
-                            <div class="how-work-step-content">
-                                <h3><span>03.</span> Quality Check</h3>
-                                <p>After completion, we ensure the quality of work meets our standards and your satisfaction.</p>
-                            </div>
-                        </div>
-                        <!-- How Work Steps Item End -->
-
-                        <!-- How Work Steps Item Start -->
-                        <div class="how-work-step-item wow fadeInUp" data-wow-delay="0.6s">
-                            <div class="icon-box">
-                                <img src="{{ asset('frontend_assets/images/icon-service-4.svg') }}" alt="">
-                            </div>
-
-                            <div class="how-work-step-content">
-                                <h3><span>04.</span> Payment and Follow-Up</h3>
-                                <p>Pay easily through our secure payment options. We'll follow up to ensure.</p>
-                            </div>
-                        </div>
-                        <!-- How Work Steps Item End -->
-                    </div>
-                    <!-- How Work Steps End -->
-                </div>
-            </div>
-        </div>
-    </div> --}}
-    <!-- How It Work End -->
 
     <!-- Quick Fact Start -->
-    {{-- <div class="quick-facts bg-radius-section">
+  <div class="quick-facts bg-radius-section">
         <div class="container">
             <div class="row section-row align-items-center">
                 <div class="col-lg-6">
                     <!-- Section Title Start -->
                     <div class="section-title dark-section">
                         <h3 class="wow fadeInUp">Some facts</h3>
-                        <h2 class="text-anime-style-3" data-cursor="-opaque">Quick facts about our services</h2>
+                        <h2 class="text-anime-style-3" data-cursor="-opaque">{{$how->name}}</h2>
                     </div>
                     <!-- Section Title End -->
                 </div>
-                
+
                 <div class="col-lg-6">
                     <!-- Section Title Content Start -->
                     <div class="section-title-content dark-section wow fadeInUp" data-wow-delay="0.2s">
-                        <p>From repairs to home improvements, our comprehensive handyman services cover everything you</p>
+                        <p>{{$how->description}}</p>
                     </div>
                     <!-- Section Title Content End -->
                 </div>
@@ -428,55 +319,58 @@
                     <div class="fact-counter-box">
                         <!-- Fact Counter Item Start -->
                         <div class="fact-counter-item">
-                            <h3>experience</h3>
-                            <h2><span class="counter">25</span>+</h2>
-                            <p>years of experience</p>
+                            <h3>{{$how->tap1_name}}</h3>
+                            <h2><span class="counter">{{$how->tap1_number}}</span>+</h2>
+                            <p>{{$how->tap1_content}}</p>
                         </div>
                         <!-- Fact Counter Item End -->
 
                         <!-- Fact Counter Item Start -->
                         <div class="fact-counter-item">
-                            <h3>people</h3>
-                            <h2><span class="counter">320</span>k</h2>
-                            <p>working staff</p>
+                            <h3>{{$how->tap2_name}}</h3>
+                            <h2><span class="counter">{{$how->tap2_number}}</span>k</h2>
+                            <p>{{$how->tap2_content}}</p>
                         </div>
                         <!-- Fact Counter Item End -->
                     </div>
                     <!-- Fact Counter Box End -->
                 </div>
-                
-                <div class="col-lg-6 order-lg-2 order-md-3 order-3">
-                    <!-- Quick Fact image Start -->
-                    <div class="quick-fact-image">
-                        <img src="{{ asset('frontend_assets/images/quick-fact-img.png') }}" alt="">
-                    </div>
-                    <!-- Quick Fact image End -->
-                </div>
-                
+
+
                 <div class="col-lg-3 col-md-6 col-6 order-lg-3 order-md-2 order-2">
                     <!-- Fact Counter Box Start -->
                     <div class="fact-counter-box">
                         <!-- Fact Counter Item Start -->
                         <div class="fact-counter-item">
-                            <h3>work</h3>
-                            <h2><span class="counter">8</span>k+</h2>
-                            <p>project complete</p>
+                            <h3>{{$how->tap3_name}}</h3>
+                            <h2><span class="counter">{{$how->tap3_number}}</span>k+</h2>
+                            <p>{{$how->tap3_content}}</p>
                         </div>
                         <!-- Fact Counter Item End -->
 
                         <!-- Fact Counter Item Start -->
                         <div class="fact-counter-item">
-                            <h3>client</h3>
-                            <h2><span class="counter">100</span>%</h2>
-                            <p>satisfaction guarante</p>
+                            <h3>{{$how->tap4_name}}</h3>
+                            <h2><span class="counter">{{$how->tap4_number}}</span>%</h2>
+                            <p>{{$how->tap4_content}}</p>
                         </div>
                         <!-- Fact Counter Item End -->
+
                     </div>
+
                     <!-- Fact Counter Box End -->
                 </div>
+                <div class="col-lg-6 order-lg-2 order-md-3 order-3">
+                    <!-- Quick Fact image Start -->
+                    <div class="quick-fact-image">
+                        <img src="{{ asset($how->image) }}" alt="">
+                    </div>
+                    <!-- Quick Fact image End -->
+                </div>
+
             </div>
         </div>
-    </div> --}}
+    </div>
     <!-- Quick Fact End -->
 
     @if ($sections['services_section']?->is_active)
