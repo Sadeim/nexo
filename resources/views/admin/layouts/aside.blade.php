@@ -142,6 +142,19 @@
                             </div>
                         </div>
                     @endif
+                    @if (auth()->user()->can('view_how'))
+                        <div class="menu-sub menu-sub-accordion">
+                            <div class="menu-item">
+                                <a class="menu-link {{ $is_active == 'how' ? 'active' : '' }}"
+                                   href="{{ route('admin.how.index') }}">
+                                    <span class="menu-bullet">
+                                        <i class="fa-solid fa-briefcase"></i>
+                                    </span>
+                                    <span class="menu-title">{{ __('admin.global.how') }}</span>
+                                </a>
+                            </div>
+                        </div>
+                    @endif
 
                     @if (auth()->user()->can('view_teams'))
                         <div class="menu-sub menu-sub-accordion">
@@ -515,8 +528,8 @@
                             <a class="{{ $is_active == 'logout' ? 'active' : '' }}"
                                 href="aaaaa.logout.index')}}">
                                 <span class="menu-title">{{ __('admin.menu.logout') }}</span>
-                            </a>    
-                        </span>                        
+                            </a>
+                        </span>
                     </span>
                 </div> --}}
             </div>

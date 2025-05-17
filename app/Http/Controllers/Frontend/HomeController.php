@@ -14,6 +14,7 @@ use App\Models\Contact;
 use App\Models\Event;
 use App\Models\Faq;
 use App\Models\Feature;
+use App\Models\How;
 use App\Models\Instagram;
 use App\Models\Newsletter;
 use App\Models\Reason;
@@ -44,6 +45,7 @@ class HomeController extends Controller
         $data['faqs'] = Faq::get();
         $data['blogs'] = Blog::get();
         $data['clients'] = Client::get();
+        $data['how']=How::first();
         // $data['tabs'] = ReasonTab::orderBy('order')->get();
 
         return view('frontend.home', $data);
