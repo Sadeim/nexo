@@ -159,7 +159,7 @@ class HomeController extends Controller
         $data['approach'] = Approach::first();
         $data['sections'] = Section::whereIn('key', [
             'skills_section',
-            'approchs_section',
+            'approaches_section',
             'reasons_section',
         ])->get()->keyBy('key');
         

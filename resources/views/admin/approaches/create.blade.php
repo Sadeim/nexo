@@ -2,8 +2,8 @@
 @section('title', isset($approach) ? __('admin.global.edit_approach') : __('admin.global.add_new_approach'))
 
 @section('content')
-    <form id="kt_form" class="form row d-flex flex-column flex-lg-row addForm" data-kt-redirect="{{ route('admin.approach.index') }}"
-          action="{{ isset($approach) ? route('admin.approach.update', $approach->id) : route('admin.approach.store') }}" method="POST" enctype="multipart/form-data">
+    <form id="kt_form" class="form row d-flex flex-column flex-lg-row addForm" data-kt-redirect="{{ route('admin.approaches.index') }}"
+          action="{{ isset($approach) ? route('admin.approaches.update', $approach->id) : route('admin.approaches.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         @isset($approach)
             @method('PATCH')
@@ -132,7 +132,7 @@
                         <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
                     </span>
                 </button>
-                <a href="{{ route('admin.approach.index') }}" class="btn btn-light me-5 cancel">{{ __('admin.form.cancel') }}</a>
+                <a href="{{ route('admin.approaches.index') }}" class="btn btn-light me-5 cancel">{{ __('admin.form.cancel') }}</a>
             </div>
         </div>
     </form>

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('approachs', function (Blueprint $table) {
+        Schema::create('approaches', function (Blueprint $table) {
             $table->id();
 
             $table->string('title')->default('Our Approach');
@@ -36,6 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('approachs');
+        Schema::dropIfExists('approaches');
     }
 };

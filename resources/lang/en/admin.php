@@ -460,6 +460,11 @@ return [
         'slider'                 => 'Slider',
         'sliders'                => 'Sliders',
         'add_new_slider'         => 'Add new slider',
+
+        'approach'                 => 'Approach',
+        'approaches'                => 'Approaches',
+        'add_new_approach'         => 'Add new approach',
+
     ],
 
     'roles' => [

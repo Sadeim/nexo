@@ -23,7 +23,7 @@
     </div>
     <!-- Page Header End -->
 
-    @if ($sections['approchs_section']?->is_active)
+    @if ($sections['approaches_section']?->is_active)
         <!-- Our Approch Section Start -->
         <div class="our-approch bg-radius-section">
             <div class="container">

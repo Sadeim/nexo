@@ -250,6 +250,32 @@
                             </div>
                         </div>
                     @endif
+                    @if (auth()->user()->can('view_approaches'))
+                        <div class="menu-sub menu-sub-accordion">
+                            <div class="menu-item">
+                                <a class="menu-link {{ $is_active == 'approaches' ? 'active' : '' }}"
+                                    href="{{ route('admin.approaches.index') }}">
+                                    <span class="menu-bullet">
+                                        <i class="fa-solid fa-approaches"></i>
+                                    </span>
+                                    <span class="menu-title">Approaches</span>
+                                </a>
+                            </div>
+                        </div>
+                    @endif
+                    @if (auth()->user()->can('view_how'))
+                        <div class="menu-sub menu-sub-accordion">
+                            <div class="menu-item">
+                                <a class="menu-link {{ $is_active == 'how' ? 'active' : '' }}"
+                                    href="{{ route('admin.how.index') }}">
+                                    <span class="menu-bullet">
+                                        <i class="fa-solid fa-how"></i>
+                                    </span>
+                                    <span class="menu-title">How</span>
+                                </a>
+                            </div>
+                        </div>
+                    @endif
                 </div>
                 {{-- @if (auth()->user()->can('view_achievements'))
                     <div

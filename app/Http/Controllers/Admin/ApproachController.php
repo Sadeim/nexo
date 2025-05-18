@@ -17,8 +17,7 @@ class ApproachController extends Controller
      */
     public function index()
     {
-        //
-        return view('admin.approach.index');
+        return view('admin.approaches.index');
     }
 
     public function datatable(Request $request) 
@@ -32,7 +31,7 @@ class ApproachController extends Controller
     public function create()
     {
         //
-        return view('admin.approach.create');
+        return view('admin.approaches.create');
     }
 
     /**
@@ -79,7 +78,7 @@ class ApproachController extends Controller
     {
         //
         $approach=Approach::findorfail($id);
-        return view('admin.approach.create',compact('approach'));
+        return view('admin.approaches.create',compact('approach'));
     }
 
     /**
@@ -114,7 +113,6 @@ class ApproachController extends Controller
      */
     public function destroy(string $id)
     {
-        //
         Approach::destroy($id);
         return $this->response_api(200, __('admin.form.deleted_successfully'), '');
     }

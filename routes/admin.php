@@ -223,8 +223,8 @@ use App\Http\Controllers\Admin\HowWorkController;
         /* ------------------------------------- menutem Routes --------------------------------- */
 
         /* ------------------------------------- slider Routes --------------------------------- */
-        Route::resource('approach', ApproachController::class);
-        Route::group(['prefix' => 'approach', 'as' => 'approach.'], function () {
+        Route::resource('approaches', ApproachController::class);
+        Route::group(['prefix' => 'approaches', 'as' => 'approaches.'], function () {
             Route::get('data/datatables', [ApproachController::class , 'datatable'])->name('datatable');
         });
         /*

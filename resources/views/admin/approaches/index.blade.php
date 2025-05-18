@@ -20,7 +20,7 @@
                             <div class="col-8 col-sm-12 col-md-9 col-lg-9">
                                 <div class="card-toolbar flex-row-fluid d-flex justify-content-end gap-5">
                                     <!--Add new user start-->
-                                    <a class="btn btn-primary" href="{{ route('admin.approach.create') }}">
+                                    <a class="btn btn-primary" href="{{ route('admin.approaches.create') }}">
                                         {{ __('admin.global.add_new_approach') }}
                                         <span class="svg-icon svg-icon-2">
                                             +
@@ -102,7 +102,7 @@
 @endsection
 @push('scripts')
     <script>
-        window.datatable_url = "{{ route('admin.approach.datatable') }}";
+        window.datatable_url = "{{ route('admin.approaches.datatable') }}";
     </script>
     <script src="{{ asset('admin_assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
     <script src="{{ asset('admin_assets/js_resources/approach.js') }}"></script>

@@ -92,7 +92,7 @@ class SectionSeeder extends Seeder
             'is_active' => true,
         ]);
         Section::create([
-            'key' => 'approach_section',
+            'key' => 'approaches_section',
             'title' => 'Our Approach',
             'description' => 'Discover our unique approach to service.',
             'is_active' => true,

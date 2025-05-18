@@ -14,7 +14,7 @@ class ApproachResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $operations = view('admin.approach.sub.operations', ['instance' => $this])->render();
+        $operations = view('admin.approaches.sub.operations', ['instance' => $this])->render();
 
         return [
             'id'            => $this->id,
