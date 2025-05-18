@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Aporch;
+use App\Models\Approach;
 use App\Traits\SaveImageTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
-class AporchController extends Controller
+class ApproachController extends Controller
 {
     use SaveImageTrait;
     
@@ -18,12 +18,12 @@ class AporchController extends Controller
     public function index()
     {
         //
-        return view('admin.aporch.index');
+        return view('admin.approach.index');
     }
 
     public function datatable(Request $request) 
     {
-        $items = Aporch::query()->orderBy('id', 'DESC');
+        $items = Approach::query()->orderBy('id', 'DESC');
         return $this->filterDataTable($items, $request);
     }
     /**
@@ -32,7 +32,7 @@ class AporchController extends Controller
     public function create()
     {
         //
-        return view('admin.aporch.create');
+        return view('admin.approach.create');
     }
 
     /**
@@ -50,11 +50,11 @@ class AporchController extends Controller
             ];
             foreach ($imageFields as $field) {
                 if ($request->hasFile($field)) {
-                    $data[$field] = $this->uploadImage($request->file($field), 'aporch');
+                    $data[$field] = $this->uploadImage($request->file($field), 'approach');
                 }
             }
             
-             Aporch::create($data);
+             Approach::create($data);
             DB::commit();
             return $this->response_api(200, __('admin.form.added_successfully'), '');
         } catch(\Exception $e) {
@@ -78,8 +78,8 @@ class AporchController extends Controller
     public function edit(string $id)
     {
         //
-        $aporch=Aporch::findorfail($id);
-        return view('admin.aporch.create',compact('aporch'));
+        $approach=Approach::findorfail($id);
+        return view('admin.approach.create',compact('approach'));
     }
 
     /**
@@ -96,11 +96,11 @@ class AporchController extends Controller
             ];
             foreach ($imageFields as $field) {
                 if ($request->hasFile($field)) {
-                    $data[$field] = $this->uploadImage($request->file($field), 'aporch');
+                    $data[$field] = $this->uploadImage($request->file($field), 'approach');
                 }
             }
-            $aporch = Aporch::findOrFail($id);
-            $aporch->update($data);
+            $approach = Approach::findOrFail($id);
+            $approach->update($data);
             DB::commit();
             return $this->response_api(200, __('admin.form.updated_successfully'), '');
         } catch(\Exception $e) {
@@ -115,7 +115,7 @@ class AporchController extends Controller
     public function destroy(string $id)
     {
         //
-        Aporch::destroy($id);
+        Approach::destroy($id);
         return $this->response_api(200, __('admin.form.deleted_successfully'), '');
     }
 }

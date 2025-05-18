@@ -5,7 +5,7 @@ namespace App\Http\Resources\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class AporchResource extends JsonResource
+class ApproachResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,7 +14,7 @@ class AporchResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $operations = view('admin.aporch.sub.operations', ['instance' => $this])->render();
+        $operations = view('admin.approach.sub.operations', ['instance' => $this])->render();
 
         return [
             'id'            => $this->id,

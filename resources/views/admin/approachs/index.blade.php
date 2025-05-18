@@ -1,6 +1,6 @@
-@extends('admin.layouts.master', ['is_active_parent' => 'home','is_active'=> 'aporch'])
+@extends('admin.layouts.master', ['is_active_parent' => 'home','is_active'=> 'approach'])
 @section('title')
-    {{ __('admin.global.aporch') }}
+    {{ __('admin.global.approach') }}
 @endsection
 @section('content')
 
@@ -14,14 +14,14 @@
                     <div class="page-content-header">
                         <div class="row justify-content-between">
                             <div class="col-3 col-sm-12 col-md-3 col-lg-3">
-                                <h2 class="table-title">{{ __('admin.global.aporch') }}</h2>
+                                <h2 class="table-title">{{ __('admin.global.approach') }}</h2>
 
                             </div>
                             <div class="col-8 col-sm-12 col-md-9 col-lg-9">
                                 <div class="card-toolbar flex-row-fluid d-flex justify-content-end gap-5">
                                     <!--Add new user start-->
-                                    <a class="btn btn-primary" href="{{ route('admin.aporch.create') }}">
-                                        {{ __('admin.global.add_new_aporch') }}
+                                    <a class="btn btn-primary" href="{{ route('admin.approach.create') }}">
+                                        {{ __('admin.global.add_new_approach') }}
                                         <span class="svg-icon svg-icon-2">
                                             +
                                         </span>
@@ -102,10 +102,10 @@
 @endsection
 @push('scripts')
     <script>
-        window.datatable_url = "{{ route('admin.aporch.datatable') }}";
+        window.datatable_url = "{{ route('admin.approach.datatable') }}";
     </script>
     <script src="{{ asset('admin_assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
-    <script src="{{ asset('admin_assets/js_resources/aporch.js') }}"></script>
+    <script src="{{ asset('admin_assets/js_resources/approach.js') }}"></script>
     <script src="{{ asset('admin_assets/js/dashboard/handleDataTable.js') }}"></script>
 @endpush
 @push('modals')

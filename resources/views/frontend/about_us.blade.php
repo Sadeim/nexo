@@ -23,140 +23,105 @@
     </div>
     <!-- Page Header End -->
 
-    <!-- Our Approch Section Start -->
-    <div class="our-approch bg-radius-section">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <!-- Our Approch Image Start -->
-                    <div class="our-approch-image">
-                        <div class="our-approch-img-1">
-                            <figure class="image-anime">
-                                <img src="{{asset($about->image1)}}" alt="">
-                            </figure>
-                        </div>
-
-                        <div class="our-approch-img-2">
-                            <figure class="image-anime">
-                                <img src="{{asset($about->image2)}}" alt="">
-                            </figure>
+    @if ($sections['approchs_section']?->is_active)
+        <!-- Our Approch Section Start -->
+        <div class="our-approch bg-radius-section">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <div class="our-approch-image">
+                            <div class="our-approch-img-1">
+                                <figure class="image-anime">
+                                    <img src="{{ asset($approach->image_1) }}" alt="">
+                                </figure>
+                            </div>
+                            <div class="our-approch-img-2">
+                                <figure class="image-anime">
+                                    <img src="{{ asset($approach->image_2) }}" alt="">
+                                </figure>
+                            </div>
                         </div>
                     </div>
-                    <!-- Our Approch Image End -->
-                </div>
-                
-                <div class="col-lg-6">
-                    <!-- Our Approch Content Start -->
-                    <div class="our-approch-content">
-                        <!-- Section Title Start -->
-                        <div class="section-title">
-                            <h3 class="wow fadeInUp">our approach</h3>
-                            <h2 class="text-anime-style-3" data-cursor="-opaque">Handyman services with personal touch</h2>
-                        </div>
-                        <!-- Section Title End -->
-
-                        <!-- Our Approch Tab Start -->
-                        <div class="our-approch-tab">
-                            <!-- Sidebar Our Approch Nav start -->
-                            <div class="our-approch-tab-nav wow fadeInUp" data-wow-delay="0.2s">
-                                <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link btn-default btn-highlighted active" id="mission-tab" data-bs-toggle="tab" data-bs-target="#mission" type="button" role="tab" aria-selected="true">our mission</button>
-                                    </li>
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link btn-default btn-highlighted" id="vision-tab" data-bs-toggle="tab" data-bs-target="#vision" type="button" role="tab" aria-selected="false">our vision</button>
-                                    </li>
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link btn-default btn-highlighted" id="value-tab" data-bs-toggle="tab" data-bs-target="#value" type="button" role="tab" aria-selected="false">our value</button>
-                                    </li>
-                                </ul>
+                    
+                    <div class="col-lg-6">
+                        <div class="our-approch-content">
+                            <div class="section-title">
+                                <h3 class="wow fadeInUp">{{ $approach->title }}</h3>
+                                <h2 class="text-anime-style-3" data-cursor="-opaque">{{ $approach->subtitle }}</h2>
                             </div>
-                            <!-- Sidebar Our Approch Nav End -->
-
-                            <!-- Approch Box Start -->
-                            <div class="approch-box tab-content" id="myTabContent">
-                                <!-- Approch Item Start -->
-                                <div class="approch-item tab-pane fade show active" id="mission" role="tabpanel">
-                                    <div class="row align-items-center">
-                                        <div class="col-lg-12">
-                                            <!-- Approch Tab Content Start -->
-                                            <div class="approch-tab-content">
-                                                <div class="approch-tab-content-header">
-                                                    <p>Our mission is to provide reliable, high-quality handyman services that enhance homes and simplify lives, delivering craftsmanship with integrity and care.</p>
-                                                </div>
-
-                                                <div class="approch-tab-content-list">
-                                                    <ul>
-                                                        <li>dependable repairs, every time</li>
-                                                        <li>improving homes, enhancing lives</li>
-                                                        <li>customer-centered approach</li>
-                                                    </ul>
-                                                </div>                                    
+        
+                            <div class="our-approch-tab">
+                                <div class="our-approch-tab-nav wow fadeInUp" data-wow-delay="0.2s">
+                                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link btn-default btn-highlighted active" id="mission-tab" data-bs-toggle="tab" data-bs-target="#mission" type="button" role="tab">our mission</button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link btn-default btn-highlighted" id="vision-tab" data-bs-toggle="tab" data-bs-target="#vision" type="button" role="tab">our vision</button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link btn-default btn-highlighted" id="value-tab" data-bs-toggle="tab" data-bs-target="#value" type="button" role="tab">our value</button>
+                                        </li>
+                                    </ul>
+                                </div>
+        
+                                <div class="approch-box tab-content" id="myTabContent">
+                                    <!-- Mission -->
+                                    <div class="approch-item tab-pane fade show active" id="mission" role="tabpanel">
+                                        <div class="approch-tab-content">
+                                            <div class="approch-tab-content-header">
+                                                <p>{{ $approach->mission_description }}</p>
                                             </div>
-                                            <!-- Approch Tab Content End -->
+                                            <div class="approch-tab-content-list">
+                                                <ul>
+                                                    @foreach ($approach->mission_points as $point)
+                                                        <li>{{ $point }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <!-- Approch Item End -->
-
-                                <!-- Approch Item Start -->
-                                <div class="approch-item tab-pane fade" id="vision" role="tabpanel">
-                                    <div class="row align-items-center">
-                                        <div class="col-lg-12">
-                                            <!-- Approch Tab Content Start -->
-                                            <div class="approch-tab-content">
-                                                <div class="approch-tab-content-header">
-                                                    <p>Our vision is to provide reliable, high-quality handyman services that enhance homes and simplify lives, delivering craftsmanship with integrity and care.</p>
-                                                </div>
-
-                                                <div class="approch-tab-content-list">
-                                                    <ul>
-                                                        <li>dependable repairs, every time</li>
-                                                        <li>improving homes, enhancing lives</li>
-                                                        <li>customer-centered approach</li>
-                                                    </ul>
-                                                </div>                                    
+        
+                                    <!-- Vision -->
+                                    <div class="approch-item tab-pane fade" id="vision" role="tabpanel">
+                                        <div class="approch-tab-content">
+                                            <div class="approch-tab-content-header">
+                                                <p>{{ $approach->vision_description }}</p>
                                             </div>
-                                            <!-- Approch Tab Content End -->
+                                            <div class="approch-tab-content-list">
+                                                <ul>
+                                                    @foreach ($approach->vision_points as $point)
+                                                        <li>{{ $point }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <!-- Approch Item End -->
-
-                                <!-- Approch Item Start -->
-                                <div class="approch-item tab-pane fade" id="value" role="tabpanel">
-                                    <div class="row align-items-center">
-                                        <div class="col-lg-12">
-                                            <!-- Approch Tab Content Start -->
-                                            <div class="approch-tab-content">
-                                                <div class="approch-tab-content-header">
-                                                    <p>Our value is to provide reliable, high-quality handyman services that enhance homes and simplify lives, delivering craftsmanship with integrity and care.</p>
-                                                </div>
-
-                                                <div class="approch-tab-content-list">
-                                                    <ul>
-                                                        <li>dependable repairs, every time</li>
-                                                        <li>improving homes, enhancing lives</li>
-                                                        <li>customer-centered approach</li>
-                                                    </ul>
-                                                </div>                                    
+        
+                                    <!-- Value -->
+                                    <div class="approch-item tab-pane fade" id="value" role="tabpanel">
+                                        <div class="approch-tab-content">
+                                            <div class="approch-tab-content-header">
+                                                <p>{{ $approach->value_description }}</p>
                                             </div>
-                                            <!-- Approch Tab Content End -->
+                                            <div class="approch-tab-content-list">
+                                                <ul>
+                                                    @foreach ($approach->value_points as $point)
+                                                        <li>{{ $point }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <!-- Approch Item End -->
-                            </div>
-                            <!-- Approch Box End -->
-                        </div>
-                        <!-- Our Approch Tab End -->
+                                </div><!-- /.approch-box -->
+                            </div><!-- /.our-approch-tab -->
+                        </div><!-- /.our-approch-content -->
                     </div>
-                    <!-- Our Approch Content End -->
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Our Approch Section End -->
+        <!-- Our Approch Section End -->
+    @endif
 
     @if ($sections['skills_section']?->is_active)
         <!-- Our Skill Section Start -->
@@ -260,7 +225,7 @@
 
     <!-- Quick Fact Section Start -->
     <div class="quick-facts bg-radius-section">
-    <div class="container">
+        <div class="container">
             <div class="row section-row align-items-center">
                 <div class="col-lg-6">
                     <!-- Section Title Start -->
@@ -340,64 +305,65 @@
     </div>
     <!-- Quick Fact Section End -->
     
-    <!-- Why Choose Us Section Start -->
-    <div class="why-choose-us">
-        <div class="why-choose-box bg-radius-section">
-            <div class="container">
-                <div class="row section-row align-items-end">
-                    <div class="col-lg-6">
-                        <!-- Section Title Start -->
-                        <div class="section-title">
-                            <h3 class="wow fadeInUp">why choose us</h3>
-                            <h2 class="text-anime-style-3" data-cursor="-opaque">Showcasing our handyman projects</h2>
-                        </div>
-                        <!-- Section Title End -->
-                    </div>
-
-                    <div class="col-lg-6">
-                        <!-- Why Choose Image Start -->
-                        <div class="why-choose-image">
-                            <figure class="image-anime">
-                                <img src="{{asset('frontend_assets/images/why.png')}}" alt="">
-                            </figure>
-                        </div>
-                        <!-- Why Choose Image End -->
-                    </div>
-                </div>
-
-                <div class="row">    
-                    <div class="col-lg-12">
-                        <!-- Why Choose Project Box Start -->
-                        <div class="why-choose-project-box">
-                            @foreach ($reasons as $reason)
-                            <!-- Why Choose Project Item Start -->
-                            <div class="why-choose-project-item wow fadeInUp">
-                                <div class="icon-box">
-                                    <i class="{{$reason->icon}}"></i>
-                                </div>
-    
-                                <div class="why-choose-project-content">
-                                    <h3>{{$reason->title}}</h3>
-                                    <p>{{$reason->text}}</p>
-                                </div>
+    @if ($sections['reasons_section']?->is_active)
+        <!-- Why Choose Us Section Start -->
+        <div class="why-choose-us">
+            <div class="why-choose-box bg-radius-section">
+                <div class="container">
+                    <div class="row section-row align-items-end">
+                        <div class="col-lg-6">
+                            <!-- Section Title Start -->
+                            <div class="section-title">
+                                <h3 class="wow fadeInUp">{{ $sections['reasons_section']->title }}</h3>
+                                <h2 class="text-anime-style-3" data-cursor="-opaque">{{ $sections['reasons_section']->description }}</h2>
                             </div>
-                            <!-- Why Choose Project Item End -->
-                            @endforeach
-                           
-                            <!-- Why Choose Project Item End -->
+                            <!-- Section Title End -->
                         </div>
-                        <!-- Why Choose Project Box End -->
-    
-                        <!-- Why Choose Footer Start -->
-                        <div class="why-choose-footer wow fadeInUp" data-wow-delay="0.8s">
-                            <p>Our construction company is the perfect choice for your dream. <a href="contact.html">Contact us now today!</a></p>
+
+                        <div class="col-lg-6">
+                            <!-- Why Choose Image Start -->
+                            <div class="why-choose-image">
+                                <figure class="image-anime">
+                                    <img src="{{asset('frontend_assets/images/why.png')}}" alt="">
+                                </figure>
+                            </div>
+                            <!-- Why Choose Image End -->
                         </div>
-                        <!-- Why Choose Footer End -->
+                    </div>
+
+                    <div class="row">    
+                        <div class="col-lg-12">
+                            <!-- Why Choose Project Box Start -->
+                            <div class="why-choose-project-box">
+                                @foreach ($reasons as $reason)
+                                    <!-- Why Choose Project Item Start -->
+                                    <div class="why-choose-project-item wow fadeInUp">
+                                        <div class="icon-box">
+                                            <i class="{{$reason->icon}}"></i>
+                                        </div>
+            
+                                        <div class="why-choose-project-content">
+                                            <h3>{{$reason->title}}</h3>
+                                            <p>{{$reason->text}}</p>
+                                        </div>
+                                    </div>
+                                    <!-- Why Choose Project Item End -->
+                                @endforeach
+                            
+                                <!-- Why Choose Project Item End -->
+                            </div>
+                            <!-- Why Choose Project Box End -->
+        
+                            <!-- Why Choose Footer Start -->
+                            <div class="why-choose-footer wow fadeInUp" data-wow-delay="0.8s">
+                                <p>{{ $sections['reasons_section']->note }}</p>
+                            </div>
+                            <!-- Why Choose Footer End -->
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>        
-    </div>
-    <!-- Why Choose Us Section End -->
-
+            </div>        
+        </div>
+        <!-- Why Choose Us Section End -->
+    @endif
 @endsection

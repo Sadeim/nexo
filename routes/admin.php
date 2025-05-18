@@ -29,7 +29,7 @@ use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\WorkController;
-use App\Http\Controllers\Admin\AporchController;
+use App\Http\Controllers\Admin\ApproachController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\HowWorkController;
 
@@ -223,9 +223,9 @@ use App\Http\Controllers\Admin\HowWorkController;
         /* ------------------------------------- menutem Routes --------------------------------- */
 
         /* ------------------------------------- slider Routes --------------------------------- */
-        Route::resource('aporch', AporchController::class);
-        Route::group(['prefix' => 'aporch', 'as' => 'aporch.'], function () {
-            Route::get('data/datatables', [AporchController::class , 'datatable'])->name('datatable');
+        Route::resource('approach', ApproachController::class);
+        Route::group(['prefix' => 'approach', 'as' => 'approach.'], function () {
+            Route::get('data/datatables', [ApproachController::class , 'datatable'])->name('datatable');
         });
         /*
         /* ------------------------------------- slider Routes --------------------------------- */

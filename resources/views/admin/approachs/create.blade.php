@@ -1,16 +1,16 @@
-@extends('admin.layouts.master', ['is_active_parent' => 'home','is_active'=> 'aporch'])
-@section('title', isset($aporch) ? __('admin.global.edit_aporch') : __('admin.global.add_new_aporch'))
+@extends('admin.layouts.master', ['is_active_parent' => 'home','is_active'=> 'approach'])
+@section('title', isset($approach) ? __('admin.global.edit_approach') : __('admin.global.add_new_approach'))
 
 @section('content')
-    <form id="kt_form" class="form row d-flex flex-column flex-lg-row addForm" data-kt-redirect="{{ route('admin.aporch.index') }}"
-          action="{{ isset($aporch) ? route('admin.aporch.update', $aporch->id) : route('admin.aporch.store') }}" method="POST" enctype="multipart/form-data">
+    <form id="kt_form" class="form row d-flex flex-column flex-lg-row addForm" data-kt-redirect="{{ route('admin.approach.index') }}"
+          action="{{ isset($approach) ? route('admin.approach.update', $approach->id) : route('admin.approach.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
-        @isset($aporch)
+        @isset($approach)
             @method('PATCH')
         @endisset
 
         <div class="page-content-header">
-            <h2 class="table-title">{{ isset($aporch) ? __('admin.global.edit_aporch') : __('admin.global.add_new_aporch') }}</h2>
+            <h2 class="table-title">{{ isset($approach) ? __('admin.global.edit_approach') : __('admin.global.add_new_approach') }}</h2>
         </div>
 
         <!-- Main Row: Left Sidebar + Right Content -->
@@ -25,7 +25,7 @@
                         <div class="card-toolbar">
                             <div class="image-input image-input-outline" data-kt-image-input="true">
                                 <div class="image-input-wrapper w-200px h-200px"
-                                     style="background-image: url({{ isset($aporch) && $aporch->image1 ? asset($aporch->image1) : asset('admin_assets/media/svg/files/blank-image.svg') }})">
+                                     style="background-image: url({{ isset($approach) && $approach->image1 ? asset($approach->image1) : asset('admin_assets/media/svg/files/blank-image.svg') }})">
                                 </div>
                                 <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
                                        data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change image">
@@ -47,7 +47,7 @@
                         <div class="card-toolbar">
                             <div class="image-input image-input-outline" data-kt-image-input="true">
                                 <div class="image-input-wrapper w-200px h-200px"
-                                     style="background-image: url({{ isset($aporch) && $aporch->image2  ? asset($aporch->image2) : asset('admin_assets/media/svg/files/blank-image.svg') }})">
+                                     style="background-image: url({{ isset($approach) && $approach->image2  ? asset($approach->image2) : asset('admin_assets/media/svg/files/blank-image.svg') }})">
                                 </div>
                                 <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
                                        data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change image">
@@ -78,43 +78,43 @@
                         <div class="mb-5">
                             <label class="required form-label">Title</label>
                             <input type="text" name="title" class="form-control" placeholder="Enter the Title"
-                                   value="{{ old('title', isset($aporch) ? $aporch->title : '') }}">
+                                   value="{{ old('title', isset($approach) ? $approach->title : '') }}">
                         </div>
 
                         <!-- Tab 1 -->
                         <div class="mb-5">
                             <label class="required form-label">Tab 1 Name</label>
                             <input type="text" name="tap1_name" class="form-control" placeholder="Enter Tab Name"
-                                   value="{{ old('tap1_name', isset($aporch) ? $aporch->tap1_name : '') }}">
+                                   value="{{ old('tap1_name', isset($approach) ? $approach->tap1_name : '') }}">
                         </div>
                         <div class="mb-5">
                             <label class="required form-label">Tab 1 Content</label>
                             <input type="text" name="tap1_content" class="form-control" placeholder="Enter Tab Content"
-                                   value="{{ old('tap1_content', isset($aporch) ? $aporch->tap1_content : '') }}">
+                                   value="{{ old('tap1_content', isset($approach) ? $approach->tap1_content : '') }}">
                         </div>
 
                         <!-- Tab 2 -->
                         <div class="mb-5">
                             <label class="required form-label">Tab 2 Name</label>
                             <input type="text" name="tap2_name" class="form-control" placeholder="Enter Tab Name"
-                                   value="{{ old('tap2_name', isset($aporch) ? $aporch->tap2_name : '') }}">
+                                   value="{{ old('tap2_name', isset($approach) ? $approach->tap2_name : '') }}">
                         </div>
                         <div class="mb-5">
                             <label class="required form-label">Tab 2 Content</label>
                             <input type="text" name="tap2_content" class="form-control" placeholder="Enter Tab Content"
-                                   value="{{ old('tap2_content', isset($aporch) ? $aporch->tap2_content : '') }}">
+                                   value="{{ old('tap2_content', isset($approach) ? $approach->tap2_content : '') }}">
                         </div>
 
                         <!-- Tab 3 -->
                         <div class="mb-5">
                             <label class="required form-label">Tab 3 Name</label>
                             <input type="text" name="tap3_name" class="form-control" placeholder="Enter Tab Name"
-                                   value="{{ old('tap3_name', isset($aporch) ? $aporch->tap3_name : '') }}">
+                                   value="{{ old('tap3_name', isset($approach) ? $approach->tap3_name : '') }}">
                         </div>
                         <div class="mb-5">
                             <label class="required form-label">Tab 3 Content</label>
                             <input type="text" name="tap3_content" class="form-control" placeholder="Enter Tab Content"
-                                   value="{{ old('tap3_content', isset($aporch) ? $aporch->tap3_content : '') }}">
+                                   value="{{ old('tap3_content', isset($approach) ? $approach->tap3_content : '') }}">
                         </div>
 
                     </div>
@@ -132,7 +132,7 @@
                         <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
                     </span>
                 </button>
-                <a href="{{ route('admin.aporch.index') }}" class="btn btn-light me-5 cancel">{{ __('admin.form.cancel') }}</a>
+                <a href="{{ route('admin.approach.index') }}" class="btn btn-light me-5 cancel">{{ __('admin.form.cancel') }}</a>
             </div>
         </div>
     </form>
