@@ -1,4 +1,4 @@
-@extends('admin.layouts.master', ['is_active_parent' => 'home', 'is_active' => ''])
+@extends('admin.layouts.master', ['is_active_parent' => 'about', 'is_active' => ''])
 @section('title', isset($how) ? 'Edit Work' : __('admin.global.add_new_work'))
 @section('content')
     <form id="kt_form" class="form row d-flex flex-column flex-lg-row addForm" data-kt-redirect="{{ route('admin.how.index') }}"
