@@ -29,6 +29,7 @@ use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\WorkController;
+use App\Http\Controllers\Admin\AporchController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\HowWorkController;
 
@@ -222,11 +223,18 @@ use App\Http\Controllers\Admin\HowWorkController;
         /* ------------------------------------- menutem Routes --------------------------------- */
 
         /* ------------------------------------- slider Routes --------------------------------- */
+        Route::resource('aporch', AporchController::class);
+        Route::group(['prefix' => 'aporch', 'as' => 'aporch.'], function () {
+            Route::get('data/datatables', [AporchController::class , 'datatable'])->name('datatable');
+        });
+        /*
+        /* ------------------------------------- slider Routes --------------------------------- */
         Route::resource('sliders', SliderController::class);
         Route::group(['prefix' => 'sliders', 'as' => 'sliders.'], function () {
             Route::get('data/datatables', [SliderController::class , 'datatable'])->name('datatable');
         });
         /* ------------------------------------- slider Routes --------------------------------- */
+        
         
         Route::post('sections/{id}/toggle', [SectionController::class, 'toggle'])->name('sections.toggle');
         Route::post('sections/{section}/update', [SectionController::class, 'update'])->name('sections.update');

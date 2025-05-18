@@ -27,6 +27,7 @@ use App\Models\Team;
 use App\Models\Testimonial;
 use App\Models\UserMessages;
 use App\Models\Work;
+use App\Models\Aporch;
 use App\Models\Skill;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -154,6 +155,7 @@ class HomeController extends Controller
         $data['skills'] = Skill::first();
         $data['reasons']=Reason::get();
         $data['how'] = How::first();
+        $data['aporch'] = Aporch::get();
 
         return view('frontend.about_us', $data);
     }

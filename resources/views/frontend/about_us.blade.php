@@ -32,13 +32,13 @@
                     <div class="our-approch-image">
                         <div class="our-approch-img-1">
                             <figure class="image-anime">
-                                <img src="{{asset('frontend_assets/images/our-approch-img-1.jpg')}}" alt="">
+                                <img src="{{asset($about->image1)}}" alt="">
                             </figure>
                         </div>
 
                         <div class="our-approch-img-2">
                             <figure class="image-anime">
-                                <img src="{{asset('frontend_assets/images/our-approch-img-2.jpg')}}" alt="">
+                                <img src="{{asset($about->image2)}}" alt="">
                             </figure>
                         </div>
                     </div>

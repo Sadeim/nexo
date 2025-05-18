@@ -41,7 +41,10 @@ class ReasonController extends Controller
     {
         try {
             DB::beginTransaction();
-            $data = $request->all();
+            $data = $request->except(['image']);
+            if ($request->hasFile('image')) {
+                $data['image'] = $this->uploadImage($request->file('image'), 'reasons');
+            }
             Reason::create($data);
             DB::commit();
             return $this->response_api(200, __('admin.form.added_successfully'), '');
@@ -61,8 +64,10 @@ class ReasonController extends Controller
     {
         try {
             DB::beginTransaction();
-            $data = $request->all();
-           
+            $data = $request->except(['image']);
+            if ($request->hasFile('image')) {
+                $data['image'] = $this->uploadImage($request->file('image'), 'reasons');
+            }
             $reason = Reason::findOrFail($id);
             $reason->update($data);
             DB::commit();
