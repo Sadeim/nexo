@@ -80,9 +80,15 @@ class SectionSeeder extends Seeder
             'is_active' => true,
         ]);
         Section::create([
-            'key' => 'consultation_section',
-            'title' => 'Consultation',
-            'description' => 'Request a consultation with our experts.',
+            'key' => 'skills_section',
+            'title' => 'Our Skills',
+            'description' => 'Discover the skills that set us apart.',
+            'is_active' => true,
+        ]);
+        Section::create([
+            'key' => 'reasons_section',
+            'title' => 'Why Choose Us',
+            'description' => 'Learn why we are the best choice for your needs.',
             'is_active' => true,
         ]);
         Section::create([

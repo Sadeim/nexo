@@ -1,4 +1,4 @@
-@extends('admin.layouts.master', ['is_active_parent' => 'home', 'is_active' => 'reasons'])
+@extends('admin.layouts.master', ['is_active_parent' => 'bout', 'is_active' => 'reasons'])
 @section('title', isset($reason) ? __('admin.global.edit_reason') : __('admin.global.add_new_reason'))
 @section('content')
 
@@ -32,19 +32,19 @@
                     <!-- Reason 1 -->
                     <div class="row align-items-end mb-8 border-bottom pb-6">
                         <div class="col-md-3 fv-row">
-                            <label class="form-label">Icon 1</label>
+                            <label class="form-label">Icon</label>
                             <input type="text" name="icon" class="form-control"
                                    value="{{ old('icon', isset($reason) ? $reason->icon : '') }}"
                                    placeholder="e.g. fas fa-star">
                         </div>
                         <div class="col-md-3 fv-row">
-                            <label class="form-label">Title 1</label>
+                            <label class="form-label">Title</label>
                             <input type="text" name="title" class="form-control"
                                    value="{{ old('title', isset($reason) ? $reason->title : '') }}"
                                    placeholder="Enter title">
                         </div>
                         <div class="col-md-6 fv-row">
-                            <label class="form-label">Description 1</label>
+                            <label class="form-label">Description</label>
                             <input type="text" name="text" class="form-control"
                                    value="{{ old('text', isset($reason) ? $reason->text: '') }}"
                                    placeholder="Enter description">

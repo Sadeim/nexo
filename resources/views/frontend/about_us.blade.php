@@ -158,103 +158,105 @@
     </div>
     <!-- Our Approch Section End -->
 
-    <!-- Our Skill Section Start -->
-    <div class="our-skill bg-radius-section">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <div class="our-skill-content">
-                        <!-- Section Title Start -->
-                        <div class="section-title">
-                            <h3 class="wow fadeInUp">our skill</h3>
-                            <h2 class="text-anime-style-3" data-cursor="-opaque">{{$skills->title}}</h2>
-                            <p class="wow fadeInUp" data-wow-delay="0.2s"> 
-                                {{$skills->description}}
-                            </p>
-                        </div>
-                        <!-- Section Title End -->
+    @if ($sections['skills_section']?->is_active)
+        <!-- Our Skill Section Start -->
+        <div class="our-skill bg-radius-section">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <div class="our-skill-content">
+                            <!-- Section Title Start -->
+                            <div class="section-title">
+                                <h3 class="wow fadeInUp">our skill</h3>
+                                <h2 class="text-anime-style-3" data-cursor="-opaque">{{$skills->title}}</h2>
+                                <p class="wow fadeInUp" data-wow-delay="0.2s"> 
+                                    {{$skills->description}}
+                                </p>
+                            </div>
+                            <!-- Section Title End -->
 
-                        <!-- About SkillBar Start -->
-                        <div class="our-skillbars">
-                            <!-- Skills Progress Bar Start -->
-                            <div class="skills-progress-bar">
-                                <!-- Skill Item Start -->
-                                <div class="skillbar" data-percent="66%">
-                                    <div class="skill-data">
-                                        <div class="skill-title">{{$skills->text1}}</div>
-                                        <div class="skill-no">{{$skills->percent1}}%</div>
+                            <!-- About SkillBar Start -->
+                            <div class="our-skillbars">
+                                <!-- Skills Progress Bar Start -->
+                                <div class="skills-progress-bar">
+                                    <!-- Skill Item Start -->
+                                    <div class="skillbar" data-percent="66%">
+                                        <div class="skill-data">
+                                            <div class="skill-title">{{$skills->text1}}</div>
+                                            <div class="skill-no">{{$skills->percent1}}%</div>
+                                        </div>
+                                        <div class="skill-progress">
+                                            <div class="count-bar"></div>
+                                        </div>
                                     </div>
-                                    <div class="skill-progress">
-                                        <div class="count-bar"></div>
-                                    </div>
+                                    <!-- Skill Item End -->
                                 </div>
-                                <!-- Skill Item End -->
-                            </div>
-                            <!-- Skills Progress Bar End -->
-                        
-                            <!-- Skills Progress Bar Start -->
-                            <div class="skills-progress-bar">
-                                <!-- Skill Item Start -->
-                                <div class="skillbar" data-percent="97%">
-                                    <div class="skill-data">
-                                        <div class="skill-title">{{$skills->text2}}</div>
-                                        <div class="skill-no">{{$skills->percent2}}%</div>
-                                    </div>
-                                    <div class="skill-progress">
-                                        <div class="count-bar"></div>
-                                    </div>
-                                </div>
-                                <!-- Skill Item End -->
-                            </div>
-                            <!-- Skills Progress Bar End -->
+                                <!-- Skills Progress Bar End -->
                             
-                            <!-- Skills Progress Bar Start -->
-                            <div class="skills-progress-bar">
-                                <!-- Skill Item Start -->
-                                <div class="skillbar" data-percent="85%">
-                                    <div class="skill-data">
-                                        <div class="skill-title">{{$skills->text3}}</div>
-                                        <div class="skill-no">{{$skills->percent3}}%</div>
+                                <!-- Skills Progress Bar Start -->
+                                <div class="skills-progress-bar">
+                                    <!-- Skill Item Start -->
+                                    <div class="skillbar" data-percent="97%">
+                                        <div class="skill-data">
+                                            <div class="skill-title">{{$skills->text2}}</div>
+                                            <div class="skill-no">{{$skills->percent2}}%</div>
+                                        </div>
+                                        <div class="skill-progress">
+                                            <div class="count-bar"></div>
+                                        </div>
                                     </div>
-                                    <div class="skill-progress">
-                                        <div class="count-bar"></div>
-                                    </div>
+                                    <!-- Skill Item End -->
                                 </div>
-                                <!-- Skill Item End -->
+                                <!-- Skills Progress Bar End -->
+                                
+                                <!-- Skills Progress Bar Start -->
+                                <div class="skills-progress-bar">
+                                    <!-- Skill Item Start -->
+                                    <div class="skillbar" data-percent="85%">
+                                        <div class="skill-data">
+                                            <div class="skill-title">{{$skills->text3}}</div>
+                                            <div class="skill-no">{{$skills->percent3}}%</div>
+                                        </div>
+                                        <div class="skill-progress">
+                                            <div class="count-bar"></div>
+                                        </div>
+                                    </div>
+                                    <!-- Skill Item End -->
+                                </div>
+                                <!-- Skills Progress Bar End -->
                             </div>
-                            <!-- Skills Progress Bar End -->
+                            <!-- About SkillBar End -->
                         </div>
-                        <!-- About SkillBar End -->
                     </div>
-                </div>
 
-                <div class="col-lg-6">
-                    <!-- Our Skill Image Start -->
-                    <div class="our-skill-image">
-                        <div class="our-skill-img-1">
-                            <figure class="image-anime">
-                                <img src="{{ asset($skills->image) }}" alt="">
-                            </figure>
+                    <div class="col-lg-6">
+                        <!-- Our Skill Image Start -->
+                        <div class="our-skill-image">
+                            <div class="our-skill-img-1">
+                                <figure class="image-anime">
+                                    <img src="{{ asset($skills->image) }}" alt="">
+                                </figure>
+                            </div>
+                    
+                            <div class="our-skill-img-2">
+                                <figure class="image-anime">
+                                    <img src="{{ asset($skills->image2) }}" alt="">
+                                </figure>
+                            </div>
+                    
+                            <div class="our-skill-img-3">
+                                <figure class="image-anime">
+                                    <img src="{{ asset($skills->image3) }}" alt="">
+                                </figure>
+                            </div>
                         </div>
-                
-                        <div class="our-skill-img-2">
-                            <figure class="image-anime">
-                                <img src="{{ asset($skills->image2) }}" alt="">
-                            </figure>
-                        </div>
-                
-                        <div class="our-skill-img-3">
-                            <figure class="image-anime">
-                                <img src="{{ asset($skills->image3) }}" alt="">
-                            </figure>
-                        </div>
+                        <!-- Our Skill Image End -->
                     </div>
-                    <!-- Our Skill Image End -->
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Our Skill Section End -->
+        <!-- Our Skill Section End -->
+    @endif
 
     <!-- Quick Fact Section Start -->
     <div class="quick-facts bg-radius-section">

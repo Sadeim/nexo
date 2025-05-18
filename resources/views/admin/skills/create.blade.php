@@ -1,4 +1,4 @@
-@extends('admin.layouts.master', ['is_active_parent' => 'home', 'is_active' => 'skills'])
+@extends('admin.layouts.master', ['is_active_parent' => 'about', 'is_active' => 'skills'])
 @section('title', isset($skill) ? __('admin.global.edit_skill') : __('admin.global.add_new_skill'))
 @section('content')
     <form id="kt_form" class="form row d-flex flex-column flex-lg-row addForm" data-kt-redirect="{{ route('admin.skills.index') }}"

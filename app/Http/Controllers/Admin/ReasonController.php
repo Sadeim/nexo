@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Reason\CreateReasonRequest;
 use App\Models\Reason;
+use App\Models\Section;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Traits\SaveImageTrait;
@@ -23,7 +24,8 @@ class ReasonController extends Controller
     public function index()
     {
         $reasons = Reason::orderBy('id', 'DESC')->get();
-        return view('admin.reasons.index', compact('reasons'));
+        $section = Section::where('key', 'reasons_section')->first();
+        return view('admin.reasons.index', compact('reasons', 'section'));
     }
 
     public function datatable(Request $request) 

@@ -2,8 +2,7 @@
 
 window.columns = [
     {data: 'id'},
-    {data: 'percent'},
-    {data: 'text'},
+    {data: 'title'},
     {data: 'created_at'},
     {data: 'operations'}
 ];

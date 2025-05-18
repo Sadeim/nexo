@@ -11,7 +11,11 @@ class Reason extends Model
 
     protected $guarded = [];
        
-    
+    protected $fillable = [
+        'title',
+        'text',
+        'icon',
+    ];
 
     public function scopeSearch($query, $request)
     { 
