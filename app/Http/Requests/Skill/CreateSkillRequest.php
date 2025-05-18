@@ -28,8 +28,7 @@ class CreateSkillRequest extends BaseRequest
     public function rules()
     {
         return [
-            'text' => 'required|string|max:255',
-            'percent' => 'required|integer|between:0,100',
+           
         ];
     }
 }

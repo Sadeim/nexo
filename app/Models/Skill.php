@@ -9,11 +9,9 @@ class Skill extends Model
 {
     public $resource = SkillResource::class;
 
-    protected $fillable = [
-        'percent',
-        'text',
-    ];
-
+        protected $guarded = [];
+          
+        
     public function scopeSearch($query, $request)
     { 
         if (!empty($request->search['value'])) {

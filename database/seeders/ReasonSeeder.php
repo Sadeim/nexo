@@ -14,9 +14,24 @@ class ReasonSeeder extends Seeder
     public function run(): void
     {
         Reason::create([
-            'icon' => 'tji-human',
+            'icon' => 'fa-solid fa-user',
             'title' => 'Full Range of Electrical Services',
-            'description' => 'Handyman projects often focus on immediate needs...',
+            'text' => 'Handyman projects often focus on immediate needs...',
+        ]);
+        Reason::create([
+            'icon' => 'fa-solid fa-user',
+            'title' => 'Full Range of Electrical Services',
+            'text' => 'Handyman projects often focus on immediate needs...',
+        ]);
+        Reason::create([
+            'icon' => 'fa-solid fa-user',
+            'title' => 'Full Range of Electrical Services',
+            'text' => 'Handyman projects often focus on immediate needs...',
+        ]);
+        Reason::create([
+            'icon' => 'fa-solid da-user',
+            'title' => 'Full Range of Electrical Services',
+            'text' => 'Handyman projects often focus on immediate needs...',
         ]);
     }
 }

@@ -32,13 +32,13 @@
                     <div class="our-approch-image">
                         <div class="our-approch-img-1">
                             <figure class="image-anime">
-                                <img src="images/our-approch-img-1.jpg" alt="">
+                                <img src="{{asset('frontend_assets/images/our-approch-img-1.jpg')}}" alt="">
                             </figure>
                         </div>
 
                         <div class="our-approch-img-2">
                             <figure class="image-anime">
-                                <img src="images/our-approch-img-2.jpg" alt="">
+                                <img src="{{asset('frontend_assets/images/our-approch-img-2.jpg')}}" alt="">
                             </figure>
                         </div>
                     </div>
@@ -167,8 +167,10 @@
                         <!-- Section Title Start -->
                         <div class="section-title">
                             <h3 class="wow fadeInUp">our skill</h3>
-                            <h2 class="text-anime-style-3" data-cursor="-opaque">Handyman expertise for every task</h2>
-                            <p class="wow fadeInUp" data-wow-delay="0.2s">Our skilled professionals bring versatile expertise to handle a wide range of repairs, installations, and improvements, ensuring every task is completed with precision and care.</p>
+                            <h2 class="text-anime-style-3" data-cursor="-opaque">{{$skills->title}}</h2>
+                            <p class="wow fadeInUp" data-wow-delay="0.2s"> 
+                                {{$skills->description}}
+                            </p>
                         </div>
                         <!-- Section Title End -->
 
@@ -179,8 +181,8 @@
                                 <!-- Skill Item Start -->
                                 <div class="skillbar" data-percent="66%">
                                     <div class="skill-data">
-                                        <div class="skill-title">carpentry</div>
-                                        <div class="skill-no">66%</div>
+                                        <div class="skill-title">{{$skills->text1}}</div>
+                                        <div class="skill-no">{{$skills->percent1}}%</div>
                                     </div>
                                     <div class="skill-progress">
                                         <div class="count-bar"></div>
@@ -195,8 +197,8 @@
                                 <!-- Skill Item Start -->
                                 <div class="skillbar" data-percent="97%">
                                     <div class="skill-data">
-                                        <div class="skill-title">plumbing repairs</div>
-                                        <div class="skill-no">97%</div>
+                                        <div class="skill-title">{{$skills->text2}}</div>
+                                        <div class="skill-no">{{$skills->percent2}}%</div>
                                     </div>
                                     <div class="skill-progress">
                                         <div class="count-bar"></div>
@@ -211,8 +213,8 @@
                                 <!-- Skill Item Start -->
                                 <div class="skillbar" data-percent="85%">
                                     <div class="skill-data">
-                                        <div class="skill-title">electrical maintenance</div>
-                                        <div class="skill-no">85%</div>
+                                        <div class="skill-title">{{$skills->text3}}</div>
+                                        <div class="skill-no">{{$skills->percent3}}%</div>
                                     </div>
                                     <div class="skill-progress">
                                         <div class="count-bar"></div>
@@ -231,19 +233,19 @@
                     <div class="our-skill-image">
                         <div class="our-skill-img-1">
                             <figure class="image-anime">
-                                <img src="images/our-skill-img-1.jpg" alt="">
+                                <img src="{{ asset($skills->image) }}" alt="">
                             </figure>
                         </div>
                 
                         <div class="our-skill-img-2">
                             <figure class="image-anime">
-                                <img src="images/our-skill-img-2.jpg" alt="">
+                                <img src="{{ asset($skills->image2) }}" alt="">
                             </figure>
                         </div>
                 
                         <div class="our-skill-img-3">
                             <figure class="image-anime">
-                                <img src="images/our-skill-img-3.jpg" alt="">
+                                <img src="{{ asset($skills->image3) }}" alt="">
                             </figure>
                         </div>
                     </div>
@@ -256,21 +258,21 @@
 
     <!-- Quick Fact Section Start -->
     <div class="quick-facts bg-radius-section">
-        <div class="container">
+    <div class="container">
             <div class="row section-row align-items-center">
                 <div class="col-lg-6">
                     <!-- Section Title Start -->
                     <div class="section-title dark-section">
                         <h3 class="wow fadeInUp">Some facts</h3>
-                        <h2 class="text-anime-style-3" data-cursor="-opaque">Quick facts about our services</h2>
+                        <h2 class="text-anime-style-3" data-cursor="-opaque">{{$how->name}}</h2>
                     </div>
                     <!-- Section Title End -->
                 </div>
-                
+
                 <div class="col-lg-6">
                     <!-- Section Title Content Start -->
                     <div class="section-title-content dark-section wow fadeInUp" data-wow-delay="0.2s">
-                        <p>From repairs to home improvements, our comprehensive handyman services cover everything you</p>
+                        <p>{{$how->description}}</p>
                     </div>
                     <!-- Section Title Content End -->
                 </div>
@@ -282,52 +284,55 @@
                     <div class="fact-counter-box">
                         <!-- Fact Counter Item Start -->
                         <div class="fact-counter-item">
-                            <h3>experience</h3>
-                            <h2><span class="counter">25</span>+</h2>
-                            <p>years of experience</p>
+                            <h3>{{$how->tap1_name}}</h3>
+                            <h2><span class="counter">{{$how->tap1_number}}</span>+</h2>
+                            <p>{{$how->tap1_content}}</p>
                         </div>
                         <!-- Fact Counter Item End -->
 
                         <!-- Fact Counter Item Start -->
                         <div class="fact-counter-item">
-                            <h3>people</h3>
-                            <h2><span class="counter">320</span>k</h2>
-                            <p>working staff</p>
+                            <h3>{{$how->tap2_name}}</h3>
+                            <h2><span class="counter">{{$how->tap2_number}}</span>k</h2>
+                            <p>{{$how->tap2_content}}</p>
                         </div>
                         <!-- Fact Counter Item End -->
                     </div>
                     <!-- Fact Counter Box End -->
                 </div>
-                
-                <div class="col-lg-6 order-lg-2 order-md-3 order-3">
-                    <!-- Quick Fact image Start -->
-                    <div class="quick-fact-image">
-                        <img src="images/quick-fact-img.png" alt="">
-                    </div>
-                    <!-- Quick Fact image End -->
-                </div>
-                
+
+
                 <div class="col-lg-3 col-md-6 col-6 order-lg-3 order-md-2 order-2">
                     <!-- Fact Counter Box Start -->
                     <div class="fact-counter-box">
                         <!-- Fact Counter Item Start -->
                         <div class="fact-counter-item">
-                            <h3>work</h3>
-                            <h2><span class="counter">8</span>k+</h2>
-                            <p>project complete</p>
+                            <h3>{{$how->tap3_name}}</h3>
+                            <h2><span class="counter">{{$how->tap3_number}}</span>k+</h2>
+                            <p>{{$how->tap3_content}}</p>
                         </div>
                         <!-- Fact Counter Item End -->
 
                         <!-- Fact Counter Item Start -->
                         <div class="fact-counter-item">
-                            <h3>client</h3>
-                            <h2><span class="counter">100</span>%</h2>
-                            <p>satisfaction guarante</p>
+                            <h3>{{$how->tap4_name}}</h3>
+                            <h2><span class="counter">{{$how->tap4_number}}</span>%</h2>
+                            <p>{{$how->tap4_content}}</p>
                         </div>
                         <!-- Fact Counter Item End -->
+
                     </div>
+
                     <!-- Fact Counter Box End -->
                 </div>
+                <div class="col-lg-6 order-lg-2 order-md-3 order-3">
+                    <!-- Quick Fact image Start -->
+                    <div class="quick-fact-image">
+                        <img src="{{ asset($how->image) }}" alt="">
+                    </div>
+                    <!-- Quick Fact image End -->
+                </div>
+
             </div>
         </div>
     </div>
@@ -351,7 +356,7 @@
                         <!-- Why Choose Image Start -->
                         <div class="why-choose-image">
                             <figure class="image-anime">
-                                <img src="images/why-choose-img.jpg" alt="">
+                                <img src="{{asset('frontend_assets/images/why.png')}}" alt="">
                             </figure>
                         </div>
                         <!-- Why Choose Image End -->
@@ -362,56 +367,21 @@
                     <div class="col-lg-12">
                         <!-- Why Choose Project Box Start -->
                         <div class="why-choose-project-box">
+                            @foreach ($reasons as $reason)
                             <!-- Why Choose Project Item Start -->
                             <div class="why-choose-project-item wow fadeInUp">
                                 <div class="icon-box">
-                                    <img src="images/icon-service-1.svg" alt="">
+                                    <i class="{{$reason->icon}}"></i>
                                 </div>
     
                                 <div class="why-choose-project-content">
-                                    <h3>locally owned</h3>
-                                    <p>As a local business, we care about our community and take pride in serving our.</p>
+                                    <h3>{{$reason->title}}</h3>
+                                    <p>{{$reason->text}}</p>
                                 </div>
                             </div>
                             <!-- Why Choose Project Item End -->
-    
-                            <!-- Why Choose Project Item Start -->
-                            <div class="why-choose-project-item wow fadeInUp" data-wow-delay="0.2s">
-                                <div class="icon-box">
-                                    <img src="images/icon-service-2.svg" alt="">
-                                </div>
-    
-                                <div class="why-choose-project-content">
-                                    <h3>on-time service</h3>
-                                    <p>As a local business, we care about our community and take pride in serving our.</p>
-                                </div>
-                            </div>
-                            <!-- Why Choose Project Item End -->
-    
-                            <!-- Why Choose Project Item Start -->
-                            <div class="why-choose-project-item wow fadeInUp" data-wow-delay="0.4s">
-                                <div class="icon-box">
-                                    <img src="images/icon-service-3.svg" alt="">
-                                </div>
-    
-                                <div class="why-choose-project-content">
-                                    <h3>transparent pricing</h3>
-                                    <p>As a local business, we care about our community and take pride in serving our.</p>
-                                </div>
-                            </div>
-                            <!-- Why Choose Project Item End -->
-    
-                            <!-- Why Choose Project Item Start -->
-                            <div class="why-choose-project-item wow fadeInUp" data-wow-delay="0.6s">
-                                <div class="icon-box">
-                                    <img src="images/icon-service-4.svg" alt="">
-                                </div>
-    
-                                <div class="why-choose-project-content">
-                                    <h3>quality assurance</h3>
-                                    <p>As a local business, we care about our community and take pride in serving our.</p>
-                                </div>
-                            </div>
+                            @endforeach
+                           
                             <!-- Why Choose Project Item End -->
                         </div>
                         <!-- Why Choose Project Box End -->

@@ -7,9 +7,11 @@ use App\Http\Requests\Reason\CreateReasonRequest;
 use App\Models\Reason;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use App\Traits\SaveImageTrait;
 class ReasonController extends Controller
 {
+    use SaveImageTrait;
+
     public function __construct()
     {
         $this->middleware('permission:view_reasons|add_reasons', ['only' => ['index','store']]);
@@ -35,11 +37,11 @@ class ReasonController extends Controller
         return view('admin.reasons.create');
     }
 
-    public function store(CreateReasonRequest $request)
+    public function store(Request $request)
     {
         try {
             DB::beginTransaction();
-            $data = $request->only(['icon', 'title', 'description']);
+            $data = $request->all();
             Reason::create($data);
             DB::commit();
             return $this->response_api(200, __('admin.form.added_successfully'), '');
@@ -55,11 +57,12 @@ class ReasonController extends Controller
         return view('admin.reasons.create', compact('reason'));
     }
 
-    public function update(CreateReasonRequest $request, $id)
+    public function update(Request $request, $id)
     {
         try {
             DB::beginTransaction();
-            $data = $request->only(['icon', 'title', 'description']);
+            $data = $request->all();
+           
             $reason = Reason::findOrFail($id);
             $reason->update($data);
             DB::commit();

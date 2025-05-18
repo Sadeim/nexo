@@ -244,39 +244,6 @@
                     @endforeach
                 </div>
 
-            <div class="row">
-				@foreach ($services as $index => $service)
-					<div class="col-lg-3 col-md-6">
-						<!-- Service Item Start -->
-						<div class="service-item wow fadeInUp" data-wow-delay="{{ $index * 0.2 }}s">
-							<!-- Service Item Header Start -->
-							<div class="service-item-header">
-								<div class="icon-box">
-									<img src="{{ asset($service->icon) }}" alt="{{ $service->name }}">
-								</div>
-
-								<div class="service-item-content">
-									<h3><a href="#">{{ $service->name }}</a></h3>
-									<p>{{ \Illuminate\Support\Str::limit($service->description, 80) }}</p>
-								</div>
-							</div>
-							<!-- Service Item Header End -->
-
-							<!-- Service Image Start -->
-							<div class="service-image">
-								<a href="#" data-cursor-text="View">
-									<figure class="image-anime">
-										<img src="{{ asset($service->image) }}" alt="{{ $service->name }}">
-									</figure>
-								</a>
-							</div>
-							<!-- Service Image End -->
-						</div>
-						<!-- Service Item End -->
-					</div>
-				@endforeach
-			</div>
-
                 <div class="col-lg-12">
                     <!-- Service Footer Start -->
                     <div class="service-footer wow fadeInUp" data-wow-delay="0.8s">
@@ -285,11 +252,7 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- Our Services Section End -->
-
-
+    @endif
 
     <!-- Quick Fact Start -->
   <div class="quick-facts bg-radius-section">
@@ -561,7 +524,7 @@
                                         
                                                     <!-- Testimonial Content Start -->
                                                     <div class="testimonial-content">
-                                                        <p>“{{ $testimonial->message }}”</p>
+                                                        <p>"{{ $testimonial->message }}"</p>
                                                     </div>
                                                     <!-- Testimonial Content End -->
                                                 </div>
@@ -789,8 +752,8 @@
     @endif
 @endsection
 
-@section('js')
+@push('js')
 
 
 
-@endsection
+@endpush

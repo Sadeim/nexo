@@ -40,5 +40,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ReasonTabSeeder::class);
         $this->call(FeatureSeeder::class);
         $this->call(SectionSeeder::class);
+        $this->call(HowSeeder::class);
     }
 }

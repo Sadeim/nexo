@@ -9,11 +9,9 @@ class Reason extends Model
 {
     public $resource = ReasonResource::class;
 
-    protected $fillable = [
-        'icon',
-        'title',
-        'description',
-    ];
+    protected $guarded = [];
+       
+    
 
     public function scopeSearch($query, $request)
     { 

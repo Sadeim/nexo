@@ -38,7 +38,7 @@ class AboutController extends Controller
         return view('admin.abouts.create');
     }
 
-    public function store(AboutRequest $request)
+    public function store(Request $request)
     {
         try {
             DB::beginTransaction();

@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('reasons', function (Blueprint $table) {
             $table->id();
-            $table->string('icon');
-            $table->string('title');
-            $table->text('description');
+        
+            $table->string('icon')->nullable();
+            $table->string('title')->nullable();
+            $table->text('text')->nullable();
+        
             $table->timestamps();
         });
     }

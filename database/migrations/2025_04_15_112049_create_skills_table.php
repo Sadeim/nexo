@@ -13,8 +13,17 @@ return new class extends Migration
     {
         Schema::create('skills', function (Blueprint $table) {
             $table->id();
-            $table->integer('percent');  // مثلاً 96, 92, 94
-            $table->string('text');      // e.g., "Technical Knowledge"
+            $table->string('image')->nullable();
+            $table->string('image2')->nullable();
+            $table->string('image3')->nullable();
+            $table->string('title');
+            $table->string('description');
+            $table->integer('percent1');  // مثلاً 96, 92, 94
+            $table->string('text1');      // e.g., "Technical Knowledge"
+            $table->integer('percent2');  // مثلاً 96, 92, 94
+            $table->string('text2');      // e.g., "Technical Knowledge"
+            $table->integer('percent3');  // مثلاً 96, 92, 94
+            $table->string('text3');      // e.g., "Technical Knowledge"
             $table->timestamps();
         });
     }

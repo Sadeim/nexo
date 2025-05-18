@@ -27,6 +27,7 @@ use App\Models\Team;
 use App\Models\Testimonial;
 use App\Models\UserMessages;
 use App\Models\Work;
+use App\Models\Skill;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -150,6 +151,10 @@ class HomeController extends Controller
         $data['testimonials'] = Testimonial::get();
         $data['teams'] = Team::get();
         $data['clients'] = Client::get();
+        $data['skills'] = Skill::first();
+        $data['reasons']=Reason::get();
+        $data['how'] = How::first();
+
         return view('frontend.about_us', $data);
     }
 }
