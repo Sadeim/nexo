@@ -168,9 +168,9 @@
                             <!-- Section Title Start -->
                             <div class="section-title">
                                 <h3 class="wow fadeInUp">our skill</h3>
-                                <h2 class="text-anime-style-3" data-cursor="-opaque">{{$skills->title}}</h2>
+                                <h2 class="text-anime-style-3" data-cursor="-opaque">{{ $sections['skills_section']->title }}</h2>
                                 <p class="wow fadeInUp" data-wow-delay="0.2s"> 
-                                    {{$skills->description}}
+                                    {{ $sections['skills_section']->description }}
                                 </p>
                             </div>
                             <!-- Section Title End -->

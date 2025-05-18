@@ -109,7 +109,6 @@
     </div>
     <!-- Client Slider Section End -->
 
-
     <!-- About Us Section Start -->
 	<div class="about-us" id="about-us">
 		<div class="container">
@@ -255,7 +254,7 @@
     @endif
 
     <!-- Quick Fact Start -->
-  <div class="quick-facts bg-radius-section">
+    <div class="quick-facts bg-radius-section">
         <div class="container">
             <div class="row section-row align-items-center">
                 <div class="col-lg-6">
@@ -348,8 +347,8 @@
                             <div class="best-services-content">
                                 <!-- Section Title Start -->
                                 <div class="section-title">
-                                    <h3 class="wow fadeInUp">what we do</h3>
-                                    <h2 class="text-anime-style-3" data-cursor="-opaque">Reliable handyman services for you</h2>
+                                    <h3 class="wow fadeInUp">{{ $sections['services_section']->title }}</h3>
+                                    <h2 class="text-anime-style-3" data-cursor="-opaque">{{ $sections['services_section']->description }}</h2>
                                 </div>
                                 <!-- Section Title End -->
 

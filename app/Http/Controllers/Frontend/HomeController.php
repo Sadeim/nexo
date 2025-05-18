@@ -58,6 +58,7 @@ class HomeController extends Controller
             'blog_section',
         ])->get()->keyBy('key');
         $data['how'] = How::first();
+        
         return view('frontend.home', $data);
     }
 
