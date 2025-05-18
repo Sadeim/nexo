@@ -1,8 +1,9 @@
 
 
+
 window.columns = [
     {data: 'id'},
-    {data: 'name'},
+    {data: 'title'},
     {data: 'created_at'},
     {data: 'operations'}
 ];
@@ -17,7 +18,6 @@ window.columnDefs = [
         orderable: false,
     },
 ];
-
 
 
 

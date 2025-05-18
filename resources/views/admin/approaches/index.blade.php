@@ -105,7 +105,7 @@
         window.datatable_url = "{{ route('admin.approaches.datatable') }}";
     </script>
     <script src="{{ asset('admin_assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
-    <script src="{{ asset('admin_assets/js_resources/approach.js') }}"></script>
+    <script src="{{ asset('admin_assets/js_resources/approaches.js') }}"></script>
     <script src="{{ asset('admin_assets/js/dashboard/handleDataTable.js') }}"></script>
 @endpush
 @push('modals')
