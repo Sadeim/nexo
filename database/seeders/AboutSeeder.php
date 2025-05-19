@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\About;
+use App\Models\OpeningHour;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -27,5 +28,16 @@ class AboutSeeder extends Seeder
             'button_text' => 'Call Us',
             'button_link' => 'about.html',
         ]);
+
+        OpeningHour::insert([
+            ['about_id' => 1, 'day' => 'Monday', 'from' => '09:30', 'to' => '07:30', 'is_closed' => false],
+            ['about_id' => 1, 'day' => 'Tuesday', 'from' => '09:30', 'to' => '07:30', 'is_closed' => false],
+            ['about_id' => 1, 'day' => 'Wednesday', 'from' => '09:30', 'to' => '07:30', 'is_closed' => false],
+            ['about_id' => 1, 'day' => 'Thursday', 'from' => '09:30', 'to' => '07:30', 'is_closed' => false],
+            ['about_id' => 1, 'day' => 'Friday', 'from' => '09:30', 'to' => '07:30', 'is_closed' => false],
+            ['about_id' => 1, 'day' => 'Saturday', 'from' => '09:30', 'to' => '07:30', 'is_closed' => false],
+            ['about_id' => 1, 'day' => 'Sunday', 'from' => null, 'to' => null, 'is_closed' => true],
+        ]);
+        
     }
 }

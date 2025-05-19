@@ -2,9 +2,10 @@
 
 window.columns = [
     {data: 'id'},
-    {data: 'address'},
+    {data: 'name'},
     {data: 'phone'},
     {data: 'email'},
+    {data: 'subject'},
     {data: 'created_at'},
     {data: 'operations'}
 ];

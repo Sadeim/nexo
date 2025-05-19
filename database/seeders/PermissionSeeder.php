@@ -44,6 +44,7 @@ class PermissionSeeder extends Seeder
             'settings' => ['view', 'add', 'edit', 'delete'],
             'how' => ['view', 'add', 'edit', 'delete'],
             'approaches' => ['view', 'add', 'edit', 'delete'],
+            'contacts' => ['view', 'add', 'edit', 'delete'],
         ];
         foreach ($admin_parents as $parent => $types) {
             foreach ($types as $type) {

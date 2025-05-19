@@ -330,6 +330,23 @@
                         </span>
                     </div>
                 @endif
+                @if (auth()->user()->can('view_contacts'))
+                    <div class="menu-item menu-accordion {{ $is_active_parent == 'contacts' ? 'here show' : '' }}">
+                        <span class="menu-link {{ $is_active == 'contacts' ? 'active' : '' }}">
+                            <span class="menu-icon">
+                                <span class="svg-icon svg-icon-2">
+                                    <i class="fa-solid fa-envelope"></i>
+                                </span>
+                            </span>
+                            <span class="menu-title">
+                                <a class="{{ $is_active == 'contacts' ? 'active' : '' }}"
+                                    href="{{ route('admin.contacts.index') }}">
+                                    <span class="menu-title">{{ __('admin.global.contacts') }}</span>
+                                </a>
+                            </span>
+                        </span>
+                    </div>
+                @endif
                 {{-- @if (auth()->user()->can('view_bookings'))
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'bookings' ? 'here show' : '' }}">
                         <span class="menu-link {{ $is_active == 'bookings' ? 'active' : '' }}">

@@ -168,16 +168,22 @@
 
 						<!-- Company Timing Start -->
 						<div class="company-timing">
-							<h3>Opening hours</h3>
-							<ul>
-								<li>Mon to Fri <span>09:30 - 07:30</span></li>
-								<li>Saturday <span>09:30 - 07:30</span></li>
-								<li>Sunday <span>closed</span></li>
-							</ul>
-							<figure>
-								<img src="{{ asset('frontend_assets/images/icon-clock.svg') }}" alt="">
-							</figure>
-						</div>
+                            <h3>Opening hours</h3>
+                            <ul>
+                                @foreach($about->openingHours as $day => $hours)
+                                    @if(!empty($hours['from']) && !empty($hours['to']))
+                                        <div class="mb-2" style="color: #fff;">
+                                             {{  $hours->day }} 
+                                            {{ $hours['from'] }} - {{ $hours['to'] }}
+                                        </div>
+                                    @endif
+                                @endforeach
+                            </ul>
+                            <figure>
+                                <img src="{{ asset('frontend_assets/images/icon-clock.svg') }}" alt="">
+                            </figure>
+                        </div>
+                        
 						<!-- Company Timing End -->
 					</div>
 					<!-- About Us Images End -->

@@ -149,7 +149,10 @@ class HomeController extends Controller
 
     public function aboutUs()
     {
-        $data['about'] = About::first();
+        $data['about'] = About::with(['openingHours' => function ($query) {
+                            $query->orderByRaw("FIELD(day, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday')");
+                        }])->first();
+                        
         $data['testimonials'] = Testimonial::get();
         $data['teams'] = Team::get();
         $data['clients'] = Client::get();

@@ -38,35 +38,47 @@ class AboutController extends Controller
         return view('admin.abouts.create');
     }
 
-    public function store(Request $request)
+    public function store(CreateAboutRequest $request)
     {
         try {
             DB::beginTransaction();
-
-            // استخراج جميع الحقول ما عدا الصور
-            $data = $request->except([
-                'image1', 'image2',
-            ]);
-
+    
+            // استخراج جميع الحقول ما عدا الصور وساعات العمل
+            $data = $request->except(['image1', 'image2', 'opening_hours']);
+    
             // معالجة الصور
-            $imageFields = [
-                'image1', 'image2',
-            ];
-
+            $imageFields = ['image1', 'image2'];
             foreach ($imageFields as $field) {
                 if ($request->hasFile($field)) {
                     $data[$field] = $this->uploadImage($request->file($field), 'about');
                 }
             }
-
-            // التحديث أو الإنشاء
+    
+            // تحديث أو إنشاء السجل
             $about = About::first();
             if ($about) {
                 $about->update($data);
             } else {
-                About::create($data);
+                $about = About::create($data);
             }
-
+    
+            // تحديث ساعات العمل
+            if ($request->has('opening_hours')) {
+                // حذف الساعات القديمة
+                $about->openingHours()->delete();
+    
+                // إضافة الجديدة
+                foreach ($request->input('opening_hours') as $day => $time) {
+                    if (!empty($time['from']) && !empty($time['to'])) {
+                        $about->openingHours()->create([
+                            'day' => $day,
+                            'from' => $time['from'],
+                            'to' => $time['to'],
+                        ]);
+                    }
+                }
+            }
+    
             DB::commit();
             return $this->response_api(200, __('admin.form.added_successfully'), '');
         } catch (\Exception $e) {
@@ -74,6 +86,7 @@ class AboutController extends Controller
             return $this->response_api(400, $this->exMessage($e));
         }
     }
+    
 
 
     public function edit($id)
@@ -82,42 +95,52 @@ class AboutController extends Controller
         return view('admin.abouts.create', compact('about'));
     }
 
-    public function update(CreateAboutRequest $request, $id)
+    public function update(CreateAboutRequest $request, About $about)
     {
         try {
             DB::beginTransaction();
-
-            $about = About::findOrFail($id);
-
-            // استخراج الحقول النصية فقط
+    
+            // استخراج البيانات ما عدا الصور وساعات العمل
             $data = $request->except([
-                'image1', 'image2',
+                'image1', 'image2', 'opening_hours'
             ]);
-
+    
             // معالجة الصور
-            $imageFields = [
-                'image1', 'image2',
-            ];
-
+            $imageFields = ['image1', 'image2'];
             foreach ($imageFields as $field) {
                 if ($request->hasFile($field)) {
-                    // حذف الصورة القديمة إذا كانت موجودة (اختياري)
-                    if ($about->$field && Storage::exists($about->$field)) {
-                        Storage::delete($about->$field);
-                    }
                     $data[$field] = $this->uploadImage($request->file($field), 'about');
                 }
             }
-
+    
+            // تحديث بيانات about
             $about->update($data);
-
+    
+            // تحديث بيانات opening hours
+            if ($request->has('opening_hours') && is_array($request->opening_hours)) {
+                // حذف السجلات القديمة
+                $about->openingHours()->delete();
+    
+                // إدخال السجلات الجديدة
+                foreach ($request->opening_hours as $hour) {
+                    $about->openingHours()->create([
+                        'day'    => $hour['day'] ?? '',
+                        'from'   => $hour['from'] ?? null,
+                        'to'     => $hour['to'] ?? null,
+                        'status' => $hour['status'] ?? false,
+                    ]);
+                }
+            }
+    
             DB::commit();
             return $this->response_api(200, __('admin.form.updated_successfully'), '');
+    
         } catch (\Exception $e) {
-            DB::rollback();
+            DB::rollBack();
             return $this->response_api(400, $this->exMessage($e));
         }
     }
+    
 
 
     public function destroy($id)

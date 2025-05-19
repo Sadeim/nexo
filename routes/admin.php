@@ -166,6 +166,13 @@ use App\Http\Controllers\Admin\HowWorkController;
         });
         /* ------------------------------------- team Routes --------------------------------- */
 
+        /* ------------------------------------- contact Routes --------------------------------- */
+        Route::resource('contacts', ContactController::class);
+        Route::group(['prefix' => 'contacts', 'as' => 'contacts.'], function () {
+            Route::get('data/datatables', [ContactController::class , 'datatable'])->name('datatable');
+        });
+        /* ------------------------------------- contact Routes --------------------------------- */
+
         /* ------------------------------------- skill Routes --------------------------------- */
         Route::resource('skills', SkillController::class);
         Route::group(['prefix' => 'skills', 'as' => 'skills.'], function () {

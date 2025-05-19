@@ -154,6 +154,37 @@
                     </div>
                 </div>
             </div>
+            <div class="card card-flush generalDataTap">
+                <div class="salesTitle">
+                    <h3>Opening Hours</h3>
+                </div>
+                <div class="card-body pt-0" id="opening-hours-wrapper">
+                    @php
+                        $openingHours = isset($about) ? $about->openingHours : [];
+                    @endphp
+            
+                    @foreach(['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday'] as $day)
+                        @php
+                            $hour = $openingHours->firstWhere('day', $day);
+                        @endphp
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label">{{ $day }}</label>
+                                <input type="hidden" name="opening_hours[{{ $day }}][day]" value="{{ $day }}">
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" name="opening_hours[{{ $day }}][from]" class="form-control" placeholder="From"
+                                    value="{{ $hour ? $hour->from : '' }}">
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" name="opening_hours[{{ $day }}][to]" class="form-control" placeholder="To"
+                                    value="{{ $hour ? $hour->to : '' }}">
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+            
         </div>
 
         <!-- Submit Buttons -->
