@@ -271,7 +271,7 @@
                                     <span class="menu-bullet">
                                         <i class="fa-solid fa-how"></i>
                                     </span>
-                                    <span class="menu-title">How</span>
+                                    <span class="menu-title">How We Work</span>
                                 </a>
                             </div>
                         </div>
