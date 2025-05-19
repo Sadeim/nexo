@@ -15,7 +15,7 @@
 
 <div class="modal fade" id="replyModal-{{ $instance->id }}" tabindex="-1" aria-labelledby="replyModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <form method="POST" action="{{ route('admin.contacts.reply', $instance->id) }}" class="modal-content">
+        <form method="POST" action="{{ route('admin.contacts.reply', $instance->id) }}" class="modal-content reply-form">
             @csrf
             <div class="modal-header">
                 <h5 class="modal-title" id="replyModalLabel">Reply</h5>
@@ -28,7 +28,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Send</button>
+                <button type="submit" class="btn btn-primary" style="padding: 10px !important">Send</button>
             </div>
         </form>
     </div>

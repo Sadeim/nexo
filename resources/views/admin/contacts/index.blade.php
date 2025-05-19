@@ -2,6 +2,9 @@
 @section('title')
     {{ __('admin.global.contacts') }}
 @endsection
+@section('style')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+@endsection
 @section('content')
     <div class="d-flex flex-column flex-column-fluid customerView" id="kt_content">
         <!--begin::Post-->
@@ -111,7 +114,42 @@
     <script src="{{ asset('admin_assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
     <script src="{{ asset('admin_assets/js_resources/contacts.js') }}"></script>
     <script src="{{ asset('admin_assets/js/dashboard/handleDataTable.js') }}"></script>
-@endpush
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.reply-form').on('submit', function (e) {
+                e.preventDefault();
+    
+                let form = $(this);
+                let contactId = form.data('id');
+                let reply = form.find('textarea[name="reply"]').val();
+    
+                $.ajax({
+                    url: '/admin/contacts/reply/' + contactId + '/reply',
+                    method: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        reply: reply
+                    },
+                    success: function (response) {
+                        $('#replyModal-' + contactId).modal('hide');
+                        toastr.success(response.message, 'Success');
+                    },
+                    error: function (xhr) {
+                        if (xhr.responseJSON?.errors?.reply) {
+                            toastr.error(xhr.responseJSON.errors.reply[0], 'Error');
+                        } else {
+                            toastr.error('Something went wrong', 'Error');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+    
+
+    @endpush
 @push('modals')
  
 @endpush
