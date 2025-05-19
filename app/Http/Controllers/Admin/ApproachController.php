@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Approach\CreateApproachRequest;
 use App\Models\Approach;
 use App\Traits\SaveImageTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ApproachController extends Controller
 {
@@ -37,23 +39,27 @@ class ApproachController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CreateApproachRequest $request)
     {
-        //
         try {
             DB::beginTransaction();
-            $data=$request->all();
-            $data = $request->except('image1','image2');
-            $imageFields = [
-                'image1', 'image2', 
-            ];
-            foreach ($imageFields as $field) {
-                if ($request->hasFile($field)) {
-                    $data[$field] = $this->uploadImage($request->file($field), 'approach');
-                }
+           
+            $data = $request->except([
+                'image_1', 'image_2', 'mission_points', 'vision_points', 'value_points'
+            ]);
+
+            if ($request->hasFile('image_1')) {
+                $data['image_1'] = $this->uploadImage($request->file('image_1'), 'approach');
             }
-            
-             Approach::create($data);
+            if ($request->hasFile('image_2')) {
+                $data['image_2'] = $this->uploadImage($request->file('image_2'), 'approach');
+            }
+
+            $data['mission_points'] = array_values(array_filter($request->input('mission_points', [])));
+            $data['vision_points']  = array_values(array_filter($request->input('vision_points', [])));
+            $data['value_points']   = array_values(array_filter($request->input('value_points', [])));
+
+            Approach::create($data);
             DB::commit();
             return $this->response_api(200, __('admin.form.added_successfully'), '');
         } catch(\Exception $e) {
@@ -84,21 +90,36 @@ class ApproachController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request,  Approach $approach)
     {
         //
         try {
             DB::beginTransaction();
-            $data = $request->except('image1','image2');
-            $imageFields = [
-                'image1', 'image2'
-            ];
-            foreach ($imageFields as $field) {
-                if ($request->hasFile($field)) {
-                    $data[$field] = $this->uploadImage($request->file($field), 'approach');
+
+            $data = $request->except([
+                'image_1', 'image_2',
+                'mission_points', 'vision_points', 'value_points'
+            ]);
+
+            // 3. تعامل مع رفع الصورتين
+            if ($request->hasFile('image_1')) {
+                // احذف القديمة إذا وجدت
+                if ($approach->image_1) {
+                    Storage::disk('public')->delete($approach->image_1);
                 }
+                $data['image_1'] = $this->uploadImage($request->file('image_1'), 'approach');
             }
-            $approach = Approach::findOrFail($id);
+            if ($request->hasFile('image_2')) {
+                if ($approach->image_2) {
+                    Storage::disk('public')->delete($approach->image_2);
+                }
+                $data['image_2'] = $this->uploadImage($request->file('image_2'), 'approach');
+            }
+
+            $data['mission_points'] = array_values(array_filter($request->input('mission_points', [])));
+            $data['vision_points']  = array_values(array_filter($request->input('vision_points', [])));
+            $data['value_points']   = array_values(array_filter($request->input('value_points', [])));
+
             $approach->update($data);
             DB::commit();
             return $this->response_api(200, __('admin.form.updated_successfully'), '');
