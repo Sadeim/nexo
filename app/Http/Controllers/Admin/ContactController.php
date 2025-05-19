@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Contact\CreateContactRequest;
+use App\Mail\ContactReplyMail;
 use App\Models\Section;
 use App\Models\Contact;
 use App\Models\UserMessages;
@@ -11,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Traits\SaveImageTrait;
 use Exception;
+use Illuminate\Support\Facades\Mail;
 
 class ContactController extends Controller
 {
@@ -73,5 +75,16 @@ class ContactController extends Controller
     {
         UserMessages::destroy($id);
         return $this->response_api(200, __('admin.form.deleted_successfully'), '');
+    }
+
+    public function reply(Request $request, UserMessages $contact)
+    {
+        $request->validate([
+            'reply' => 'required|string',
+        ]);
+
+        Mail::to($contact->email)->send(new ContactReplyMail($contact, $request->reply));
+
+        return back()->with('success', 'Reply sent successfully.');
     }
 }

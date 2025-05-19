@@ -5,7 +5,7 @@ window.columns = [
     {data: 'name'},
     {data: 'phone'},
     {data: 'email'},
-    {data: 'subject'},
+    {data: 'message'},
     {data: 'created_at'},
     {data: 'operations'}
 ];

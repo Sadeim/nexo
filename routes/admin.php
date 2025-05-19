@@ -170,6 +170,7 @@ use App\Http\Controllers\Admin\HowWorkController;
         Route::resource('contacts', ContactController::class);
         Route::group(['prefix' => 'contacts', 'as' => 'contacts.'], function () {
             Route::get('data/datatables', [ContactController::class , 'datatable'])->name('datatable');
+            Route::post('reply/{contact}/reply', [ContactController::class, 'reply'])->name('reply');
         });
         /* ------------------------------------- contact Routes --------------------------------- */
 

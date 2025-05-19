@@ -76,7 +76,7 @@
                                                 <th>{{ __('admin.form.name') }}</th>
                                                 <th>Phone</th>
                                                 <th>Email</th>
-                                                <th>Subject</th>
+                                                <th>Message</th>
                                                 <th>{{ __('admin.form.created_at') }}</th>
                                                 <th>{{ __('admin.form.actions') }}</th>
                                             </tr>
@@ -100,6 +100,8 @@
             </div>
         </div>
     </div>
+<!-- Modal -->
+
 
 @endsection
 @push('scripts')
