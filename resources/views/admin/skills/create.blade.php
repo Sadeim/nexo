@@ -68,24 +68,6 @@
                 </div>
                 <div class="card-body pt-0">
                     <div class="row">
-                        <!-- Title Field -->
-                        <div class="col-md-6 fv-row">
-                            <div class="mb-5">
-                                <label class="required form-label">Title</label>
-                                <input type="text" name="title" class="form-control" placeholder=""
-                                       value="{{ isset($skill) ? $skill->title : '' }}" required>
-                            </div>
-                        </div>
-                        <!-- Description Field -->
-                        <div class="col-md-6 fv-row">
-                            <div class="mb-5">
-                                <label class="required form-label">Description</label>
-                                <input type="text" name="description" class="form-control" placeholder=""
-                                       value="{{ isset($skill) ? $skill->description : '' }}" required>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
                         <!-- Percent 1 -->
                         <div class="col-md-6 fv-row">
                             <div class="mb-5">
