@@ -225,57 +225,61 @@
                         <span class="menu-arrow"></span>
                     </span>
                     @if (auth()->user()->can('view_skills'))
-                        <div class="menu-sub menu-sub-accordion">
-                            <div class="menu-item">
-                                <a class="menu-link {{ $is_active == 'skills' ? 'active' : '' }}"
-                                    href="{{ route('admin.skills.index') }}">
-                                    <span class="menu-bullet">
-                                        <i class="fa-solid fa-skills"></i>
-                                    </span>
-                                    <span class="menu-title">{{ __('admin.global.skills') }}</span>
-                                </a>
-                            </div>
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a class="menu-link {{ $is_active == 'skills' ? 'active' : '' }}"
+                                href="{{ route('admin.skills.index') }}">
+                                <span class="menu-bullet">
+                                    <i class="fa-solid fa-brain"></i> {{-- skills --}}
+                                </span>
+                                <span class="menu-title">{{ __('admin.global.skills') }}</span>
+                            </a>
                         </div>
-                    @endif
-                    @if (auth()->user()->can('view_reasons'))
-                        <div class="menu-sub menu-sub-accordion">
-                            <div class="menu-item">
-                                <a class="menu-link {{ $is_active == 'reasons' ? 'active' : '' }}"
-                                    href="{{ route('admin.reasons.index') }}">
-                                    <span class="menu-bullet">
-                                        <i class="fa-solid fa-reasons"></i>
-                                    </span>
-                                    <span class="menu-title">{{ __('admin.global.reasons') }}</span>
-                                </a>
-                            </div>
+                    </div>
+                @endif
+                
+                @if (auth()->user()->can('view_reasons'))
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a class="menu-link {{ $is_active == 'reasons' ? 'active' : '' }}"
+                                href="{{ route('admin.reasons.index') }}">
+                                <span class="menu-bullet">
+                                    <i class="fa-solid fa-lightbulb"></i> {{-- reasons --}}
+                                </span>
+                                <span class="menu-title">{{ __('admin.global.reasons') }}</span>
+                            </a>
                         </div>
-                    @endif
-                    @if (auth()->user()->can('view_approaches'))
-                        <div class="menu-sub menu-sub-accordion">
-                            <div class="menu-item">
-                                <a class="menu-link {{ $is_active == 'approaches' ? 'active' : '' }}"
-                                    href="{{ route('admin.approaches.index') }}">
-                                    <span class="menu-bullet">
-                                        <i class="fa-solid fa-approaches"></i>
-                                    </span>
-                                    <span class="menu-title">Approaches</span>
-                                </a>
-                            </div>
+                    </div>
+                @endif
+                
+                @if (auth()->user()->can('view_approaches'))
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a class="menu-link {{ $is_active == 'approaches' ? 'active' : '' }}"
+                                href="{{ route('admin.approaches.index') }}">
+                                <span class="menu-bullet">
+                                    <i class="fa-solid fa-route"></i> {{-- approaches --}}
+                                </span>
+                                <span class="menu-title">Approaches</span>
+                            </a>
                         </div>
-                    @endif
-                    @if (auth()->user()->can('view_how'))
-                        <div class="menu-sub menu-sub-accordion">
-                            <div class="menu-item">
-                                <a class="menu-link {{ $is_active == 'how' ? 'active' : '' }}"
-                                    href="{{ route('admin.how.index') }}">
-                                    <span class="menu-bullet">
-                                        <i class="fa-solid fa-how"></i>
-                                    </span>
-                                    <span class="menu-title">How We Work</span>
-                                </a>
-                            </div>
+                    </div>
+                @endif
+                
+                @if (auth()->user()->can('view_how'))
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a class="menu-link {{ $is_active == 'how' ? 'active' : '' }}"
+                                href="{{ route('admin.how.index') }}">
+                                <span class="menu-bullet">
+                                    <i class="fa-solid fa-gears"></i> {{-- how we work --}}
+                                </span>
+                                <span class="menu-title">How We Work</span>
+                            </a>
                         </div>
-                    @endif
+                    </div>
+                @endif
+                
                 </div>
                 {{-- @if (auth()->user()->can('view_achievements'))
                     <div
