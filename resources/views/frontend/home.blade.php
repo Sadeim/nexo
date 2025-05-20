@@ -429,7 +429,7 @@
                         <!-- Section Title Start -->
                         <div class="section-title">
                             <h3 class="wow fadeInUp">{{ $sections['works_section']->title }}</h3>
-                            <h2 class="text-anime-style-3" data-cursor="-opaque">{{ $sections['services_section']->description }}</h2>
+                            <h2 class="text-anime-style-3" data-cursor="-opaque">{{ $sections['works_section']->description }}</h2>
                         </div>
                         <!-- Section Title End -->
                     </div>
