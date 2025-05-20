@@ -407,7 +407,7 @@
                             <!-- Best Services Image Start -->
                             <div class="best-services-image">
                                 <figure class="image-anime">
-                                    <img src="{{ asset('frontend_assets/images/what-we-do-img.jpg') }}" alt="">
+                                    <img src="{{ asset('frontend_assets/images/ab.jpeg') }}" alt="">
                                 </figure>
                             </div>
                             <!-- Best Services Image End -->
