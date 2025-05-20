@@ -260,85 +260,85 @@
     @endif
 
     <!-- Quick Fact Start -->
-    <div class="quick-facts bg-radius-section">
-        <div class="container">
-            <div class="row section-row align-items-center">
-                <div class="col-lg-6">
-                    <!-- Section Title Start -->
-                    <div class="section-title dark-section">
-                        <h3 class="wow fadeInUp">Some facts</h3>
-                        <h2 class="text-anime-style-3" data-cursor="-opaque">{{$how->name}}</h2>
-                    </div>
-                    <!-- Section Title End -->
-                </div>
+{{--    <div class="quick-facts bg-radius-section">--}}
+{{--        <div class="container">--}}
+{{--            <div class="row section-row align-items-center">--}}
+{{--                <div class="col-lg-6">--}}
+{{--                    <!-- Section Title Start -->--}}
+{{--                    <div class="section-title dark-section">--}}
+{{--                        <h3 class="wow fadeInUp">Some facts</h3>--}}
+{{--                        <h2 class="text-anime-style-3" data-cursor="-opaque">{{$how->name}}</h2>--}}
+{{--                    </div>--}}
+{{--                    <!-- Section Title End -->--}}
+{{--                </div>--}}
 
-                <div class="col-lg-6">
-                    <!-- Section Title Content Start -->
-                    <div class="section-title-content dark-section wow fadeInUp" data-wow-delay="0.2s">
-                        <p>{{$how->description}}</p>
-                    </div>
-                    <!-- Section Title Content End -->
-                </div>
-            </div>
+{{--                <div class="col-lg-6">--}}
+{{--                    <!-- Section Title Content Start -->--}}
+{{--                    <div class="section-title-content dark-section wow fadeInUp" data-wow-delay="0.2s">--}}
+{{--                        <p>{{$how->description}}</p>--}}
+{{--                    </div>--}}
+{{--                    <!-- Section Title Content End -->--}}
+{{--                </div>--}}
+{{--            </div>--}}
 
-            <div class="row align-items-center">
-                <div class="col-lg-3 col-md-6 col-6 order-lg-1 order-md-1 order-1">
-                    <!-- Fact Counter Box Start -->
-                    <div class="fact-counter-box">
-                        <!-- Fact Counter Item Start -->
-                        <div class="fact-counter-item">
-                            <h3>{{$how->tap1_name}}</h3>
-                            <h2><span class="counter">{{$how->tap1_number}}</span>+</h2>
-                            <p>{{$how->tap1_content}}</p>
-                        </div>
-                        <!-- Fact Counter Item End -->
+{{--            <div class="row align-items-center">--}}
+{{--                <div class="col-lg-3 col-md-6 col-6 order-lg-1 order-md-1 order-1">--}}
+{{--                    <!-- Fact Counter Box Start -->--}}
+{{--                    <div class="fact-counter-box">--}}
+{{--                        <!-- Fact Counter Item Start -->--}}
+{{--                        <div class="fact-counter-item">--}}
+{{--                            <h3>{{$how->tap1_name}}</h3>--}}
+{{--                            <h2><span class="counter">{{$how->tap1_number}}</span>+</h2>--}}
+{{--                            <p>{{$how->tap1_content}}</p>--}}
+{{--                        </div>--}}
+{{--                        <!-- Fact Counter Item End -->--}}
 
-                        <!-- Fact Counter Item Start -->
-                        <div class="fact-counter-item">
-                            <h3>{{$how->tap2_name}}</h3>
-                            <h2><span class="counter">{{$how->tap2_number}}</span>k</h2>
-                            <p>{{$how->tap2_content}}</p>
-                        </div>
-                        <!-- Fact Counter Item End -->
-                    </div>
-                    <!-- Fact Counter Box End -->
-                </div>
+{{--                        <!-- Fact Counter Item Start -->--}}
+{{--                        <div class="fact-counter-item">--}}
+{{--                            <h3>{{$how->tap2_name}}</h3>--}}
+{{--                            <h2><span class="counter">{{$how->tap2_number}}</span>k</h2>--}}
+{{--                            <p>{{$how->tap2_content}}</p>--}}
+{{--                        </div>--}}
+{{--                        <!-- Fact Counter Item End -->--}}
+{{--                    </div>--}}
+{{--                    <!-- Fact Counter Box End -->--}}
+{{--                </div>--}}
 
 
-                <div class="col-lg-3 col-md-6 col-6 order-lg-3 order-md-2 order-2">
-                    <!-- Fact Counter Box Start -->
-                    <div class="fact-counter-box">
-                        <!-- Fact Counter Item Start -->
-                        <div class="fact-counter-item">
-                            <h3>{{$how->tap3_name}}</h3>
-                            <h2><span class="counter">{{$how->tap3_number}}</span>k+</h2>
-                            <p>{{$how->tap3_content}}</p>
-                        </div>
-                        <!-- Fact Counter Item End -->
+{{--                <div class="col-lg-3 col-md-6 col-6 order-lg-3 order-md-2 order-2">--}}
+{{--                    <!-- Fact Counter Box Start -->--}}
+{{--                    <div class="fact-counter-box">--}}
+{{--                        <!-- Fact Counter Item Start -->--}}
+{{--                        <div class="fact-counter-item">--}}
+{{--                            <h3>{{$how->tap3_name}}</h3>--}}
+{{--                            <h2><span class="counter">{{$how->tap3_number}}</span>k+</h2>--}}
+{{--                            <p>{{$how->tap3_content}}</p>--}}
+{{--                        </div>--}}
+{{--                        <!-- Fact Counter Item End -->--}}
 
-                        <!-- Fact Counter Item Start -->
-                        <div class="fact-counter-item">
-                            <h3>{{$how->tap4_name}}</h3>
-                            <h2><span class="counter">{{$how->tap4_number}}</span>%</h2>
-                            <p>{{$how->tap4_content}}</p>
-                        </div>
-                        <!-- Fact Counter Item End -->
+{{--                        <!-- Fact Counter Item Start -->--}}
+{{--                        <div class="fact-counter-item">--}}
+{{--                            <h3>{{$how->tap4_name}}</h3>--}}
+{{--                            <h2><span class="counter">{{$how->tap4_number}}</span>%</h2>--}}
+{{--                            <p>{{$how->tap4_content}}</p>--}}
+{{--                        </div>--}}
+{{--                        <!-- Fact Counter Item End -->--}}
 
-                    </div>
+{{--                    </div>--}}
 
-                    <!-- Fact Counter Box End -->
-                </div>
-                <div class="col-lg-6 order-lg-2 order-md-3 order-3">
-                    <!-- Quick Fact image Start -->
-                    <div class="quick-fact-image">
-                        <img src="{{ asset($how->image) }}" alt="">
-                    </div>
-                    <!-- Quick Fact image End -->
-                </div>
+{{--                    <!-- Fact Counter Box End -->--}}
+{{--                </div>--}}
+{{--                <div class="col-lg-6 order-lg-2 order-md-3 order-3">--}}
+{{--                    <!-- Quick Fact image Start -->--}}
+{{--                    <div class="quick-fact-image">--}}
+{{--                        <img src="{{ asset($how->image) }}" alt="">--}}
+{{--                    </div>--}}
+{{--                    <!-- Quick Fact image End -->--}}
+{{--                </div>--}}
 
-            </div>
-        </div>
-    </div>
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    </div>--}}
     <!-- Quick Fact End -->
 
     @if ($sections['services_section']?->is_active)
