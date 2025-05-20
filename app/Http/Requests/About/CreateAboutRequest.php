@@ -28,8 +28,8 @@ class CreateAboutRequest extends BaseRequest
     public function rules()
     {
         return [
-            'image1' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'image2' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'image1' => 'nullable|image|mimes:jpg,jpeg,png',
+            'image2' => 'nullable|image|mimes:jpg,jpeg,png',
 
             'title'         => 'required|string|max:255',
             'description'   => 'nullable|string',
