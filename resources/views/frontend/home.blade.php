@@ -173,7 +173,7 @@
                                 @foreach($about->openingHours as $day => $hours)
                                     @if(!empty($hours['from']) && !empty($hours['to']))
                                         <div class="mb-2" style="color: #fff;">
-                                             {{  $hours->day }} 
+                                             {{  $hours->day }}
                                             {{ $hours['from'] }} - {{ $hours['to'] }}
                                         </div>
                                     @endif
@@ -183,7 +183,7 @@
                                 <img src="{{ asset('frontend_assets/images/icon-clock.svg') }}" alt="">
                             </figure>
                         </div>
-                        
+
 						<!-- Company Timing End -->
 					</div>
 					<!-- About Us Images End -->
@@ -223,17 +223,17 @@
                             <div class="service-item wow fadeInUp" data-wow-delay="{{ $index * 0.2 }}s">
                                 <!-- Service Item Header Start -->
                                 <div class="service-item-header">
-                                    <div class="icon-box">
-                                        <img src="{{ asset($service->icon) }}" alt="{{ $service->name }}">
-                                    </div>
-                    
+{{--                                    <div class="icon-box">--}}
+{{--                                        <img src="{{ asset($service->icon) }}" alt="{{ $service->name }}">--}}
+{{--                                    </div>--}}
+
                                     <div class="service-item-content">
                                         <h3><a href="#">{{ $service->name }}</a></h3>
                                         <p>{{ \Illuminate\Support\Str::limit($service->description, 80) }}</p>
                                     </div>
                                 </div>
                                 <!-- Service Item Header End -->
-                    
+
                                 <!-- Service Image Start -->
                                 <div class="service-image">
                                     <a href="#" data-cursor-text="View">
@@ -374,7 +374,7 @@
                                             <div class="icon-box">
                                                 <img src="{{ asset($service->icon) }}" alt="{{ $service->name }}">
                                             </div>
-                                    
+
                                             <div class="best-services-item-content">
                                                 <h3>{{ $service->name }}</h3>
                                                 <p>{{ $service->description }}</p>
@@ -383,7 +383,7 @@
                                         <!-- Best Services Item End -->
                                         @endforeach
                                     </div>
-                                    
+
                                     <!-- Best Services Box End -->
                                 </div>
                                 <!-- Best Services Body End -->
@@ -484,7 +484,7 @@
                             </div>
                             <!-- Our Testimonial Image End -->
                         </div>
-        
+
                         <div class="col-lg-6">
                             <!-- Testimonial Slider Start -->
                             <div class="testimonial-slider">
@@ -503,14 +503,14 @@
                                                                     <img src="{{ asset($testimonial->photo) }}" alt="">
                                                                 </figure>
                                                             </div>
-                                        
+
                                                             <div class="author-content">
                                                                 <h3>{{ $testimonial->name }}</h3>
                                                                 <p>{{ $testimonial->position }}</p>
                                                             </div>
                                                         </div>
                                                         <!-- Testimonial Author End -->
-                                        
+
                                                         <!-- Testimonial Quotes Start -->
                                                         <div class="testimonial-quotes">
                                                             <img src="{{ asset('frontend_assets/images/testimonial-quotes.svg') }}" alt="">
@@ -518,7 +518,7 @@
                                                         <!-- Testimonial Quotes End -->
                                                     </div>
                                                     <!-- Testimonial Author Information End -->
-                                        
+
                                                     <!-- Testimonial Rating Start -->
                                                     <div class="testimonial-rating">
                                                         @for ($i = 1; $i <= 5; $i++)
@@ -526,7 +526,7 @@
                                                         @endfor
                                                     </div>
                                                     <!-- Testimonial Rating End -->
-                                        
+
                                                     <!-- Testimonial Content Start -->
                                                     <div class="testimonial-content">
                                                         <p>"{{ $testimonial->message }}"</p>
@@ -564,7 +564,7 @@
                         </div>
                     </div>
                 </div>
-            </div>        
+            </div>
         </div>
         <!-- Our Testimonial Section End -->
     @endif
@@ -606,7 +606,7 @@
                                     </a>
                                 </div>
                                 <!-- team Image End -->
-                        
+
                                 <!-- Team Body Start -->
                                 <div class="team-body">
                                     <!-- Team Content Start -->
@@ -620,7 +620,7 @@
                                     <div class="team-social-list">
                                         <ul>
                                             @foreach(json_decode($team->social_links, true) as $platform => $link)
-                                                <li><a href="{{ $link }}"><i class="fa-brands fa-{{ $platform }}-p"></i></a></li>										
+                                                <li><a href="{{ $link }}"><i class="fa-brands fa-{{ $platform }}-p"></i></a></li>
                                             @endforeach
                                         </ul>
                                     </div>
@@ -641,7 +641,7 @@
 
     @if ($sections['faqs_section']?->is_active)
         <!-- Our FAQs Section Start -->
-        <div class="our-faqs parallaxie">        
+        <div class="our-faqs parallaxie">
             <div class="container">
                 <div class="row section-row">
                     <div class="col-lg-6">
@@ -652,7 +652,7 @@
                         </div>
                         <!-- Section Title End -->
                     </div>
-                    
+
                     <div class="col-lg-6">
                         <!-- FAQ Accordion Start -->
                         <div class="faq-accordion" id="accordion">
@@ -720,7 +720,7 @@
                                     </a>
                                 </div>
                                 <!-- Post Featured Image End -->
-                        
+
                                 <!-- Team Item Body Start -->
                                 <div class="post-item-body">
                                     <!-- Post Meta Start -->
