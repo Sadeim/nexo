@@ -29,7 +29,7 @@ class CreateWorkRequest extends BaseRequest
     {
         return [
             'title' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp',
             'category' => 'nullable|string|max:255',
             'description' => 'required|string',
         ];

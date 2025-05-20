@@ -434,13 +434,13 @@
                         <!-- Section Title End -->
                     </div>
 
-                    <div class="col-lg-6">
-                        <!-- Section Title Button Start -->
-                        <div class="section-btn wow fadeInUp" data-wow-delay="0.2s">
-                            <a href="#" class="btn-default">explore more work</a>
-                        </div>
-                        <!-- Section Title Button End -->
-                    </div>
+{{--                    <div class="col-lg-6">--}}
+{{--                        <!-- Section Title Button Start -->--}}
+{{--                        <div class="section-btn wow fadeInUp" data-wow-delay="0.2s">--}}
+{{--                            <a href="#" class="btn-default">explore more work</a>--}}
+{{--                        </div>--}}
+{{--                        <!-- Section Title Button End -->--}}
+{{--                    </div>--}}
                 </div>
 
                 <div class="row">
@@ -450,11 +450,11 @@
                             <div class="project-item wow fadeInUp" data-wow-delay="{{ $index * 0.2 }}s">
                                 <!-- Project Image Start -->
                                 <div class="project-image">
-                                    <a href="#" data-cursor-text="View">
+{{--                                    <a href="#" data-cursor-text="View">--}}
                                         <figure class="image-anime">
                                             <img src="{{ asset($work->image) }}" alt="{{ $work->title }}">
                                         </figure>
-                                    </a>
+{{--                                    </a>--}}
                                 </div>
                                 <!-- Project Image End -->
 
