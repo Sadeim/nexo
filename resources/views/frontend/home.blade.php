@@ -368,7 +368,7 @@
 
                                     <!-- Best Services Box Start -->
                                     <div class="best-services-box">
-                                        @foreach ($services as $index => $service)
+{{--                                        @foreach ($services as $index => $service)--}}
                                         <!-- Best Services Item Start -->
                                         <div class="best-services-item wow fadeInUp" data-wow-delay="{{ $index * 0.2 }}s">
 {{--                                            <div class="icon-box">--}}
@@ -395,7 +395,7 @@
                                                 </div>
                                             </div>
                                         <!-- Best Services Item End -->
-                                        @endforeach
+{{--                                        @endforeach--}}
                                     </div>
 
                                     <!-- Best Services Box End -->
