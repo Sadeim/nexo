@@ -137,7 +137,7 @@
                         <ul>
                             <li><a href="{{ route('home') }}">home</a></li>
                             <li><a href="{{ route('about_us') }}">about Us</a></li>
-                            <li><a href="#">services</a></li>
+{{--                            <li><a href="#">services</a></li>--}}
                             <li><a href="{{ route('blog.index') }}">blog</a></li>
                         </ul>
                     </div>
@@ -149,9 +149,9 @@
                     <div class="footer-links">
                         <h3>support</h3>
                         <ul>
-                            <li><a href="#">help</a></li>
-                            <li><a href="#">term's & condition</a></li>
-                            <li><a href="#">privacy policy</a></li>
+{{--                            <li><a href="#">help</a></li>--}}
+{{--                            <li><a href="#">term's & condition</a></li>--}}
+{{--                            <li><a href="#">privacy policy</a></li>--}}
                             <li><a href="{{ route('contact') }}">contact</a></li>
                         </ul>
                     </div>
