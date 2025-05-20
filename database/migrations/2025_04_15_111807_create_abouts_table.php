@@ -21,10 +21,8 @@ return new class extends Migration
             $table->text('tab1_content');
             $table->string('tab2_title');
             $table->text('tab2_content');
-            $table->string('tab3_title');
-            $table->text('tab3_content');
             $table->string('button_text')->nullable();
-            $table->string('button_link')->nullable();   
+            $table->string('button_link')->nullable();
             $table->timestamps();
         });
     }

@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Http\Resources\Admin\ContactResource;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class UserMessages extends Model
 {
     use HasFactory;
+    public $resource = ContactResource::class;
     protected $table = 'user_messages';
     protected $fillable = [
         'name', 

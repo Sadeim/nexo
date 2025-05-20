@@ -18,8 +18,7 @@ class SkillResource extends JsonResource
 
         return [
             'id'            => $this->id,
-            'percent'          => $this->percent,
-            'text'          => $this->text,
+            'title'          => $this->title,
             'created_at'          => $this->created_at->format('d-m-Y'),
             'operations'    => $operations,
         ];

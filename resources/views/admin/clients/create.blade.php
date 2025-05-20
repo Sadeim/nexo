@@ -1,4 +1,4 @@
-@extends('admin.layouts.master', ['is_active_parent' => 'clients','is_active'=> 'clients'])
+@extends('admin.layouts.master', ['is_active_parent' => 'home','is_active'=> 'clients'])
 @section('title', isset($client) ? __('admin.global.edit_client') : __('admin.global.add_new_client'))
 
 @section('content')

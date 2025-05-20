@@ -1,4 +1,4 @@
-@extends('admin.layouts.master', ['is_active_parent' => 'instagrams','is_active'=> 'instagrams'])
+@extends('admin.layouts.master', ['is_active_parent' => 'home','is_active'=> 'instagrams'])
 @section('title', isset($instagram) ? __('admin.global.edit_instagram') : __('admin.global.add_new_instagram'))
 
 @section('content')

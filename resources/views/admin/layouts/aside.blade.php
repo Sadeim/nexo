@@ -62,74 +62,225 @@
                         </a>
                     </div>
                 @endif
-                @if (auth()->user()->can('view_sliders'))
-                    <div class="menu-item menu-accordion {{ $is_active_parent == 'sliders' ? 'here show' : '' }}">
-                        <span class="menu-link {{ $is_active == 'sliders' ? 'active' : '' }}">
-                            <span class="menu-icon">
-                                <span class="svg-icon svg-icon-2">
-                                    <i class="fa-solid fa-sliders"></i>
-                                </span>
+
+                <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ $is_active_parent == 'home' ? 'here show' : '' }}">
+                    <span class="menu-link menu-accordion">
+                        <span class="menu-icon">
+                            <span class="svg-icon svg-icon-2">
+                                <i class="fa-solid fa-home"></i>
                             </span>
-                            <span class="menu-title">
-                                <a class="{{ $is_active == 'sliders' ? 'active' : '' }}"
+                        </span>
+                        <span class="menu-title">Website Home Page</span>
+                        <span class="menu-arrow"></span>
+                    </span>
+                    @if (auth()->user()->can('view_sliders'))
+                        <div class="menu-sub menu-sub-accordion">
+                            <div class="menu-item">
+                                <a class="menu-link {{ $is_active == 'sliders' ? 'active' : '' }}"
                                     href="{{ route('admin.sliders.index') }}">
+                                    <span class="menu-bullet">
+                                        <i class="fa-solid fa-sliders"></i>
+                                    </span>
                                     <span class="menu-title">{{ __('admin.global.sliders') }}</span>
                                 </a>
-                            </span>
-                        </span>
-                    </div>
-                @endif
-                @if (auth()->user()->can('view_categories'))
-                    <div class="menu-item menu-accordion {{ $is_active_parent == 'categories' ? 'here show' : '' }}">
-                        <span class="menu-link {{ $is_active == 'categories' ? 'active' : '' }}">
-                            <span class="menu-icon">
-                                <span class="svg-icon svg-icon-2">
-                                    <i class="fa-solid fa-list"></i>
-                                </span>
-                            </span>
-                            <span class="menu-title">
-                                <a class="{{ $is_active == 'categories' ? 'active' : '' }}"
+                            </div>
+                        </div>
+                    @endif
+
+                    @if (auth()->user()->can('view_categories'))
+                        <div class="menu-sub menu-sub-accordion">
+                            <div class="menu-item">
+                                <a class="menu-link {{ $is_active == 'categories' ? 'active' : '' }}"
                                     href="{{ route('admin.categories.index') }}">
-                                    <span class="menu-title">{{ __('admin.menu.categories') }}</span>
+                                    <span class="menu-bullet">
+                                        <i class="fa-solid fa-layer-group"></i>
+                                    </span>
+                                    <span class="menu-title">{{ __('admin.global.categories') }}</span>
                                 </a>
-                            </span>
-                        </span>
-                    </div>
-                @endif
-                @if (auth()->user()->can('view_services'))
-                    <div class="menu-item menu-accordion {{ $is_active_parent == 'services' ? 'here show' : '' }}">
-                        <span class="menu-link {{ $is_active == 'services' ? 'active' : '' }}">
-                            <span class="menu-icon">
-                                <span class="svg-icon svg-icon-2">
-                                    <i class="fa-solid fa-concierge-bell"></i>
-                                </span>
-                            </span>
-                            <span class="menu-title">
-                                <a class="{{ $is_active == 'services' ? 'active' : '' }}"
+                            </div>
+                        </div>
+                    @endif
+
+                    @if (auth()->user()->can('view_services'))
+                        <div class="menu-sub menu-sub-accordion">
+                            <div class="menu-item">
+                                <a class="menu-link {{ $is_active == 'services' ? 'active' : '' }}"
                                     href="{{ route('admin.services.index') }}">
+                                    <span class="menu-bullet">
+                                        <i class="fa-solid fa-screwdriver-wrench"></i>
+                                    </span>
                                     <span class="menu-title">{{ __('admin.global.services') }}</span>
                                 </a>
-                            </span>
-                        </span>
-                    </div>
-                @endif
-                @if (auth()->user()->can('view_testimonials'))
-                    <div class="menu-item menu-accordion {{ $is_active_parent == 'testimonials' ? 'here show' : '' }}">
-                        <span class="menu-link {{ $is_active == 'testimonials' ? 'active' : '' }}">
-                            <span class="menu-icon">
-                                <span class="svg-icon svg-icon-2">
-                                    <i class="fa-solid fa-comment-dots"></i>
-                                </span>
-                            </span>
-                            <span class="menu-title">
-                                <a class="{{ $is_active == 'testimonials' ? 'active' : '' }}"
+                            </div>
+                        </div>
+                    @endif
+
+                    @if (auth()->user()->can('view_testimonials'))
+                        <div class="menu-sub menu-sub-accordion">
+                            <div class="menu-item">
+                                <a class="menu-link {{ $is_active == 'testimonials' ? 'active' : '' }}"
                                     href="{{ route('admin.testimonials.index') }}">
+                                    <span class="menu-bullet">
+                                        <i class="fa-solid fa-comments"></i>
+                                    </span>
                                     <span class="menu-title">{{ __('admin.global.testimonials') }}</span>
                                 </a>
+                            </div>
+                        </div>
+                    @endif
+
+                    @if (auth()->user()->can('view_works'))
+                        <div class="menu-sub menu-sub-accordion">
+                            <div class="menu-item">
+                                <a class="menu-link {{ $is_active == 'works' ? 'active' : '' }}"
+                                    href="{{ route('admin.works.index') }}">
+                                    <span class="menu-bullet">
+                                        <i class="fa-solid fa-briefcase"></i>
+                                    </span>
+                                    <span class="menu-title">{{ __('admin.global.works') }}</span>
+                                </a>
+                            </div>
+                        </div>
+                    @endif
+                    @if (auth()->user()->can('view_how'))
+                        <div class="menu-sub menu-sub-accordion">
+                            <div class="menu-item">
+                                <a class="menu-link {{ $is_active == 'how' ? 'active' : '' }}"
+                                   href="{{ route('admin.how.index') }}">
+                                    <span class="menu-bullet">
+                                        <i class="fa-solid fa-briefcase"></i>
+                                    </span>
+                                    <span class="menu-title">{{ __('admin.global.how') }}</span>
+                                </a>
+                            </div>
+                        </div>
+                    @endif
+
+                    @if (auth()->user()->can('view_teams'))
+                        <div class="menu-sub menu-sub-accordion">
+                            <div class="menu-item">
+                                <a class="menu-link {{ $is_active == 'teams' ? 'active' : '' }}"
+                                    href="{{ route('admin.teams.index') }}">
+                                    <span class="menu-bullet">
+                                        <i class="fa-solid fa-users"></i>
+                                    </span>
+                                    <span class="menu-title">{{ __('admin.global.teams') }}</span>
+                                </a>
+                            </div>
+                        </div>
+                    @endif
+
+                    @if (auth()->user()->can('view_faqs'))
+                        <div class="menu-sub menu-sub-accordion">
+                            <div class="menu-item">
+                                <a class="menu-link {{ $is_active == 'faqs' ? 'active' : '' }}"
+                                    href="{{ route('admin.faqs.index') }}">
+                                    <span class="menu-bullet">
+                                        <i class="fa-solid fa-question-circle"></i>
+                                    </span>
+                                    <span class="menu-title">{{ __('admin.global.faqs') }}</span>
+                                </a>
+                            </div>
+                        </div>
+                    @endif
+
+                    @if (auth()->user()->can('view_abouts'))
+                        <div class="menu-sub menu-sub-accordion">
+                            <div class="menu-item">
+                                <a class="menu-link {{ $is_active == 'abouts' ? 'active' : '' }}"
+                                    href="{{ route('admin.abouts.index') }}">
+                                    <span class="menu-bullet">
+                                        <i class="fa-solid fa-info-circle"></i>
+                                    </span>
+                                    <span class="menu-title">{{ __('admin.global.abouts') }}</span>
+                                </a>
+                            </div>
+                        </div>
+                    @endif
+
+                    @if (auth()->user()->can('view_clients'))
+                        <div class="menu-sub menu-sub-accordion">
+                            <div class="menu-item">
+                                <a class="menu-link {{ $is_active == 'clients' ? 'active' : '' }}"
+                                    href="{{ route('admin.clients.index') }}">
+                                    <span class="menu-bullet">
+                                        <i class="fa-solid fa-handshake"></i>
+                                    </span>
+                                    <span class="menu-title">{{ __('admin.global.clients') }}</span>
+                                </a>
+                            </div>
+                        </div>
+                    @endif
+
+                </div>
+
+                <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ $is_active_parent == 'about' ? 'here show' : '' }}">
+                    <span class="menu-link menu-accordion">
+                        <span class="menu-icon">
+                            <span class="svg-icon svg-icon-2">
+                                <i class="fa-solid fa-home"></i>
                             </span>
                         </span>
+                        <span class="menu-title">About Page</span>
+                        <span class="menu-arrow"></span>
+                    </span>
+                    @if (auth()->user()->can('view_skills'))
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a class="menu-link {{ $is_active == 'skills' ? 'active' : '' }}"
+                                href="{{ route('admin.skills.index') }}">
+                                <span class="menu-bullet">
+                                    <i class="fa-solid fa-brain"></i> {{-- skills --}}
+                                </span>
+                                <span class="menu-title">{{ __('admin.global.skills') }}</span>
+                            </a>
+                        </div>
                     </div>
                 @endif
+                
+                @if (auth()->user()->can('view_reasons'))
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a class="menu-link {{ $is_active == 'reasons' ? 'active' : '' }}"
+                                href="{{ route('admin.reasons.index') }}">
+                                <span class="menu-bullet">
+                                    <i class="fa-solid fa-lightbulb"></i> {{-- reasons --}}
+                                </span>
+                                <span class="menu-title">{{ __('admin.global.reasons') }}</span>
+                            </a>
+                        </div>
+                    </div>
+                @endif
+                
+                @if (auth()->user()->can('view_approaches'))
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a class="menu-link {{ $is_active == 'approaches' ? 'active' : '' }}"
+                                href="{{ route('admin.approaches.index') }}">
+                                <span class="menu-bullet">
+                                    <i class="fa-solid fa-route"></i> {{-- approaches --}}
+                                </span>
+                                <span class="menu-title">Approaches</span>
+                            </a>
+                        </div>
+                    </div>
+                @endif
+                
+                @if (auth()->user()->can('view_how'))
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a class="menu-link {{ $is_active == 'how' ? 'active' : '' }}"
+                                href="{{ route('admin.how.index') }}">
+                                <span class="menu-bullet">
+                                    <i class="fa-solid fa-gears"></i> {{-- how we work --}}
+                                </span>
+                                <span class="menu-title">How We Work</span>
+                            </a>
+                        </div>
+                    </div>
+                @endif
+                
+                </div>
                 {{-- @if (auth()->user()->can('view_achievements'))
                     <div
                         class="menu-item menu-accordion {{ $is_active_parent == 'achievements' ? 'here show' : '' }}">
@@ -148,23 +299,6 @@
                         </span>
                     </div>
                 @endif --}}
-                @if (auth()->user()->can('view_abouts'))
-                    <div class="menu-item menu-accordion {{ $is_active_parent == 'abouts' ? 'here show' : '' }}">
-                        <span class="menu-link {{ $is_active == 'abouts' ? 'active' : '' }}">
-                            <span class="menu-icon">
-                                <span class="svg-icon svg-icon-2">
-                                    <i class="fa-solid fa-image"></i>
-                                </span>
-                            </span>
-                            <span class="menu-title">
-                                <a class="{{ $is_active == 'abouts' ? 'active' : '' }}"
-                                    href="{{ route('admin.abouts.index') }}">
-                                    <span class="menu-title">{{ __('admin.global.abouts') }}</span>
-                                </a>
-                            </span>
-                        </span>
-                    </div>
-                @endif
                 {{-- @if (auth()->user()->can('view_banners'))
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'banners' ? 'here show' : '' }}">
                         <span class="menu-link {{ $is_active == 'banners' ? 'active' : '' }}">
@@ -182,6 +316,7 @@
                         </span>
                     </div>
                 @endif --}}
+
                 @if (auth()->user()->can('view_blogs'))
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'blogs' ? 'here show' : '' }}">
                         <span class="menu-link {{ $is_active == 'blogs' ? 'active' : '' }}">
@@ -199,25 +334,24 @@
                         </span>
                     </div>
                 @endif
-                @if (auth()->user()->can('view_clients'))
-                    <div class="menu-item menu-accordion {{ $is_active_parent == 'clients' ? 'here show' : '' }}">
-                        <span class="menu-link {{ $is_active == 'clients' ? 'active' : '' }}">
+                @if (auth()->user()->can('view_contacts'))
+                    <div class="menu-item menu-accordion {{ $is_active_parent == 'contacts' ? 'here show' : '' }}">
+                        <span class="menu-link {{ $is_active == 'contacts' ? 'active' : '' }}">
                             <span class="menu-icon">
                                 <span class="svg-icon svg-icon-2">
-                                    <i class="fa-solid fa-user-group"></i>
+                                    <i class="fa-solid fa-envelope"></i>
                                 </span>
                             </span>
                             <span class="menu-title">
-                                <a class="{{ $is_active == 'clients' ? 'active' : '' }}"
-                                    href="{{ route('admin.clients.index') }}">
-                                    <span class="menu-title">{{ __('admin.global.clients') }}</span>
+                                <a class="{{ $is_active == 'contacts' ? 'active' : '' }}"
+                                    href="{{ route('admin.contacts.index') }}">
+                                    <span class="menu-title">{{ __('admin.global.contacts') }}</span>
                                 </a>
                             </span>
                         </span>
                     </div>
                 @endif
-
-                @if (auth()->user()->can('view_bookings'))
+                {{-- @if (auth()->user()->can('view_bookings'))
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'bookings' ? 'here show' : '' }}">
                         <span class="menu-link {{ $is_active == 'bookings' ? 'active' : '' }}">
                             <span class="menu-icon">
@@ -233,7 +367,7 @@
                             </span>
                         </span>
                     </div>
-                @endif
+                @endif --}}
 
                 {{-- @if (auth()->user()->can('view_contacts'))
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'contacts' ? 'here show' : '' }}">
@@ -253,7 +387,7 @@
                     </div>
                 @endif --}}
 
-                @if (auth()->user()->can('view_events'))
+                {{-- @if (auth()->user()->can('view_events'))
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'events' ? 'here show' : '' }}">
                         <span class="menu-link {{ $is_active == 'events' ? 'active' : '' }}">
                             <span class="menu-icon">
@@ -303,9 +437,9 @@
                             </span>
                         </span>
                     </div>
-                @endif
+                @endif --}}
 
-                @if (auth()->user()->can('view_menu_items'))
+                {{-- @if (auth()->user()->can('view_menu_items'))
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'menu_items' ? 'here show' : '' }}">
                         <span class="menu-link {{ $is_active == 'menu_items' ? 'active' : '' }}">
                             <span class="menu-icon">
@@ -321,7 +455,7 @@
                             </span>
                         </span>
                     </div>
-                @endif
+                @endif --}}
                 @if (auth()->user()->can('view_newsletters'))
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'newsletters' ? 'here show' : '' }}">
                         <span class="menu-link {{ $is_active == 'newsletters' ? 'active' : '' }}">
@@ -339,23 +473,7 @@
                         </span>
                     </div>
                 @endif
-                @if (auth()->user()->can('view_faqs'))
-                    <div class="menu-item menu-accordion {{ $is_active_parent == 'faqs' ? 'here show' : '' }}">
-                        <span class="menu-link {{ $is_active == 'faqs' ? 'active' : '' }}">
-                            <span class="menu-icon">
-                                <span class="svg-icon svg-icon-2">
-                                    <i class="fa-solid fa-circle-question"></i>
-                                </span>
-                            </span>
-                            <span class="menu-title">
-                                <a class="{{ $is_active == 'faqs' ? 'active' : '' }}"
-                                    href="{{ route('admin.faqs.index') }}">
-                                    <span class="menu-title">{{ __('admin.global.faqs') }}</span>
-                                </a>
-                            </span>
-                        </span>
-                    </div>
-                @endif
+
                 {{-- @if (auth()->user()->can('view_reasons'))
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'reasons' ? 'here show' : '' }}">
                         <span class="menu-link {{ $is_active == 'reasons' ? 'active' : '' }}">
@@ -373,23 +491,7 @@
                         </span>
                     </div>
                 @endif --}}
-                @if (auth()->user()->can('view_teams'))
-                    <div class="menu-item menu-accordion {{ $is_active_parent == 'teams' ? 'here show' : '' }}">
-                        <span class="menu-link {{ $is_active == 'teams' ? 'active' : '' }}">
-                            <span class="menu-icon">
-                                <span class="svg-icon svg-icon-2">
-                                    <i class="fa-solid fa-users"></i>
-                                </span>
-                            </span>
-                            <span class="menu-title">
-                                <a class="{{ $is_active == 'teams' ? 'active' : '' }}"
-                                    href="{{ route('admin.teams.index') }}">
-                                    <span class="menu-title">{{ __('admin.global.teams') }}</span>
-                                </a>
-                            </span>
-                        </span>
-                    </div>
-                @endif
+
                 {{-- @if (auth()->user()->can('view_skills'))
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'skills' ? 'here show' : '' }}">
                         <span class="menu-link {{ $is_active == 'skills' ? 'active' : '' }}">
@@ -407,23 +509,7 @@
                         </span>
                     </div>
                 @endif --}}
-                @if (auth()->user()->can('view_works'))
-                    <div class="menu-item menu-accordion {{ $is_active_parent == 'works' ? 'here show' : '' }}">
-                        <span class="menu-link {{ $is_active == 'works' ? 'active' : '' }}">
-                            <span class="menu-icon">
-                                <span class="svg-icon svg-icon-2">
-                                    <i class="fa-solid fa-briefcase"></i>
-                                </span>
-                            </span>
-                            <span class="menu-title">
-                                <a class="{{ $is_active == 'works' ? 'active' : '' }}"
-                                    href="{{ route('admin.works.index') }}">
-                                    <span class="menu-title">{{ __('admin.global.works') }}</span>
-                                </a>
-                            </span>
-                        </span>
-                    </div>
-                @endif
+
                 @if (auth()->user()->can('view_static_pages'))
                     <div
                         class="menu-item menu-accordion {{ $is_active_parent == 'static_pages' ? 'here show' : '' }}">
@@ -480,7 +566,7 @@
                         </div>
                     @endif
                 </div> --}}
-                @if (auth()->user()->can('view_roles'))
+                {{-- @if (auth()->user()->can('view_roles'))
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'roles' ? 'here show' : '' }}">
                         <span class="menu-link {{ $is_active == 'roles' ? 'active' : '' }}">
                             <span class="menu-icon">
@@ -496,7 +582,7 @@
                             </span>
                         </span>
                     </div>
-                @endif
+                @endif --}}
 
                 @if (auth()->user()->can('view_settings'))
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'settings' ? 'here show' : '' }}">
@@ -526,8 +612,8 @@
                             <a class="{{ $is_active == 'logout' ? 'active' : '' }}"
                                 href="aaaaa.logout.index')}}">
                                 <span class="menu-title">{{ __('admin.menu.logout') }}</span>
-                            </a>    
-                        </span>                        
+                            </a>
+                        </span>
                     </span>
                 </div> --}}
             </div>

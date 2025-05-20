@@ -1,4 +1,4 @@
-@extends('admin.layouts.master', ['is_active_parent' => 'services', 'is_active' => 'services'])
+@extends('admin.layouts.master', ['is_active_parent' => 'home', 'is_active' => 'services'])
 @section('title', isset($service) ? 'Edit service' : __('admin.global.add_new_service'))
 
 @section('content')
@@ -9,10 +9,10 @@
             @method('PATCH')
         @endisset
 
-        <div class="page-content-header">
+        <div class="page-content-header mb-5">
             <h2 class="table-title">{{ isset($service) ? 'Edit service' : __('admin.global.add_new_service') }}</h2>
         </div>
-        
+
         <!-- Sidebar: Status Section -->
         <div class="d-flex flex-column gap-5 col-lg-3 mb-7">
             <div class="card card-flush">
@@ -42,11 +42,34 @@
                                 <i class="bi bi-x fs-2"></i>
                             </span>
                         </div>
+
                     </div>
+
                 </div>
+
+            </div>
+            <div class="card card-flush">
+                <div class="card-header justify-content-center p-5">
+                    <label class="available">Icon Image</label>
+                    <div class="card-toolbar">
+                        <div class="image-input image-input-outline" data-kt-image-input="true">
+                            <div class="image-input-wrapper w-200px h-200px" style="background-image: url({{ isset($service) && $service->icon ? asset($service->icon) : asset('admin_assets/media/svg/files/blank-image.svg') }})"></div>
+                            <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change image">
+                                <i class="bi bi-pencil-fill fs-7"></i>
+                                <input type="file" name="icon" accept=".png, .jpg, .jpeg" />
+                            </label>
+                            <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel image">
+                                <i class="bi bi-x fs-2"></i>
+                            </span>
+                        </div>
+
+                    </div>
+
+                </div>
+
             </div>
         </div>
-        
+
         <!-- Main Content: Service Details -->
         <div class="d-flex flex-column flex-row-fluid gap-3 col-lg-9">
             <div class="card card-flush generalDataTap">
@@ -54,11 +77,7 @@
                     <h3 class="card-title">{{ __('admin.global.name_and_description') }}</h3>
                 </div>
                 <div class="card-body pt-0">
-                    <div class="mb-5">
-                        <label class="required form-label">Icon</label>
-                        <input type="text" name="icon" class="form-control" placeholder="Enter Icon Class"
-                               value="{{ isset($service) ? $service->icon : '' }}">
-                    </div>
+
                     <div class="mb-5">
                         <label class="required form-label">{{ __('admin.form.title') }}</label>
                         <input type="text" name="name" class="form-control" placeholder="Enter Service Title"
@@ -71,7 +90,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Submit Buttons -->
         <div class="page-buttuns mt-5">
             <div class="row justify-content-between">

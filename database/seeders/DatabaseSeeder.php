@@ -24,10 +24,10 @@ class DatabaseSeeder extends Seeder
         $this->call(BlogSeeder::class);
         $this->call(FaqSeeder::class);
         $this->call(ServiceSeeder::class);
-        // $this->call(ReasonSeeder::class);
+        $this->call(ReasonSeeder::class);
         $this->call(ClientSeeder::class);
         $this->call(AboutSeeder::class);
-        // $this->call(SkillSeeder::class);
+        $this->call(SkillSeeder::class);
         $this->call(WorkSeeder::class);
         // $this->call(AchievementSeeder::class);
         $this->call(TeamSeeder::class);
@@ -36,8 +36,11 @@ class DatabaseSeeder extends Seeder
         // $this->call(EventSeeder::class);
         // $this->call(InstagramSeeder::class);
         // $this->call(MenuItemSeeder::class);
-       $this->call(SliderSeeder::class);
+        $this->call(SliderSeeder::class);
         $this->call(ReasonTabSeeder::class);
         $this->call(FeatureSeeder::class);
+        $this->call(SectionSeeder::class);
+        $this->call(HowSeeder::class);
+        $this->call(ApproachSeeder::class);
     }
 }

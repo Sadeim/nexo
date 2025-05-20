@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Testimonial\CreateTestimonialRequest;
+use App\Models\Section;
 use Illuminate\Http\Request;
 use App\Models\Testimonial;
 use App\Traits\SaveImageTrait;
@@ -23,7 +24,8 @@ class TestimonialController extends Controller
 
     public function index()
     {
-        return view('admin.testimonials.index');
+        $data['section'] = Section::where('key', 'testimonials_section')->first();
+        return view('admin.testimonials.index', $data);
     }
 
     public function datatable(Request $request) 

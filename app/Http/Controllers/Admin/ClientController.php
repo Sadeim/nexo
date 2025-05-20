@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Client\CreateClientRequest;
 use App\Models\Client;
+use App\Models\Section;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Traits\SaveImageTrait;
@@ -23,7 +24,8 @@ class ClientController extends Controller
 
     public function index()
     {
-        return view('admin.clients.index');
+        $data['section'] = Section::where('key', 'clients_section')->first();
+        return view('admin.clients.index', $data);
     }
 
     public function datatable(Request $request) 

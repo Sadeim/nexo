@@ -28,22 +28,23 @@ class CreateAboutRequest extends BaseRequest
     public function rules()
     {
         return [
-            'company_name'       => 'required|string|max:255',
-            'sub_title'          => 'nullable|string|max:255',
-            'title'              => 'required|string|max:255',
-            'description'        => 'nullable|string',
-            'image1'             => 'nullable|image|mimes:jpeg,png,jpg,webp',
-            'image2'             => 'nullable|image|mimes:jpeg,png,jpg,webp',
-            'image3'             => 'nullable|image|mimes:jpeg,png,jpg,webp',
-            'circle_text_image'  => 'nullable|image|mimes:jpeg,png,jpg,webp',
-            'logo_icon'          => 'nullable|image|mimes:jpeg,png,jpg,webp',
-            'author_name'        => 'nullable|string|max:255',
-            'author_position'    => 'nullable|string|max:255',
-            'author_image'       => 'nullable|image|mimes:jpeg,png,jpg,webp',
-            'signature_image'    => 'nullable|image|mimes:jpeg,png,jpg,webp',
-            'check1'             => 'nullable|string|max:255',
-            'check2'             => 'nullable|string|max:255',
-            'check3'             => 'nullable|string|max:255',
+            'image1' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'image2' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+
+            'title'         => 'required|string|max:255',
+            'description'   => 'nullable|string',
+            'tab1_title'    => 'nullable|string|max:255',
+            'tab2_title'    => 'nullable|string|max:255',
+            'tab1_content'  => 'nullable|string|max:1000',
+            'tab2_content'  => 'nullable|string|max:1000',
+            'button_text'   => 'nullable|string|max:255',
+            'button_link'   => 'nullable|max:255',
+
+            'opening_hours' => 'nullable|array',
+            'opening_hours.*.day' => 'required_with:opening_hours|string|max:20',
+            'opening_hours.*.from' => 'nullable|date_format:H:i',
+            'opening_hours.*.to' => 'nullable|date_format:H:i',
+            'opening_hours.*.status' => 'nullable|boolean',
         ];
     }
 }

@@ -19,7 +19,7 @@ class ReasonResource extends JsonResource
         return [
             'id'            => $this->id,
             'title'          => $this->title,
-            'description'          => $this->description,
+            'text'          => $this->text,
             'created_at'          => $this->created_at->format('d-m-Y'),
             'operations'    => $operations,
         ];

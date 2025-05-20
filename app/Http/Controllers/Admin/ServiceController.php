@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Service\CreateServiceRequest;
+use App\Models\Section;
 use Illuminate\Http\Request;
 use App\Models\Service;
 use App\Traits\SaveImageTrait;
@@ -22,10 +23,11 @@ class ServiceController extends Controller
 
     public function index()
     {
-        return view('admin.services.index');
+        $data['section'] = Section::where('key', 'services_section')->first();
+        return view('admin.services.index', $data);
     }
 
-    public function datatable(Request $request) 
+    public function datatable(Request $request)
     {
         $items = Service::query()->orderBy('id', 'DESC');
         return $this->filterDataTable($items, $request);
@@ -40,9 +42,15 @@ class ServiceController extends Controller
     {
         try {
             DB::beginTransaction();
-            $data = $request->only('name', 'description', 'is_featured', 'icon');
-            if ($request->hasFile('image')) {
-                $data['image'] = $this->uploadImage($request->image, 'services');
+            $data = $request->only('name', 'description', 'is_featured',);
+            // معالجة الصور
+            $imageFields = [
+                'image', 'icon',
+            ];
+            foreach ($imageFields as $field) {
+                if ($request->hasFile($field)) {
+                    $data[$field] = $this->uploadImage($request->file($field), 'services');
+                }
             }
             Service::create($data);
             DB::commit();
@@ -64,9 +72,14 @@ class ServiceController extends Controller
     {
         try {
             DB::beginTransaction();
-            $data = $request->only('name', 'description', 'is_featured', 'icon');
-            if ($request->hasFile('image')) {
-                $data['image'] = $this->uploadImage($request->image, 'services');
+            $data = $request->only('name', 'description', 'is_featured');
+            $imageFields = [
+                'image', 'icon',
+            ];
+            foreach ($imageFields as $field) {
+                if ($request->hasFile($field)) {
+                    $data[$field] = $this->uploadImage($request->file($field), 'services');
+                }
             }
             $service = Service::findOrFail($id);
             $service->update($data);

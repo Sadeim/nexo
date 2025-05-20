@@ -35,13 +35,16 @@ class PermissionSeeder extends Seeder
             'instagrams' => ['view', 'add', 'edit', 'delete'],
             'menu_items' => ['view', 'add', 'edit', 'delete'],
             'sliders' => ['view', 'add', 'edit', 'delete'],
-            // 'faqs' => ['view', 'add', 'edit', 'delete'],
-            // 'reasons' => ['view', 'add', 'edit', 'delete'],
+            'faqs' => ['view', 'add', 'edit', 'delete'],
+            'reasons' => ['view', 'add', 'edit', 'delete'],
             'teams' => ['view', 'add', 'edit', 'delete'],
-            // 'skills' => ['view', 'add', 'edit', 'delete'],
+            'skills' => ['view', 'add', 'edit', 'delete'],
             'works' => ['view', 'add', 'edit', 'delete'],
             'home' => ['view'],
             'settings' => ['view', 'add', 'edit', 'delete'],
+            'how' => ['view', 'add', 'edit', 'delete'],
+            'approaches' => ['view', 'add', 'edit', 'delete'],
+            'contacts' => ['view', 'add', 'edit', 'delete'],
         ];
         foreach ($admin_parents as $parent => $types) {
             foreach ($types as $type) {

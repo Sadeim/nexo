@@ -5,11 +5,14 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Reason\CreateReasonRequest;
 use App\Models\Reason;
+use App\Models\Section;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use App\Traits\SaveImageTrait;
 class ReasonController extends Controller
 {
+    use SaveImageTrait;
+
     public function __construct()
     {
         $this->middleware('permission:view_reasons|add_reasons', ['only' => ['index','store']]);
@@ -21,7 +24,8 @@ class ReasonController extends Controller
     public function index()
     {
         $reasons = Reason::orderBy('id', 'DESC')->get();
-        return view('admin.reasons.index', compact('reasons'));
+        $section = Section::where('key', 'reasons_section')->first();
+        return view('admin.reasons.index', compact('reasons', 'section'));
     }
 
     public function datatable(Request $request) 
@@ -35,11 +39,14 @@ class ReasonController extends Controller
         return view('admin.reasons.create');
     }
 
-    public function store(CreateReasonRequest $request)
+    public function store(Request $request)
     {
         try {
             DB::beginTransaction();
-            $data = $request->only(['icon', 'title', 'description']);
+            $data = $request->except(['image']);
+            if ($request->hasFile('image')) {
+                $data['image'] = $this->uploadImage($request->file('image'), 'reasons');
+            }
             Reason::create($data);
             DB::commit();
             return $this->response_api(200, __('admin.form.added_successfully'), '');
@@ -55,11 +62,14 @@ class ReasonController extends Controller
         return view('admin.reasons.create', compact('reason'));
     }
 
-    public function update(CreateReasonRequest $request, $id)
+    public function update(Request $request, $id)
     {
         try {
             DB::beginTransaction();
-            $data = $request->only(['icon', 'title', 'description']);
+            $data = $request->except(['image']);
+            if ($request->hasFile('image')) {
+                $data['image'] = $this->uploadImage($request->file('image'), 'reasons');
+            }
             $reason = Reason::findOrFail($id);
             $reason->update($data);
             DB::commit();

@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\About;
+use App\Models\OpeningHour;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -22,10 +23,21 @@ class AboutSeeder extends Seeder
             'tab1_content' => 'Conveniently target business opportunities market-driven solutions',
             'tab2_title' => 'Repairing Roofing and Door',
             'tab2_content' => 'List item one',
-            'tab3_title' => 'Repairing Roofing and Door',
-            'tab3_content' => 'List item two',
-            'button_text' => 'Get An Estimate',
+            // 'tab3_title' => 'Repairing Roofing and Door',
+            // 'tab3_content' => 'List item two',
+            'button_text' => 'Call Us',
             'button_link' => 'about.html',
         ]);
+
+        OpeningHour::insert([
+            ['about_id' => 1, 'day' => 'Monday', 'from' => '09:30', 'to' => '07:30', 'is_closed' => false],
+            ['about_id' => 1, 'day' => 'Tuesday', 'from' => '09:30', 'to' => '07:30', 'is_closed' => false],
+            ['about_id' => 1, 'day' => 'Wednesday', 'from' => '09:30', 'to' => '07:30', 'is_closed' => false],
+            ['about_id' => 1, 'day' => 'Thursday', 'from' => '09:30', 'to' => '07:30', 'is_closed' => false],
+            ['about_id' => 1, 'day' => 'Friday', 'from' => '09:30', 'to' => '07:30', 'is_closed' => false],
+            ['about_id' => 1, 'day' => 'Saturday', 'from' => '09:30', 'to' => '07:30', 'is_closed' => false],
+            ['about_id' => 1, 'day' => 'Sunday', 'from' => null, 'to' => null, 'is_closed' => true],
+        ]);
+        
     }
 }

@@ -14,16 +14,21 @@ use App\Models\Contact;
 use App\Models\Event;
 use App\Models\Faq;
 use App\Models\Feature;
+use App\Models\How;
 use App\Models\Instagram;
 use App\Models\Newsletter;
 use App\Models\Reason;
 use App\Models\ReasonTab;
+use App\Models\Section;
 use App\Models\Service;
+use App\Models\Setting;
 use App\Models\Slider;
 use App\Models\Team;
 use App\Models\Testimonial;
 use App\Models\UserMessages;
 use App\Models\Work;
+use App\Models\Approach;
+use App\Models\Skill;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -33,18 +38,27 @@ class HomeController extends Controller
     public function home()
     {
         $data['slider'] = Slider::first();
-        // $data['features'] = Feature::get();
         $data['about'] = About::first();
         $data['services'] = Service::get();
-        // $data['reasons'] = Reason::get();
         $data['works'] = Work::get();
         $data['teams'] = Team::get();
         $data['testimonials'] = Testimonial::get();
         $data['faqs'] = Faq::get();
         $data['blogs'] = Blog::get();
         $data['clients'] = Client::get();
-        // $data['tabs'] = ReasonTab::orderBy('order')->get();
-
+        $data['sections'] = Section::whereIn('key', [
+            'services_section',
+            'testimonials_section',
+            'works_section',
+            'about_section',
+            'teams_section',
+            'faqs_section',
+            'sliders_section',
+            'clients_section',
+            'blog_section',
+        ])->get()->keyBy('key');
+        $data['how'] = How::first();
+        
         return view('frontend.home', $data);
     }
 
@@ -65,7 +79,7 @@ class HomeController extends Controller
         }
 
         $message = Consultation::create($request->all());
-       
+
         Mail::to(config('mail.admin_email'))->send(new AdminNotification($message, 'consultation'));
 
         return response()->json([
@@ -103,14 +117,14 @@ class HomeController extends Controller
         return response()->json(['message' => 'Booking saved successfully.']);
     }
 
-    public function contactUs() 
+    public function contactUs()
     {
         $data['instagrams'] = Instagram::get();
         $data['about'] = About::first();
         return view('frontend.contact_us', $data);
     }
 
-    public function contactStore(Request $request) 
+    public function contactStore(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
@@ -127,18 +141,31 @@ class HomeController extends Controller
 
         $dataR = $request->only(['name', 'phone', 'email','subject','message']);
         $message = UserMessages::create($dataR);
-        
-        // Mail::to(config('mail.admin_email'))->send(new AdminNotification($message, 'contact'));
+        $email = Setting::where('key', 'email')->first()->value;
+         Mail::to($email)->send(new AdminNotification($message, 'contact'));
 
-        return $this->response_api(200, 'Done Successfully', '');
+        return $this->response_api(200, 'Done Successfully');
     }
 
-    public function aboutUs() 
+    public function aboutUs()
     {
-        $data['about'] = About::first();
+        $data['about'] = About::with(['openingHours' => function ($query) {
+                            $query->orderByRaw("FIELD(day, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday')");
+                        }])->first();
+                        
         $data['testimonials'] = Testimonial::get();
         $data['teams'] = Team::get();
         $data['clients'] = Client::get();
+        $data['skills'] = Skill::first();
+        $data['reasons'] = Reason::get();
+        $data['how'] = How::first();
+        $data['approach'] = Approach::first();
+        $data['sections'] = Section::whereIn('key', [
+            'skills_section',
+            'approaches_section',
+            'reasons_section',
+        ])->get()->keyBy('key');
+        
         return view('frontend.about_us', $data);
     }
 }

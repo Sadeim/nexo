@@ -1,5 +1,5 @@
-@extends('admin.layouts.master', ['is_active_parent' => 'abouts', 'is_active' => 'abouts'])
-@section('title', isset($about) ? __('admin.global.edit_about') : __('admin.global.add_new_about'))
+@extends('admin.layouts.master', ['is_active_parent' => 'home', 'is_active' => 'abouts'])
+@section('title', isset($about) ? 'Edit about' : __('admin.global.add_new_about'))
 
 @section('content')
     <form id="kt_form" class="form row d-flex flex-column flex-lg-row addForm"
@@ -26,7 +26,7 @@
                 <div class="card-header card-header justify-content-center p-5">
                     <div class="card-toolbar">
                         <div class="image-input image-input-outline" data-kt-image-input="true">
-                            <div class="image-input-wrapper w-200px h-200px" 
+                            <div class="image-input-wrapper w-200px h-200px"
                                  style="background-image: url({{ isset($about) && $about->image1 ? asset($about->image1) : asset('admin_assets/media/svg/files/blank-image.svg') }})">
                             </div>
                             <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
@@ -54,7 +54,7 @@
                 <div class="card-header card-header justify-content-center p-5">
                     <div class="card-toolbar">
                         <div class="image-input image-input-outline" data-kt-image-input="true">
-                            <div class="image-input-wrapper w-200px h-200px" 
+                            <div class="image-input-wrapper w-200px h-200px"
                                  style="background-image: url({{ isset($about) && $about->image2 ? asset($about->image2) : asset('admin_assets/media/svg/files/blank-image.svg') }})">
                             </div>
                             <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
@@ -74,126 +74,7 @@
                     </div>
                 </div>
             </div>
-            <!-- Image3 -->
-            <div class="card card-flush">
-                <div class="card-header justify-content-center">
-                    <h3 class="card-title">image3</h3>
-                </div>
-                <div class="card-header card-header justify-content-center p-5">
-                    <div class="card-toolbar">
-                        <div class="image-input image-input-outline" data-kt-image-input="true">
-                            <div class="image-input-wrapper w-200px h-200px" 
-                                 style="background-image: url({{ isset($about) && $about->image3 ? asset($about->image3) : asset('admin_assets/media/svg/files/blank-image.svg') }})">
-                            </div>
-                            <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-                                   data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change Image3">
-                                <i class="bi bi-pencil-fill fs-7"></i>
-                                <input type="file" name="image3" accept=".png, .jpg, .jpeg" />
-                            </label>
-                            <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-                                  data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel Image3">
-                                <i class="bi bi-x fs-2"></i>
-                            </span>
-                            <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-                                  data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="Remove Image3">
-                                <i class="bi bi-x fs-2"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Circle Text Image -->
-            <div class="card card-flush">
-                <div class="card-header justify-content-center">
-                    <h3 class="card-title">circle_text_image</h3>
-                </div>
-                <div class="card-header card-header justify-content-center p-5">
-                    <div class="card-toolbar">
-                        <div class="image-input image-input-outline" data-kt-image-input="true">
-                            <div class="image-input-wrapper w-200px h-200px"
-                                 style="background-image: url({{ isset($about) && $about->circle_text_image ? asset($about->circle_text_image) : asset('admin_assets/media/svg/files/blank-image.svg') }})"></div>
-                            <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-                                   data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change Circle Text Image">
-                                <i class="bi bi-pencil-fill fs-7"></i>
-                                <input type="file" name="circle_text_image" accept=".png, .jpg, .jpeg" />
-                            </label>
-                            <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-                                  data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel Circle Text Image">
-                                <i class="bi bi-x fs-2"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Logo Icon -->
-            <div class="card card-flush">
-                <div class="card-header justify-content-center">
-                    <h3 class="card-title">logo_icon</h3>
-                </div>
-                <div class="card-header card-header justify-content-center p-5">
-                    <div class="card-toolbar">
-                        <div class="image-input image-input-outline" data-kt-image-input="true">
-                            <div class="image-input-wrapper w-200px h-200px"
-                                 style="background-image: url({{ isset($about) && $about->logo_icon ? asset($about->logo_icon) : asset('admin_assets/media/svg/files/blank-image.svg') }})"></div>
-                            <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-                                   data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change Logo Icon">
-                                <i class="bi bi-pencil-fill fs-7"></i>
-                                <input type="file" name="logo_icon" accept=".png, .jpg, .jpeg" />
-                            </label>
-                            <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-                                  data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel Logo Icon">
-                                <i class="bi bi-x fs-2"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Author Image -->
-            <div class="card card-flush">
-                <div class="card-header justify-content-center">
-                    <h3 class="card-title">author_image</h3>
-                </div>
-                <div class="card-header card-header justify-content-center p-5">
-                    <div class="card-toolbar">
-                        <div class="image-input image-input-outline" data-kt-image-input="true">
-                            <div class="image-input-wrapper w-200px h-200px"
-                                 style="background-image: url({{ isset($about) && $about->author_image ? asset($about->author_image) : asset('admin_assets/media/svg/files/blank-image.svg') }})"></div>
-                            <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-                                   data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change Author Image">
-                                <i class="bi bi-pencil-fill fs-7"></i>
-                                <input type="file" name="author_image" accept=".png, .jpg, .jpeg" />
-                            </label>
-                            <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-                                  data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel Author Image">
-                                <i class="bi bi-x fs-2"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Signature Image -->
-            <div class="card card-flush">
-                <div class="card-header justify-content-center">
-                    <h3 class="card-title">signature_image</h3>
-                </div>
-                <div class="card-header card-header justify-content-center p-5">
-                    <div class="card-toolbar">
-                        <div class="image-input image-input-outline" data-kt-image-input="true">
-                            <div class="image-input-wrapper w-200px h-200px"
-                                 style="background-image: url({{ isset($about) && $about->signature_image ? asset($about->signature_image) : asset('admin_assets/media/svg/files/blank-image.svg') }})"></div>
-                            <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-                                   data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change Signature Image">
-                                <i class="bi bi-pencil-fill fs-7"></i>
-                                <input type="file" name="signature_image" accept=".png, .jpg, .jpeg" />
-                            </label>
-                            <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-                                  data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel Signature Image">
-                                <i class="bi bi-x fs-2"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
         </div>
 
         <!-- Main Content: About Details -->
@@ -203,23 +84,7 @@
                     <h3>{{ __('admin.global.name_and_description') }}</h3>
                 </div>
                 <div class="card-body pt-0">
-                    <!-- Row 1: Company Name and Sub Title -->
-                    <div class="row">
-                        <div class="col-md-6 fv-row">
-                            <div class="mb-5">
-                                <label class="required form-label">Company name</label>
-                                <input type="text" name="company_name" class="form-control" placeholder="Enter Company Name"
-                                    value="{{ isset($about) ? $about->company_name : old('company_name') }}" required>
-                            </div>
-                        </div>
-                        <div class="col-md-6 fv-row">
-                            <div class="mb-5">
-                                <label class="form-label">Sub title</label>
-                                <input type="text" name="sub_title" class="form-control" placeholder="Enter Sub Title"
-                                    value="{{ isset($about) ? $about->sub_title : old('sub_title') }}">
-                            </div>
-                        </div>
-                    </div>
+
                     <!-- Row 2: Title and Description -->
                     <div class="row">
                         <div class="col-md-6 fv-row">
@@ -240,47 +105,88 @@
                     <div class="row">
                         <div class="col-md-4 fv-row">
                             <div class="mb-5">
-                                <label class="form-label">Check1</label>
-                                <input type="text" name="check1" class="form-control" placeholder="Enter first check"
-                                    value="{{ isset($about) ? $about->check1 : old('check1') }}">
+                                <label class="form-label">Check1 Title</label>
+                                <input type="text" name="tab1_title" class="form-control" placeholder="Enter first check"
+                                    value="{{ isset($about) ? $about->tab1_title : old('tab1_title') }}">
                             </div>
                         </div>
                         <div class="col-md-4 fv-row">
                             <div class="mb-5">
-                                <label class="form-label">Check2</label>
-                                <input type="text" name="check2" class="form-control" placeholder="Enter second check"
-                                    value="{{ isset($about) ? $about->check2 : old('check2') }}">
-                            </div>
-                        </div>
-                        <div class="col-md-4 fv-row">
-                            <div class="mb-5">
-                                <label class="form-label">Check3</label>
-                                <input type="text" name="check3" class="form-control" placeholder="Enter third check"
-                                    value="{{ isset($about) ? $about->check3 : old('check3') }}">
+                                <label class="form-label">Check2 Title</label>
+                                <input type="text" name="tab2_title" class="form-control" placeholder="Enter second check"
+                                    value="{{ isset($about) ? $about->tab2_title : old('tab2_title') }}">
                             </div>
                         </div>
                     </div>
                     <!-- Row 4: Author Info -->
+
                     <div class="row">
                         <div class="col-md-6 fv-row">
                             <div class="mb-5">
-                                <label class="form-label">Author name</label>
-                                <input type="text" name="author_name" class="form-control" placeholder="Enter Author Name"
-                                    value="{{ isset($about) ? $about->author_name : old('author_name') }}">
+                                <label class="form-label">Chech1 Content</label>
+                                <input type="text" name="tab1_content" class="form-control" placeholder="Enter Author Name"
+                                       value="{{ isset($about) ? $about->tab1_content : old('tab1_content') }}">
                             </div>
                         </div>
                         <div class="col-md-6 fv-row">
                             <div class="mb-5">
-                                <label class="form-label">Author position</label>
-                                <input type="text" name="author_position" class="form-control" placeholder="Enter Author Position"
-                                    value="{{ isset($about) ? $about->author_position : old('author_position') }}">
+                                <label class="form-label">Chech2 Content</label>
+                                <input type="text" name="tab2_content" class="form-control" placeholder="Enter Author Position"
+                                       value="{{ isset($about) ? $about->tab2_content : old('tab2_content') }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 fv-row">
+                            <div class="mb-5">
+                                <label class="form-label">Button Text</label>
+                                <input type="text" name="button_text" class="form-control" placeholder="Enter Author Name"
+                                       value="{{ isset($about) ? $about->button_text : old('button_text') }}">
+                            </div>
+                        </div>
+                        <div class="col-md-6 fv-row">
+                            <div class="mb-5">
+                                <label class="form-label">Button Link</label>
+                                <input type="text" name="button_link" class="form-control" placeholder="Enter Author Position"
+                                       value="{{ isset($about) ? $about->button_link : old('button_link') }}">
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="card card-flush generalDataTap">
+                <div class="salesTitle">
+                    <h3>Opening Hours</h3>
+                </div>
+                <div class="card-body pt-0" id="opening-hours-wrapper">
+                    @php
+                        $openingHours = isset($about) ? $about->openingHours : [];
+                    @endphp
+            
+                    @foreach(['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday'] as $day)
+                        @php
+                            $hour = $openingHours->firstWhere('day', $day);
+                        @endphp
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label">{{ $day }}</label>
+                                <input type="hidden" name="opening_hours[{{ $day }}][day]" value="{{ $day }}">
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" name="opening_hours[{{ $day }}][from]" class="form-control" placeholder="From"
+                                    value="{{ $hour ? $hour->from : '' }}">
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" name="opening_hours[{{ $day }}][to]" class="form-control" placeholder="To"
+                                    value="{{ $hour ? $hour->to : '' }}">
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+            
         </div>
-        
+
         <!-- Submit Buttons -->
         <div class="page-buttuns mt-5">
             <div class="row justify-content-between">

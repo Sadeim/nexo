@@ -1,4 +1,4 @@
-@extends('admin.layouts.master', ['is_active_parent' => 'instagrams','is_active'=> 'instagrams'])
+@extends('admin.layouts.master', ['is_active_parent' => 'home','is_active'=> 'instagrams'])
 @section('title')
     {{ __('admin.global.instagrams') }}
 @endsection

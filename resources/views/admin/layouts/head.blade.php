@@ -1,7 +1,7 @@
 <head>
     <base href="">
     <title>@yield('title')</title>
-    <meta name="_token" content="{{ csrf_token() }}">
+    <meta name="_token" id="csrf_token" content="{{ csrf_token() }}">
     <meta http-equiv="refresh" content="{{ config('session.lifetime') * 60 }}">
     <meta charset="utf-8" />
     <meta name="description" content=" " />

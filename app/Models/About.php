@@ -23,4 +23,9 @@ class About extends Model
         'button_text',
         'button_link',
     ];
+
+    public function openingHours()
+    {
+        return $this->hasMany(OpeningHour::class);
+    }
 }

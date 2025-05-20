@@ -1,4 +1,4 @@
-@extends('admin.layouts.master', ['is_active_parent' => 'sliders','is_active'=> 'sliders'])
+@extends('admin.layouts.master', ['is_active_parent' => 'home','is_active'=> 'sliders'])
 @section('title')
     {{ __('admin.global.sliders') }}
 @endsection

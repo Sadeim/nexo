@@ -1,4 +1,4 @@
-@extends('admin.layouts.master', ['is_active_parent' => 'events','is_active'=> 'events'])
+@extends('admin.layouts.master', ['is_active_parent' => 'home','is_active'=> 'events'])
 @section('title', isset($event) ? __('admin.global.edit_event') : __('admin.global.add_new_event'))
 
 @section('content')
