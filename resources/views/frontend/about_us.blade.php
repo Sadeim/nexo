@@ -42,14 +42,14 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="col-lg-6">
                         <div class="our-approch-content">
                             <div class="section-title">
                                 <h3 class="wow fadeInUp">{{ $approach->title }}</h3>
                                 <h2 class="text-anime-style-3" data-cursor="-opaque">{{ $approach->subtitle }}</h2>
                             </div>
-        
+
                             <div class="our-approch-tab">
                                 <div class="our-approch-tab-nav wow fadeInUp" data-wow-delay="0.2s">
                                     <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -64,7 +64,7 @@
                                         </li>
                                     </ul>
                                 </div>
-        
+
                                 <div class="approch-box tab-content" id="myTabContent">
                                     <!-- Mission -->
                                     <div class="approch-item tab-pane fade show active" id="mission" role="tabpanel">
@@ -81,7 +81,7 @@
                                             </div>
                                         </div>
                                     </div>
-        
+
                                     <!-- Vision -->
                                     <div class="approch-item tab-pane fade" id="vision" role="tabpanel">
                                         <div class="approch-tab-content">
@@ -97,7 +97,7 @@
                                             </div>
                                         </div>
                                     </div>
-        
+
                                     <!-- Value -->
                                     <div class="approch-item tab-pane fade" id="value" role="tabpanel">
                                         <div class="approch-tab-content">
@@ -134,7 +134,7 @@
                             <div class="section-title">
                                 <h3 class="wow fadeInUp">our skill</h3>
                                 <h2 class="text-anime-style-3" data-cursor="-opaque">{{ $sections['skills_section']->title }}</h2>
-                                <p class="wow fadeInUp" data-wow-delay="0.2s"> 
+                                <p class="wow fadeInUp" data-wow-delay="0.2s">
                                     {{ $sections['skills_section']->description }}
                                 </p>
                             </div>
@@ -145,7 +145,7 @@
                                 <!-- Skills Progress Bar Start -->
                                 <div class="skills-progress-bar">
                                     <!-- Skill Item Start -->
-                                    <div class="skillbar" data-percent="66%">
+                                    <div class="skillbar" data-percent="{{$skills->percent1}}%">
                                         <div class="skill-data">
                                             <div class="skill-title">{{$skills->text1}}</div>
                                             <div class="skill-no">{{$skills->percent1}}%</div>
@@ -157,11 +157,11 @@
                                     <!-- Skill Item End -->
                                 </div>
                                 <!-- Skills Progress Bar End -->
-                            
+
                                 <!-- Skills Progress Bar Start -->
                                 <div class="skills-progress-bar">
                                     <!-- Skill Item Start -->
-                                    <div class="skillbar" data-percent="97%">
+                                    <div class="skillbar" data-percent="{{$skills->percent2}}%">
                                         <div class="skill-data">
                                             <div class="skill-title">{{$skills->text2}}</div>
                                             <div class="skill-no">{{$skills->percent2}}%</div>
@@ -173,11 +173,11 @@
                                     <!-- Skill Item End -->
                                 </div>
                                 <!-- Skills Progress Bar End -->
-                                
+
                                 <!-- Skills Progress Bar Start -->
                                 <div class="skills-progress-bar">
                                     <!-- Skill Item Start -->
-                                    <div class="skillbar" data-percent="85%">
+                                    <div class="skillbar" data-percent="{{$skills->percent3}}%">
                                         <div class="skill-data">
                                             <div class="skill-title">{{$skills->text3}}</div>
                                             <div class="skill-no">{{$skills->percent3}}%</div>
@@ -202,13 +202,13 @@
                                     <img src="{{ asset($skills->image) }}" alt="">
                                 </figure>
                             </div>
-                    
+
                             <div class="our-skill-img-2">
                                 <figure class="image-anime">
                                     <img src="{{ asset($skills->image2) }}" alt="">
                                 </figure>
                             </div>
-                    
+
                             <div class="our-skill-img-3">
                                 <figure class="image-anime">
                                     <img src="{{ asset($skills->image3) }}" alt="">
@@ -224,87 +224,87 @@
     @endif
 
     <!-- Quick Fact Section Start -->
-    <div class="quick-facts bg-radius-section">
-        <div class="container">
-            <div class="row section-row align-items-center">
-                <div class="col-lg-6">
-                    <!-- Section Title Start -->
-                    <div class="section-title dark-section">
-                        <h3 class="wow fadeInUp">Some facts</h3>
-                        <h2 class="text-anime-style-3" data-cursor="-opaque">{{$how->name}}</h2>
-                    </div>
-                    <!-- Section Title End -->
-                </div>
+{{--    <div class="quick-facts bg-radius-section">--}}
+{{--        <div class="container">--}}
+{{--            <div class="row section-row align-items-center">--}}
+{{--                <div class="col-lg-6">--}}
+{{--                    <!-- Section Title Start -->--}}
+{{--                    <div class="section-title dark-section">--}}
+{{--                        <h3 class="wow fadeInUp">Some facts</h3>--}}
+{{--                        <h2 class="text-anime-style-3" data-cursor="-opaque">{{$how->name}}</h2>--}}
+{{--                    </div>--}}
+{{--                    <!-- Section Title End -->--}}
+{{--                </div>--}}
 
-                <div class="col-lg-6">
-                    <!-- Section Title Content Start -->
-                    <div class="section-title-content dark-section wow fadeInUp" data-wow-delay="0.2s">
-                        <p>{{$how->description}}</p>
-                    </div>
-                    <!-- Section Title Content End -->
-                </div>
-            </div>
+{{--                <div class="col-lg-6">--}}
+{{--                    <!-- Section Title Content Start -->--}}
+{{--                    <div class="section-title-content dark-section wow fadeInUp" data-wow-delay="0.2s">--}}
+{{--                        <p>{{$how->description}}</p>--}}
+{{--                    </div>--}}
+{{--                    <!-- Section Title Content End -->--}}
+{{--                </div>--}}
+{{--            </div>--}}
 
-            <div class="row align-items-center">
-                <div class="col-lg-3 col-md-6 col-6 order-lg-1 order-md-1 order-1">
-                    <!-- Fact Counter Box Start -->
-                    <div class="fact-counter-box">
-                        <!-- Fact Counter Item Start -->
-                        <div class="fact-counter-item">
-                            <h3>{{$how->tap1_name}}</h3>
-                            <h2><span class="counter">{{$how->tap1_number}}</span>+</h2>
-                            <p>{{$how->tap1_content}}</p>
-                        </div>
-                        <!-- Fact Counter Item End -->
+{{--            <div class="row align-items-center">--}}
+{{--                <div class="col-lg-3 col-md-6 col-6 order-lg-1 order-md-1 order-1">--}}
+{{--                    <!-- Fact Counter Box Start -->--}}
+{{--                    <div class="fact-counter-box">--}}
+{{--                        <!-- Fact Counter Item Start -->--}}
+{{--                        <div class="fact-counter-item">--}}
+{{--                            <h3>{{$how->tap1_name}}</h3>--}}
+{{--                            <h2><span class="counter">{{$how->tap1_number}}</span>+</h2>--}}
+{{--                            <p>{{$how->tap1_content}}</p>--}}
+{{--                        </div>--}}
+{{--                        <!-- Fact Counter Item End -->--}}
 
-                        <!-- Fact Counter Item Start -->
-                        <div class="fact-counter-item">
-                            <h3>{{$how->tap2_name}}</h3>
-                            <h2><span class="counter">{{$how->tap2_number}}</span>k</h2>
-                            <p>{{$how->tap2_content}}</p>
-                        </div>
-                        <!-- Fact Counter Item End -->
-                    </div>
-                    <!-- Fact Counter Box End -->
-                </div>
+{{--                        <!-- Fact Counter Item Start -->--}}
+{{--                        <div class="fact-counter-item">--}}
+{{--                            <h3>{{$how->tap2_name}}</h3>--}}
+{{--                            <h2><span class="counter">{{$how->tap2_number}}</span>k</h2>--}}
+{{--                            <p>{{$how->tap2_content}}</p>--}}
+{{--                        </div>--}}
+{{--                        <!-- Fact Counter Item End -->--}}
+{{--                    </div>--}}
+{{--                    <!-- Fact Counter Box End -->--}}
+{{--                </div>--}}
 
 
-                <div class="col-lg-3 col-md-6 col-6 order-lg-3 order-md-2 order-2">
-                    <!-- Fact Counter Box Start -->
-                    <div class="fact-counter-box">
-                        <!-- Fact Counter Item Start -->
-                        <div class="fact-counter-item">
-                            <h3>{{$how->tap3_name}}</h3>
-                            <h2><span class="counter">{{$how->tap3_number}}</span>k+</h2>
-                            <p>{{$how->tap3_content}}</p>
-                        </div>
-                        <!-- Fact Counter Item End -->
+{{--                <div class="col-lg-3 col-md-6 col-6 order-lg-3 order-md-2 order-2">--}}
+{{--                    <!-- Fact Counter Box Start -->--}}
+{{--                    <div class="fact-counter-box">--}}
+{{--                        <!-- Fact Counter Item Start -->--}}
+{{--                        <div class="fact-counter-item">--}}
+{{--                            <h3>{{$how->tap3_name}}</h3>--}}
+{{--                            <h2><span class="counter">{{$how->tap3_number}}</span>k+</h2>--}}
+{{--                            <p>{{$how->tap3_content}}</p>--}}
+{{--                        </div>--}}
+{{--                        <!-- Fact Counter Item End -->--}}
 
-                        <!-- Fact Counter Item Start -->
-                        <div class="fact-counter-item">
-                            <h3>{{$how->tap4_name}}</h3>
-                            <h2><span class="counter">{{$how->tap4_number}}</span>%</h2>
-                            <p>{{$how->tap4_content}}</p>
-                        </div>
-                        <!-- Fact Counter Item End -->
+{{--                        <!-- Fact Counter Item Start -->--}}
+{{--                        <div class="fact-counter-item">--}}
+{{--                            <h3>{{$how->tap4_name}}</h3>--}}
+{{--                            <h2><span class="counter">{{$how->tap4_number}}</span>%</h2>--}}
+{{--                            <p>{{$how->tap4_content}}</p>--}}
+{{--                        </div>--}}
+{{--                        <!-- Fact Counter Item End -->--}}
 
-                    </div>
+{{--                    </div>--}}
 
-                    <!-- Fact Counter Box End -->
-                </div>
-                <div class="col-lg-6 order-lg-2 order-md-3 order-3">
-                    <!-- Quick Fact image Start -->
-                    <div class="quick-fact-image">
-                        <img src="{{ asset($how->image) }}" alt="">
-                    </div>
-                    <!-- Quick Fact image End -->
-                </div>
+{{--                    <!-- Fact Counter Box End -->--}}
+{{--                </div>--}}
+{{--                <div class="col-lg-6 order-lg-2 order-md-3 order-3">--}}
+{{--                    <!-- Quick Fact image Start -->--}}
+{{--                    <div class="quick-fact-image">--}}
+{{--                        <img src="{{ asset($how->image) }}" alt="">--}}
+{{--                    </div>--}}
+{{--                    <!-- Quick Fact image End -->--}}
+{{--                </div>--}}
 
-            </div>
-        </div>
-    </div>
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    </div>--}}
     <!-- Quick Fact Section End -->
-    
+
     @if ($sections['reasons_section']?->is_active)
         <!-- Why Choose Us Section Start -->
         <div class="why-choose-us">
@@ -331,7 +331,7 @@
                         </div>
                     </div>
 
-                    <div class="row">    
+                    <div class="row">
                         <div class="col-lg-12">
                             <!-- Why Choose Project Box Start -->
                             <div class="why-choose-project-box">
@@ -341,7 +341,7 @@
                                         <div class="icon-box">
                                             <i class="{{$reason->icon}}"></i>
                                         </div>
-            
+
                                         <div class="why-choose-project-content">
                                             <h3>{{$reason->title}}</h3>
                                             <p>{{$reason->text}}</p>
@@ -349,11 +349,11 @@
                                     </div>
                                     <!-- Why Choose Project Item End -->
                                 @endforeach
-                            
+
                                 <!-- Why Choose Project Item End -->
                             </div>
                             <!-- Why Choose Project Box End -->
-        
+
                             <!-- Why Choose Footer Start -->
                             <div class="why-choose-footer wow fadeInUp" data-wow-delay="0.8s">
                                 <p>{{ $sections['reasons_section']->note }}</p>
@@ -362,7 +362,7 @@
                         </div>
                     </div>
                 </div>
-            </div>        
+            </div>
         </div>
         <!-- Why Choose Us Section End -->
     @endif
