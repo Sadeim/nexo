@@ -236,11 +236,11 @@
 
                                 <!-- Service Image Start -->
                                 <div class="service-image">
-                                    <a href="#" data-cursor-text="View">
+{{--                                    <a href="#" data-cursor-text="View">--}}
                                         <figure class="image-anime">
                                             <img src="{{ asset($service->image) }}" alt="{{ $service->name }}">
                                         </figure>
-                                    </a>
+{{--                                    </a>--}}
                                 </div>
                                 <!-- Service Image End -->
                             </div>
