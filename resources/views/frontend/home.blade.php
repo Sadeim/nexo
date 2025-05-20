@@ -371,15 +371,29 @@
                                         @foreach ($services as $index => $service)
                                         <!-- Best Services Item Start -->
                                         <div class="best-services-item wow fadeInUp" data-wow-delay="{{ $index * 0.2 }}s">
-                                            <div class="icon-box">
-                                                <img src="{{ asset($service->icon) }}" alt="{{ $service->name }}">
-                                            </div>
+{{--                                            <div class="icon-box">--}}
+{{--                                                <img src="{{ asset($service->icon) }}" alt="{{ $service->name }}">--}}
+{{--                                            </div>--}}
 
                                             <div class="best-services-item-content">
-                                                <h3>{{ $service->name }}</h3>
-                                                <p>{{ $service->description }}</p>
+{{--                                                <h3>{{ $service->name }}</h3>--}}
+{{--                                                <p>{{ $service->description }}</p>--}}
+                                                <h3>Thermostat services</h3>
+                                                <p>Smart thermostat setup to improve comfort and reduce energy use.</p>
                                             </div>
                                         </div>
+                                            <div class="best-services-item wow fadeInUp" data-wow-delay="{{ $index * 0.2 }}s">
+                                                {{--                                            <div class="icon-box">--}}
+                                                {{--                                                <img src="{{ asset($service->icon) }}" alt="{{ $service->name }}">--}}
+                                                {{--                                            </div>--}}
+
+                                                <div class="best-services-item-content">
+                                                    {{--                                                <h3>{{ $service->name }}</h3>--}}
+                                                    {{--                                                <p>{{ $service->description }}</p>--}}
+                                                    <h3>Airflow balancing</h3>
+                                                    <p>We adjust vents and dampers for even cooling and heating in every room.</p>
+                                                </div>
+                                            </div>
                                         <!-- Best Services Item End -->
                                         @endforeach
                                     </div>
