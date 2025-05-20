@@ -84,7 +84,7 @@
                     <div class="footer-header">
                         <!-- Footer Logo Start -->
                         <div class="footer-logo">
-                            <img src="{{ asset('frontend_assets/images/footer-logo.svg') }}" alt="">
+                            <img src="{{ url($settings->valueOf('company_logo')) }}" alt="">
                         </div>
                         <!-- Footer Logo End -->
 
@@ -93,7 +93,7 @@
                             <!-- Footer Contact Item Start -->
                             <div class="footer-contact-item">
                                 <div class="icon-box">
-                                    <img src="{{ asset('frontend_assets/images/icon-phone.svg') }}" alt="">
+                                    <img src="{{ url($settings->valueOf('company_logo')) }}" alt="">
                                 </div>
 
                                 <div class="footer-contact-content">
