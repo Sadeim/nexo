@@ -30,7 +30,7 @@ class CreateBlogRequest extends BaseRequest
         return [
             'title' => 'required|string|max:255',
             'content' => 'required|string',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp',
             'is_active' => 'nullable|boolean',
         ];
     }
