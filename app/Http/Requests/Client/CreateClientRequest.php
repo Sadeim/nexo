@@ -29,7 +29,7 @@ class CreateClientRequest extends BaseRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'logo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'logo' => 'nullable|image|mimes:jpg,jpeg,png,webp',
             'website' => 'nullable|url|max:2048',
         ];
     }

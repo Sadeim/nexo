@@ -31,7 +31,7 @@ class CreateTestimonialRequest extends BaseRequest
             'name' => 'required|string|max:255',
             'position' => 'nullable|string|max:255',
             'message' => 'required|string',
-            'photo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'photo' => 'nullable|image|mimes:jpg,jpeg,png,webp',
             'rating' => 'required|integer|between:1,5',
         ];
     }

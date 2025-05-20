@@ -30,7 +30,7 @@ class CreateBannerRequest extends BaseRequest
         return [
             'title' => 'required|string|max:255',
             'subtitle' => 'nullable|string|max:255',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp',
             'button_text' => 'nullable|string|max:255',
             'button_link' => 'nullable|max:2048',
             'description' => 'nullable|max:2048',
