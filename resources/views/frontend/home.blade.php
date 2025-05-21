@@ -223,9 +223,9 @@
                             <div class="service-item wow fadeInUp" data-wow-delay="{{ $index * 0.2 }}s">
                                 <!-- Service Item Header Start -->
                                 <div class="service-item-header">
-{{--                                    <div class="icon-box">--}}
-{{--                                        <img src="{{ asset($service->icon) }}" alt="{{ $service->name }}">--}}
-{{--                                    </div>--}}
+                                   <div class="icon-box">
+                                       <img src="{{ asset($service->icon) }}" alt="{{ $service->name }}">
+                                   </div>
 
                                     <div class="service-item-content">
                                         <h3><a href="#">{{ $service->name }}</a></h3>
@@ -252,7 +252,7 @@
                 <div class="col-lg-12">
                     <!-- Service Footer Start -->
                     <div class="service-footer wow fadeInUp" data-wow-delay="0.8s">
-                        <p>You will be satisfy with our work. Contact us today <a href="tel:123456789">(+91) 123 - 456 789</a></p>
+                        <p>{{ $sections['services_section']->note }}</p>
                     </div>
                 </div>
             </div>

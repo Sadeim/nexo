@@ -21,8 +21,8 @@ class SectionSeeder extends Seeder
         ]);
         Section::create([
             'key' => 'testimonials_section',
-            'title' => 'What Our Clients Say',
-            'description' => 'Hear from our satisfied clients.',
+            'title' => '',
+            'description' => '',
             'is_active' => true,
         ]);
         Section::create([

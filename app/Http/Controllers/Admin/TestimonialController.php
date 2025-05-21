@@ -72,7 +72,7 @@ class TestimonialController extends Controller
 
             $data = $request->only(['name', 'position', 'message', 'rating']);
             if ($request->hasFile('photo')) {
-                $data['photo'] = $this->uploadImage($request->image, 'testimonials');
+                $data['photo'] = $this->uploadImage($request->photo, 'testimonials');
             }
 
             $testimonial = Testimonial::findOrFail($id);

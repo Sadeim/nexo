@@ -5,13 +5,15 @@
 @endsection
 
 @section('content')
-    <form id="kt_form" class="form row d-flex flex-column flex-lg-row addForm"
-        data-kt-redirect="{{ route('admin.works.index') }}"
-        action="{{ route('admin.works.store') }}" method="POST" enctype="multipart/form-data">
+    <form id="kt_form" class="form row d-flex flex-column flex-lg-row addForm" data-kt-redirect="{{ route('admin.works.index') }}"
+          action="{{ isset($work) ? route('admin.works.update', $work->id) : route('admin.works.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
+        @isset($work)
+            @method('PATCH')
+        @endisset
 
         <div class="page-content-header mb-5">
-            <h2 class="table-title">{{ __('admin.global.add_new_work') }}</h2>
+            <h2 class="table-title">{{ isset($work) ? __('admin.global.edit_work') : __('admin.global.add_new_work') }}</h2>
         </div>
 
         <div class="d-flex flex-column gap-5 col-lg-3 mb-7">

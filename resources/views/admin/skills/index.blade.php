@@ -26,7 +26,7 @@
                         </div>
 
                         <!-- Edit/Save Buttons -->
-                        <button class="btn btn-sm btn-light-warning" id="editBtn">
+                        <button class="btn btn-primary" id="editBtn">
                             <i class="fas fa-edit"></i> Edit
                         </button>
                         <button class="btn btn-sm btn-light-success d-none" id="saveBtn" data-url="{{ route('admin.sections.update', $section->id) }}">
