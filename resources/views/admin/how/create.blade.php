@@ -8,7 +8,7 @@
             @method('PATCH')
         @endisset
 
-        <div class="page-content-header">
+        <div class="page-content-header mb-5">
             <h2 class="table-title">{{ isset($how) ? 'Edit How We Work' : __('admin.global.add_new_how') }}</h2>
         </div>
 

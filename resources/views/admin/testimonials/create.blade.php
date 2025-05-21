@@ -11,7 +11,7 @@
             @method('PATCH')
         @endisset
 
-        <div class="page-content-header">
+        <div class="page-content-header mb-5">
             <h2 class="table-title">Testimonial details</h2>
         </div>
 

@@ -10,7 +10,7 @@
         action="{{ route('admin.works.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
-        <div class="page-content-header">
+        <div class="page-content-header mb-5">
             <h2 class="table-title">{{ __('admin.global.add_new_work') }}</h2>
         </div>
 

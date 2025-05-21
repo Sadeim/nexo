@@ -9,7 +9,7 @@
             @method('PATCH')
         @endisset
 
-        <div class="page-content-header mb-5">
+        <div class="page-content-header">
             <h2 class="table-title">{{ isset($instagram) ? __('admin.global.edit_instagram') : __('admin.global.add_new_instagram') }}</h2>
         </div>
         

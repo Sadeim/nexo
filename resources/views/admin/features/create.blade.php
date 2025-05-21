@@ -9,7 +9,7 @@
             @method('PATCH')
         @endisset
 
-        <div class="page-content-header mb-5">
+        <div class="page-content-header">
             <h2 class="table-title">{{ isset($feature) ? __('admin.global.edit_feature') : __('admin.global.add_new_feature') }}</h2>
         </div>
         

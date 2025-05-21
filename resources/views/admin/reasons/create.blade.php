@@ -12,7 +12,7 @@
         @endisset
 
         <!-- Page Header -->
-        <div class="page-content-header">
+        <div class="page-content-header mb-5">
             <h2 class="table-title">
                 {{ isset($reason) ? __('admin.global.edit_reason') : __('admin.global.add_new_reason') }}
             </h2>

@@ -87,14 +87,16 @@
 
                     <!-- Row 2: Title and Description -->
                     <div class="row">
-                        <div class="col-md-6 fv-row">
+                        <div class="col-md-12 fv-row">
                             <div class="mb-5">
                                 <label class="required form-label">Title</label>
                                 <input type="text" name="title" class="form-control" placeholder="Enter Title"
                                     value="{{ isset($about) ? $about->title : old('title') }}" required>
                             </div>
                         </div>
-                        <div class="col-md-6 fv-row">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 fv-row">
                             <div class="mb-5">
                                 <label class="form-label">Description</label>
                                 <textarea name="description" class="form-control" rows="4" placeholder="Enter Description">{{ isset($about) ? $about->description : old('description') }}</textarea>
@@ -103,14 +105,25 @@
                     </div>
                     <!-- Row 3: Check Fields -->
                     <div class="row">
-                        <div class="col-md-4 fv-row">
+                        <div class="col-md-12 fv-row">
                             <div class="mb-5">
-                                <label class="form-label">Check1 Title</label>
+                                <label class="form-label">Check 1 Title</label>
                                 <input type="text" name="tab1_title" class="form-control" placeholder="Enter first check"
                                     value="{{ isset($about) ? $about->tab1_title : old('tab1_title') }}">
                             </div>
                         </div>
-                        <div class="col-md-4 fv-row">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 fv-row">
+                            <div class="mb-5">
+                                <label class="form-label">Check 1 Content</label>
+                                <input type="text" name="tab1_content" class="form-control" placeholder="Enter Author Name"
+                                       value="{{ isset($about) ? $about->tab1_content : old('tab1_content') }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 fv-row">
                             <div class="mb-5">
                                 <label class="form-label">Check2 Title</label>
                                 <input type="text" name="tab2_title" class="form-control" placeholder="Enter second check"
@@ -120,17 +133,11 @@
                     </div>
                     <!-- Row 4: Author Info -->
 
+                    
                     <div class="row">
-                        <div class="col-md-6 fv-row">
+                        <div class="col-md-12 fv-row">
                             <div class="mb-5">
-                                <label class="form-label">Chech1 Content</label>
-                                <input type="text" name="tab1_content" class="form-control" placeholder="Enter Author Name"
-                                       value="{{ isset($about) ? $about->tab1_content : old('tab1_content') }}">
-                            </div>
-                        </div>
-                        <div class="col-md-6 fv-row">
-                            <div class="mb-5">
-                                <label class="form-label">Chech2 Content</label>
+                                <label class="form-label">Check 2 Content</label>
                                 <input type="text" name="tab2_content" class="form-control" placeholder="Enter Author Position"
                                        value="{{ isset($about) ? $about->tab2_content : old('tab2_content') }}">
                             </div>

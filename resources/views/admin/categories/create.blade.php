@@ -10,7 +10,7 @@
             @method('PATCH')
         @endif
 
-        <div class="page-content-header">
+        <div class="page-content-header mb-5">
             <h2 class="table-title">{{ __('admin.global.add_new_category') }}</h2>
         </div>
         
