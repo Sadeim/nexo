@@ -633,9 +633,24 @@
                                     <!-- Team Social List Start -->
                                     <div class="team-social-list">
                                         <ul>
-                                            @foreach(json_decode($team->social_links, true) as $platform => $link)
+                                            @php
+                                                $socialLinks = json_decode($team->social_links, true);
+                                            @endphp
+                                             @if (is_array($socialLinks))
+                                                @foreach ($socialLinks as $platform => $link)
+                                                    @if (!empty($link))
+                                                        <li>
+                                                            <a href="{{ $link }}" target="_blank">
+                                                                <i class="fa-brands fa-{{ $platform }}"></i>
+                                                            </a>
+                                                        </li>
+                                                    @endif
+                                                @endforeach
+                                            @endif
+
+                                            {{-- @foreach(json_decode($team->social_links, true) as $platform => $link)
                                                 <li><a href="{{ $link }}"><i class="fa-brands fa-{{ $platform }}-p"></i></a></li>
-                                            @endforeach
+                                            @endforeach --}}
                                         </ul>
                                     </div>
                                     <!-- Team Social List End -->

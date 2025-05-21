@@ -26,18 +26,22 @@ class SectionController extends Controller
     public function update(Request $request, Section $section)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
+            'title' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'note' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        $section->update([
-            'title' => $request->title,
-            'description' => $request->description,
-            'note' => $request->note,
-        ]);
+        $data = $request->only('title', 'description', 'note');
+
+        if ($request->hasFile('image')) {
+            $data['image'] = $this->uploadImage($request->file('image'), 'sections');
+        }
+
+        $section->update($data);
 
         return response()->json(['success' => true]);
     }
+
 
 }

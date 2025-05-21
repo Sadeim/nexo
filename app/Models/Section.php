@@ -10,6 +10,7 @@ class Section extends Model
         'key',
         'title',
         'note',
+        'image',
         'description',
         'status'
     ];

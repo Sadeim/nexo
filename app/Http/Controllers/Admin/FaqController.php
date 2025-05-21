@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FAQ\CreateFAQRequest;
 use App\Models\Faq;
+use App\Models\Section;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -20,7 +21,8 @@ class FaqController extends Controller
 
     public function index()
     {
-        return view('admin.faqs.index');
+        $data['section'] = Section::where('key', 'faqs_section')->first();
+        return view('admin.faqs.index', $data);
     }
 
     public function datatable(Request $request) 

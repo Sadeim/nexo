@@ -3,6 +3,67 @@
     {{ __('admin.global.faqs') }}
 @endsection
 @section('content')
+@if ($section)
+    <div class="container-xxl">
+        <div class="card card-flush mb-5" id="sectionCard">
+            <div class="card-header justify-content-center p-5">
+                <div class="card-toolbar">
+                    <div class="image-input image-input-outline" data-kt-image-input="true">
+                        <div class="image-input-wrapper w-200px h-200px" 
+                             style="background-image: url({{ $section->image ? asset($section->image) : asset('admin_assets/media/svg/files/blank-image.svg') }})">
+                        </div>
+
+                        {{-- زر تغيير الصورة --}}
+                        <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" 
+                               data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change image">
+                            <i class="bi bi-pencil-fill fs-7"></i>
+                            <input type="file" name="image" accept=".png, .jpg, .jpeg" id="sectionImageInput" />
+                        </label>
+
+                        {{-- زر الإلغاء --}}
+                        <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" 
+                              data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel image">
+                            <i class="bi bi-x fs-2"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="card-title">
+                        {{-- عنوان السكشن إن أردت إضافته --}}
+                    </h2>
+                </div>
+
+                <div class="d-flex align-items-center gap-4">
+                    {{-- Toggle --}}
+                    <div class="form-check form-switch form-check-custom form-check-solid">
+                        <input class="form-check-input" type="checkbox" id="section_toggle"
+                            {{ $section->is_active ? 'checked' : '' }}
+                            data-url="{{ route('admin.sections.toggle', $section->id) }}" />
+                        <label class="form-check-label" for="section_toggle">
+                            {{ $section->is_active ? 'Visible' : 'Hidden' }}
+                        </label>
+                    </div>
+
+                    {{-- أزرار التعديل --}}
+                    {{-- <button class="btn btn-primary" id="editBtn">
+                        <i class="fas fa-edit"></i> Edit
+                    </button> --}}
+                    <button class="btn btn-sm btn-light-success" id="saveBtn"
+                        data-url="{{ route('admin.sections.update', $section->id) }}">
+                        <i class="fas fa-save"></i> Save
+                    </button>
+                </div>
+            </div>
+
+            <div class="card-body">
+                {{-- الحقول الأخرى --}}
+            </div>
+        </div>
+    </div>
+@endif
 
     <div class="d-flex flex-column flex-column-fluid customerView" id="kt_content">
         <!--begin::Post-->
@@ -36,25 +97,7 @@
                         <div class="card-header align-items-center py-5 gap-2 gap-md-5">
                             <!--begin::Card title-->
                             <div class="card-title">
-                                <!--begin::Search-->
-                                <div class="d-flex align-items-center position-relative my-1">
-                                    <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
-                                    <span class="svg-icon svg-icon-1 position-absolute ms-4">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2"
-                                                rx="1" transform="rotate(45 17.0365 15.1223)"
-                                                fill="currentColor"></rect>
-                                            <path
-                                                d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z"
-                                                fill="currentColor"></path>
-                                        </svg>
-                                    </span>
-                                    <!--end::Svg Icon-->
-                                    <input type="text" class="form-control form-control-solid w-250px ps-14"
-                                        placeholder="{{ __('admin.form.search') }}" data-kt-docs-table-filter="search">
-                                </div>
-                                <!--end::Search-->
+                                
                                 <!--begin::Export buttons-->
                                 <div id="kt_ecommerce_report_views_export" class="d-none"></div>
                                 <!--end::Export buttons-->
