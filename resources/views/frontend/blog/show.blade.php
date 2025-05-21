@@ -33,7 +33,7 @@
                 <!-- Post Featured Image Start -->
                 <div class="post-image">
                     <figure class="image-anime">
-                        <img src="{{ asset('uploads/blogs/' . $blog->image) }}" alt="{{ $blog->title }}">
+                        <img src="{{ asset($blog->image) }}" alt="{{ $blog->title }}">
                     </figure>
                 </div>
                 <!-- Post Featured Image End -->

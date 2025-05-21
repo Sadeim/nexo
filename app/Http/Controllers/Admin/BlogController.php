@@ -42,7 +42,7 @@ class BlogController extends Controller
     {
         try {
             DB::beginTransaction();
-            $data = $request->only(['title', 'category', 'author', 'published_at', 'content', 'status']);
+            $data = $request->only(['title', 'category', 'author', 'published_at', 'content']);
             $data['slug'] = Str::slug($data['title']);
             if ($request->hasFile('image')) {
                 $data['image'] = $this->uploadImage($request->image, 'blogs');
@@ -66,7 +66,7 @@ class BlogController extends Controller
     {
         try {
             DB::beginTransaction();
-            $data = $request->only(['title', 'category', 'author', 'published_at', 'content', 'status']);
+            $data = $request->only(['title', 'category', 'author', 'published_at', 'content']);
             $data['slug'] = Str::slug($data['title']);
             if ($request->hasFile('image')) {
                 $data['image'] = $this->uploadImage($request->image, 'blogs');

@@ -15,20 +15,7 @@
 
         <!-- Sidebar: Status and Image Section -->
         <div class="d-flex flex-column gap-5 col-lg-3 mb-7">
-            <div class="card card-flush">
-                <div class="card-header">
-                    <div class="card-title">
-                        <h3>{{ __('admin.form.status') }}</h3>
-                    </div>
-                    <div class="card-toolbar">
-                        <label class="form-check form-switch form-check-custom form-check-solid">
-                            <input type="hidden" name="status" value="0">
-                            <input class="form-check-input btn active_operation" type="checkbox" name="status"
-                                @if(isset($blog) && $blog->status == 1) checked @endif value="1">
-                        </label>
-                    </div>
-                </div>
-            </div>
+           
             <!-- Banner Image Section for Blog Post -->
             <div class="card card-flush">
                 <div class="card-header justify-content-center p-5">
@@ -57,23 +44,23 @@
                 <div class="card-body pt-0">
                     <div class="mb-5">
                         <label class="required form-label">{{ __('admin.form.title') }}</label>
-                        <input type="text" name="title" class="form-control" placeholder="Enter Blog Title" value="{{ old('title', $blog->title ?? '') }}" required>
+                        <input type="text" name="title" class="form-control" placeholder="Enter Blog Title" value="{{ isset($blog) ? $blog->title : ''}}">
                     </div>
                     <div class="mb-5">
                         <label class="form-label">{{ __('admin.form.category') }}</label>
-                        <input type="text" name="category" class="form-control" placeholder="Enter Category" value="{{ old('category', $blog->category ?? '') }}">
+                        <input type="text" name="category" class="form-control" placeholder="Enter Category" value="{{ isset($blog) ? $blog->category : ''}}">
                     </div>
                     <div class="mb-5">
-                        <label class="form-label">{{ __('admin.form.author') }}</label>
-                        <input type="text" name="author" class="form-control" placeholder="Enter Author" value="{{ old('author', $blog->author ?? '') }}">
+                        <label class="form-label">Author</label>
+                        <input type="text" name="author" class="form-control" placeholder="Enter Author" value="{{ isset($blog) ? $blog->author : ''}}">
                     </div>
                     <div class="mb-5">
-                        <label class="form-label">{{ __('admin.form.published_at') }}</label>
-                        <input type="date" name="published_at" class="form-control" value="{{ old('published_at', isset($blog->created_at) ? $blog->created_at->format('Y-m-d') : '') }}">
+                        <label class="form-label">Published at</label>
+                        <input type="date" name="published_at" class="form-control" value="{{ isset($blog) ? $blog->created_at->format('Y-m-d') : '' }}">
                     </div>
                     <div class="mb-5">
-                        <label class="form-label">{{ __('admin.form.content') }}</label>
-                        <textarea name="content" id="summernote" class="form-control" rows="6" placeholder="Enter Blog Content">{{ old('content', $blog->content ?? '') }}</textarea>
+                        <label class="form-label">Content</label>
+                        <textarea name="content" id="summernote" class="form-control" rows="6" placeholder="Enter Blog Content">{{ isset($blog) ? $blog->content : ''}}</textarea>
                     </div>
                 </div>
             </div>
