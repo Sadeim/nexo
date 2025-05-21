@@ -324,7 +324,7 @@
                             <!-- Why Choose Image Start -->
                             <div class="why-choose-image">
                                 <figure class="image-anime">
-                                    <img src="{{asset('frontend_assets/images/why.JPG')}}" alt="">
+                                    <img src="{{ asset($sections['reasons_section']->image) }}" alt="">
                                 </figure>
                             </div>
                             <!-- Why Choose Image End -->

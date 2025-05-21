@@ -493,7 +493,7 @@
                             <!-- Our Testimonial Image Start -->
                             <div class="our-testimonial-image">
                                 <figure class="image-anime">
-                                    <img src="{{ asset('frontend_assets/images/testimonial-image.jpg') }}" alt="">
+                                    <img src="{{ asset($sections['testimonials_section']->image) }}" alt="">
                                 </figure>
                             </div>
                             <!-- Our Testimonial Image End -->

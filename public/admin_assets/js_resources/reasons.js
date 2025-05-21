@@ -19,84 +19,70 @@ window.columnDefs = [
     },
 ];
 
-
 const editBtn = document.getElementById('editBtn');
 const saveBtn = document.getElementById('saveBtn');
 
-editBtn?.addEventListener('click', () => {
-    // إظهار حقول الإدخال
-    document.getElementById('sectionTitleText').classList.add('d-none');
-    document.getElementById('sectionTitleInput').classList.remove('d-none');
-
-    document.getElementById('sectionDescriptionText').classList.add('d-none');
-    document.getElementById('sectionDescriptionInput').classList.remove('d-none');
-
-    document.getElementById('sectionNoteText').classList.add('d-none');
-    document.getElementById('sectionNoteInput').classList.remove('d-none');
-
-    editBtn.classList.add('d-none');
-    saveBtn.classList.remove('d-none');
-});
-
 saveBtn?.addEventListener('click', () => {
     const url = saveBtn.dataset.url;
-    const title = document.getElementById('sectionTitleInput').value;
-    const description = document.getElementById('sectionDescriptionInput').value;
-    const note = document.getElementById('sectionNoteInput').value;
+    const formData = new FormData();
+
+    // الحقول النصية - فقط إذا كانت موجودة
+    const titleInput = document.getElementById('sectionTitleInput');
+    const descriptionInput = document.getElementById('sectionDescriptionInput');
+    const noteInput = document.getElementById('sectionNoteInput');
+    const imageInput = document.getElementById('sectionImageInput');
+
+    if (titleInput) formData.append('title', titleInput.value.trim());
+    if (descriptionInput) formData.append('description', descriptionInput.value.trim());
+    if (noteInput) formData.append('note', noteInput.value.trim());
+    if (imageInput?.files.length > 0) {
+        formData.append('image', imageInput.files[0]);
+    }
+
+    // التحقق أنه على الأقل تم تعديل شيء واحد
+    if (!formData.has('title') && !formData.has('description') && !formData.has('note') && !formData.has('image')) {
+        toastr.warning('لم يتم تعديل أي شيء');
+        return;
+    }
 
     fetch(url, {
         method: 'POST',
         headers: {
             'X-CSRF-TOKEN': $('#csrf_token').attr('content'),
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ title, description, note })
+        body: formData
     })
-    .then(response => response.json())
+    .then(res => res.json())
     .then(data => {
         if (data.success) {
-            // تحديث النصوص
-            document.getElementById('sectionTitleText').textContent = 'Title: ' + title;
-            document.getElementById('sectionDescriptionText').textContent = description;
-            document.getElementById('sectionNoteText').textContent = note;
+            if (titleInput) {
+                document.getElementById('sectionTitleText').textContent = 'Title: ' + (titleInput.value.trim() || 'N/A');
+                titleInput.classList.add('d-none');
+                document.getElementById('sectionTitleText').classList.remove('d-none');
+            }
 
-            // إرجاع الحقول للنص العادي
-            document.getElementById('sectionTitleText').classList.remove('d-none');
-            document.getElementById('sectionTitleInput').classList.add('d-none');
+            if (descriptionInput) {
+                document.getElementById('sectionDescriptionText').textContent = descriptionInput.value.trim() || 'N/A';
+                descriptionInput.classList.add('d-none');
+                document.getElementById('sectionDescriptionText').classList.remove('d-none');
+            }
 
-            document.getElementById('sectionDescriptionText').classList.remove('d-none');
-            document.getElementById('sectionDescriptionInput').classList.add('d-none');
+            if (noteInput) {
+                document.getElementById('sectionNoteText').textContent = noteInput.value.trim() || 'N/A';
+                noteInput.classList.add('d-none');
+                document.getElementById('sectionNoteText').classList.remove('d-none');
+            }
 
-            document.getElementById('sectionNoteText').classList.remove('d-none');
-            document.getElementById('sectionNoteInput').classList.add('d-none');
+            editBtn?.classList.remove('d-none');
+            saveBtn?.classList.add('d-none');
 
-            editBtn.classList.remove('d-none');
-            saveBtn.classList.add('d-none');
-
-            toastr.success('Section updated successfully');
+            toastr.success("تم تحديث القسم بنجاح");
+            location.reload(); // لو بدك تغير الصورة المعروضة
         } else {
-            toastr.error('Failed to update section');
+            toastr.error("فشل في تحديث القسم");
         }
     })
     .catch(() => {
-        toastr.error('Error updating section');
-    });
-});
-document.getElementById('section_toggle')?.addEventListener('change', function () {
-    const url = this.dataset.url;
-
-    fetch(url, {
-        method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': $('#csrf_token').attr('content'),
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-    })
-    .then(response => response.json())
-    .then(data => {
-        const label = this.nextElementSibling;
-        label.textContent = data.is_active ? 'Visible' : 'Hidden';
+        toastr.error("حدث خطأ أثناء التحديث");
     });
 });
