@@ -670,7 +670,7 @@
 
     @if ($sections['faqs_section']?->is_active)
         <!-- Our FAQs Section Start -->
-        <div class="our-faqs parallaxie">
+        <div class="our-faqs parallaxie" style="background-image: url({{ asset($sections['faqs_section']->image) }})">
             <div class="container">
                 <div class="row section-row">
                     <div class="col-lg-6">
