@@ -8,6 +8,7 @@ use App\Models\Setting;
 use App\Traits\SaveImageTrait;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class SettingController extends Controller
 {
@@ -25,6 +26,10 @@ class SettingController extends Controller
         try {
             foreach ($data as $key => $value) {
                 if (!is_null($value)) {
+                    if ($key === 'map_embed') {
+                        $value = $this->extractIframeSrc($value);
+                    }
+
                     if (request()->has('company_logo') && $key == 'company_logo') {
                         $value = $this->uploadImage($request->company_logo, 'company_logo');
                     }
@@ -39,4 +44,18 @@ class SettingController extends Controller
         }
 
     }
+
+    private function extractIframeSrc($input)
+    {
+        // إذا أدخل المستخدم iframe
+        if (Str::contains($input, '<iframe')) {
+            // استخراج src باستخدام regex
+            preg_match('/src="([^"]+)"/', $input, $matches);
+            return $matches[1] ?? $input;
+        }
+
+        // إذا كان إدخال المستخدم فعلاً رابط، نُعيده كما هو
+        return $input;
+    }
+
 }

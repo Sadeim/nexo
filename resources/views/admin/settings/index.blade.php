@@ -145,7 +145,7 @@
                                                     <div class="fs-6 fw-semibold mt-2 mb-3">Map Embed</div>
                                                 </div>
                                                 <div class="col-xl-9 fv-row fv-plugins-icon-container">
-                                                    <input type="text" class="form-control" name="map_embed" value="{{ $settings->valueOf('map_embed') }}">
+                                                    <input type="text" class="form-control" name="map_embed" placeholder="paste the iframe embed code here" value="{{ $settings->valueOf('map_embed') }}">
                                                     <div class="fv-plugins-message-container invalid-feedback"></div>
                                                 </div>
                                             </div>

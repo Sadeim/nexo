@@ -2,8 +2,10 @@
 @section('title', isset($team) ? __('admin.global.edit_team') : __('admin.global.add_new_team'))
 
 @section('content')
-    <form id="kt_form" class="form row d-flex flex-column flex-lg-row addForm" data-kt-redirect="{{ route('admin.teams.index') }}"
-          action="{{ isset($team) ? route('admin.teams.update', $team->id) : route('admin.teams.store') }}" method="POST" enctype="multipart/form-data">
+    <form id="kt_form" class="form row d-flex flex-column flex-lg-row addForm"
+        data-kt-redirect="{{ route('admin.teams.index') }}"
+        action="{{ isset($team) ? route('admin.teams.update', $team->id) : route('admin.teams.store') }}" method="POST"
+        enctype="multipart/form-data">
         @csrf
         @isset($team)
             @method('PATCH')
@@ -24,7 +26,7 @@
                         <label class="form-check form-switch form-check-custom form-check-solid">
                             <input type="hidden" name="status" value="0">
                             <input class="form-check-input btn active_operation" type="checkbox" name="status" 
-                                @if(isset($team) && $team->status == 1) checked @endif value="1">
+                                @if (isset($team) && $team->status == 1) checked @endif value="1">
                         </label>
                     </div>
                 </div>
@@ -34,12 +36,16 @@
                 <div class="card-header justify-content-center p-5">
                     <div class="card-toolbar">
                         <div class="image-input image-input-outline" data-kt-image-input="true">
-                            <div class="image-input-wrapper w-200px h-200px" style="background-image: url({{ isset($team) && $team->image ? asset($team->image) : asset('admin_assets/media/svg/files/blank-image.svg') }})"></div>
-                            <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change image">
+                            <div class="image-input-wrapper w-200px h-200px"
+                                style="background-image: url({{ isset($team) && $team->image ? asset($team->image) : asset('admin_assets/media/svg/files/blank-image.svg') }})">
+                            </div>
+                            <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
+                                data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change image">
                                 <i class="bi bi-pencil-fill fs-7"></i>
                                 <input type="file" name="image" accept=".png, .jpg, .jpeg" />
                             </label>
-                            <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel image">
+                            <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
+                                data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel image">
                                 <i class="bi bi-x fs-2"></i>
                             </span>
                         </div>
@@ -58,21 +64,51 @@
                     <div class="mb-5">
                         <label class=" form-label">{{ __('admin.form.name') }}</label>
                         <input type="text" name="name" class="form-control" placeholder="Enter Team Member Name"
-                               value="{{ isset($team) ? $team->name : '' }}" >
+                            value="{{ isset($team) ? $team->name : '' }}">
                     </div>
                     <div class="mb-5">
                         <label class="form-label">Position</label>
                         <input type="text" name="position" class="form-control" placeholder="Enter Position"
-                               value="{{ isset($team) ? $team->position : '' }}">
+                            value="{{ isset($team) ? $team->position : '' }}">
                     </div>
                     <div class="mb-5">
-                        <label class="form-label">Social links (JSON format)</label>
-                        <textarea name="social_links" class="form-control" rows="3" placeholder='{"facebook":"https://facebook.com", "twitter":"https://twitter.com"}'>{{ isset($team) && $team->social_links ? json_encode($team->social_links) : '' }}</textarea>
+                        <label class="form-label fw-bold">Social Links</label>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Facebook</label>
+                                <input type="text" name="social[facebook]" class="form-control"
+                                    value="{{ isset($team->social_links['facebook']) ? $team->social_links['facebook'] : '' }}"
+                                    placeholder="https://facebook.com/yourpage">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Twitter</label>
+                                <input type="text" name="social[twitter]" class="form-control"
+                                    value="{{ isset($team->social_links['twitter']) ? $team->social_links['twitter'] : '' }}"
+                                    placeholder="https://twitter.com/yourhandle">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Instagram</label>
+                                <input type="text" name="social[instagram]" class="form-control"
+                                    value="{{ isset($team->social_links['instagram']) ? $team->social_links['instagram'] : '' }}"
+                                    placeholder="https://instagram.com/yourprofile">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">LinkedIn</label>
+                                <input type="text" name="social[linkedin]" class="form-control"
+                                    value="{{ isset($team->social_links['linkedin']) ? $team->social_links['linkedin'] : '' }}"
+                                    placeholder="https://linkedin.com/in/yourprofile">
+                            </div>
+                        </div>
                     </div>
+
                 </div>
             </div>
         </div>
-        
+
         <!-- Submit Buttons -->
         <div class="page-buttuns mt-5">
             <div class="row justify-content-between">
@@ -83,7 +119,8 @@
                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
                         </span>
                     </button>
-                    <a href="{{ route('admin.teams.index') }}" class="btn btn-light me-5 cancel">{{ __('admin.form.cancel') }}</a>
+                    <a href="{{ route('admin.teams.index') }}"
+                        class="btn btn-light me-5 cancel">{{ __('admin.form.cancel') }}</a>
                 </div>
             </div>
         </div>
