@@ -2,7 +2,6 @@
 
 window.columns = [
     {data: 'id'},
-    {data: 'title'},
     {data: 'created_at'},
     {data: 'operations'}
 ];

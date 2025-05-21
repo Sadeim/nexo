@@ -39,13 +39,13 @@ class ReasonController extends Controller
         return view('admin.reasons.create');
     }
 
-    public function store(Request $request)
+    public function store(CreateReasonRequest $request)
     {
         try {
             DB::beginTransaction();
-            $data = $request->except(['image']);
-            if ($request->hasFile('image')) {
-                $data['image'] = $this->uploadImage($request->file('image'), 'reasons');
+            $data = $request->except(['icon']);
+            if ($request->hasFile('icon')) {
+                $data['icon'] = $this->uploadImage($request->file('icon'), 'reasons');
             }
             Reason::create($data);
             DB::commit();
@@ -62,13 +62,13 @@ class ReasonController extends Controller
         return view('admin.reasons.create', compact('reason'));
     }
 
-    public function update(Request $request, $id)
+    public function update(CreateReasonRequest $request, $id)
     {
         try {
             DB::beginTransaction();
-            $data = $request->except(['image']);
-            if ($request->hasFile('image')) {
-                $data['image'] = $this->uploadImage($request->file('image'), 'reasons');
+            $data = $request->except(['icon']);
+            if ($request->hasFile('icon')) {
+                $data['icon'] = $this->uploadImage($request->file('icon'), 'reasons');
             }
             $reason = Reason::findOrFail($id);
             $reason->update($data);

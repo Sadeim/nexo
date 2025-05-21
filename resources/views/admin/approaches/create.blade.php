@@ -58,7 +58,7 @@
                     <label class="required form-label">Title</label>
                     <input type="text" name="title" class="form-control"
                            placeholder="Enter Title"
-                           value="{{ old('title', $approach->title ?? '') }}">
+                           value="{{ isset($approach) ? $approach->title : ''}}">
                 </div>
 
                 {{-- Subtitle --}}
@@ -66,33 +66,43 @@
                     <label class="form-label">Subtitle</label>
                     <input type="text" name="subtitle" class="form-control"
                            placeholder="Enter Subtitle"
-                           value="{{ old('subtitle', $approach->subtitle ?? '') }}">
+                           value="{{ isset($approach) ? $approach->subtitle : ''}}">
                 </div>
 
                 {{-- Mission Description --}}
                 <div class="mb-5">
                     <label class="form-label">Mission Description</label>
                     <textarea name="mission_description" class="form-control" rows="3"
-                              placeholder="Enter mission description">{{ old('mission_description', $approach->mission_description ?? '') }}</textarea>
+                              placeholder="Enter mission description">{{ isset($approach) ? $approach->mission_description : ''}}</textarea>
                 </div>
 
                 {{-- Mission Points --}}
                 <div class="mb-5">
                     <label class="form-label">Mission Points</label>
                     <div id="mission-points-container">
-                        @php
-                            $missionPoints = old('mission_points', $approach->mission_points ?? ['']);
-                        @endphp
-                        @foreach($missionPoints as $idx => $point)
-                            <div class="d-flex mb-2 point-row">
-                                <input type="text"
-                                       name="mission_points[]"
-                                       class="form-control me-2"
-                                       placeholder="Point"
-                                       value="{{ $point }}">
-                                <button type="button" class="btn btn-danger btn-remove-point">×</button>
-                            </div>
-                        @endforeach
+                        @if (isset($approach) && $approach->mission_points)
+                            @foreach($approach->mission_points as $idx => $point)
+                                <div class="d-flex mb-2 point-row">
+                                    <input type="text"
+                                        name="mission_points[]"
+                                        class="form-control me-2"
+                                        placeholder="Point"
+                                        value="{{ $point }}">
+                                    <button type="button" class="btn btn-danger btn-remove-point">×</button>
+                                </div>
+                            @endforeach
+                        @else
+                            @foreach([''] as $idx => $point)
+                                <div class="d-flex mb-2 point-row">
+                                    <input type="text"
+                                        name="mission_points[]"
+                                        class="form-control me-2"
+                                        placeholder="Point"
+                                        value="{{ $point }}">
+                                    <button type="button" class="btn btn-danger btn-remove-point">×</button>
+                                </div>
+                            @endforeach
+                        @endif
                     </div>
                     <button type="button" class="btn btn-sm btn-outline-primary" id="btn-add-mission-point">
                         + Add Point
@@ -103,26 +113,37 @@
                 <div class="mb-5">
                     <label class="form-label">Vision Description</label>
                     <textarea name="vision_description" class="form-control" rows="3"
-                              placeholder="Enter vision description">{{ old('vision_description', $approach->vision_description ?? '') }}</textarea>
+                              placeholder="Enter vision description">{{ isset($approach) ? $approach->vision_description : ''}}</textarea>
                 </div>
 
                 {{-- Vision Points --}}
                 <div class="mb-5">
                     <label class="form-label">Vision Points</label>
                     <div id="vision-points-container">
-                        @php
-                            $visionPoints = old('vision_points', $approach->vision_points ?? ['']);
-                        @endphp
-                        @foreach($visionPoints as $idx => $point)
-                            <div class="d-flex mb-2 point-row">
-                                <input type="text"
-                                       name="vision_points[]"
-                                       class="form-control me-2"
-                                       placeholder="Point"
-                                       value="{{ $point }}">
-                                <button type="button" class="btn btn-danger btn-remove-point">×</button>
-                            </div>
-                        @endforeach
+                      
+                        @if (isset($approach) && $approach->vision_points)
+                            @foreach($approach->vision_points as $idx => $point)
+                                <div class="d-flex mb-2 point-row">
+                                    <input type="text"
+                                        name="vision_points[]"
+                                        class="form-control me-2"
+                                        placeholder="Point"
+                                        value="{{ $point }}">
+                                    <button type="button" class="btn btn-danger btn-remove-point">×</button>
+                                </div>
+                            @endforeach
+                        @else
+                            @foreach([''] as $idx => $point)
+                                <div class="d-flex mb-2 point-row">
+                                    <input type="text"
+                                        name="vision_points[]"
+                                        class="form-control me-2"
+                                        placeholder="Point"
+                                        value="{{ $point }}">
+                                    <button type="button" class="btn btn-danger btn-remove-point">×</button>
+                                </div>
+                            @endforeach
+                        @endif
                     </div>
                     <button type="button" class="btn btn-sm btn-outline-primary" id="btn-add-vision-point">
                         + Add Point
@@ -133,26 +154,38 @@
                 <div class="mb-5">
                     <label class="form-label">Value Description</label>
                     <textarea name="value_description" class="form-control" rows="3"
-                              placeholder="Enter value description">{{ old('value_description', $approach->value_description ?? '') }}</textarea>
+                              placeholder="Enter value description">{{ isset($approach) ? $approach->value_description : ''}}</textarea>
                 </div>
 
                 {{-- Value Points --}}
                 <div class="mb-5">
                     <label class="form-label">Value Points</label>
                     <div id="value-points-container">
-                        @php
-                            $valuePoints = old('value_points', $approach->value_points ?? ['']);
-                        @endphp
-                        @foreach($valuePoints as $idx => $point)
-                            <div class="d-flex mb-2 point-row">
-                                <input type="text"
-                                       name="value_points[]"
-                                       class="form-control me-2"
-                                       placeholder="Point"
-                                       value="{{ $point }}">
-                                <button type="button" class="btn btn-danger btn-remove-point">×</button>
-                            </div>
-                        @endforeach
+                        
+                        @if (isset($approach) && $approach->value_points)
+                            @foreach($approach->value_points as $idx => $point)
+                                <div class="d-flex mb-2 point-row">
+                                    <input type="text"
+                                        name="value_points[]"
+                                        class="form-control me-2"
+                                        placeholder="Point"
+                                        value="{{ $point }}">
+                                    <button type="button" class="btn btn-danger btn-remove-point">×</button>
+                                </div>
+                            @endforeach
+                        @else
+                            @foreach([''] as $idx => $point)
+                                <div class="d-flex mb-2 point-row">
+                                    <input type="text"
+                                        name="value_points[]"
+                                        class="form-control me-2"
+                                        placeholder="Point"
+                                        value="{{ $point }}">
+                                    <button type="button" class="btn btn-danger btn-remove-point">×</button>
+                                </div>
+                            @endforeach
+                        @endif
+                        
                     </div>
                     <button type="button" class="btn btn-sm btn-outline-primary" id="btn-add-value-point">
                         + Add Point
@@ -186,6 +219,8 @@
 @endsection
 
 @push('scripts')
+    <script src="{{ asset('admin_assets/js/dashboard/handleSubmitForm.js') }}"></script>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     function setupRepeater(containerId, addButtonId, inputName) {

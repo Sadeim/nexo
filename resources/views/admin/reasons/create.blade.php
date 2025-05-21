@@ -18,8 +18,28 @@
             </h2>
         </div>
 
-        
+        <div class="d-flex flex-column gap-5 col-lg-3 mb-7">
+            <div class="card card-flush">
+                <div class="card-header justify-content-center p-5">
+                    {{-- <label class="available">Icon Image</label> --}}
+                    <div class="card-toolbar">
+                        <div class="image-input image-input-outline" data-kt-image-input="true">
+                            <div class="image-input-wrapper w-200px h-200px" style="background-image: url({{ isset($service) && $service->icon ? asset($service->icon) : asset('admin_assets/media/svg/files/blank-image.svg') }})"></div>
+                            <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change image">
+                                <i class="bi bi-pencil-fill fs-7"></i>
+                                <input type="file" name="icon" accept=".png, .jpg, .jpeg" />
+                            </label>
+                            <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel image">
+                                <i class="bi bi-x fs-2"></i>
+                            </span>
+                        </div>
 
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
 
         <!-- Main Content: Reason Fields -->
         <div class="d-flex flex-column flex-row-fluid gap-3 col-lg-9">
@@ -28,36 +48,26 @@
                     <h3 class="card-title">Reason Details</h3>
                 </div>
                 <div class="card-body pt-0">
-
                     <!-- Reason 1 -->
-                    <div class="row align-items-end mb-8 border-bottom pb-6">
-                        <div class="col-md-3 fv-row">
-                            <label class="form-label">Icon</label>
-                            <input type="text" name="icon" class="form-control"
-                                   value="{{ old('icon', isset($reason) ? $reason->icon : '') }}"
-                                   placeholder="e.g. fas fa-star">
-                        </div>
-                        <div class="col-md-3 fv-row">
+                    <div class="row align-items-end mb-8 pb-6">
+                        <div class="col-md-12 fv-row">
                             <label class="form-label">Title</label>
                             <input type="text" name="title" class="form-control"
                                    value="{{ old('title', isset($reason) ? $reason->title : '') }}"
                                    placeholder="Enter title">
                         </div>
-                        <div class="col-md-6 fv-row">
+                    </div>
+                    <div class="row align-items-end mb-8 pb-6">
+                        <div class="col-md-12 fv-row">
                             <label class="form-label">Description</label>
                             <input type="text" name="text" class="form-control"
-                                   value="{{ old('text', isset($reason) ? $reason->text: '') }}"
-                                   placeholder="Enter description">
+                                    value="{{ old('text', isset($reason) ? $reason->text: '') }}"
+                                    placeholder="Enter description">
                         </div>
                     </div>
-
-                    
-
-                    
-
-                    
                 </div>
             </div>
+
         </div>
 
         <!-- Submit Buttons -->

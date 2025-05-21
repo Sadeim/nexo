@@ -339,7 +339,8 @@
                                     <!-- Why Choose Project Item Start -->
                                     <div class="why-choose-project-item wow fadeInUp">
                                         <div class="icon-box">
-                                            <i class="{{$reason->icon}}"></i>
+                                            <img src="{{ asset($reason->icon) }}" style="" alt="">
+                                            {{-- <i class="{{$reason->icon}}"></i> --}}
                                         </div>
 
                                         <div class="why-choose-project-content">

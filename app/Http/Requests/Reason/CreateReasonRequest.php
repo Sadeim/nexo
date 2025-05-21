@@ -28,9 +28,9 @@ class CreateReasonRequest extends BaseRequest
     public function rules()
     {
         return [
-            // 'icon' => 'required|string|max:255',
-            // 'title' => 'required|string|max:255',
-            // 'description' => 'nullable|string',
+            'icon'          => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif'],
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
         ];
     }
 }
