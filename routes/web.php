@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Route;
     Route::get('/', [HomeController::class, 'home'])->name('home');
 
     Route::get('about_us', [HomeController::class, 'aboutUs'])->name('about_us');
+    Route::get('projects', [HomeController::class, 'projects'])->name('projects');
     Route::get('blog', [BlogController::class, 'index'])->name('blog.index');
     Route::get('blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
     Route::get('search', [BlogController::class, 'search'])->name('blog.search');

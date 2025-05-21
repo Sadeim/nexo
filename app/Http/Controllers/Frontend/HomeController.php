@@ -168,4 +168,15 @@ class HomeController extends Controller
         
         return view('frontend.about_us', $data);
     }
+
+    public function projects()
+    {
+        $data['works'] = Work::get();
+        $data['categories'] = Category::get();
+        $data['sections'] = Section::whereIn('key', [
+            'projects_section',
+        ])->get()->keyBy('key');
+        
+        return view('frontend.projects', $data);
+    }
 }
