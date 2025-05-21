@@ -18,15 +18,30 @@ window.columnDefs = [
         orderable: false,
     },
 ];
-
 const editBtn = document.getElementById('editBtn');
 const saveBtn = document.getElementById('saveBtn');
+
+editBtn?.addEventListener('click', () => {
+    // إظهار الحقول القابلة للتحرير
+    document.getElementById('sectionTitleText')?.classList.add('d-none');
+    document.getElementById('sectionTitleInput')?.classList.remove('d-none');
+
+    document.getElementById('sectionDescriptionText')?.classList.add('d-none');
+    document.getElementById('sectionDescriptionInput')?.classList.remove('d-none');
+
+    document.getElementById('sectionNoteText')?.classList.add('d-none');
+    document.getElementById('sectionNoteInput')?.classList.remove('d-none');
+
+    // تبديل الأزرار
+    editBtn.classList.add('d-none');
+    saveBtn.classList.remove('d-none');
+});
 
 saveBtn?.addEventListener('click', () => {
     const url = saveBtn.dataset.url;
     const formData = new FormData();
 
-    // الحقول النصية - فقط إذا كانت موجودة
+    // الحقول النصية
     const titleInput = document.getElementById('sectionTitleInput');
     const descriptionInput = document.getElementById('sectionDescriptionInput');
     const noteInput = document.getElementById('sectionNoteInput');
@@ -39,7 +54,6 @@ saveBtn?.addEventListener('click', () => {
         formData.append('image', imageInput.files[0]);
     }
 
-    // التحقق أنه على الأقل تم تعديل شيء واحد
     if (!formData.has('title') && !formData.has('description') && !formData.has('note') && !formData.has('image')) {
         toastr.warning('لم يتم تعديل أي شيء');
         return;
@@ -77,7 +91,7 @@ saveBtn?.addEventListener('click', () => {
             saveBtn?.classList.add('d-none');
 
             toastr.success("تم تحديث القسم بنجاح");
-            location.reload(); // لو بدك تغير الصورة المعروضة
+            location.reload(); // لإظهار الصورة الجديدة فورًا
         } else {
             toastr.error("فشل في تحديث القسم");
         }
