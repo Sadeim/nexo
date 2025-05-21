@@ -58,7 +58,7 @@
             <div id="kt_content_container" class="container-xxl accountTable">
                 <!--begin::Main column-->
                 <div class="d-flex flex-column flex-row-fluid gap-7 gap-lg-10">
-                    <div class="page-content-header">
+                    <div class="page-content-header mb-5">
                         <div class="row justify-content-between">
                             <div class="col-3 col-sm-12 col-md-3 col-lg-3">
                                 <h2 class="table-title">{{ __('admin.global.works') }}</h2>

@@ -11,7 +11,7 @@
             <div id="kt_content_container" class="container-xxl accountTable">
                 <!--begin::Main column-->
                 <div class="d-flex flex-column flex-row-fluid gap-7 gap-lg-10">
-                    <div class="page-content-header">
+                    <div class="page-content-header mb-5">
                         <div class="row justify-content-between">
                             <div class="col-3 col-sm-12 col-md-3 col-lg-3">
                                 <h2 class="table-title">{{ __('admin.global.sliders') }}</h2>
@@ -20,12 +20,12 @@
                             <div class="col-8 col-sm-12 col-md-9 col-lg-9">
                                 <div class="card-toolbar flex-row-fluid d-flex justify-content-end gap-5">
                                     <!--Add new user start-->
-                                    <a class="btn btn-primary" href="{{ route('admin.sliders.create') }}">
+                                    {{-- <a class="btn btn-primary" href="{{ route('admin.sliders.create') }}">
                                         {{ __('admin.global.add_new_slider') }}
                                         <span class="svg-icon svg-icon-2">
                                             +
                                         </span>
-                                    </a>
+                                    </a> --}}
                                 </div>
                             </div>
                         </div>

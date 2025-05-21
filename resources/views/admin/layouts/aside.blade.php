@@ -87,21 +87,21 @@
                         </div>
                     @endif
 
-                    @if (auth()->user()->can('view_categories'))
+                    @if (auth()->user()->can('view_abouts'))
                         <div class="menu-sub menu-sub-accordion">
                             <div class="menu-item">
-                                <a class="menu-link {{ $is_active == 'categories' ? 'active' : '' }}"
-                                    href="{{ route('admin.categories.index') }}">
+                                <a class="menu-link {{ $is_active == 'abouts' ? 'active' : '' }}"
+                                    href="{{ route('admin.abouts.index') }}">
                                     <span class="menu-bullet">
-                                        <i class="fa-solid fa-layer-group"></i>
+                                        <i class="fa-solid fa-info-circle"></i>
                                     </span>
-                                    <span class="menu-title">{{ __('admin.global.categories') }}</span>
+                                    <span class="menu-title">{{ __('admin.global.abouts') }}</span>
                                 </a>
                             </div>
                         </div>
                     @endif
 
-                    @if (auth()->user()->can('view_services'))
+                     @if (auth()->user()->can('view_services'))
                         <div class="menu-sub menu-sub-accordion">
                             <div class="menu-item">
                                 <a class="menu-link {{ $is_active == 'services' ? 'active' : '' }}"
@@ -110,6 +110,32 @@
                                         <i class="fa-solid fa-screwdriver-wrench"></i>
                                     </span>
                                     <span class="menu-title">{{ __('admin.global.services') }}</span>
+                                </a>
+                            </div>
+                        </div>
+                    @endif
+                    @if (auth()->user()->can('view_how'))
+                        <div class="menu-sub menu-sub-accordion">
+                            <div class="menu-item">
+                                <a class="menu-link {{ $is_active == 'how' ? 'active' : '' }}"
+                                   href="{{ route('admin.how.index') }}">
+                                    <span class="menu-bullet">
+                                        <i class="fa-solid fa-briefcase"></i>
+                                    </span>
+                                    <span class="menu-title">{{ __('admin.global.how') }}</span>
+                                </a>
+                            </div>
+                        </div>
+                    @endif
+                    @if (auth()->user()->can('view_works'))
+                        <div class="menu-sub menu-sub-accordion">
+                            <div class="menu-item">
+                                <a class="menu-link {{ $is_active == 'works' ? 'active' : '' }}"
+                                    href="{{ route('admin.works.index') }}">
+                                    <span class="menu-bullet">
+                                        <i class="fa-solid fa-briefcase"></i>
+                                    </span>
+                                    <span class="menu-title">{{ __('admin.global.works') }}</span>
                                 </a>
                             </div>
                         </div>
@@ -128,34 +154,19 @@
                             </div>
                         </div>
                     @endif
-
-                    @if (auth()->user()->can('view_works'))
+                    @if (auth()->user()->can('view_clients'))
                         <div class="menu-sub menu-sub-accordion">
                             <div class="menu-item">
-                                <a class="menu-link {{ $is_active == 'works' ? 'active' : '' }}"
-                                    href="{{ route('admin.works.index') }}">
+                                <a class="menu-link {{ $is_active == 'clients' ? 'active' : '' }}"
+                                    href="{{ route('admin.clients.index') }}">
                                     <span class="menu-bullet">
-                                        <i class="fa-solid fa-briefcase"></i>
+                                        <i class="fa-solid fa-handshake"></i>
                                     </span>
-                                    <span class="menu-title">{{ __('admin.global.works') }}</span>
+                                    <span class="menu-title">{{ __('admin.global.clients') }}</span>
                                 </a>
                             </div>
                         </div>
                     @endif
-                    @if (auth()->user()->can('view_how'))
-                        <div class="menu-sub menu-sub-accordion">
-                            <div class="menu-item">
-                                <a class="menu-link {{ $is_active == 'how' ? 'active' : '' }}"
-                                   href="{{ route('admin.how.index') }}">
-                                    <span class="menu-bullet">
-                                        <i class="fa-solid fa-briefcase"></i>
-                                    </span>
-                                    <span class="menu-title">{{ __('admin.global.how') }}</span>
-                                </a>
-                            </div>
-                        </div>
-                    @endif
-
                     @if (auth()->user()->can('view_teams'))
                         <div class="menu-sub menu-sub-accordion">
                             <div class="menu-item">
@@ -183,35 +194,6 @@
                             </div>
                         </div>
                     @endif
-
-                    @if (auth()->user()->can('view_abouts'))
-                        <div class="menu-sub menu-sub-accordion">
-                            <div class="menu-item">
-                                <a class="menu-link {{ $is_active == 'abouts' ? 'active' : '' }}"
-                                    href="{{ route('admin.abouts.index') }}">
-                                    <span class="menu-bullet">
-                                        <i class="fa-solid fa-info-circle"></i>
-                                    </span>
-                                    <span class="menu-title">{{ __('admin.global.abouts') }}</span>
-                                </a>
-                            </div>
-                        </div>
-                    @endif
-
-                    @if (auth()->user()->can('view_clients'))
-                        <div class="menu-sub menu-sub-accordion">
-                            <div class="menu-item">
-                                <a class="menu-link {{ $is_active == 'clients' ? 'active' : '' }}"
-                                    href="{{ route('admin.clients.index') }}">
-                                    <span class="menu-bullet">
-                                        <i class="fa-solid fa-handshake"></i>
-                                    </span>
-                                    <span class="menu-title">{{ __('admin.global.clients') }}</span>
-                                </a>
-                            </div>
-                        </div>
-                    @endif
-
                 </div>
 
                 <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ $is_active_parent == 'about' ? 'here show' : '' }}">
@@ -332,6 +314,19 @@
                                 </a>
                             </span>
                         </span>
+                    </div>
+                @endif
+                @if (auth()->user()->can('view_categories'))
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a class="menu-link {{ $is_active == 'categories' ? 'active' : '' }}"
+                                href="{{ route('admin.categories.index') }}">
+                                <span class="menu-bullet">
+                                    <i class="fa-solid fa-layer-group"></i>
+                                </span>
+                                <span class="menu-title">{{ __('admin.global.categories') }}</span>
+                            </a>
+                        </div>
                     </div>
                 @endif
                 @if (auth()->user()->can('view_contacts'))
