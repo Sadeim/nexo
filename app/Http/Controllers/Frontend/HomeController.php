@@ -56,6 +56,7 @@ class HomeController extends Controller
             'sliders_section',
             'clients_section',
             'blog_section',
+            'achievements_section',
         ])->get()->keyBy('key');
         $data['how'] = How::first();
         

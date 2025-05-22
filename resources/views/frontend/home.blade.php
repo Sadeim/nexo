@@ -342,7 +342,7 @@
     {{--    </div>--}}
     <!-- Quick Fact End -->
 
-    @if ($sections['services_section']?->is_active)
+    @if ($sections['achievements_section']?->is_active)
         <!-- Best Services Section Start -->
         <div class="best-services bg-radius-section">
             <div class="container">
@@ -354,8 +354,8 @@
                             <div class="best-services-content">
                                 <!-- Section Title Start -->
                                 <div class="section-title">
-                                    <h3 class="wow fadeInUp">{{ $sections['services_section']->title }}</h3>
-                                    <h2 class="text-anime-style-3" data-cursor="-opaque">{{ $sections['services_section']->description }}</h2>
+                                    <h3 class="wow fadeInUp">{{ $sections['achievements_section']->title }}</h3>
+                                    <h2 class="text-anime-style-3" data-cursor="-opaque">{{ $sections['achievements_section']->description }}</h2>
                                 </div>
                                 <!-- Section Title End -->
 
@@ -369,34 +369,20 @@
 
                                     <!-- Best Services Box Start -->
                                     <div class="best-services-box">
-                                        {{--                                        @foreach ($services as $index => $service)--}}
-                                        <!-- Best Services Item Start -->
-                                        <div class="best-services-item wow fadeInUp" data-wow-delay="{{ $index * 0.2 }}s">
-                                            {{--                                            <div class="icon-box">--}}
-                                            {{--                                                <img src="{{ asset($service->icon) }}" alt="{{ $service->name }}">--}}
-                                            {{--                                            </div>--}}
+                                        @foreach ($achievements as $index => $service)
+                                            <!-- Best Services Item Start -->
+                                            <div class="best-services-item wow fadeInUp" data-wow-delay="{{ $index * 0.2 }}s">
+                                                {{--                                            <div class="icon-box">--}}
+                                                {{--                                                <img src="{{ asset($service->icon) }}" alt="{{ $service->name }}">--}}
+                                                {{--                                            </div>--}}
 
-                                            <div class="best-services-item-content">
-                                                {{--                                                <h3>{{ $service->name }}</h3>--}}
-                                                {{--                                                <p>{{ $service->description }}</p>--}}
-                                                <h3>Thermostat services</h3>
-                                                <p>Smart thermostat setup to improve comfort and reduce energy use.</p>
+                                                <div class="best-services-item-content">
+                                                    <h3>{{ $service->name }}</h3>
+                                                    <p>{{ $service->description }}</p>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="best-services-item wow fadeInUp" data-wow-delay="{{ $index * 0.2 }}s">
-                                            {{--                                            <div class="icon-box">--}}
-                                            {{--                                                <img src="{{ asset($service->icon) }}" alt="{{ $service->name }}">--}}
-                                            {{--                                            </div>--}}
-
-                                            <div class="best-services-item-content">
-                                                {{--                                                <h3>{{ $service->name }}</h3>--}}
-                                                {{--                                                <p>{{ $service->description }}</p>--}}
-                                                <h3>Airflow balancing</h3>
-                                                <p>We adjust vents and dampers for even cooling and heating in every room.</p>
-                                            </div>
-                                        </div>
-                                        <!-- Best Services Item End -->
-                                        {{--                                        @endforeach--}}
+                                            <!-- Best Services Item End -->
+                                        @endforeach
                                     </div>
 
                                     <!-- Best Services Box End -->
@@ -408,7 +394,7 @@
                             <!-- Best Services Image Start -->
                             <div class="best-services-image">
                                 <figure class="image-anime">
-                                    <img src="{{ asset('frontend_assets/ab.jpeg') }}" alt="">
+                                    <img src="{{ asset($sections['achievements_section']->image) }}" alt="">
                                 </figure>
                             </div>
                             <!-- Best Services Image End -->

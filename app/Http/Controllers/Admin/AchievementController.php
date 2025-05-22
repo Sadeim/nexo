@@ -6,18 +6,21 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Achievement\CreateAchievementRequest;
 use App\Models\Achievement;
 use App\Models\Section;
+use App\Traits\SaveImageTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class AchievementController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('permission:view_achievements|add_achievements', ['only' => ['index','store']]);
-        $this->middleware('permission:add_achievements', ['only' => ['create','store']]);
-        $this->middleware('permission:edit_achievements', ['only' => ['edit','update']]);
-        $this->middleware('permission:delete_achievements', ['only' => ['destroy']]);
-    }
+    use SaveImageTrait;
+
+    // public function __construct()
+    // {
+    //     $this->middleware('permission:view_achievements|add_achievements', ['only' => ['index','store']]);
+    //     $this->middleware('permission:add_achievements', ['only' => ['create','store']]);
+    //     $this->middleware('permission:edit_achievements', ['only' => ['edit','update']]);
+    //     $this->middleware('permission:delete_achievements', ['only' => ['destroy']]);
+    // }
     
     public function index()
     {
@@ -41,6 +44,10 @@ class AchievementController extends Controller
         try {
             DB::beginTransaction();
             $data = $request->only(['description', 'title', 'year']);
+            if ($request->hasFile('image')) {
+                $data['image'] = $this->uploadImage($request->file('image'), 'achievements');
+            }
+            $data['year'] = $request->year ?? 0;
             Achievement::create($data);
             DB::commit();
             return $this->response_api(200, __('admin.form.added_successfully'), '');
@@ -61,6 +68,11 @@ class AchievementController extends Controller
         try {
             DB::beginTransaction();
             $data = $request->only(['description', 'title', 'year']);
+            if ($request->hasFile('image')) {
+                $data['image'] = $this->uploadImage($request->file('image'), 'achievements');
+            }
+            $data['year'] = $request->year ?? 0;
+
             $achievement = Achievement::findOrFail($id);
             $achievement->update($data);
             DB::commit();

@@ -12,7 +12,7 @@ class Achievement extends Model
     protected $fillable = [
         'title',
         'description',
-        'year',
+        'image',
     ];
 
     public function scopeSearch($query, $request)

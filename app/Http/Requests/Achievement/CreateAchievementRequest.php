@@ -30,7 +30,8 @@ class CreateAchievementRequest extends BaseRequest
         return [
             'title' => 'required|string|max:255',
             'description' => 'required',
-            'year' => 'required|string|max:255',
+            'year' => 'nullable|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ];
     }
 }

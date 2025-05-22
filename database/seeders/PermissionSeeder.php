@@ -23,7 +23,7 @@ class PermissionSeeder extends Seeder
             'newsletters' => ['view', 'add', 'edit', 'delete'],
             'services' => ['view', 'add', 'edit', 'delete'],
             'testimonials' => ['view', 'add', 'edit', 'delete'],
-            // 'achievements' => ['view', 'add', 'edit', 'delete'],
+            'achievements' => ['view', 'add', 'edit', 'delete'],
             'abouts' => ['view', 'add', 'edit', 'delete'],
             // 'banners' => ['view', 'add', 'edit', 'delete'],
             'blogs' => ['view', 'add', 'edit', 'delete'],

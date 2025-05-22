@@ -114,7 +114,17 @@
                             </div>
                         </div>
                     @endif
-
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a class="menu-link {{ $is_active == 'achievements' ? 'active' : '' }}"
+                                href="{{ route('admin.achievements.index') }}">
+                                <span class="menu-bullet">
+                                        <i class="fa-solid fa-trophy"></i>
+                                </span>
+                                <span class="menu-title">{{ __('admin.global.achievements') }}</span>
+                            </a>
+                        </div>
+                    </div>
                     @if (auth()->user()->can('view_testimonials'))
                         <div class="menu-sub menu-sub-accordion">
                             <div class="menu-item">
@@ -292,24 +302,7 @@
                 @endif
                 
                 </div>
-                {{-- @if (auth()->user()->can('view_achievements'))
-                    <div
-                        class="menu-item menu-accordion {{ $is_active_parent == 'achievements' ? 'here show' : '' }}">
-                        <span class="menu-link {{ $is_active == 'achievements' ? 'active' : '' }}">
-                            <span class="menu-icon">
-                                <span class="svg-icon svg-icon-2">
-                                    <i class="fa-solid fa-trophy"></i>
-                                </span>
-                            </span>
-                            <span class="menu-title">
-                                <a class="{{ $is_active == 'achievements' ? 'active' : '' }}"
-                                    href="{{ route('admin.achievements.index') }}">
-                                    <span class="menu-title">{{ __('admin.global.achievements') }}</span>
-                                </a>
-                            </span>
-                        </span>
-                    </div>
-                @endif --}}
+                    
                 {{-- @if (auth()->user()->can('view_banners'))
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'banners' ? 'here show' : '' }}">
                         <span class="menu-link {{ $is_active == 'banners' ? 'active' : '' }}">

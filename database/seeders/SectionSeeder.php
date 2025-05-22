@@ -115,5 +115,11 @@ class SectionSeeder extends Seeder
             'key' => 'contact_page',
             'image' => 'contact.jpg',
         ]);
+        Section::create([
+            'key' => 'achievements_section',
+            'title' => 'Our achievements',
+            'description' => 'We offer a variety of services to meet your needs.',
+            'is_active' => true,
+        ]);
     }
 }
