@@ -39,8 +39,9 @@ class DatabaseSeeder extends Seeder
         // $this->call(SliderSeeder::class);
         // $this->call(ReasonTabSeeder::class);
         // $this->call(FeatureSeeder::class);
-        $this->call(SectionSeeder::class);
         // $this->call(HowSeeder::class);
         // $this->call(ApproachSeeder::class);
+        $this->call(SectionSeeder::class);
+
     }
 }
