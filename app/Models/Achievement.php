@@ -12,6 +12,7 @@ class Achievement extends Model
     protected $fillable = [
         'title',
         'description',
+        'year',
         'image',
     ];
 

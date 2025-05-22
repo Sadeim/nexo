@@ -16,18 +16,25 @@
         <!-- Sidebar: Status Section -->
         {{-- <div class="d-flex flex-column gap-5 col-lg-3 mb-7">
             <div class="card card-flush">
-                <div class="card-header">
-                    <div class="card-title">
-                        <h3>{{ __('admin.form.status') }}</h3>
-                    </div>
+               <div class="card card-flush">
+                <div class="card-header justify-content-center p-5">
                     <div class="card-toolbar">
-                        <label class="form-check form-switch form-check-custom form-check-solid">
-                            <input type="hidden" name="status" value="0">
-                            <input class="form-check-input btn active_operation" type="checkbox" name="status" 
-                                @if(isset($achievement) && $achievement->status == 1) checked @endif value="1">
-                        </label>
+                        <div class="image-input image-input-outline" data-kt-image-input="true">
+                            <div class="image-input-wrapper w-200px h-200px" style="background-image: url({{ isset($achievement) && $achievement->image ? asset($achievement->image) : asset('admin_assets/media/svg/files/blank-image.svg') }})"></div>
+                            <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change image">
+                                <i class="bi bi-pencil-fill fs-7"></i>
+                                <input type="file" name="image" accept=".png, .jpg, .jpeg" />
+                            </label>
+                            <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel image">
+                                <i class="bi bi-x fs-2"></i>
+                            </span>
+                        </div>
+
                     </div>
+
                 </div>
+
+            </div>
             </div>
         </div> --}}
         
@@ -39,24 +46,16 @@
                 </div>
                 <div class="card-body pt-0">
                     <div class="row">
-                        <div class="col-md-4 fv-row">
+                        <div class="col-md-12 fv-row">
                             <div class="mb-5">
                                 <label class="required form-label">Title</label>
                                 <input type="text" name="title" class="form-control" placeholder="Enter Achievement Title"
                                     value="{{ isset($achievement) ? $achievement->title : '' }}">
                             </div>
-                        </div>
-                        <!-- Number Field -->
-                        <div class="col-md-4 fv-row">
-                            <div class="mb-5">
-                                <label class="required form-label">Year</label>
-                                <input type="text" name="year" class="form-control" placeholder="Enter Achievement Year"
-                                    value="{{ isset($achievement) ? $achievement->year : '' }}">
-                            </div>
-                        </div>
+                        </div>                      
                     </div>
                     <div class="row">
-                        <div class="col-md-6 fv-row">
+                        <div class="col-md-12 fv-row">
                             <div class="mb-5">
                                 <label class="required form-label">Description</label>
                                 <textarea name="description" class="form-control">{{ isset($achievement) ? $achievement->description : '' }}</textarea>

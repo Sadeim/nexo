@@ -43,11 +43,8 @@ class AchievementController extends Controller
     {
         try {
             DB::beginTransaction();
-            $data = $request->only(['description', 'title', 'year']);
-            if ($request->hasFile('image')) {
-                $data['image'] = $this->uploadImage($request->file('image'), 'achievements');
-            }
-            $data['year'] = $request->year ?? 0;
+            $data = $request->only(['description', 'title']);
+            $data['year'] =  0;
             Achievement::create($data);
             DB::commit();
             return $this->response_api(200, __('admin.form.added_successfully'), '');
@@ -68,10 +65,6 @@ class AchievementController extends Controller
         try {
             DB::beginTransaction();
             $data = $request->only(['description', 'title', 'year']);
-            if ($request->hasFile('image')) {
-                $data['image'] = $this->uploadImage($request->file('image'), 'achievements');
-            }
-            $data['year'] = $request->year ?? 0;
 
             $achievement = Achievement::findOrFail($id);
             $achievement->update($data);

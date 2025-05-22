@@ -377,7 +377,7 @@
                                                 {{--                                            </div>--}}
 
                                                 <div class="best-services-item-content">
-                                                    <h3>{{ $service->name }}</h3>
+                                                    <h3>{{ $service->title }}</h3>
                                                     <p>{{ $service->description }}</p>
                                                 </div>
                                             </div>
