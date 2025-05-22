@@ -3,7 +3,7 @@
 	<!--begin::Head-->
 	<head>
 		<meta charset="utf-8" />
-		<title>House of corned beef</title>
+		<title>Hrs</title>
 		<meta name="description" content="Login page example" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 		<!--begin::Fonts-->
@@ -131,7 +131,7 @@
 					<div class="container d-flex flex-column flex-md-row align-items-center justify-content-center justify-content-md-between">
 						<div class="font-size-h6 font-weight-bolder order-2 order-md-1 py-2 py-md-0">
 							<span class="text-muted font-weight-bold mr-2">2025©</span>
-							<a href="" target="_blank" class="text-dark-50 text-hover-primary">House of corned beef</a></a>
+							<a href="" target="_blank" class="text-dark-50 text-hover-primary">Hrs</a></a>
 						</div>
 						<div class="font-size-h5 font-weight-bolder order-1 order-md-2 py-2 py-md-0">
 							{{-- <a href="#" class="text-primary">Terms</a>

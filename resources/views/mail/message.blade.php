@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>House of corned beef, A new subscription by {{$data['user_name']}}</title>
+    <title>Hrs, A new subscription by {{$data['user_name']}}</title>
     <style>
         /* Inline styles for simplicity, consider using CSS classes for larger templates */
         body {

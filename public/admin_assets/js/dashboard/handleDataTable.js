@@ -35,7 +35,7 @@ var KTDatatablesServerSide = function () {
             processing: true,
             serverSide: true,
             language: {
-                info: ` عرض _START_ إلى _END_ من _TOTAL_`,
+                info: ` Show _START_ to _END_ from _TOTAL_`,
                 // search: 'البحث'
                 emptyTable: no_data_available_in_table,
                 infoEmpty: showing_no_records
@@ -64,7 +64,7 @@ var KTDatatablesServerSide = function () {
             processing: true,
             serverSide: true,
             language: {
-                info: ` عرض _START_ إلى _END_ من _TOTAL_`,
+                info: ` Show _START_ to _END_ from _TOTAL_`,
                 // search: 'البحث'
             },
             // order: [[0, 'desc']],

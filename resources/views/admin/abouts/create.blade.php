@@ -12,8 +12,8 @@
         @endisset
 
         <!-- Page Header -->
-        <div class="page-content-header">
-            <h2 class="table-title">{{ isset($about) ? __('admin.global.edit_about') : __('admin.global.add_new_about') }}</h2>
+        <div class="page-content-header mb-5">
+            <h2 class="table-title">{{ isset($about) ? 'Edit about' : __('admin.global.add_new_about') }}</h2>
         </div>
 
         <!-- Sidebar: Image Uploaders -->
