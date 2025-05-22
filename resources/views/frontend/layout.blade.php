@@ -55,6 +55,7 @@
                                 <li class="nav-item"><a class="nav-link" href="{{ route('home') }}">Home</a>
                                 <li class="nav-item"><a class="nav-link" href="{{ route('about_us') }}">About Us</a>
                                 <li class="nav-item"><a class="nav-link" href="{{ route('blog.index') }}">Blog</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ route('projects') }}">Projects</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{ route('contact') }}">Contact Us</a></li>
                             </ul>
                         </div>
@@ -137,8 +138,9 @@
                         <ul>
                             <li><a href="{{ route('home') }}">home</a></li>
                             <li><a href="{{ route('about_us') }}">about Us</a></li>
+                            <li><a href="{{ route('projects') }}">Projects</a></li>
 {{--                            <li><a href="#">services</a></li>--}}
-                            <li><a href="{{ route('blog.index') }}">blog</a></li>
+                            <li><a href="{{ route('blog.index') }}">Blog</a></li>
                         </ul>
                     </div>
                     <!-- Footer Links End -->

@@ -30,8 +30,8 @@ class CreateApproachRequest extends BaseRequest
         return [
             'title'               => 'required|string|max:255',
             'subtitle'            => 'nullable|string|max:255',
-            'image_1'             => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'image_2'             => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'image_1'             => 'nullable|image|mimes:jpeg,png,jpg',
+            'image_2'             => 'nullable|image|mimes:jpeg,png,jpg',
             'mission_description' => 'nullable|string',
             'mission_points.*'    => 'nullable|string',
             'vision_description'  => 'nullable|string',
