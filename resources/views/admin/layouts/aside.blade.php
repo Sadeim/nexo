@@ -224,6 +224,17 @@
                         <span class="menu-title">About Page</span>
                         <span class="menu-arrow"></span>
                     </span>
+                     <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a class="menu-link {{ $is_active == 'about_page' ? 'active' : '' }}"
+                                href="{{ route('admin.about_page.index') }}">
+                                <span class="menu-bullet">
+                                    <i class="fa-solid fa-about"></i> {{-- about_page --}}
+                                </span>
+                                <span class="menu-title">About page</span>
+                            </a>
+                        </div>
+                    </div>
                     @if (auth()->user()->can('view_skills'))
                     <div class="menu-sub menu-sub-accordion">
                         <div class="menu-item">
@@ -334,7 +345,6 @@
                         </span>
                     </div>
                 @endif
-<<<<<<< HEAD
                 {{-- @if (auth()->user()->can('view_categories'))
                     <div class="menu-sub menu-sub-accordion">
                         <div class="menu-item">
@@ -348,8 +358,6 @@
                         </div>
                     </div>
                 @endif --}}
-=======
->>>>>>> parent of db1dd52 (ed)
                 @if (auth()->user()->can('view_contacts'))
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'contacts' ? 'here show' : '' }}">
                         <span class="menu-link {{ $is_active == 'contacts' ? 'active' : '' }}">
@@ -367,6 +375,21 @@
                         </span>
                     </div>
                 @endif
+                <div class="menu-item menu-accordion {{ $is_active_parent == 'contact_page' ? 'here show' : '' }}">
+                    <span class="menu-link {{ $is_active == 'contact_page' ? 'active' : '' }}">
+                        <span class="menu-icon">
+                            <span class="svg-icon svg-icon-2">
+                                <i class="fa-solid fa-envelope"></i>
+                            </span>
+                        </span>
+                        <span class="menu-title">
+                            <a class="{{ $is_active == 'contact_page' ? 'active' : '' }}"
+                                href="{{ route('admin.contact_page.index') }}">
+                                <span class="menu-title">Contact page</span>
+                            </a>
+                        </span>
+                    </span>
+                </div>
                 {{-- @if (auth()->user()->can('view_bookings'))
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'bookings' ? 'here show' : '' }}">
                         <span class="menu-link {{ $is_active == 'bookings' ? 'active' : '' }}">

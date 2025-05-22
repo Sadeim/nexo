@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\About;
 use App\Models\Blog;
 use App\Models\Category;
+use App\Models\Section;
 use Illuminate\Http\Request;
 
 class BlogController extends Controller
@@ -14,6 +15,8 @@ class BlogController extends Controller
     {
         $data['blogs'] = Blog::latest()->paginate(6);
         $data['about'] = About::first();
+        $data['section'] = Section::where('key', 'blog_page')->first();
+
         // $data['popular_posts'] = Blog::limit(3)->get();
         // $data['categories'] = Category::active()->get();
         return view('frontend.blog.index', $data);
@@ -22,6 +25,7 @@ class BlogController extends Controller
     public function show()
     {
         $data['blog'] = Blog::where('slug', request()->slug)->firstOrFail();
+        $data['section'] = Section::where('key', 'blog_page')->first();
         // $data['popular_posts'] = Blog::limit(3)->get();
         // $data['categories'] = Category::active()->get();
         return view('frontend.blog.show', $data);

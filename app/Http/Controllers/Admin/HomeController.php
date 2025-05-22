@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Blog;
 use App\Models\Client;
 use App\Models\Newsletter;
+use App\Models\Section;
 use App\Models\Service;
 use App\Models\Testimonial;
 use App\Models\Work;
@@ -91,5 +92,23 @@ class HomeController extends Controller
         ];
 
         return view('admin.home.index', $data);
+    }
+
+    public function aboutPage()
+    {
+        $data['section'] = Section::where('key', 'about_page')->first();
+        return view('admin.home.about_page', $data);
+    }
+
+    public function blogPage()
+    {
+        $data['section'] = Section::where('key', 'blog_page')->first();
+        return view('admin.home.blog_page', $data);
+    }
+
+    public function contactPage()
+    {
+        $data['section'] = Section::where('key', 'contact_page')->first();
+        return view('admin.home.contact_page', $data);
     }
 }

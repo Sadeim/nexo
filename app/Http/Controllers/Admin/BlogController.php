@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Blog\CreateBlogRequest;
 use App\Models\Blog;
+use App\Models\Section;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Traits\SaveImageTrait;
@@ -24,7 +25,8 @@ class BlogController extends Controller
     
     public function index()
     {
-        return view('admin.blogs.index');
+        $section = Section::where('key', 'blog_page')->first();
+        return view('admin.blogs.index', compact('section'));
     }
     
     public function datatable(Request $request) 

@@ -2,7 +2,7 @@
 
 @section('content')
     <!-- Page Header Start -->
-    <div class="page-header parallaxie" style="background-image: url('{{ asset($about->image1) }}');">
+    <div class="page-header parallaxie" style="background-image: url('{{ $sections['about_page']?->image ? asset($sections['about_page']->image) : asset($about->image1) }}');">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">

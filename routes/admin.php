@@ -247,4 +247,6 @@ use App\Http\Controllers\Admin\HowWorkController;
         Route::post('sections/{id}/toggle', [SectionController::class, 'toggle'])->name('sections.toggle');
         Route::post('sections/{section}/update', [SectionController::class, 'update'])->name('sections.update');
 
+        Route::get('about_page', [HomeController::class , 'aboutPage'])->name('about_page.index');
+        Route::get('contact_page', [HomeController::class , 'contactPage'])->name('contact_page.index');
 });
