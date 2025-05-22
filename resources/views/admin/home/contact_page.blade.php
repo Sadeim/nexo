@@ -63,6 +63,11 @@
             </div>
         </div>
     </div>
+    <div id="globalLoader" class="d-none globalLoader">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
 @endif
 @endsection
 @push('scripts')

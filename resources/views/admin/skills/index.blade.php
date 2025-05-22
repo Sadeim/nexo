@@ -50,6 +50,11 @@
                 </div>
             </div>
         </div>
+        <div id="globalLoader" class="d-none globalLoader">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
     @endif
     <div class="d-flex flex-column flex-column-fluid customerView" id="kt_content">
         <!--begin::Post-->

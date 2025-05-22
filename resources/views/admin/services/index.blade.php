@@ -1,4 +1,4 @@
-@extends('admin.layouts.master', ['is_active_parent' => 'home','is_active'=> 'services'])
+@extends('admin.layouts.master', ['is_active_parent' => 'home', 'is_active' => 'services'])
 @section('title')
     {{ __('admin.global.services') }}
 @endsection
@@ -10,10 +10,11 @@
                     <div>
                         <h2 class="card-title">
                             <span id="sectionTitleText">Title: {{ $section->title }}</span>
-                            <input type="text" class="form-control d-none" id="sectionTitleInput" value="{{ $section->title }}">
+                            <input type="text" class="form-control d-none" id="sectionTitleInput"
+                                value="{{ $section->title }}">
                         </h2>
                     </div>
-        
+
                     <div class="d-flex align-items-center gap-4">
                         <!-- Toggle -->
                         <div class="form-check form-switch form-check-custom form-check-solid">
@@ -24,30 +25,36 @@
                                 {{ $section->is_active ? 'Visible' : 'Hidden' }}
                             </label>
                         </div>
-        
+
                         <!-- Edit/Save Buttons -->
                         <button class="btn btn-primary" id="editBtn">
                             <i class="fas fa-edit"></i> Edit
                         </button>
-                        <button class="btn btn-sm btn-light-success d-none" id="saveBtn" data-url="{{ route('admin.sections.update', $section->id) }}">
+                        <button class="btn btn-sm btn-light-success d-none" id="saveBtn"
+                            data-url="{{ route('admin.sections.update', $section->id) }}">
                             <i class="fas fa-save"></i> Save
                         </button>
                     </div>
                 </div>
-        
+
                 <div class="card-body">
                     <div class="mb-4">
                         <label><strong>Description:</strong></label>
                         <p id="sectionDescriptionText" class="fs-5 text-gray-700 m-0">{{ $section->description }}</p>
                         <textarea class="form-control d-none" id="sectionDescriptionInput">{{ $section->description }}</textarea>
                     </div>
-        
+
                     <div>
                         <label><strong>Note:</strong></label>
                         <p id="sectionNoteText" class="fs-6 text-muted m-0">{{ $section->note }}</p>
                         <textarea class="form-control d-none" id="sectionNoteInput">{{ $section->note }}</textarea>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div id="globalLoader" class="d-none globalLoader">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
             </div>
         </div>
     @endif
@@ -81,7 +88,7 @@
                     <div class="card card-flush">
                         <!--begin::Card header-->
                         <div class="card-header align-items-center py-5 gap-2 gap-md-5">
-                             
+
                         </div>
                         <!--end::Card header-->
                         <!--begin::Card body-->
@@ -94,7 +101,8 @@
                                         <!--begin::Table head-->
                                         <thead>
                                             <!--begin::Table row-->
-                                            <tr class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0 text-center">
+                                            <tr
+                                                class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0 text-center">
                                                 <th>#</th>
                                                 <th>{{ __('admin.form.name') }}</th>
                                                 <th>{{ __('admin.form.description') }}</th>
@@ -128,10 +136,6 @@
     <script src="{{ asset('admin_assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
     <script src="{{ asset('admin_assets/js_resources/services.js') }}"></script>
     <script src="{{ asset('admin_assets/js/dashboard/handleDataTable.js') }}"></script>
-
-
 @endpush
 @push('modals')
- 
 @endpush
- 
