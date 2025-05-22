@@ -103,18 +103,18 @@ class SectionSeeder extends Seeder
         //     'description' => 'Get in touch with us for any inquiries.',
         //     'is_active' => true,
         // ]);
-        Section::create([
-            'key' => 'about_page',
-            'image' => 'about.jpg',
-        ]);
-        Section::create([
-            'key' => 'blog_page',
-            'image' => 'blog.jpg',
-        ]);
-        Section::create([
-            'key' => 'contact_page',
-            'image' => 'contact.jpg',
-        ]);
+        // Section::create([
+        //     'key' => 'about_page',
+        //     'image' => 'about.jpg',
+        // ]);
+        // Section::create([
+        //     'key' => 'blog_page',
+        //     'image' => 'blog.jpg',
+        // ]);
+        // Section::create([
+        //     'key' => 'contact_page',
+        //     'image' => 'contact.jpg',
+        // ]);
         Section::create([
             'key' => 'achievements_section',
             'title' => 'Our achievements',
