@@ -1,6 +1,6 @@
 @extends('frontend.layout')
 @section('css')
-<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
 @endsection
 @section('content')
     <!-- Hero Section Start -->
@@ -110,70 +110,70 @@
     <!-- Client Slider Section End -->
 
     <!-- About Us Section Start -->
-	<div class="about-us" id="about-us">
-		<div class="container">
-			<div class="row align-items-center">
-				<div class="col-lg-6">
-					<!-- About Us Content Start -->
-					<div class="about-us-content">
-						<!-- Section Title Start -->
-						<div class="section-title">
-							<h3 class="wow fadeInUp">about us</h3>
-							<h2 class="text-anime-style-3" data-cursor="-opaque">{{ $about->title }}</h2>
-							<p class="wow fadeInUp" data-wow-delay="0.2s">{{ $about->description }}</p>
-						</div>
-						<!-- Section Title End -->
+    <div class="about-us" id="about-us">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <!-- About Us Content Start -->
+                    <div class="about-us-content">
+                        <!-- Section Title Start -->
+                        <div class="section-title">
+                            <h3 class="wow fadeInUp">about us</h3>
+                            <h2 class="text-anime-style-3" data-cursor="-opaque">{{ $about->title }}</h2>
+                            <p class="wow fadeInUp" data-wow-delay="0.2s">{{ $about->description }}</p>
+                        </div>
+                        <!-- Section Title End -->
 
-						<!-- About Us Info List Start -->
-						<div class="about-us-info-list">
-							<div class="about-us-info-item wow fadeInUp" data-wow-delay="0.4s">
-								<h3>{{ $about->tab1_title }}</h3>
-								<p>{{ $about->tab1_content }}</p>
-							</div>
+                        <!-- About Us Info List Start -->
+                        <div class="about-us-info-list">
+                            <div class="about-us-info-item wow fadeInUp" data-wow-delay="0.4s">
+                                <h3>{{ $about->tab1_title }}</h3>
+                                <p>{{ $about->tab1_content }}</p>
+                            </div>
 
-							<div class="about-us-info-item wow fadeInUp" data-wow-delay="0.6s">
-								<h3>{{ $about->tab2_title }}</h3>
-								<p>{{ $about->tab2_content }}</p>
-							</div>
-						</div>
-						<!-- About Us Info List End -->
+                            <div class="about-us-info-item wow fadeInUp" data-wow-delay="0.6s">
+                                <h3>{{ $about->tab2_title }}</h3>
+                                <p>{{ $about->tab2_content }}</p>
+                            </div>
+                        </div>
+                        <!-- About Us Info List End -->
 
-						<!-- About Us Button Start -->
-						<div class="about-us-btn wow fadeInUp" data-wow-delay="0.8s">
-							<a href="{{ $about->button_link }}" class="btn-default">{{ $about->button_text }}</a>
-						</div>
-						<!-- About Us Button End -->
-					</div>
-					<!-- About Us Content End -->
-				</div>
+                        <!-- About Us Button Start -->
+                        <div class="about-us-btn wow fadeInUp" data-wow-delay="0.8s">
+                            <a href="{{ $about->button_link }}" class="btn-default">{{ $about->button_text }}</a>
+                        </div>
+                        <!-- About Us Button End -->
+                    </div>
+                    <!-- About Us Content End -->
+                </div>
 
-				<div class="col-lg-6">
-					<!-- About Us Images Start -->
-					<div class="about-us-images">
-						<!-- About Image 1 Start -->
-						<div class="about-img-1">
-							<figure class="image-anime">
-								<img src="{{ asset($about->image1) }}" alt="About Image 1">
-							</figure>
-						</div>
-						<!-- About Image 1 End -->
+                <div class="col-lg-6">
+                    <!-- About Us Images Start -->
+                    <div class="about-us-images">
+                        <!-- About Image 1 Start -->
+                        <div class="about-img-1">
+                            <figure class="image-anime">
+                                <img src="{{ asset($about->image1) }}" alt="About Image 1">
+                            </figure>
+                        </div>
+                        <!-- About Image 1 End -->
 
-						<!-- About Image 2 Start -->
-						<div class="about-img-2">
-							<figure class="image-anime">
-								<img src="{{ asset($about->image2) }}" alt="About Image 2">
-							</figure>
-						</div>
-						<!-- About Image 2 End -->
+                        <!-- About Image 2 Start -->
+                        <div class="about-img-2">
+                            <figure class="image-anime">
+                                <img src="{{ asset($about->image2) }}" alt="About Image 2">
+                            </figure>
+                        </div>
+                        <!-- About Image 2 End -->
 
-						<!-- Company Timing Start -->
-						<div class="company-timing">
+                        <!-- Company Timing Start -->
+                        <div class="company-timing">
                             <h3>Opening hours</h3>
                             <ul>
                                 @foreach($about->openingHours as $day => $hours)
                                     @if(!empty($hours['from']) && !empty($hours['to']))
                                         <div class="mb-2" style="color: #fff;">
-                                             {{  $hours->day }}
+                                            {{  $hours->day }}
                                             {{ $hours['from'] }} - {{ $hours['to'] }}
                                         </div>
                                     @endif
@@ -184,13 +184,13 @@
                             </figure>
                         </div>
 
-						<!-- Company Timing End -->
-					</div>
-					<!-- About Us Images End -->
-				</div>
-			</div>
-		</div>
-	</div>
+                        <!-- Company Timing End -->
+                    </div>
+                    <!-- About Us Images End -->
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- About Us Section End -->
     @if ($sections['services_section']?->is_active)
@@ -223,9 +223,9 @@
                             <div class="service-item wow fadeInUp" data-wow-delay="{{ $index * 0.2 }}s">
                                 <!-- Service Item Header Start -->
                                 <div class="service-item-header">
-                                   <div class="icon-box">
-                                       <img src="{{ asset($service->icon) }}" alt="{{ $service->name }}">
-                                   </div>
+                                    {{--                                    <div class="icon-box">--}}
+                                    {{--                                        <img src="{{ asset($service->icon) }}" alt="{{ $service->name }}">--}}
+                                    {{--                                    </div>--}}
 
                                     <div class="service-item-content">
                                         <h3><a href="#">{{ $service->name }}</a></h3>
@@ -236,11 +236,11 @@
 
                                 <!-- Service Image Start -->
                                 <div class="service-image">
-{{--                                    <a href="#" data-cursor-text="View">--}}
-                                        <figure class="image-anime">
-                                            <img src="{{ asset($service->image) }}" alt="{{ $service->name }}">
-                                        </figure>
-{{--                                    </a>--}}
+                                    {{--                                    <a href="#" data-cursor-text="View">--}}
+                                    <figure class="image-anime">
+                                        <img src="{{ asset($service->image) }}" alt="{{ $service->name }}">
+                                    </figure>
+                                    {{--                                    </a>--}}
                                 </div>
                                 <!-- Service Image End -->
                             </div>
@@ -252,7 +252,7 @@
                 <div class="col-lg-12">
                     <!-- Service Footer Start -->
                     <div class="service-footer wow fadeInUp" data-wow-delay="0.8s">
-                        <p>{{ $sections['services_section']->note }}</p>
+                        <p>You will be satisfy with our work. Contact us today <a href="tel:123456789">(+91) 123 - 456 789</a></p>
                     </div>
                 </div>
             </div>
@@ -260,85 +260,85 @@
     @endif
 
     <!-- Quick Fact Start -->
-{{--    <div class="quick-facts bg-radius-section">--}}
-{{--        <div class="container">--}}
-{{--            <div class="row section-row align-items-center">--}}
-{{--                <div class="col-lg-6">--}}
-{{--                    <!-- Section Title Start -->--}}
-{{--                    <div class="section-title dark-section">--}}
-{{--                        <h3 class="wow fadeInUp">Some facts</h3>--}}
-{{--                        <h2 class="text-anime-style-3" data-cursor="-opaque">{{$how->name}}</h2>--}}
-{{--                    </div>--}}
-{{--                    <!-- Section Title End -->--}}
-{{--                </div>--}}
+    {{--    <div class="quick-facts bg-radius-section">--}}
+    {{--        <div class="container">--}}
+    {{--            <div class="row section-row align-items-center">--}}
+    {{--                <div class="col-lg-6">--}}
+    {{--                    <!-- Section Title Start -->--}}
+    {{--                    <div class="section-title dark-section">--}}
+    {{--                        <h3 class="wow fadeInUp">Some facts</h3>--}}
+    {{--                        <h2 class="text-anime-style-3" data-cursor="-opaque">{{$how->name}}</h2>--}}
+    {{--                    </div>--}}
+    {{--                    <!-- Section Title End -->--}}
+    {{--                </div>--}}
 
-{{--                <div class="col-lg-6">--}}
-{{--                    <!-- Section Title Content Start -->--}}
-{{--                    <div class="section-title-content dark-section wow fadeInUp" data-wow-delay="0.2s">--}}
-{{--                        <p>{{$how->description}}</p>--}}
-{{--                    </div>--}}
-{{--                    <!-- Section Title Content End -->--}}
-{{--                </div>--}}
-{{--            </div>--}}
+    {{--                <div class="col-lg-6">--}}
+    {{--                    <!-- Section Title Content Start -->--}}
+    {{--                    <div class="section-title-content dark-section wow fadeInUp" data-wow-delay="0.2s">--}}
+    {{--                        <p>{{$how->description}}</p>--}}
+    {{--                    </div>--}}
+    {{--                    <!-- Section Title Content End -->--}}
+    {{--                </div>--}}
+    {{--            </div>--}}
 
-{{--            <div class="row align-items-center">--}}
-{{--                <div class="col-lg-3 col-md-6 col-6 order-lg-1 order-md-1 order-1">--}}
-{{--                    <!-- Fact Counter Box Start -->--}}
-{{--                    <div class="fact-counter-box">--}}
-{{--                        <!-- Fact Counter Item Start -->--}}
-{{--                        <div class="fact-counter-item">--}}
-{{--                            <h3>{{$how->tap1_name}}</h3>--}}
-{{--                            <h2><span class="counter">{{$how->tap1_number}}</span>+</h2>--}}
-{{--                            <p>{{$how->tap1_content}}</p>--}}
-{{--                        </div>--}}
-{{--                        <!-- Fact Counter Item End -->--}}
+    {{--            <div class="row align-items-center">--}}
+    {{--                <div class="col-lg-3 col-md-6 col-6 order-lg-1 order-md-1 order-1">--}}
+    {{--                    <!-- Fact Counter Box Start -->--}}
+    {{--                    <div class="fact-counter-box">--}}
+    {{--                        <!-- Fact Counter Item Start -->--}}
+    {{--                        <div class="fact-counter-item">--}}
+    {{--                            <h3>{{$how->tap1_name}}</h3>--}}
+    {{--                            <h2><span class="counter">{{$how->tap1_number}}</span>+</h2>--}}
+    {{--                            <p>{{$how->tap1_content}}</p>--}}
+    {{--                        </div>--}}
+    {{--                        <!-- Fact Counter Item End -->--}}
 
-{{--                        <!-- Fact Counter Item Start -->--}}
-{{--                        <div class="fact-counter-item">--}}
-{{--                            <h3>{{$how->tap2_name}}</h3>--}}
-{{--                            <h2><span class="counter">{{$how->tap2_number}}</span>k</h2>--}}
-{{--                            <p>{{$how->tap2_content}}</p>--}}
-{{--                        </div>--}}
-{{--                        <!-- Fact Counter Item End -->--}}
-{{--                    </div>--}}
-{{--                    <!-- Fact Counter Box End -->--}}
-{{--                </div>--}}
+    {{--                        <!-- Fact Counter Item Start -->--}}
+    {{--                        <div class="fact-counter-item">--}}
+    {{--                            <h3>{{$how->tap2_name}}</h3>--}}
+    {{--                            <h2><span class="counter">{{$how->tap2_number}}</span>k</h2>--}}
+    {{--                            <p>{{$how->tap2_content}}</p>--}}
+    {{--                        </div>--}}
+    {{--                        <!-- Fact Counter Item End -->--}}
+    {{--                    </div>--}}
+    {{--                    <!-- Fact Counter Box End -->--}}
+    {{--                </div>--}}
 
 
-{{--                <div class="col-lg-3 col-md-6 col-6 order-lg-3 order-md-2 order-2">--}}
-{{--                    <!-- Fact Counter Box Start -->--}}
-{{--                    <div class="fact-counter-box">--}}
-{{--                        <!-- Fact Counter Item Start -->--}}
-{{--                        <div class="fact-counter-item">--}}
-{{--                            <h3>{{$how->tap3_name}}</h3>--}}
-{{--                            <h2><span class="counter">{{$how->tap3_number}}</span>k+</h2>--}}
-{{--                            <p>{{$how->tap3_content}}</p>--}}
-{{--                        </div>--}}
-{{--                        <!-- Fact Counter Item End -->--}}
+    {{--                <div class="col-lg-3 col-md-6 col-6 order-lg-3 order-md-2 order-2">--}}
+    {{--                    <!-- Fact Counter Box Start -->--}}
+    {{--                    <div class="fact-counter-box">--}}
+    {{--                        <!-- Fact Counter Item Start -->--}}
+    {{--                        <div class="fact-counter-item">--}}
+    {{--                            <h3>{{$how->tap3_name}}</h3>--}}
+    {{--                            <h2><span class="counter">{{$how->tap3_number}}</span>k+</h2>--}}
+    {{--                            <p>{{$how->tap3_content}}</p>--}}
+    {{--                        </div>--}}
+    {{--                        <!-- Fact Counter Item End -->--}}
 
-{{--                        <!-- Fact Counter Item Start -->--}}
-{{--                        <div class="fact-counter-item">--}}
-{{--                            <h3>{{$how->tap4_name}}</h3>--}}
-{{--                            <h2><span class="counter">{{$how->tap4_number}}</span>%</h2>--}}
-{{--                            <p>{{$how->tap4_content}}</p>--}}
-{{--                        </div>--}}
-{{--                        <!-- Fact Counter Item End -->--}}
+    {{--                        <!-- Fact Counter Item Start -->--}}
+    {{--                        <div class="fact-counter-item">--}}
+    {{--                            <h3>{{$how->tap4_name}}</h3>--}}
+    {{--                            <h2><span class="counter">{{$how->tap4_number}}</span>%</h2>--}}
+    {{--                            <p>{{$how->tap4_content}}</p>--}}
+    {{--                        </div>--}}
+    {{--                        <!-- Fact Counter Item End -->--}}
 
-{{--                    </div>--}}
+    {{--                    </div>--}}
 
-{{--                    <!-- Fact Counter Box End -->--}}
-{{--                </div>--}}
-{{--                <div class="col-lg-6 order-lg-2 order-md-3 order-3">--}}
-{{--                    <!-- Quick Fact image Start -->--}}
-{{--                    <div class="quick-fact-image">--}}
-{{--                        <img src="{{ asset($how->image) }}" alt="">--}}
-{{--                    </div>--}}
-{{--                    <!-- Quick Fact image End -->--}}
-{{--                </div>--}}
+    {{--                    <!-- Fact Counter Box End -->--}}
+    {{--                </div>--}}
+    {{--                <div class="col-lg-6 order-lg-2 order-md-3 order-3">--}}
+    {{--                    <!-- Quick Fact image Start -->--}}
+    {{--                    <div class="quick-fact-image">--}}
+    {{--                        <img src="{{ asset($how->image) }}" alt="">--}}
+    {{--                    </div>--}}
+    {{--                    <!-- Quick Fact image End -->--}}
+    {{--                </div>--}}
 
-{{--            </div>--}}
-{{--        </div>--}}
-{{--    </div>--}}
+    {{--            </div>--}}
+    {{--        </div>--}}
+    {{--    </div>--}}
     <!-- Quick Fact End -->
 
     @if ($sections['services_section']?->is_active)
@@ -368,34 +368,34 @@
 
                                     <!-- Best Services Box Start -->
                                     <div class="best-services-box">
-{{--                                        @foreach ($services as $index => $service)--}}
+                                        {{--                                        @foreach ($services as $index => $service)--}}
                                         <!-- Best Services Item Start -->
                                         <div class="best-services-item wow fadeInUp" data-wow-delay="{{ $index * 0.2 }}s">
-{{--                                            <div class="icon-box">--}}
-{{--                                                <img src="{{ asset($service->icon) }}" alt="{{ $service->name }}">--}}
-{{--                                            </div>--}}
+                                            {{--                                            <div class="icon-box">--}}
+                                            {{--                                                <img src="{{ asset($service->icon) }}" alt="{{ $service->name }}">--}}
+                                            {{--                                            </div>--}}
 
                                             <div class="best-services-item-content">
-{{--                                                <h3>{{ $service->name }}</h3>--}}
-{{--                                                <p>{{ $service->description }}</p>--}}
+                                                {{--                                                <h3>{{ $service->name }}</h3>--}}
+                                                {{--                                                <p>{{ $service->description }}</p>--}}
                                                 <h3>Thermostat services</h3>
                                                 <p>Smart thermostat setup to improve comfort and reduce energy use.</p>
                                             </div>
                                         </div>
-                                            <div class="best-services-item wow fadeInUp" data-wow-delay="{{ $index * 0.2 }}s">
-                                                {{--                                            <div class="icon-box">--}}
-                                                {{--                                                <img src="{{ asset($service->icon) }}" alt="{{ $service->name }}">--}}
-                                                {{--                                            </div>--}}
+                                        <div class="best-services-item wow fadeInUp" data-wow-delay="{{ $index * 0.2 }}s">
+                                            {{--                                            <div class="icon-box">--}}
+                                            {{--                                                <img src="{{ asset($service->icon) }}" alt="{{ $service->name }}">--}}
+                                            {{--                                            </div>--}}
 
-                                                <div class="best-services-item-content">
-                                                    {{--                                                <h3>{{ $service->name }}</h3>--}}
-                                                    {{--                                                <p>{{ $service->description }}</p>--}}
-                                                    <h3>Airflow balancing</h3>
-                                                    <p>We adjust vents and dampers for even cooling and heating in every room.</p>
-                                                </div>
+                                            <div class="best-services-item-content">
+                                                {{--                                                <h3>{{ $service->name }}</h3>--}}
+                                                {{--                                                <p>{{ $service->description }}</p>--}}
+                                                <h3>Airflow balancing</h3>
+                                                <p>We adjust vents and dampers for even cooling and heating in every room.</p>
                                             </div>
+                                        </div>
                                         <!-- Best Services Item End -->
-{{--                                        @endforeach--}}
+                                        {{--                                        @endforeach--}}
                                     </div>
 
                                     <!-- Best Services Box End -->
@@ -434,13 +434,13 @@
                         <!-- Section Title End -->
                     </div>
 
-{{--                    <div class="col-lg-6">--}}
-{{--                        <!-- Section Title Button Start -->--}}
-{{--                        <div class="section-btn wow fadeInUp" data-wow-delay="0.2s">--}}
-{{--                            <a href="#" class="btn-default">explore more work</a>--}}
-{{--                        </div>--}}
-{{--                        <!-- Section Title Button End -->--}}
-{{--                    </div>--}}
+                    {{--                    <div class="col-lg-6">--}}
+                    {{--                        <!-- Section Title Button Start -->--}}
+                    {{--                        <div class="section-btn wow fadeInUp" data-wow-delay="0.2s">--}}
+                    {{--                            <a href="#" class="btn-default">explore more work</a>--}}
+                    {{--                        </div>--}}
+                    {{--                        <!-- Section Title Button End -->--}}
+                    {{--                    </div>--}}
                 </div>
 
                 <div class="row">
@@ -450,11 +450,11 @@
                             <div class="project-item wow fadeInUp" data-wow-delay="{{ $index * 0.2 }}s">
                                 <!-- Project Image Start -->
                                 <div class="project-image">
-{{--                                    <a href="#" data-cursor-text="View">--}}
-                                        <figure class="image-anime">
-                                            <img src="{{ asset($work->image) }}" alt="{{ $work->title }}">
-                                        </figure>
-{{--                                    </a>--}}
+                                    {{--                                    <a href="#" data-cursor-text="View">--}}
+                                    <figure class="image-anime">
+                                        <img src="{{ asset($work->image) }}" alt="{{ $work->title }}">
+                                    </figure>
+                                    {{--                                    </a>--}}
                                 </div>
                                 <!-- Project Image End -->
 
@@ -493,7 +493,7 @@
                             <!-- Our Testimonial Image Start -->
                             <div class="our-testimonial-image">
                                 <figure class="image-anime">
-                                    <img src="{{ asset($sections['testimonials_section']->image) }}" alt="">
+                                    <img src="{{ asset('frontend_assets/images/testimonial-image.jpg') }}" alt="">
                                 </figure>
                             </div>
                             <!-- Our Testimonial Image End -->
@@ -633,24 +633,9 @@
                                     <!-- Team Social List Start -->
                                     <div class="team-social-list">
                                         <ul>
-                                            @php
-                                                $socialLinks = json_decode($team->social_links, true);
-                                            @endphp
-                                             @if (is_array($socialLinks))
-                                                @foreach ($socialLinks as $platform => $link)
-                                                    @if (!empty($link))
-                                                        <li>
-                                                            <a href="{{ $link }}" target="_blank">
-                                                                <i class="fa-brands fa-{{ $platform }}"></i>
-                                                            </a>
-                                                        </li>
-                                                    @endif
-                                                @endforeach
-                                            @endif
-
-                                            {{-- @foreach(json_decode($team->social_links, true) as $platform => $link)
+                                            @foreach(json_decode($team->social_links, true) as $platform => $link)
                                                 <li><a href="{{ $link }}"><i class="fa-brands fa-{{ $platform }}-p"></i></a></li>
-                                            @endforeach --}}
+                                            @endforeach
                                         </ul>
                                     </div>
                                     <!-- Team Social List End -->
@@ -670,7 +655,7 @@
 
     @if ($sections['faqs_section']?->is_active)
         <!-- Our FAQs Section Start -->
-        <div class="our-faqs parallaxie" style="background-image: url({{ asset($sections['faqs_section']->image) }})">
+        <div class="our-faqs parallaxie">
             <div class="container">
                 <div class="row section-row">
                     <div class="col-lg-6">
