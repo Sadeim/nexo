@@ -42,6 +42,4 @@ class SectionController extends Controller
 
         return response()->json(['success' => true]);
     }
-
-
 }

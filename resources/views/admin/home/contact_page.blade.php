@@ -124,14 +124,14 @@ saveBtn?.addEventListener('click', () => {
             editBtn?.classList.remove('d-none');
             saveBtn?.classList.add('d-none');
 
-            toastr.success("تم تحديث القسم بنجاح");
+            toastr.success("Section updated successfully");
             location.reload(); // لو بدك تغير الصورة المعروضة
         } else {
-            toastr.error("فشل في تحديث القسم");
+            toastr.error("Failed to update section");
         }
     })
     .catch(() => {
-        toastr.error("حدث خطأ أثناء التحديث");
+        toastr.error("An error occurred during the update.");
     });
 });
 
