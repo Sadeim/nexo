@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zxx">
 <head>
 	<!-- Meta -->
 	<meta charset="utf-8">
@@ -7,7 +7,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 	<meta name="description" content="">
 	<meta name="keywords" content="">
-	<meta name="author" content="">
+	<meta name="author" content="Awaiken">
 	<!-- Page Title -->
     <title>Hrs</title>
 	<!-- Favicon Icon -->
@@ -60,7 +60,7 @@
                         </div>
                         <!-- Header Btn Start -->
                         <div class="header-btn d-inline-flex">
-                            <a href="{{ route('contact') }}" class="btn-default">Contact Us</a>
+                            <a href="#" class="btn-default">Get a Quote</a>
                         </div>
                         <!-- Header Btn End -->
 					</div>

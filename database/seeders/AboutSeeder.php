@@ -26,14 +26,14 @@ class AboutSeeder extends Seeder
             // 'tab3_title' => 'Repairing Roofing and Door',
             // 'tab3_content' => 'List item two',
             'button_text' => 'Call Us',
-            'button_link' => route('contact'),
+            'button_link' => 'about.html',
         ]);
 
         OpeningHour::insert([
             ['about_id' => 1, 'day' => 'Monday', 'from' => '09:30', 'to' => '07:30', 'is_closed' => false],
-            ['about_id' => 1, 'day' => 'Tuesday', 'from' => null, 'to' => null, 'is_closed' => true],
+            ['about_id' => 1, 'day' => 'Tuesday', 'from' => '09:30', 'to' => '07:30', 'is_closed' => false],
             ['about_id' => 1, 'day' => 'Wednesday', 'from' => '09:30', 'to' => '07:30', 'is_closed' => false],
-            ['about_id' => 1, 'day' => 'Thursday', 'from' => null, 'to' => null, 'is_closed' => true],
+            ['about_id' => 1, 'day' => 'Thursday', 'from' => '09:30', 'to' => '07:30', 'is_closed' => false],
             ['about_id' => 1, 'day' => 'Friday', 'from' => '09:30', 'to' => '07:30', 'is_closed' => false],
             ['about_id' => 1, 'day' => 'Saturday', 'from' => '09:30', 'to' => '07:30', 'is_closed' => false],
             ['about_id' => 1, 'day' => 'Sunday', 'from' => null, 'to' => null, 'is_closed' => true],
