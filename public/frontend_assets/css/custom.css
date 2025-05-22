@@ -42,7 +42,7 @@
 
 /************************************/
 /*** 	 01. Global Variables	  ***/
-/************************************/	
+/************************************/
 
 :root{
 	--primary-color			: #2C2C2C;
@@ -853,7 +853,7 @@ header.main-header .header-sticky.active{
 
 .client-slider-box .client-logo img{
 	width: 100%;
-	max-height: 40px;
+	max-height: 65px;
 }
 
 .scroll-down-circle-box{
@@ -866,7 +866,7 @@ header.main-header .header-sticky.active{
 }
 
 .scroll-circle-text{
-	position: relative;	
+	position: relative;
 	text-align: center;
 	margin-top: 20px;
 }
@@ -891,7 +891,7 @@ header.main-header .header-sticky.active{
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-		
+
 }
 
 .scroll-down-arrow a{
@@ -1893,7 +1893,7 @@ header.main-header .header-sticky.active{
     aspect-ratio: 1 / 1.141;
     object-fit: cover;
 	border-radius: 20px;
-	transition: all 0.4s ease-in-out; 
+	transition: all 0.4s ease-in-out;
 }
 
 .team-item:hover .team-image img{
@@ -2019,7 +2019,7 @@ header.main-header .header-sticky.active{
     padding-right: 30px;
 }
 
-.faq-accordion .accordion-item .accordion-button::after, 
+.faq-accordion .accordion-item .accordion-button::after,
 .faq-accordion .accordion-item .accordion-button.collapsed::after{
     content: '\2b';
     font-family: 'Font Awesome 6 Free';
@@ -2096,7 +2096,7 @@ header.main-header .header-sticky.active{
     aspect-ratio: 1 / 1.215;
     object-fit: cover;
 	border-radius: 20px;
-	transition: all 0.4s ease-in-out; 
+	transition: all 0.4s ease-in-out;
 }
 
 .post-item:hover .post-featured-image img{
@@ -3335,7 +3335,7 @@ header.main-header .header-sticky.active{
     transition: all 0.3s ease-in-out;
 }
 
-.page-pagination ul li.active a, 
+.page-pagination ul li.active a,
 .page-pagination ul li a:hover{
     background: var(--accent-color);
     color: var(--white-color);
@@ -3356,7 +3356,7 @@ header.main-header .header-sticky.active{
 }
 
 .post-image figure{
-	display: block;	
+	display: block;
 	overflow: hidden;
 }
 
@@ -4881,7 +4881,7 @@ header.main-header .header-sticky.active{
 /************************************/
 
 @media only screen and (max-width: 1024px){
-	
+
 	.main-menu ul li{
 		margin: 0;
 	}
@@ -4913,7 +4913,7 @@ header.main-header .header-sticky.active{
 	.main-menu ul li.highlighted-menu{
 		display: block;
 	}
-	
+
 	.slicknav_nav li,
 	.slicknav_nav ul{
         display: block;
@@ -5279,7 +5279,7 @@ header.main-header .header-sticky.active{
 	.post-meta{
 		margin-bottom: 10px;
 	}
-	
+
 	.main-footer{
 		padding: 50px 0 0 0;
 	}
@@ -6107,7 +6107,7 @@ header.main-header .header-sticky.active{
 	.best-services-image img{
 		aspect-ratio: 1 / 1.088;
 	}
-	
+
 	.project-title h3{
 		font-size: 18px;
 	}
@@ -6557,7 +6557,7 @@ header.main-header .header-sticky.active{
 	.pricing-box-img img{
 		max-width: 38px;
 	}
-	
+
 	.pricing-price h2{
         font-size: 26px;
     }
