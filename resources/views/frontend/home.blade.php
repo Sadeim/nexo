@@ -223,9 +223,9 @@
                             <div class="service-item wow fadeInUp" data-wow-delay="{{ $index * 0.2 }}s">
                                 <!-- Service Item Header Start -->
                                 <div class="service-item-header">
-                                    {{--                                    <div class="icon-box">--}}
-                                    {{--                                        <img src="{{ asset($service->icon) }}" alt="{{ $service->name }}">--}}
-                                    {{--                                    </div>--}}
+                                    <div class="icon-box">
+                                        <img src="{{ asset($service->icon) }}" alt="{{ $service->name }}">
+                                    </div>
 
                                     <div class="service-item-content">
                                         <h3><a href="#">{{ $service->name }}</a></h3>
@@ -252,7 +252,7 @@
                 <div class="col-lg-12">
                     <!-- Service Footer Start -->
                     <div class="service-footer wow fadeInUp" data-wow-delay="0.8s">
-                        <p>You will be satisfy with our work. Contact us today <a href="tel:{{$settings->valueOf('phone')}}">{{$settings->valueOf('phone')}}</a></p>
+                        <p>{{ $sections['services_section']->note }}</p>
                     </div>
                 </div>
             </div>
@@ -493,7 +493,7 @@
                             <!-- Our Testimonial Image Start -->
                             <div class="our-testimonial-image">
                                 <figure class="image-anime">
-                                    <img src="{{ asset('frontend_assets/images/testimonial-image.jpg') }}" alt="">
+                                    <img src="{{ asset($sections['testimonials_section']->image) }}" alt="">
                                 </figure>
                             </div>
                             <!-- Our Testimonial Image End -->
@@ -633,9 +633,24 @@
                                     <!-- Team Social List Start -->
                                     <div class="team-social-list">
                                         <ul>
-                                            @foreach(json_decode($team->social_links, true) as $platform => $link)
+                                            @php
+                                                $socialLinks = json_decode($team->social_links, true);
+                                            @endphp
+                                            @if (is_array($socialLinks))
+                                                @foreach ($socialLinks as $platform => $link)
+                                                    @if (!empty($link))
+                                                        <li>
+                                                            <a href="{{ $link }}" target="_blank">
+                                                                <i class="fa-brands fa-{{ $platform }}"></i>
+                                                            </a>
+                                                        </li>
+                                                    @endif
+                                                @endforeach
+                                            @endif
+
+                                            {{-- @foreach(json_decode($team->social_links, true) as $platform => $link)
                                                 <li><a href="{{ $link }}"><i class="fa-brands fa-{{ $platform }}-p"></i></a></li>
-                                            @endforeach
+                                            @endforeach --}}
                                         </ul>
                                     </div>
                                     <!-- Team Social List End -->
@@ -655,7 +670,7 @@
 
     @if ($sections['faqs_section']?->is_active)
         <!-- Our FAQs Section Start -->
-        <div class="our-faqs parallaxie">
+        <div class="our-faqs parallaxie" style="background-image: url({{ asset($sections['faqs_section']->image) }})">
             <div class="container">
                 <div class="row section-row">
                     <div class="col-lg-6">
