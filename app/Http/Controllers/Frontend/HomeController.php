@@ -176,7 +176,7 @@ class HomeController extends Controller
         $data['works'] = Work::get();
         $data['categories'] = Category::get();
         $data['sections'] = Section::whereIn('key', [
-            'work_page',
+            'works_section',
             'projects_section',
         ])->get()->keyBy('key');
         return view('frontend.projects', $data);

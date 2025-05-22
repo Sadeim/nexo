@@ -115,9 +115,5 @@ class SectionSeeder extends Seeder
             'key' => 'contact_page',
             'image' => 'contact.jpg',
         ]);
-        Section::create([
-            'key' => 'work_page',
-            'image' => 'contact.jpg',
-        ]);
     }
 }
