@@ -384,107 +384,87 @@ return [
         'testimonial'  => 'Testimonial',
         'testimonials'  => 'Testimonials',
         'add_new_testimonial'  => 'Add new testimonial',
-        'edit_testimonial'  => 'Edit testimonial',
 
         'service'  => 'Service',
         'services'  => 'Services',
         'add_new_service'  => 'Add new service',
-        'edit_service'  => 'Edit service',
 
         'newsletter'  => 'Newsletter',
         'newsletters'  => 'Newsletters',
         'add_new_newsletter'  => 'Add new newsletter',
-        'edit_newsletter'  => 'Edit newsletter',
 
         'testimonial'            => 'Testimonial',
         'testimonials'           => 'Testimonials',
         'add_new_testimonial'    => 'Add new testimonial',
-        'edit_testimonial'       => 'Edit testimonial',
 
         'faq'                    => 'FAQ',
         'faqs'                   => 'FAQs',
         'add_new_faq'            => 'Add new FAQ',
-        'edit_faq'               => 'Edit FAQ',
 
         'blog'                   => 'Blog',
         'blogs'                  => 'Blogs',
         'add_new_blog'           => 'Add new blog',
-        'edit_blog'              => 'Edit blog',
 
         'about'                  => 'About',
         'abouts'                 => 'About Sections',
         'add_new_about'          => 'Add new about section',
-        'edit_about'             => 'Edit about section',
 
         'achievement'            => 'Achievement',
         'achievements'           => 'Achievements',
         'add_new_achievement'    => 'Add new achievement',
-        'edit_achievement'       => 'Edit achievement',
 
         'team'                   => 'Team Member',
         'teams'                  => 'Team Members',
         'add_new_team'           => 'Add new team member',
-        'edit_team'              => 'Edit team member',
 
         'skill'                  => 'Skill',
         'skills'                 => 'Skills',
         'add_new_skill'          => 'Add new skill',
-        'edit_skill'             => 'Edit skill',
 
         'banner'                 => 'Banner',
         'banners'                => 'Banners',
         'add_new_banner'         => 'Add new banner',
-        'edit_banner'            => 'Edit banner',
 
         'reason'                 => 'Reason',
         'reasons'                => 'Reasons',
         'add_new_reason'         => 'Add new reason',
-        'edit_reason'            => 'Edit reason',
 
         'client'                 => 'Client',
         'clients'                => 'Clients',
         'add_new_client'         => 'Add new client',
-        'edit_client'            => 'Edit client',
 
         'work'                 => 'Work',
         'works'                => 'Works',
         'add_new_work'         => 'Add new work',
-        'edit_work'            => 'Edit work',
 
         'booking'                 => 'Booking',
         'bookings'                => 'Bookings',
         'add_new_booking'         => 'Add new booking',
-        'edit_booking'            => 'Edit booking',
 
         'contact'                 => 'Contact',
         'contacts'                => 'Contacts',
         'add_new_contact'         => 'Add new contact',
-        'edit_contact'            => 'Edit contact',
 
         'event'                 => 'Event',
         'events'                => 'Events',
         'add_new_event'         => 'Add new event',
-        'edit_event'            => 'Edit event',
 
         'instagram'                 => 'Instagram',
         'instagrams'                => 'Instagrams',
         'add_new_instagram'         => 'Add new instagram',
-        'edit_instagram'            => 'Edit instagram',
 
         'menu_item'                 => 'Menu item',
         'menu_items'                => 'Menu items',
         'add_new_menu_item'         => 'Add new menu item',
-        'edit_menu_item'            => 'Edit menu item',
 
         'slider'                 => 'Slider',
         'sliders'                => 'Sliders',
         'add_new_slider'         => 'Add new slider',
-        'edit_slider'            => 'Edit slider',
 
         'approach'                 => 'Approach',
         'approaches'                => 'Approaches',
         'add_new_approach'         => 'Add new approach',
-        'edit_approach'            => 'Edit approach',
+
     ],
 
     'roles' => [
