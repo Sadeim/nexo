@@ -124,7 +124,7 @@ class HomeController extends Controller
     {
         $data['instagrams'] = Instagram::get();
         $data['about'] = About::first();
-        $data['section'] = Section::where('key', 'contact_section')->first();
+        $data['section'] = Section::where('key', 'contact_page')->first();
         return view('frontend.contact_us', $data);
     }
 
