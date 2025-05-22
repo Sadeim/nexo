@@ -84,7 +84,8 @@ saveBtn?.addEventListener('click', () => {
     });
 });
 document.getElementById('section_toggle')?.addEventListener('change', function () {
-    const url = this.dataset.url;
+    const toggle = this;
+    const url = toggle.dataset.url;
 
     fetch(url, {
         method: 'POST',
@@ -96,7 +97,18 @@ document.getElementById('section_toggle')?.addEventListener('change', function (
     })
     .then(response => response.json())
     .then(data => {
-        const label = this.nextElementSibling;
-        label.textContent = data.is_active ? 'Visible' : 'Hidden';
+        const label = toggle.nextElementSibling;
+        if (data.is_active) {
+            label.textContent = 'Visible';
+            toastr.success('Activated successfully');
+        } else {
+            label.textContent = 'Hidden';
+            toastr.success('Cancelled successfully');
+        }
+    })
+    .catch(() => {
+        // لو صار خطأ نرجع التبديل لحالته السابقة
+        toggle.checked = !toggle.checked;
+        toastr.error('An error occurred while attempting to activate/cancel');
     });
 });

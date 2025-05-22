@@ -108,3 +108,32 @@ saveBtn?.addEventListener('click', () => {
         toastr.error("An error occurred during the update.");
     });
 });
+document.getElementById('section_toggle')?.addEventListener('change', function () {
+    const toggle = this;
+    const url = toggle.dataset.url;
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': $('#csrf_token').attr('content'),
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        const label = toggle.nextElementSibling;
+        if (data.is_active) {
+            label.textContent = 'Visible';
+            toastr.success('Activated successfully');
+        } else {
+            label.textContent = 'Hidden';
+            toastr.success('Cancelled successfully');
+        }
+    })
+    .catch(() => {
+        // لو صار خطأ نرجع التبديل لحالته السابقة
+        toggle.checked = !toggle.checked;
+        toastr.error('An error occurred while attempting to activate/cancel');
+    });
+});
