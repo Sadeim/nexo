@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Mail\AdminNotification;
 use App\Models\About;
+use App\Models\Achievement;
 use App\Models\Blog;
 use App\Models\Booking;
 use App\Models\Category;
@@ -46,6 +47,7 @@ class HomeController extends Controller
         $data['faqs'] = Faq::get();
         $data['blogs'] = Blog::get();
         $data['clients'] = Client::get();
+        $data['achievements'] = Achievement::get();
         $data['sections'] = Section::whereIn('key', [
             'services_section',
             'testimonials_section',
