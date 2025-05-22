@@ -20,12 +20,12 @@
                             <div class="col-8 col-sm-12 col-md-9 col-lg-9">
                                 <div class="card-toolbar flex-row-fluid d-flex justify-content-end gap-5">
                                     <!--Add new user start-->
-                                    <a class="btn btn-primary" href="{{ route('admin.approaches.create') }}">
+                                    {{-- <a class="btn btn-primary" href="{{ route('admin.approaches.create') }}">
                                         {{ __('admin.global.add_new_approach') }}
                                         <span class="svg-icon svg-icon-2">
                                             +
                                         </span>
-                                    </a>
+                                    </a> --}}
                                 </div>
                             </div>
                         </div>

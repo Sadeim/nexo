@@ -372,10 +372,6 @@
                                         @foreach ($achievements as $index => $service)
                                             <!-- Best Services Item Start -->
                                             <div class="best-services-item wow fadeInUp" data-wow-delay="{{ $index * 0.2 }}s">
-                                                {{--                                            <div class="icon-box">--}}
-                                                {{--                                                <img src="{{ asset($service->icon) }}" alt="{{ $service->name }}">--}}
-                                                {{--                                            </div>--}}
-
                                                 <div class="best-services-item-content">
                                                     <h3>{{ $service->title }}</h3>
                                                     <p>{{ $service->description }}</p>

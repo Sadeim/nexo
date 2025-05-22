@@ -93,7 +93,14 @@ saveBtn?.addEventListener('click', () => {
             toastr.success("Section updated successfully");
             location.reload(); // لإظهار الصورة الجديدة فورًا
         } else {
-            toastr.error("Failed to update section");
+            if (data.errors) {
+                // عرض أول رسالة خطأ فقط
+                const firstKey = Object.keys(data.errors)[0];
+                const firstError = data.errors[firstKey][0];
+                toastr.error(firstError);
+            } else {
+                toastr.error("Failed to update section");
+            }    
         }
     })
     .catch(() => {

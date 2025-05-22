@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Traits\SaveImageTrait;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class SectionController extends Controller
 {
@@ -25,12 +26,16 @@ class SectionController extends Controller
 
     public function update(Request $request, Section $section)
     {
-        $request->validate([
+        $validation = Validator::make($request->all(), [
             'title' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'note' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
+
+        if ($validation->fails()) {
+            return response()->json(['success' => false, 'errors' => $validation->errors()]);
+        }
 
         $data = $request->only('title', 'description', 'note');
 
