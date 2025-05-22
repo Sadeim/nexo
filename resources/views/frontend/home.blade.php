@@ -252,7 +252,7 @@
                 <div class="col-lg-12">
                     <!-- Service Footer Start -->
                     <div class="service-footer wow fadeInUp" data-wow-delay="0.8s">
-                        <p>You will be satisfy with our work. Contact us today <a href="tel:123456789">(+91) 123 - 456 789</a></p>
+                        <p>You will be satisfy with our work. Contact us today <a href="tel:{{$settings->valueOf('phone')}}">{{$settings->valueOf('phone')}}</a></p>
                     </div>
                 </div>
             </div>
