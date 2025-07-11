@@ -67,7 +67,7 @@ class LoginController extends Controller
             return $response;
         }
 
-        return redirect()->route('admin.home');
+        return redirect()->intended(route('admin.home'));
     }
 
     protected function sendFailedLoginResponse(Request $request)

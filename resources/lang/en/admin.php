@@ -381,10 +381,6 @@ return [
 
         'user_management' => 'User management',
 
-        'testimonial'  => 'Testimonial',
-        'testimonials'  => 'Testimonials',
-        'add_new_testimonial'  => 'Add new testimonial',
-
         'service'  => 'Service',
         'services'  => 'Services',
         'add_new_service'  => 'Add new service',

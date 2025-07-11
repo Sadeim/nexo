@@ -34,8 +34,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\HowWorkController;
 
     /* ------------------------------------- Auth Routes --------------------------------- */
-    Route::get('admin/login', [LoginController::class, 'showLoginForm'])->name('admin.login');
-    Route::post('admin/login', [LoginController::class, 'login'])->name('admin.login.post');
+    Route::get('admin/login', [LoginController::class, 'showLoginForm'])->middleware('guest:admin')->name('admin.login');
+    Route::post('admin/login', [LoginController::class, 'login'])->middleware('guest:admin')->name('admin.login.post');
     Route::post('admin/logout', [LoginController::class, 'logout'])->name('admin.logout');
     /* ------------------------------------- Admin Dashboard --------------------------------- */
     Route::group(['middleware' => ['auth:admin', 'admin'], 'prefix' => 'admin', 'as' => 'admin.'], function () {
