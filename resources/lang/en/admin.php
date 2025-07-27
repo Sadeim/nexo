@@ -279,6 +279,7 @@ return [
         'lat'  => 'Latitude',
         'lng'  => 'Longitude',
         'name_and_description'  => 'Name and description',
+        'name_and_description_and_price'  => 'Name and description and price',
 
         'categories'  => 'Categories',
         'add_new_category'  => 'Add new category',
@@ -292,6 +293,7 @@ return [
         'product_name'  => 'Product name',
         'product_description'  => 'Product description',
         'product_category'  => 'Product category',
+        'product_price'  => 'Product price',
 
         'coupon'  => 'Coupon',
         'coupons'  => 'Coupons',

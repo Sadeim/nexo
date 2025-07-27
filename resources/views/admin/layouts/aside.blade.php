@@ -63,7 +63,8 @@
                     </div>
                 @endif
 
-                <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ $is_active_parent == 'home' ? 'here show' : '' }}">
+                <div data-kt-menu-trigger="click"
+                    class="menu-item menu-accordion {{ $is_active_parent == 'home' ? 'here show' : '' }}">
                     <span class="menu-link menu-accordion">
                         <span class="menu-icon">
                             <span class="svg-icon svg-icon-2">
@@ -101,6 +102,7 @@
                         </div>
                     @endif
 
+
                     @if (auth()->user()->can('view_services'))
                         <div class="menu-sub menu-sub-accordion">
                             <div class="menu-item">
@@ -119,7 +121,7 @@
                             <a class="menu-link {{ $is_active == 'achievements' ? 'active' : '' }}"
                                 href="{{ route('admin.achievements.index') }}">
                                 <span class="menu-bullet">
-                                        <i class="fa-solid fa-trophy"></i>
+                                    <i class="fa-solid fa-trophy"></i>
                                 </span>
                                 <span class="menu-title">{{ __('admin.global.achievements') }}</span>
                             </a>
@@ -156,7 +158,7 @@
                         <div class="menu-sub menu-sub-accordion">
                             <div class="menu-item">
                                 <a class="menu-link {{ $is_active == 'how' ? 'active' : '' }}"
-                                   href="{{ route('admin.how.index') }}">
+                                    href="{{ route('admin.how.index') }}">
                                     <span class="menu-bullet">
                                         <i class="fa-solid fa-briefcase"></i>
                                     </span>
@@ -224,7 +226,8 @@
 
                 </div>
 
-                <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ $is_active_parent == 'about' ? 'here show' : '' }}">
+                <div data-kt-menu-trigger="click"
+                    class="menu-item menu-accordion {{ $is_active_parent == 'about' ? 'here show' : '' }}">
                     <span class="menu-link menu-accordion">
                         <span class="menu-icon">
                             <span class="svg-icon svg-icon-2">
@@ -234,7 +237,7 @@
                         <span class="menu-title">About Page</span>
                         <span class="menu-arrow"></span>
                     </span>
-                     <div class="menu-sub menu-sub-accordion">
+                    <div class="menu-sub menu-sub-accordion">
                         <div class="menu-item">
                             <a class="menu-link {{ $is_active == 'about_page' ? 'active' : '' }}"
                                 href="{{ route('admin.about_page.index') }}">
@@ -246,63 +249,63 @@
                         </div>
                     </div>
                     @if (auth()->user()->can('view_skills'))
-                    <div class="menu-sub menu-sub-accordion">
-                        <div class="menu-item">
-                            <a class="menu-link {{ $is_active == 'skills' ? 'active' : '' }}"
-                                href="{{ route('admin.skills.index') }}">
-                                <span class="menu-bullet">
-                                    <i class="fa-solid fa-brain"></i> {{-- skills --}}
-                                </span>
-                                <span class="menu-title">{{ __('admin.global.skills') }}</span>
-                            </a>
+                        <div class="menu-sub menu-sub-accordion">
+                            <div class="menu-item">
+                                <a class="menu-link {{ $is_active == 'skills' ? 'active' : '' }}"
+                                    href="{{ route('admin.skills.index') }}">
+                                    <span class="menu-bullet">
+                                        <i class="fa-solid fa-brain"></i> {{-- skills --}}
+                                    </span>
+                                    <span class="menu-title">{{ __('admin.global.skills') }}</span>
+                                </a>
+                            </div>
                         </div>
-                    </div>
-                @endif
-                
-                @if (auth()->user()->can('view_reasons'))
-                    <div class="menu-sub menu-sub-accordion">
-                        <div class="menu-item">
-                            <a class="menu-link {{ $is_active == 'reasons' ? 'active' : '' }}"
-                                href="{{ route('admin.reasons.index') }}">
-                                <span class="menu-bullet">
-                                    <i class="fa-solid fa-lightbulb"></i> {{-- reasons --}}
-                                </span>
-                                <span class="menu-title">{{ __('admin.global.reasons') }}</span>
-                            </a>
+                    @endif
+
+                    @if (auth()->user()->can('view_reasons'))
+                        <div class="menu-sub menu-sub-accordion">
+                            <div class="menu-item">
+                                <a class="menu-link {{ $is_active == 'reasons' ? 'active' : '' }}"
+                                    href="{{ route('admin.reasons.index') }}">
+                                    <span class="menu-bullet">
+                                        <i class="fa-solid fa-lightbulb"></i> {{-- reasons --}}
+                                    </span>
+                                    <span class="menu-title">{{ __('admin.global.reasons') }}</span>
+                                </a>
+                            </div>
                         </div>
-                    </div>
-                @endif
-                
-                @if (auth()->user()->can('view_approaches'))
-                    <div class="menu-sub menu-sub-accordion">
-                        <div class="menu-item">
-                            <a class="menu-link {{ $is_active == 'approaches' ? 'active' : '' }}"
-                                href="{{ route('admin.approaches.index') }}">
-                                <span class="menu-bullet">
-                                    <i class="fa-solid fa-route"></i> {{-- approaches --}}
-                                </span>
-                                <span class="menu-title">Approaches</span>
-                            </a>
+                    @endif
+
+                    @if (auth()->user()->can('view_approaches'))
+                        <div class="menu-sub menu-sub-accordion">
+                            <div class="menu-item">
+                                <a class="menu-link {{ $is_active == 'approaches' ? 'active' : '' }}"
+                                    href="{{ route('admin.approaches.index') }}">
+                                    <span class="menu-bullet">
+                                        <i class="fa-solid fa-route"></i> {{-- approaches --}}
+                                    </span>
+                                    <span class="menu-title">Approaches</span>
+                                </a>
+                            </div>
                         </div>
-                    </div>
-                @endif
-                
-                @if (auth()->user()->can('view_how'))
-                    <div class="menu-sub menu-sub-accordion">
-                        <div class="menu-item">
-                            <a class="menu-link {{ $is_active == 'how' ? 'active' : '' }}"
-                                href="{{ route('admin.how.index') }}">
-                                <span class="menu-bullet">
-                                    <i class="fa-solid fa-gears"></i> {{-- how we work --}}
-                                </span>
-                                <span class="menu-title">How We Work</span>
-                            </a>
+                    @endif
+
+                    @if (auth()->user()->can('view_how'))
+                        <div class="menu-sub menu-sub-accordion">
+                            <div class="menu-item">
+                                <a class="menu-link {{ $is_active == 'how' ? 'active' : '' }}"
+                                    href="{{ route('admin.how.index') }}">
+                                    <span class="menu-bullet">
+                                        <i class="fa-solid fa-gears"></i> {{-- how we work --}}
+                                    </span>
+                                    <span class="menu-title">How We Work</span>
+                                </a>
+                            </div>
                         </div>
-                    </div>
-                @endif
-                
+                    @endif
+
                 </div>
-                    
+
                 {{-- @if (auth()->user()->can('view_banners'))
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'banners' ? 'here show' : '' }}">
                         <span class="menu-link {{ $is_active == 'banners' ? 'active' : '' }}">
@@ -320,6 +323,19 @@
                         </span>
                     </div>
                 @endif --}}
+                {{-- @if (auth()->user()->can('view_products'))
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a class="menu-link {{ $is_active == 'products' ? 'active' : '' }}"
+                                href="{{ route('admin.products.index') }}">
+                                <span class="menu-bullet">
+                                    <i class="fa-solid fa-layer-group"></i>
+                                </span>
+                                <span class="menu-title">{{ __('admin.global.products') }}</span>
+                            </a>
+                        </div>
+                    </div>
+                @endif --}}
 
                 @if (auth()->user()->can('view_blogs'))
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'blogs' ? 'here show' : '' }}">
@@ -333,6 +349,23 @@
                                 <a class="{{ $is_active == 'blogs' ? 'active' : '' }}"
                                     href="{{ route('admin.blogs.index') }}">
                                     <span class="menu-title">{{ __('admin.global.blogs') }}</span>
+                                </a>
+                            </span>
+                        </span>
+                    </div>
+                @endif
+                @if (auth()->user()->can('view_products'))
+                    <div class="menu-item menu-accordion {{ $is_active_parent == 'products' ? 'here show' : '' }}">
+                        <span class="menu-link {{ $is_active == 'products' ? 'active' : '' }}">
+                            <span class="menu-icon">
+                                <span class="menu-bullet">
+                                    <i class="fa-solid fa-layer-group"></i>
+                                </span>
+                            </span>
+                            <span class="menu-title">
+                                <a class="{{ $is_active == 'products' ? 'active' : '' }}"
+                                    href="{{ route('admin.products.index') }}">
+                                    <span class="menu-title">{{ __('admin.global.products') }}</span>
                                 </a>
                             </span>
                         </span>
@@ -633,6 +666,7 @@
                         </span>
                     </div>
                 @endif
+
                 {{-- <div class="menu-item menu-accordion {{ $is_active_parent == 'logout' ? 'here show' : '' }}">
                     <span class="menu-link">
                         <span class="menu-icon">

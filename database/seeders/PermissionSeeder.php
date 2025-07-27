@@ -18,6 +18,7 @@ class PermissionSeeder extends Seeder
         $admin_parents = [
             // 'admins' => ['view', 'add', 'edit', 'delete'],
             // 'users' => ['view', 'add', 'edit', 'delete'],
+            'products' => ['view', 'add', 'edit', 'delete'],
             'categories' => ['view', 'add', 'edit', 'delete'],
             'static_pages' => ['view', 'add', 'edit', 'delete'],
             'newsletters' => ['view', 'add', 'edit', 'delete'],

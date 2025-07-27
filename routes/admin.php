@@ -32,6 +32,7 @@ use App\Http\Controllers\Admin\WorkController;
 use App\Http\Controllers\Admin\ApproachController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\HowWorkController;
+use App\Http\Controllers\Admin\ProductController;
 
     /* ------------------------------------- Auth Routes --------------------------------- */
     Route::get('admin/login', [LoginController::class, 'showLoginForm'])->middleware('guest:admin')->name('admin.login');
@@ -40,6 +41,13 @@ use App\Http\Controllers\Admin\HowWorkController;
     /* ------------------------------------- Admin Dashboard --------------------------------- */
     Route::group(['middleware' => ['auth:admin', 'admin'], 'prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::get('/', [HomeController::class, 'index'])->name('home');
+
+        /* ------------------------------------- Product Routes --------------------------------- */
+        Route::resource('products', ProductController::class);
+        Route::group(['prefix' => 'products', 'as' => 'products.'], function () {
+             Route::get('data/datatables', [ProductController::class , 'datatable'])->name('datatable');
+        });
+        /* ------------------------------------- Product Routes --------------------------------- */
 
         /* ------------------------------------- Category Routes --------------------------------- */
         Route::resource('categories', CategoryController::class);

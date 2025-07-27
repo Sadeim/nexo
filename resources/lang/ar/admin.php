@@ -277,6 +277,9 @@ return [
         'need_review'  => 'يحتاج مراجعة',
         'completed'  => 'مكتمل',
         'name_and_description'  => 'الاسم والوصف',
+        'name_and_description_and_price'  => 'الاسم والوصف والسعر',
+
+        
 
         'categories'  => 'التصنيفات',
         'add_new_category'  => 'إضافة تصنيف جديد',
@@ -290,6 +293,7 @@ return [
         'product_name'  => 'اسم المنتج',
         'product_description'  => 'وصف المنتج',
         'product_category'  => 'تصنيف المنتج',
+        'product_price'  => 'سعر المنتج',
 
         'coupon'  => 'الكوبون',
         'coupons'  => 'الكوبونات',
