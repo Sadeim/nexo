@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\CreateProductRequest;
 use App\Http\Requests\Product\UpdateProductRequest;
+use App\Models\Attribute;
 use App\Models\Product;
+use App\Models\Variant;
 use App\Traits\SaveImageTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -43,8 +45,8 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
-        return view('admin.products.create');
+        $data['attributes'] = Attribute::active()->get();
+        return view('admin.products.create', $data);
     }
 
     /**
@@ -55,14 +57,45 @@ class ProductController extends Controller
         //
         $data = $request->only('name', 'price', 'description', 'image');
 
+        $product = Product::create($data);
+
         try {
             DB::beginTransaction();
 
-            if ($request->hasFile('image')) {
-                $data['image'] = $this->uploadImage($request->image, 'product_images');
+            // if ($request->hasFile('image')) {
+            //     $data['image'] = $this->uploadImage($request->image, 'product_images');
+            // }
+            if ($request->has('variants')) {
+                foreach ($request->variants as $variantData) {
+                 
+                      $variant = $product->variants()->create([
+                        'price' => $variantData['price'],
+                         'sku' => $variantData['sku'] ?? null,
+                    ]);
+
+                  
+                    if (!empty($variantData['attribute_values'])) {
+                        $attributesToSync = [];
+                        foreach ($variantData['attribute_values'] as $value_id) {
+                            if ($value_id !== null) {
+                                $attributesToSync[] = $value_id;
+                            }
+                        }
+                        $variant->attributeValues()->sync($attributesToSync);
+                    }
+
+                    $variant->inventory()->create([
+                        'quantity' => $variantData['quantity'] ?? 0,
+                    ]);
+                }
+            } else {
+                $product->price = $request->price;
+                $product->save();
             }
 
-            Product::create($data);
+             if (!empty($request->media_repeater)) {
+                $product->storeProductImages($product, $request->media_repeater);
+            }
 
             DB::commit();
             return $this->response_api(200, __('admin.form.added_successfully'), '');
@@ -87,6 +120,7 @@ class ProductController extends Controller
     {
         //
         $data['product'] = Product::findOrFail($id);
+        $data['attributes'] = Attribute::active()->get();
         return view('admin.products.create', $data);
     }
 
@@ -101,12 +135,58 @@ class ProductController extends Controller
         try {
             DB::beginTransaction();
 
-            if ($request->hasFile('image')) {
-                $data['image'] = $this->uploadImage($request->image, 'product_images');
-            }
+            // if ($request->hasFile('image')) {
+            //     $data['image'] = $this->uploadImage($request->image, 'product_images');
+            // }
 
             $product = Product::findOrFail($id);
             $product->update($data);
+
+                if ($request->has('variants')) {
+                foreach ($request->variants as $variantData) {
+                    if (!empty($variantData['id'])) {
+                        $variant = Variant::find($variantData['id']);
+
+                        if ($variant) {
+                            $variant->update([
+                                'price' => $variantData['price'],
+                                'sku'   => $variantData['sku'] ?? null,
+                            ]);
+
+                            // تحديث الكمية عبر علاقة polymorphic
+                            $variant->inventory()->updateOrCreate(
+                                [], // لا شرط، لأنه morphOne مرتبط بـ variant
+                                ['quantity' => $variantData['quantity'] ?? 0]
+                            );
+                        }
+                    } else {
+                        $variant = $product->variants()->create([
+                            'price' => $variantData['price'],
+                            'sku'   => $variantData['sku'] ?? null,
+                        ]);
+
+                        $variant->inventory()->create([
+                            'quantity' => $variantData['quantity'] ?? 0,
+                        ]);
+                    }
+
+                    if (!empty($variantData['attribute_values']) && is_array($variantData['attribute_values'])) {
+                        $attributesToSync = array_filter(array_values($variantData['attribute_values']));
+                        $variant->attributeValues()->sync($attributesToSync);
+                    }
+                }
+            } else {
+                $product->price = $request->price;
+                $product->save();
+
+                $product->inventory()->updateOrCreate(
+                    [], // لا شرط، لأنه morphOne مرتبط بـ product
+                    ['quantity' => $request->quantity ?? 0]
+                );
+            }
+              if (!empty($request->media_repeater)) {
+                $product->updateProductImages($product, $request->media_repeater);
+            }
 
             DB::commit();
             return $this->response_api(200, __('admin.form.updated_successfully'), '');

@@ -371,6 +371,40 @@
                         </span>
                     </div>
                 @endif
+                                @if(auth()->user()->can('view_attributes')) 
+                    <div class="menu-item menu-accordion {{ $is_active_parent == 'attributes' ? 'here show' : '' }}">
+                        <span class="menu-link {{ $is_active == 'attributes' ? 'active' : '' }}">
+                            <span class="menu-icon">
+                                <span class="svg-icon svg-icon-2">
+                                    <i class="fa-solid fa-sliders-h"></i>
+                                </span>
+                            </span>
+                            <span class="menu-title">
+                                <a class="{{ $is_active == 'attributes' ? 'active' : '' }}"
+                                    href="{{ route('admin.attributes.index')}}">
+                                    <span class="menu-title">{{ __('admin.menu.attributes') }}</span>
+                                </a>    
+                            </span>                        
+                        </span>
+                    </div>
+                @endif
+                @if(auth()->user()->can('view_attribute_values')) 
+                    <div class="menu-item menu-accordion {{ $is_active_parent == 'attribute_values' ? 'here show' : '' }}">
+                        <span class="menu-link {{ $is_active == 'attribute_values' ? 'active' : '' }}">
+                            <span class="menu-icon">
+                                <span class="svg-icon svg-icon-2">
+                                    <i class="fa-solid fa-bars"></i>
+                                </span>
+                            </span>
+                            <span class="menu-title">
+                                <a class="{{ $is_active == 'attribute_values' ? 'active' : '' }}"
+                                    href="{{ route('admin.attribute_values.index')}}">
+                                    <span class="menu-title">{{ __('admin.menu.attribute_values') }}</span>
+                                </a>    
+                            </span>                        
+                        </span>
+                    </div>
+                @endif
                 {{-- @if (auth()->user()->can('view_categories'))
                     <div class="menu-sub menu-sub-accordion">
                         <div class="menu-item">

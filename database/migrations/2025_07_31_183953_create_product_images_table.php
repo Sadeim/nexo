@@ -11,22 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('products', function (Blueprint $table) {
+        Schema::create('product_images', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); 
-            $table->string('image')->nullable(); 
-            $table->decimal('price', 10, 2)->nullable(); // Price with 10 digits total and 2 decimal places
-            $table->text('description')->nullable();
+            $table->foreignId('product_id')->constrained('products', 'id')->onDelete('cascade');
+            $table->integer('pos')->default(1);
+            $table->string('image_title')->nullable();
+            $table->string('path');
             $table->timestamps();
         });
     }
 
     /**
      * Reverse the migrations.
-     *  $table->id();
      */
     public function down(): void
     {
-        Schema::dropIfExists('products');
+        Schema::dropIfExists('product_images');
     }
 };

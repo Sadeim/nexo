@@ -16,10 +16,18 @@ class ProductResource extends JsonResource
     {
         $operations = view('admin.products.sub.operations', ['instance' => $this])->render();
 
+        
+        if($this->variants->count()){
+            $price = $this->variants()->first()->price;
+        }else{
+            $price = $this->price;
+        }
+        
+
         return [
             'id'          => $this->id,
             'name'        => $this->name,
-            'price'       => number_format($this->price, 2), // format like "19.99"
+            'price'       => $price, 
             'description' => $this->description ?? '-',
             'operations'  => $operations,
         ];

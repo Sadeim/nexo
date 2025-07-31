@@ -11,22 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('products', function (Blueprint $table) {
+        Schema::create('attributes', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); 
-            $table->string('image')->nullable(); 
-            $table->decimal('price', 10, 2)->nullable(); // Price with 10 digits total and 2 decimal places
-            $table->text('description')->nullable();
+            $table->string('name');
+            $table->string('description')->nullable();
+            $table->string('slug')->nullable();
+            $table->tinyInteger('status')->default(1);
             $table->timestamps();
         });
     }
 
     /**
      * Reverse the migrations.
-     *  $table->id();
      */
     public function down(): void
     {
-        Schema::dropIfExists('products');
+        Schema::dropIfExists('attributes');
     }
 };

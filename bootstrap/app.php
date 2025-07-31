@@ -34,7 +34,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'auth' => \App\Http\Middleware\Authenticate::class,
             'admin' => \App\Http\Middleware\Admin::class,
             // 'OAuth2'    => \App\Http\Middleware\OAuth2::class,
-            // 'Image' => Intervention\Image\Facades\Image::class,
+            'Image' => Intervention\Image\Facades\Image::class,
             'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
             'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         ]);

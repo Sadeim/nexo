@@ -18,6 +18,8 @@ class PermissionSeeder extends Seeder
         $admin_parents = [
             // 'admins' => ['view', 'add', 'edit', 'delete'],
             // 'users' => ['view', 'add', 'edit', 'delete'],
+            'attributes' => ['view', 'add', 'edit', 'delete'],
+            'attribute_values' => ['view', 'add', 'edit', 'delete'],
             'products' => ['view', 'add', 'edit', 'delete'],
             'categories' => ['view', 'add', 'edit', 'delete'],
             'static_pages' => ['view', 'add', 'edit', 'delete'],
@@ -49,7 +51,7 @@ class PermissionSeeder extends Seeder
         ];
         foreach ($admin_parents as $parent => $types) {
             foreach ($types as $type) {
-                Permission::create(['name_key' => $type, 'guard_name'=>'admin', 'name' => "$type" . "_" . $parent, 'parent' => $parent]);
+                Permission::create(['name_key' => $type, 'guard_name' => 'admin', 'name' => "$type" . "_" . $parent, 'parent' => $parent]);
             }
         }
     }
