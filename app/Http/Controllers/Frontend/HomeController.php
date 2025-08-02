@@ -29,6 +29,7 @@ use App\Models\Testimonial;
 use App\Models\UserMessages;
 use App\Models\Work;
 use App\Models\Approach;
+use App\Models\Product;
 use App\Models\Skill;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -43,17 +44,19 @@ class HomeController extends Controller
         $data['services'] = Service::get();
         $data['works'] = Work::get();
         $data['teams'] = Team::get();
+        $data['products'] = Product::get();
         $data['testimonials'] = Testimonial::get();
         $data['faqs'] = Faq::get();
         $data['blogs'] = Blog::get();
         $data['clients'] = Client::get();
-        $data['achievements'] = Achievement::get();
+        $data['achievements'] = Achievement::get();  
         $data['sections'] = Section::whereIn('key', [
             'services_section',
             'testimonials_section',
             'works_section',
             'about_section',
             'teams_section',
+            'products_section',
             'faqs_section',
             'sliders_section',
             'clients_section',

@@ -122,5 +122,11 @@ class SectionSeeder extends Seeder
             'description' => 'We offer a variety of services to meet your needs.',
             'is_active' => true,
         ]);
+          Section::create([
+            'key' => 'products_section',
+            'title' => 'Our Products',
+            'description' => '',
+            'is_active' => true,
+        ]);
     }
 }

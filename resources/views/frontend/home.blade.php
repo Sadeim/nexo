@@ -170,10 +170,10 @@
                         <div class="company-timing">
                             <h3>Opening hours</h3>
                             <ul>
-                                @foreach($about->openingHours as $day => $hours)
-                                    @if(!empty($hours['from']) && !empty($hours['to']))
+                                @foreach ($about->openingHours as $day => $hours)
+                                    @if (!empty($hours['from']) && !empty($hours['to']))
                                         <div class="mb-2" style="color: #fff;">
-                                            {{  $hours->day }}
+                                            {{ $hours->day }}
                                             {{ $hours['from'] }} - {{ $hours['to'] }}
                                         </div>
                                     @endif
@@ -202,7 +202,8 @@
                         <!-- Section Title Start -->
                         <div class="section-title">
                             <h3 class="wow fadeInUp">Our Services</h3>
-                            <h2 class="text-anime-style-3" data-cursor="-opaque">{{ $sections['services_section']->title }}</h2>
+                            <h2 class="text-anime-style-3" data-cursor="-opaque">{{ $sections['services_section']->title }}
+                            </h2>
                         </div>
                         <!-- Section Title End -->
                     </div>
@@ -223,9 +224,9 @@
                             <div class="service-item wow fadeInUp" data-wow-delay="{{ $index * 0.2 }}s">
                                 <!-- Service Item Header Start -->
                                 <div class="service-item-header">
-                                    {{--                                    <div class="icon-box">--}}
-                                    {{--                                        <img src="{{ asset($service->icon) }}" alt="{{ $service->name }}">--}}
-                                    {{--                                    </div>--}}
+                                    {{--                                    <div class="icon-box"> --}}
+                                    {{--                                        <img src="{{ asset($service->icon) }}" alt="{{ $service->name }}"> --}}
+                                    {{--                                    </div> --}}
 
                                     <div class="service-item-content">
                                         <h3><a href="#">{{ $service->name }}</a></h3>
@@ -236,11 +237,11 @@
 
                                 <!-- Service Image Start -->
                                 <div class="service-image">
-                                    {{--                                    <a href="#" data-cursor-text="View">--}}
+                                    {{--                                    <a href="#" data-cursor-text="View"> --}}
                                     <figure class="image-anime">
                                         <img src="{{ asset($service->image) }}" alt="{{ $service->name }}">
                                     </figure>
-                                    {{--                                    </a>--}}
+                                    {{--                                    </a> --}}
                                 </div>
                                 <!-- Service Image End -->
                             </div>
@@ -252,7 +253,8 @@
                 <div class="col-lg-12">
                     <!-- Service Footer Start -->
                     <div class="service-footer wow fadeInUp" data-wow-delay="0.8s">
-                        <p>You will be satisfy with our work. Contact us today <a href="tel:{{$settings->valueOf('phone')}}">{{$settings->valueOf('phone')}}</a></p>
+                        <p>You will be satisfy with our work. Contact us today <a
+                                href="tel:{{ $settings->valueOf('phone') }}">{{ $settings->valueOf('phone') }}</a></p>
                     </div>
                 </div>
             </div>
@@ -261,85 +263,85 @@
 
 
     <!-- Quick Fact Start -->
-    {{--    <div class="quick-facts bg-radius-section">--}}
-    {{--        <div class="container">--}}
-    {{--            <div class="row section-row align-items-center">--}}
-    {{--                <div class="col-lg-6">--}}
-    {{--                    <!-- Section Title Start -->--}}
-    {{--                    <div class="section-title dark-section">--}}
-    {{--                        <h3 class="wow fadeInUp">Some facts</h3>--}}
-    {{--                        <h2 class="text-anime-style-3" data-cursor="-opaque">{{$how->name}}</h2>--}}
-    {{--                    </div>--}}
-    {{--                    <!-- Section Title End -->--}}
-    {{--                </div>--}}
+    {{--    <div class="quick-facts bg-radius-section"> --}}
+    {{--        <div class="container"> --}}
+    {{--            <div class="row section-row align-items-center"> --}}
+    {{--                <div class="col-lg-6"> --}}
+    {{--                    <!-- Section Title Start --> --}}
+    {{--                    <div class="section-title dark-section"> --}}
+    {{--                        <h3 class="wow fadeInUp">Some facts</h3> --}}
+    {{--                        <h2 class="text-anime-style-3" data-cursor="-opaque">{{$how->name}}</h2> --}}
+    {{--                    </div> --}}
+    {{--                    <!-- Section Title End --> --}}
+    {{--                </div> --}}
 
-    {{--                <div class="col-lg-6">--}}
-    {{--                    <!-- Section Title Content Start -->--}}
-    {{--                    <div class="section-title-content dark-section wow fadeInUp" data-wow-delay="0.2s">--}}
-    {{--                        <p>{{$how->description}}</p>--}}
-    {{--                    </div>--}}
-    {{--                    <!-- Section Title Content End -->--}}
-    {{--                </div>--}}
-    {{--            </div>--}}
+    {{--                <div class="col-lg-6"> --}}
+    {{--                    <!-- Section Title Content Start --> --}}
+    {{--                    <div class="section-title-content dark-section wow fadeInUp" data-wow-delay="0.2s"> --}}
+    {{--                        <p>{{$how->description}}</p> --}}
+    {{--                    </div> --}}
+    {{--                    <!-- Section Title Content End --> --}}
+    {{--                </div> --}}
+    {{--            </div> --}}
 
-    {{--            <div class="row align-items-center">--}}
-    {{--                <div class="col-lg-3 col-md-6 col-6 order-lg-1 order-md-1 order-1">--}}
-    {{--                    <!-- Fact Counter Box Start -->--}}
-    {{--                    <div class="fact-counter-box">--}}
-    {{--                        <!-- Fact Counter Item Start -->--}}
-    {{--                        <div class="fact-counter-item">--}}
-    {{--                            <h3>{{$how->tap1_name}}</h3>--}}
-    {{--                            <h2><span class="counter">{{$how->tap1_number}}</span>+</h2>--}}
-    {{--                            <p>{{$how->tap1_content}}</p>--}}
-    {{--                        </div>--}}
-    {{--                        <!-- Fact Counter Item End -->--}}
+    {{--            <div class="row align-items-center"> --}}
+    {{--                <div class="col-lg-3 col-md-6 col-6 order-lg-1 order-md-1 order-1"> --}}
+    {{--                    <!-- Fact Counter Box Start --> --}}
+    {{--                    <div class="fact-counter-box"> --}}
+    {{--                        <!-- Fact Counter Item Start --> --}}
+    {{--                        <div class="fact-counter-item"> --}}
+    {{--                            <h3>{{$how->tap1_name}}</h3> --}}
+    {{--                            <h2><span class="counter">{{$how->tap1_number}}</span>+</h2> --}}
+    {{--                            <p>{{$how->tap1_content}}</p> --}}
+    {{--                        </div> --}}
+    {{--                        <!-- Fact Counter Item End --> --}}
 
-    {{--                        <!-- Fact Counter Item Start -->--}}
-    {{--                        <div class="fact-counter-item">--}}
-    {{--                            <h3>{{$how->tap2_name}}</h3>--}}
-    {{--                            <h2><span class="counter">{{$how->tap2_number}}</span>k</h2>--}}
-    {{--                            <p>{{$how->tap2_content}}</p>--}}
-    {{--                        </div>--}}
-    {{--                        <!-- Fact Counter Item End -->--}}
-    {{--                    </div>--}}
-    {{--                    <!-- Fact Counter Box End -->--}}
-    {{--                </div>--}}
+    {{--                        <!-- Fact Counter Item Start --> --}}
+    {{--                        <div class="fact-counter-item"> --}}
+    {{--                            <h3>{{$how->tap2_name}}</h3> --}}
+    {{--                            <h2><span class="counter">{{$how->tap2_number}}</span>k</h2> --}}
+    {{--                            <p>{{$how->tap2_content}}</p> --}}
+    {{--                        </div> --}}
+    {{--                        <!-- Fact Counter Item End --> --}}
+    {{--                    </div> --}}
+    {{--                    <!-- Fact Counter Box End --> --}}
+    {{--                </div> --}}
 
 
-    {{--                <div class="col-lg-3 col-md-6 col-6 order-lg-3 order-md-2 order-2">--}}
-    {{--                    <!-- Fact Counter Box Start -->--}}
-    {{--                    <div class="fact-counter-box">--}}
-    {{--                        <!-- Fact Counter Item Start -->--}}
-    {{--                        <div class="fact-counter-item">--}}
-    {{--                            <h3>{{$how->tap3_name}}</h3>--}}
-    {{--                            <h2><span class="counter">{{$how->tap3_number}}</span>k+</h2>--}}
-    {{--                            <p>{{$how->tap3_content}}</p>--}}
-    {{--                        </div>--}}
-    {{--                        <!-- Fact Counter Item End -->--}}
+    {{--                <div class="col-lg-3 col-md-6 col-6 order-lg-3 order-md-2 order-2"> --}}
+    {{--                    <!-- Fact Counter Box Start --> --}}
+    {{--                    <div class="fact-counter-box"> --}}
+    {{--                        <!-- Fact Counter Item Start --> --}}
+    {{--                        <div class="fact-counter-item"> --}}
+    {{--                            <h3>{{$how->tap3_name}}</h3> --}}
+    {{--                            <h2><span class="counter">{{$how->tap3_number}}</span>k+</h2> --}}
+    {{--                            <p>{{$how->tap3_content}}</p> --}}
+    {{--                        </div> --}}
+    {{--                        <!-- Fact Counter Item End --> --}}
 
-    {{--                        <!-- Fact Counter Item Start -->--}}
-    {{--                        <div class="fact-counter-item">--}}
-    {{--                            <h3>{{$how->tap4_name}}</h3>--}}
-    {{--                            <h2><span class="counter">{{$how->tap4_number}}</span>%</h2>--}}
-    {{--                            <p>{{$how->tap4_content}}</p>--}}
-    {{--                        </div>--}}
-    {{--                        <!-- Fact Counter Item End -->--}}
+    {{--                        <!-- Fact Counter Item Start --> --}}
+    {{--                        <div class="fact-counter-item"> --}}
+    {{--                            <h3>{{$how->tap4_name}}</h3> --}}
+    {{--                            <h2><span class="counter">{{$how->tap4_number}}</span>%</h2> --}}
+    {{--                            <p>{{$how->tap4_content}}</p> --}}
+    {{--                        </div> --}}
+    {{--                        <!-- Fact Counter Item End --> --}}
 
-    {{--                    </div>--}}
+    {{--                    </div> --}}
 
-    {{--                    <!-- Fact Counter Box End -->--}}
-    {{--                </div>--}}
-    {{--                <div class="col-lg-6 order-lg-2 order-md-3 order-3">--}}
-    {{--                    <!-- Quick Fact image Start -->--}}
-    {{--                    <div class="quick-fact-image">--}}
-    {{--                        <img src="{{ asset($how->image) }}" alt="">--}}
-    {{--                    </div>--}}
-    {{--                    <!-- Quick Fact image End -->--}}
-    {{--                </div>--}}
+    {{--                    <!-- Fact Counter Box End --> --}}
+    {{--                </div> --}}
+    {{--                <div class="col-lg-6 order-lg-2 order-md-3 order-3"> --}}
+    {{--                    <!-- Quick Fact image Start --> --}}
+    {{--                    <div class="quick-fact-image"> --}}
+    {{--                        <img src="{{ asset($how->image) }}" alt=""> --}}
+    {{--                    </div> --}}
+    {{--                    <!-- Quick Fact image End --> --}}
+    {{--                </div> --}}
 
-    {{--            </div>--}}
-    {{--        </div>--}}
-    {{--    </div>--}}
+    {{--            </div> --}}
+    {{--        </div> --}}
+    {{--    </div> --}}
     <!-- Quick Fact End -->
 
     @if ($sections['achievements_section']?->is_active)
@@ -355,7 +357,8 @@
                                 <!-- Section Title Start -->
                                 <div class="section-title">
                                     <h3 class="wow fadeInUp">{{ $sections['achievements_section']->title }}</h3>
-                                    <h2 class="text-anime-style-3" data-cursor="-opaque">{{ $sections['achievements_section']->description }}</h2>
+                                    <h2 class="text-anime-style-3" data-cursor="-opaque">
+                                        {{ $sections['achievements_section']->description }}</h2>
                                 </div>
                                 <!-- Section Title End -->
 
@@ -371,7 +374,8 @@
                                     <div class="best-services-box">
                                         @foreach ($achievements as $index => $service)
                                             <!-- Best Services Item Start -->
-                                            <div class="best-services-item wow fadeInUp" data-wow-delay="{{ $index * 0.2 }}s">
+                                            <div class="best-services-item wow fadeInUp"
+                                                data-wow-delay="{{ $index * 0.2 }}s">
                                                 <div class="best-services-item-content">
                                                     <h3>{{ $service->title }}</h3>
                                                     <p>{{ $service->description }}</p>
@@ -412,18 +416,19 @@
                         <!-- Section Title Start -->
                         <div class="section-title">
                             <h3 class="wow fadeInUp">{{ $sections['works_section']->title }}</h3>
-                            <h2 class="text-anime-style-3" data-cursor="-opaque">{{ $sections['works_section']->description }}</h2>
+                            <h2 class="text-anime-style-3" data-cursor="-opaque">
+                                {{ $sections['works_section']->description }}</h2>
                         </div>
                         <!-- Section Title End -->
                     </div>
 
-                    {{--                    <div class="col-lg-6">--}}
-                    {{--                        <!-- Section Title Button Start -->--}}
-                    {{--                        <div class="section-btn wow fadeInUp" data-wow-delay="0.2s">--}}
-                    {{--                            <a href="#" class="btn-default">explore more work</a>--}}
-                    {{--                        </div>--}}
-                    {{--                        <!-- Section Title Button End -->--}}
-                    {{--                    </div>--}}
+                    {{--                    <div class="col-lg-6"> --}}
+                    {{--                        <!-- Section Title Button Start --> --}}
+                    {{--                        <div class="section-btn wow fadeInUp" data-wow-delay="0.2s"> --}}
+                    {{--                            <a href="#" class="btn-default">explore more work</a> --}}
+                    {{--                        </div> --}}
+                    {{--                        <!-- Section Title Button End --> --}}
+                    {{--                    </div> --}}
                 </div>
 
                 <div class="row">
@@ -433,11 +438,11 @@
                             <div class="project-item wow fadeInUp" data-wow-delay="{{ $index * 0.2 }}s">
                                 <!-- Project Image Start -->
                                 <div class="project-image">
-                                    {{--                                    <a href="#" data-cursor-text="View">--}}
+                                    {{--                                    <a href="#" data-cursor-text="View"> --}}
                                     <figure class="image-anime">
                                         <img src="{{ asset($work->image) }}" alt="{{ $work->title }}">
                                     </figure>
-                                    {{--                                    </a>--}}
+                                    {{--                                    </a> --}}
                                 </div>
                                 <!-- Project Image End -->
 
@@ -497,7 +502,8 @@
                                                         <div class="testimonial-author">
                                                             <div class="author-image">
                                                                 <figure class="image-anime">
-                                                                    <img src="{{ asset($testimonial->photo) }}" alt="">
+                                                                    <img src="{{ asset($testimonial->photo) }}"
+                                                                        alt="">
                                                                 </figure>
                                                             </div>
 
@@ -510,7 +516,8 @@
 
                                                         <!-- Testimonial Quotes Start -->
                                                         <div class="testimonial-quotes">
-                                                            <img src="{{ asset('frontend_assets/images/testimonial-quotes.svg') }}" alt="">
+                                                            <img src="{{ asset('frontend_assets/images/testimonial-quotes.svg') }}"
+                                                                alt="">
                                                         </div>
                                                         <!-- Testimonial Quotes End -->
                                                     </div>
@@ -519,7 +526,8 @@
                                                     <!-- Testimonial Rating Start -->
                                                     <div class="testimonial-rating">
                                                         @for ($i = 1; $i <= 5; $i++)
-                                                            <i class="fa-solid fa-star{{ $i <= $testimonial->rating ? '' : '-o' }}"></i>
+                                                            <i
+                                                                class="fa-solid fa-star{{ $i <= $testimonial->rating ? '' : '-o' }}"></i>
                                                         @endfor
                                                     </div>
                                                     <!-- Testimonial Rating End -->
@@ -566,6 +574,97 @@
         <!-- Our Testimonial Section End -->
     @endif
 
+    @if ($sections['products_section']?->is_active)
+        <!-- Our Products Section Start -->
+        <div class="our-team bg-radius-section">
+            <div class="container">
+                <div class="row section-row align-items-center">
+                    <div class="col-lg-6">
+                        <!-- Section Title Start -->
+                        <div class="section-title">
+                            <h3 class="wow fadeInUp">{{ $sections['products_section']->title }}</h3>
+                            <h2 class="text-anime-style-3" data-cursor="-opaque">
+                                {{ $sections['products_section']->title }}
+                            </h2>
+                        </div>
+                        <!-- Section Title End -->
+                    </div>
+
+                    <div class="col-lg-6">
+                        <!-- Section Title Button Start -->
+                        <div class="section-btn wow fadeInUp" data-wow-delay="0.2s">
+                            <a href="#" class="btn-default">view all member</a>
+                        </div>
+                        <!-- Section Title Button End -->
+                    </div>
+                </div>
+
+                <div class="row">
+                    @forelse ($products as $index => $product)
+                        <div class="col-lg-4 col-md-6">
+                            <!-- Team Member Item Start -->
+                            <div class="team-item wow fadeInUp" data-wow-delay="{{ $index * 0.2 }}s">
+                                <!-- team Image Start -->
+                                <div class="team-image">
+                                    <a href="#" data-cursor-text="View">
+                                        <figure class="image-anime">
+                                            <img src="{{ $product->images->first()
+                                                ? asset('storage/' . $product->images->first()->path)
+                                                : asset('frontend_assets/images/team-1.jpg') }}"
+                                                alt="">
+                                        </figure>
+                                    </a>
+                                </div>
+                                <!-- team Image End -->
+
+                                <!-- Team Body Start -->
+                                <div class="team-body">
+                                    <!-- Team Content Start -->
+                                    <div class="team-content">
+                                        <h3><a href="#">{{ $product->name }}</a></h3>
+                                        {{-- <p>{{ $team->position }}</p> --}}
+                                    </div>
+                                    <!-- Team Content End -->
+
+                                    <!-- Team Social List Start -->
+                                    <div class="team-social-list">
+                                        <ul>
+                                            @php
+                                                $socialLinks = json_decode($product->social_links, true);
+                                            @endphp
+                                            @if (is_array($socialLinks))
+                                                @foreach ($socialLinks as $platform => $link)
+                                                    @if (!empty($link))
+                                                        <li>
+                                                            <a href="{{ $link }}" target="_blank">
+                                                                <i class="fa-brands fa-{{ $platform }}"></i>
+                                                            </a>
+                                                        </li>
+                                                    @endif
+                                                @endforeach
+                                            @endif
+
+                                            {{-- @foreach (json_decode($team->social_links, true) as $platform => $link)
+                                                <li><a href="{{ $link }}"><i class="fa-brands fa-{{ $platform }}-p"></i></a></li>
+                                            @endforeach --}}
+                                        </ul>
+                                    </div>
+                                    <!-- Team Social List End -->
+                                </div>
+                                <!-- Team Body End -->
+                            </div>
+                            <!-- Team Member Item End -->
+                        </div>
+                    @empty
+                        No team member found
+                    @endforelse
+                </div>
+            </div>
+        </div>
+        <!-- Our Team Section End -->
+    @endif
+
+
     @if ($sections['teams_section']?->is_active)
         <!-- Our Team Section Start -->
         <div class="our-team bg-radius-section">
@@ -575,7 +674,8 @@
                         <!-- Section Title Start -->
                         <div class="section-title">
                             <h3 class="wow fadeInUp">{{ $sections['teams_section']->title }}</h3>
-                            <h2 class="text-anime-style-3" data-cursor="-opaque">{{ $sections['teams_section']->title }}</h2>
+                            <h2 class="text-anime-style-3" data-cursor="-opaque">{{ $sections['teams_section']->title }}
+                            </h2>
                         </div>
                         <!-- Section Title End -->
                     </div>
@@ -631,7 +731,7 @@
                                                 @endforeach
                                             @endif
 
-                                            {{-- @foreach(json_decode($team->social_links, true) as $platform => $link)
+                                            {{-- @foreach (json_decode($team->social_links, true) as $platform => $link)
                                                 <li><a href="{{ $link }}"><i class="fa-brands fa-{{ $platform }}-p"></i></a></li>
                                             @endforeach --}}
                                         </ul>
@@ -660,7 +760,8 @@
                         <!-- Section Title Start -->
                         <div class="section-title">
                             <h3 class="wow fadeInUp">{{ $sections['faqs_section']->title }}</h3>
-                            <h2 class="text-anime-style-3" data-cursor="-opaque">{{ $sections['faqs_section']->description }}</h2>
+                            <h2 class="text-anime-style-3" data-cursor="-opaque">
+                                {{ $sections['faqs_section']->description }}</h2>
                         </div>
                         <!-- Section Title End -->
                     </div>
@@ -672,11 +773,14 @@
                                 <!-- FAQ Item Start -->
                                 <div class="accordion-item wow fadeInUp" data-wow-delay="{{ $index * 0.2 }}s">
                                     <h2 class="accordion-header" id="heading{{ $faq->id }}">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $faq->id }}" aria-expanded="false" aria-controls="collapse{{ $faq->id }}">
+                                        <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#collapse{{ $faq->id }}"
+                                            aria-expanded="false" aria-controls="collapse{{ $faq->id }}">
                                             {{ $loop->iteration }}. {{ $faq->question }}
                                         </button>
                                     </h2>
-                                    <div id="collapse{{ $faq->id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ $faq->id }}" data-bs-parent="#accordion">
+                                    <div id="collapse{{ $faq->id }}" class="accordion-collapse collapse"
+                                        aria-labelledby="heading{{ $faq->id }}" data-bs-parent="#accordion">
                                         <div class="accordion-body">
                                             <p>{{ $faq->answer }}</p>
                                         </div>
@@ -704,7 +808,8 @@
                         <!-- Section Title Start -->
                         <div class="section-title">
                             <h3 class="wow fadeInUp">{{ $sections['blog_section']->title }}</h3>
-                            <h2 class="text-anime-style-3" data-cursor="-opaque">{{ $sections['blog_section']->description }}</h2>
+                            <h2 class="text-anime-style-3" data-cursor="-opaque">
+                                {{ $sections['blog_section']->description }}</h2>
                         </div>
                         <!-- Section Title End -->
                     </div>
@@ -738,7 +843,8 @@
                                     <!-- Post Meta Start -->
                                     <div class="post-meta">
                                         <ul>
-                                            <li>{{ strtoupper(\Carbon\Carbon::parse($blog->created_at)->format('d M, Y')) }}</li>
+                                            <li>{{ strtoupper(\Carbon\Carbon::parse($blog->created_at)->format('d M, Y')) }}
+                                            </li>
                                         </ul>
                                     </div>
                                     <!-- Post Meta End -->
@@ -770,7 +876,4 @@
 @endsection
 
 @push('js')
-
-
-
 @endpush

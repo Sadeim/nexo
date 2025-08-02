@@ -8,7 +8,7 @@ use App\Http\Requests\Product\UpdateProductRequest;
 use App\Models\Attribute;
 use App\Models\Product;
 use App\Models\Variant;
-use App\Traits\SaveImageTrait;
+// use App\Traits\SaveImageTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\DB;
 class ProductController extends Controller
 {
 
-    use SaveImageTrait;
+    // use SaveImageTrait;
 
     public function __construct()
     {
