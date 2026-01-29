@@ -19,8 +19,9 @@ class BookingResource extends JsonResource
         return [
             'id'            => $this->id,
             'name'          => $this->name,
-            'email'          => $this->email,
-            'phone'          => $this->phone,
+            'service'       => $this->service ? $this->service->name : 'N/A', 
+            'date'            => $this->date,
+            'time'            => $this->time,
             'created_at'    => $this->created_at->format('d-m-Y'),
             'operations'    => $operations,
         ];

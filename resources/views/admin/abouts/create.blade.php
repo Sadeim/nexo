@@ -47,7 +47,7 @@
                 </div>
             </div>
             <!-- Image2 -->
-            <div class="card card-flush">
+            {{-- <div class="card card-flush">
                 <div class="card-header justify-content-center">
                     <h3 class="card-title">image2</h3>
                 </div>
@@ -73,7 +73,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
         </div>
 
@@ -107,7 +107,7 @@
                     <div class="row">
                         <div class="col-md-12 fv-row">
                             <div class="mb-5">
-                                <label class="form-label">Check 1 Title</label>
+                                <label class="form-label">OPEN</label>
                                 <input type="text" name="tab1_title" class="form-control" placeholder="Enter first check"
                                     value="{{ isset($about) ? $about->tab1_title : old('tab1_title') }}">
                             </div>
@@ -116,13 +116,13 @@
                     <div class="row">
                         <div class="col-md-12 fv-row">
                             <div class="mb-5">
-                                <label class="form-label">Check 1 Content</label>
+                                <label class="form-label">Close</label>
                                 <input type="text" name="tab1_content" class="form-control" placeholder="Enter Author Name"
                                        value="{{ isset($about) ? $about->tab1_content : old('tab1_content') }}">
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    {{-- <div class="row">
                         <div class="col-md-12 fv-row">
                             <div class="mb-5">
                                 <label class="form-label">Check2 Title</label>
@@ -130,11 +130,11 @@
                                     value="{{ isset($about) ? $about->tab2_title : old('tab2_title') }}">
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <!-- Row 4: Author Info -->
 
                     
-                    <div class="row">
+                    {{-- <div class="row">
                         <div class="col-md-12 fv-row">
                             <div class="mb-5">
                                 <label class="form-label">Check 2 Content</label>
@@ -142,15 +142,15 @@
                                        value="{{ isset($about) ? $about->tab2_content : old('tab2_content') }}">
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="row">
-                        <div class="col-md-6 fv-row">
+                        {{-- <div class="col-md-6 fv-row">
                             <div class="mb-5">
                                 <label class="form-label">Button Text</label>
                                 <input type="text" name="button_text" class="form-control" placeholder="Enter Author Name"
                                        value="{{ isset($about) ? $about->button_text : old('button_text') }}">
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="col-md-6 fv-row">
                             <div class="mb-5">
                                 <label class="form-label">Button Link</label>
@@ -161,7 +161,7 @@
                     </div>
                 </div>
             </div>
-            <div class="card card-flush generalDataTap">
+            {{-- <div class="card card-flush generalDataTap">
                 <div class="salesTitle">
                     <h3>Opening Hours</h3>
                 </div>
@@ -190,7 +190,7 @@
                         </div>
                     @endforeach
                 </div>
-            </div>
+            </div> --}}
             
         </div>
 

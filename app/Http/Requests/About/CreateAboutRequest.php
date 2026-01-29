@@ -41,7 +41,7 @@ class CreateAboutRequest extends BaseRequest
             'button_link'   => 'nullable|max:255',
 
             'opening_hours' => 'nullable|array',
-            'opening_hours.*.day' => 'required_with:opening_hours|string|max:20',
+            'opening_hours.*.day' => 'nullable:opening_hours|string|max:20',
             'opening_hours.*.from' => 'nullable|date_format:H:i',
             'opening_hours.*.to' => 'nullable|date_format:H:i',
             'opening_hours.*.status' => 'nullable|boolean',

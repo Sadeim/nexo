@@ -27,7 +27,9 @@ class UpdateSettingRequest extends BaseRequest
     public function rules()
     {
         return [
+            'site_title'            => ['nullable'],
             'company_logo'          => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif'],
+            'company_logo_footer'   => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif'],
             'email'                 => ['nullable', 'max:255'],
             'phone'                 => ['nullable'],
             'whatsapp'              => ['nullable'],
@@ -37,9 +39,15 @@ class UpdateSettingRequest extends BaseRequest
             'instagram'             => ['nullable', 'max:255'],
             'twitter'               => ['nullable', 'max:255'],
             'address'               => ['nullable', 'max:255'],
+            'address1'               => ['nullable', 'max:255'],
             'web_address'           => ['nullable', 'max:255'],
             'map_embed'             => ['nullable'],
             'site_description'      => ['nullable', 'max:255'],
+            'top_header_description' => ['nullable', 'max:255'],
+            'hours_part1' => ['nullable', 'max:255'],
+            'hours_part2' => ['nullable', 'max:255'],
+
+
         ];
     }
 }

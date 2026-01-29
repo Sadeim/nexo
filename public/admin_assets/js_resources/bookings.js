@@ -3,8 +3,9 @@
 window.columns = [
     {data: 'id'},
     {data: 'name'},
-    {data: 'email'},
-    {data: 'phone'},
+    {data: 'service'},
+    {data: 'date'},
+    {data: 'time'},
     {data: 'created_at'},
     {data: 'operations'}
 ];

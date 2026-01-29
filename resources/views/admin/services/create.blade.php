@@ -29,7 +29,7 @@
                     </div>
                 </div>
             </div>
-            <div class="card card-flush">
+            {{-- <div class="card card-flush">
                 <div class="card-header justify-content-center p-5">
                     <div class="card-toolbar">
                         <div class="image-input image-input-outline" data-kt-image-input="true">
@@ -67,14 +67,14 @@
 
                 </div>
 
-            </div>
+            </div> --}}
         </div>
 
         <!-- Main Content: Service Details -->
         <div class="d-flex flex-column flex-row-fluid gap-3 col-lg-9">
             <div class="card card-flush generalDataTap">
                 <div class="card-header">
-                    <h3 class="card-title">{{ __('admin.global.name_and_description') }}</h3>
+                    <h3 class="card-title">Name And Price</h3>
                 </div>
                 <div class="card-body pt-0">
 
@@ -84,8 +84,8 @@
                                value="{{ isset($service) ? $service->name : ''}}">
                     </div>
                     <div class="mb-5">
-                        <label class="form-label">{{ __('admin.form.description') }}</label>
-                        <textarea name="description" class="form-control" rows="4" placeholder="Enter Service Description">{{ isset($service) ? $service->description : '' }}</textarea>
+                        <label class="form-label">Price</label>
+                        <textarea name="description" class="form-control" rows="4" placeholder="Enter Service Price">{{ isset($service) ? $service->description : '' }}</textarea>
                     </div>
                 </div>
             </div>

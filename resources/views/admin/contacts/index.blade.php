@@ -19,7 +19,7 @@
                                 <h2 class="table-title">{{ __('admin.global.contacts') }}</h2>
 
                             </div>
-                            <div class="col-8 col-sm-12 col-md-9 col-lg-9">
+                            {{-- <div class="col-8 col-sm-12 col-md-9 col-lg-9">
                                 <div class="card-toolbar flex-row-fluid d-flex justify-content-end gap-5">
                                     <!--Add new user start-->
                                     <a class="btn btn-primary" href="{{ route('admin.contacts.create') }}">
@@ -29,7 +29,7 @@
                                         </span>
                                     </a>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                     <!----------------------------------------Tabs Start---------------------------->
@@ -77,7 +77,7 @@
                                             <tr class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0 text-center">
                                                 <th>#</th>
                                                 <th>{{ __('admin.form.name') }}</th>
-                                                <th>Phone</th>
+                                                {{-- <th>Phone</th> --}}
                                                 <th>Email</th>
                                                 <th>Message</th>
                                                 <th>{{ __('admin.form.created_at') }}</th>

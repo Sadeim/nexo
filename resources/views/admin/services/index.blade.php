@@ -105,7 +105,7 @@
                                                 class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0 text-center">
                                                 <th>#</th>
                                                 <th>{{ __('admin.form.name') }}</th>
-                                                <th>{{ __('admin.form.description') }}</th>
+                                                <th>Price</th>
                                                 <th>{{ __('admin.form.actions') }}</th>
                                             </tr>
                                             <!--end::Table row-->

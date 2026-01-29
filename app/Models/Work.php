@@ -15,5 +15,6 @@ class Work extends Model
         'image',
         'category',
         'description',
+        'is_featured',
     ];
 }

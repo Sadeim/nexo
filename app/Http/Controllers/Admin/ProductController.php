@@ -20,10 +20,10 @@ class ProductController extends Controller
 
     public function __construct()
     {
-        $this->middleware('permission:view_products|add_products', ['only' => ['index', 'store']]);
-        $this->middleware('permission:add_products', ['only' => ['create', 'store']]);
-        $this->middleware('permission:edit_products', ['only' => ['edit', 'update']]);
-        $this->middleware('permission:delete_products', ['only' => ['destroy']]);
+        // $this->middleware('permission:view_products|add_products', ['only' => ['index', 'store']]);
+        // $this->middleware('permission:add_products', ['only' => ['create', 'store']]);
+        // $this->middleware('permission:edit_products', ['only' => ['edit', 'update']]);
+        // $this->middleware('permission:delete_products', ['only' => ['destroy']]);
     }
     /**
      * Display a listing of the resource.

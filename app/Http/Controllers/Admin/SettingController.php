@@ -14,13 +14,13 @@ class SettingController extends Controller
 {
     use SaveImageTrait;
 
-    public function index() 
+    public function index()
     {
         $data['settings'] = new Setting();
-        return view('admin.settings.index' , $data);
+        return view('admin.settings.index', $data);
     }
 
-    public function update(UpdateSettingRequest $request) 
+    public function update(UpdateSettingRequest $request)
     {
         $data = $request->validated();
         try {
@@ -33,16 +33,17 @@ class SettingController extends Controller
                     if (request()->has('company_logo') && $key == 'company_logo') {
                         $value = $this->uploadImage($request->company_logo, 'company_logo');
                     }
+                    if (request()->has('company_logo_footer') && $key == 'company_logo_footer') {
+                        $value = $this->uploadImage($request->company_logo_footer, 'company_logo_footer');
+                    }
                     Setting::updateOrCreate(['key' => $key], ['value' => $value]);
                 }
             }
             return $this->response_api(200, __('admin.form.added_successfully'), '');
-
         } catch (Exception $e) {
             // return $this->response_api(400, $e->getMessage());
-            return back()->with(['msg_status' => 'error','msg_content' => $e->getMessage()]);
+            return back()->with(['msg_status' => 'error', 'msg_content' => $e->getMessage()]);
         }
-
     }
 
     private function extractIframeSrc($input)
@@ -57,5 +58,4 @@ class SettingController extends Controller
         // إذا كان إدخال المستخدم فعلاً رابط، نُعيده كما هو
         return $input;
     }
-
 }

@@ -43,7 +43,7 @@
                         <input type="text" name="title" class="form-control" placeholder="Enter slider title"
                                value="{{ isset($slider) ? $slider->title : '' }}">
                     </div>
-                    <div class="mb-5">
+                    {{-- <div class="mb-5">
                         <label class="form-label">Subtitle</label>
                         <input type="text" name="subtitle" class="form-control" placeholder="Enter slider subtitle"
                                value="{{ isset($slider) ? $slider->subtitle : '' }}">
@@ -51,7 +51,7 @@
                     <div class="mb-5">
                         <label class="form-label">Description</label>
                         <textarea name="description" id="" cols="30" rows="10" class="form-control">{{ isset($slider) ? $slider->description : '' }}</textarea>
-                    </div>
+                    </div> --}}
                     <div class="mb-5">
                         <label class="form-label">Button text</label>
                         <input type="text" name="button_text" class="form-control" placeholder="Enter slider button text"
@@ -62,11 +62,11 @@
                         <input type="text" name="button_link" class="form-control" placeholder="Enter slider button link"
                                value="{{ isset($slider) ? $slider->button_link : '' }}">
                     </div>
-                    <div class="mb-5">
+                    {{-- <div class="mb-5">
                         <label class="form-label">Order</label>
                         <input type="text" name="order" class="form-control" placeholder="Enter slider order"
                                value="{{ isset($slider) ? $slider->order : '' }}">
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>

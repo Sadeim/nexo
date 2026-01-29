@@ -3,7 +3,7 @@
 window.columns = [
     {data: 'id'},
     {data: 'name'},
-    {data: 'phone'},
+    // {data: 'phone'},
     {data: 'email'},
     {data: 'message'},
     {data: 'created_at'},

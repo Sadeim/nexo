@@ -1,9 +1,8 @@
-@extends('admin.layouts.master', ['is_active_parent' => 'home','is_active'=> 'bookings'])
+@extends('admin.layouts.master', ['is_active_parent' => 'home', 'is_active' => 'bookings'])
 @section('title')
     {{ __('admin.global.bookings') }}
 @endsection
 @section('content')
-
     <div class="d-flex flex-column flex-column-fluid customerView" id="kt_content">
         <!--begin::Post-->
         <div class="post d-flex flex-column-fluid chartAccount customView" id="kt_post">
@@ -70,11 +69,13 @@
                                         <!--begin::Table head-->
                                         <thead>
                                             <!--begin::Table row-->
-                                            <tr class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0 text-center">
+                                            <tr
+                                                class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0 text-center">
                                                 <th>#</th>
                                                 <th>{{ __('admin.form.name') }}</th>
-                                                <th>Email</th>
-                                                <th>Phone</th>
+                                                <th>Service</th>
+                                                <th>Date</th>
+                                                <th>Time</th>
                                                 <th>{{ __('admin.form.created_at') }}</th>
                                                 <th>{{ __('admin.form.actions') }}</th>
                                             </tr>
@@ -98,7 +99,6 @@
             </div>
         </div>
     </div>
-
 @endsection
 @push('scripts')
     <script>
@@ -109,5 +109,4 @@
     <script src="{{ asset('admin_assets/js/dashboard/handleDataTable.js') }}"></script>
 @endpush
 @push('modals')
- 
 @endpush

@@ -1,44 +1,46 @@
-@extends('admin.layouts.master', ['is_active_parent' => 'home', 'is_active'=> 'works'])
+@extends('admin.layouts.master', ['is_active_parent' => 'home', 'is_active' => 'works'])
 
 @section('title')
-    {{ __('admin.global.add_new_work') }}
+    Add New Gallery
 @endsection
 
 @section('content')
-    <form id="kt_form" class="form row d-flex flex-column flex-lg-row addForm" data-kt-redirect="{{ route('admin.works.index') }}"
-          action="{{ isset($work) ? route('admin.works.update', $work->id) : route('admin.works.store') }}" method="POST" enctype="multipart/form-data">
+    <form id="kt_form" class="form row d-flex flex-column flex-lg-row addForm"
+        data-kt-redirect="{{ route('admin.galleries.index') }}"
+        action="{{ isset($work) ? route('admin.galleries.update', $work->id) : route('admin.galleries.store') }}"
+        method="POST" enctype="multipart/form-data">
         @csrf
         @isset($work)
             @method('PATCH')
         @endisset
 
         <div class="page-content-header mb-5">
-            <h2 class="table-title">{{ isset($work) ? __('admin.global.edit_work') : __('admin.global.add_new_work') }}</h2>
+            <h2 class="table-title">{{ isset($work) ? 'Edit Gallery' : 'Add New Gallery' }}</h2>
         </div>
 
         <div class="d-flex flex-column gap-5 col-lg-3 mb-7">
-            {{-- <div class="card card-flush">
+            <div class="card card-flush">
                 <div class="card-header">
                     <div class="card-title">
-                        <h3>{{ __('admin.form.status') }}</h3>
+                        <h3>Is featured</h3>
                     </div>
                     <div class="card-toolbar">
                         <label class="form-check form-switch form-check-custom form-check-solid">
-                            <input type="hidden" name="status" value="0">
-                            <input class="form-check-input btn active_operation" type="checkbox" name="status" value="1">
-                            <span class="form-check-label fw-bold text-muted"></span>
+                            <input type="hidden" name="is_featured" value="0">
+                            <input class="form-check-input btn active_operation" type="checkbox" name="is_featured"
+                                @if (isset($work) && $work->is_featured == 1) checked @endif value="1">
                         </label>
                     </div>
                 </div>
-            </div> --}}
-
+            </div>
             <div class="card card-flush">
                 <div class="card-header card-header justify-content-center p-5">
                     <div class="card-toolbar">
                         <div class="image-input image-input-outline image-input-placeholder image-input-empty"
                             data-kt-image-input="true">
                             <div class="image-input-wrapper w-200px h-200px"
-                                style="background-image: url('@if(isset($work) && $work->image !== null) {{ asset($work->image) }} @else {{ asset('admin_assets/media/svg/files/blank-image.svg') }} @endif')"></div>
+                                style="background-image: url('@if (isset($work) && $work->image !== null) {{ asset($work->image) }} @else {{ asset('admin_assets/media/svg/files/blank-image.svg') }} @endif')">
+                            </div>
 
                             <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
                                 data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change image">
@@ -70,17 +72,18 @@
                     <div class="card-body pt-0">
                         <div class="mb-5 fv-row">
                             <label class="required form-label">{{ __('admin.form.title') }}</label>
-                            <input type="text" name="title" value="{{ isset($work) ? $work->title : ''  }}" class="form-control mb-2" placeholder="{{ __('admin.form.title') }}" />
+                            <input type="text" name="title" value="{{ isset($work) ? $work->title : '' }}"
+                                class="form-control mb-2" placeholder="{{ __('admin.form.title') }}" />
                         </div>
-                        <div class="mb-5 fv-row">
+                        {{-- <div class="mb-5 fv-row">
                             <label class="form-label">{{ __('admin.global.category') }}</label>
                             <input type="text" name="category" value="{{ isset($work) ? $work->category : ''  }}" class="form-control mb-2" placeholder="{{ __('admin.global.category') }}" />
-                        </div>
+                        </div> --}}
 
-                        <div class="mb-5 fv-row">
+                        {{-- <div class="mb-5 fv-row">
                             <label class="form-label">{{ __('admin.form.description') }}</label>
                             <textarea name="description" value="{{ isset($work) ? $work->description : ''  }}" class="form-control" rows="4">{{ isset($work) ? $work->description : ''  }}</textarea>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>
@@ -95,7 +98,7 @@
                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
                         </span>
                     </button>
-                    <a href="{{ route('admin.works.index') }}" class="btn btn-light me-5 cancel">
+                    <a href="{{ route('admin.galleries.index') }}" class="btn btn-light me-5 cancel">
                         {{ __('admin.form.cancel') }}
                     </a>
                 </div>

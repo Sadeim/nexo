@@ -116,7 +116,7 @@
                             </div>
                         </div>
                     @endif
-                    <div class="menu-sub menu-sub-accordion">
+                    {{-- <div class="menu-sub menu-sub-accordion">
                         <div class="menu-item">
                             <a class="menu-link {{ $is_active == 'achievements' ? 'active' : '' }}"
                                 href="{{ route('admin.achievements.index') }}">
@@ -139,22 +139,22 @@
                                 </a>
                             </div>
                         </div>
-                    @endif
+                    @endif --}}
 
                     @if (auth()->user()->can('view_works'))
                         <div class="menu-sub menu-sub-accordion">
                             <div class="menu-item">
                                 <a class="menu-link {{ $is_active == 'works' ? 'active' : '' }}"
-                                    href="{{ route('admin.works.index') }}">
+                                    href="{{ route('admin.galleries.index') }}">
                                     <span class="menu-bullet">
                                         <i class="fa-solid fa-briefcase"></i>
                                     </span>
-                                    <span class="menu-title">{{ __('admin.global.works') }}</span>
+                                    <span class="menu-title">Gallery</span>
                                 </a>
                             </div>
                         </div>
                     @endif
-                    @if (auth()->user()->can('view_how'))
+                    {{-- @if (auth()->user()->can('view_how'))
                         <div class="menu-sub menu-sub-accordion">
                             <div class="menu-item">
                                 <a class="menu-link {{ $is_active == 'how' ? 'active' : '' }}"
@@ -166,9 +166,9 @@
                                 </a>
                             </div>
                         </div>
-                    @endif
+                    @endif --}}
 
-                    @if (auth()->user()->can('view_teams'))
+                    {{-- @if (auth()->user()->can('view_teams'))
                         <div class="menu-sub menu-sub-accordion">
                             <div class="menu-item">
                                 <a class="menu-link {{ $is_active == 'teams' ? 'active' : '' }}"
@@ -180,9 +180,9 @@
                                 </a>
                             </div>
                         </div>
-                    @endif
+                    @endif --}}
 
-                    @if (auth()->user()->can('view_faqs'))
+                    {{-- @if (auth()->user()->can('view_faqs'))
                         <div class="menu-sub menu-sub-accordion">
                             <div class="menu-item">
                                 <a class="menu-link {{ $is_active == 'faqs' ? 'active' : '' }}"
@@ -194,7 +194,7 @@
                                 </a>
                             </div>
                         </div>
-                    @endif
+                    @endif --}}
 
                     @if (auth()->user()->can('view_abouts'))
                         <div class="menu-sub menu-sub-accordion">
@@ -210,7 +210,7 @@
                         </div>
                     @endif
 
-                    @if (auth()->user()->can('view_clients'))
+                    {{-- @if (auth()->user()->can('view_clients'))
                         <div class="menu-sub menu-sub-accordion">
                             <div class="menu-item">
                                 <a class="menu-link {{ $is_active == 'clients' ? 'active' : '' }}"
@@ -222,11 +222,11 @@
                                 </a>
                             </div>
                         </div>
-                    @endif
+                    @endif --}}
 
                 </div>
 
-                <div data-kt-menu-trigger="click"
+                {{-- <div data-kt-menu-trigger="click"
                     class="menu-item menu-accordion {{ $is_active_parent == 'about' ? 'here show' : '' }}">
                     <span class="menu-link menu-accordion">
                         <span class="menu-icon">
@@ -242,7 +242,7 @@
                             <a class="menu-link {{ $is_active == 'about_page' ? 'active' : '' }}"
                                 href="{{ route('admin.about_page.index') }}">
                                 <span class="menu-bullet">
-                                    <i class="fa-solid fa-about"></i> {{-- about_page --}}
+                                    <i class="fa-solid fa-about"></i> 
                                 </span>
                                 <span class="menu-title">About page</span>
                             </a>
@@ -254,7 +254,7 @@
                                 <a class="menu-link {{ $is_active == 'skills' ? 'active' : '' }}"
                                     href="{{ route('admin.skills.index') }}">
                                     <span class="menu-bullet">
-                                        <i class="fa-solid fa-brain"></i> {{-- skills --}}
+                                        <i class="fa-solid fa-brain"></i> 
                                     </span>
                                     <span class="menu-title">{{ __('admin.global.skills') }}</span>
                                 </a>
@@ -268,7 +268,7 @@
                                 <a class="menu-link {{ $is_active == 'reasons' ? 'active' : '' }}"
                                     href="{{ route('admin.reasons.index') }}">
                                     <span class="menu-bullet">
-                                        <i class="fa-solid fa-lightbulb"></i> {{-- reasons --}}
+                                        <i class="fa-solid fa-lightbulb"></i> 
                                     </span>
                                     <span class="menu-title">{{ __('admin.global.reasons') }}</span>
                                 </a>
@@ -282,7 +282,7 @@
                                 <a class="menu-link {{ $is_active == 'approaches' ? 'active' : '' }}"
                                     href="{{ route('admin.approaches.index') }}">
                                     <span class="menu-bullet">
-                                        <i class="fa-solid fa-route"></i> {{-- approaches --}}
+                                        <i class="fa-solid fa-route"></i> 
                                     </span>
                                     <span class="menu-title">Approaches</span>
                                 </a>
@@ -296,7 +296,7 @@
                                 <a class="menu-link {{ $is_active == 'how' ? 'active' : '' }}"
                                     href="{{ route('admin.how.index') }}">
                                     <span class="menu-bullet">
-                                        <i class="fa-solid fa-gears"></i> {{-- how we work --}}
+                                        <i class="fa-solid fa-gears"></i> 
                                     </span>
                                     <span class="menu-title">How We Work</span>
                                 </a>
@@ -304,7 +304,7 @@
                         </div>
                     @endif
 
-                </div>
+                </div> --}}
 
                 {{-- @if (auth()->user()->can('view_banners'))
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'banners' ? 'here show' : '' }}">
@@ -337,7 +337,7 @@
                     </div>
                 @endif --}}
 
-                @if (auth()->user()->can('view_blogs'))
+                {{-- @if (auth()->user()->can('view_blogs'))
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'blogs' ? 'here show' : '' }}">
                         <span class="menu-link {{ $is_active == 'blogs' ? 'active' : '' }}">
                             <span class="menu-icon">
@@ -353,8 +353,8 @@
                             </span>
                         </span>
                     </div>
-                @endif
-                @if (auth()->user()->can('view_products'))
+                @endif --}}
+                {{-- @if (auth()->user()->can('view_products'))
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'products' ? 'here show' : '' }}">
                         <span class="menu-link {{ $is_active == 'products' ? 'active' : '' }}">
                             <span class="menu-icon">
@@ -371,7 +371,8 @@
                         </span>
                     </div>
                 @endif
-                                @if(auth()->user()->can('view_attributes')) 
+                           
+                @if(auth()->user()->can('view_attributes')) 
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'attributes' ? 'here show' : '' }}">
                         <span class="menu-link {{ $is_active == 'attributes' ? 'active' : '' }}">
                             <span class="menu-icon">
@@ -404,7 +405,7 @@
                             </span>                        
                         </span>
                     </div>
-                @endif
+                @endif --}}
                 {{-- @if (auth()->user()->can('view_categories'))
                     <div class="menu-sub menu-sub-accordion">
                         <div class="menu-item">
@@ -450,7 +451,7 @@
                         </span>
                     </span>
                 </div>
-                {{-- @if (auth()->user()->can('view_bookings'))
+                @if (auth()->user()->can('view_bookings'))
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'bookings' ? 'here show' : '' }}">
                         <span class="menu-link {{ $is_active == 'bookings' ? 'active' : '' }}">
                             <span class="menu-icon">
@@ -466,7 +467,7 @@
                             </span>
                         </span>
                     </div>
-                @endif --}}
+                @endif
 
                 {{-- @if (auth()->user()->can('view_contacts'))
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'contacts' ? 'here show' : '' }}">
@@ -555,7 +556,7 @@
                         </span>
                     </div>
                 @endif --}}
-                @if (auth()->user()->can('view_newsletters'))
+                {{-- @if (auth()->user()->can('view_newsletters'))
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'newsletters' ? 'here show' : '' }}">
                         <span class="menu-link {{ $is_active == 'newsletters' ? 'active' : '' }}">
                             <span class="menu-icon">
@@ -571,7 +572,7 @@
                             </span>
                         </span>
                     </div>
-                @endif
+                @endif --}}
 
                 {{-- @if (auth()->user()->can('view_reasons'))
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'reasons' ? 'here show' : '' }}">
@@ -609,7 +610,7 @@
                     </div>
                 @endif --}}
 
-                @if (auth()->user()->can('view_static_pages'))
+                {{-- @if (auth()->user()->can('view_static_pages'))
                     <div
                         class="menu-item menu-accordion {{ $is_active_parent == 'static_pages' ? 'here show' : '' }}">
                         <span class="menu-link {{ $is_active == 'static_pages' ? 'active' : '' }}">
@@ -626,7 +627,7 @@
                             </span>
                         </span>
                     </div>
-                @endif
+                @endif --}}
                 {{-- <div data-kt-menu-trigger="click"
                     class="menu-item menu-accordion {{ $is_active_parent == 'user_management' ? 'here show' : '' }}">
                     <span class="menu-link menu-accordion">

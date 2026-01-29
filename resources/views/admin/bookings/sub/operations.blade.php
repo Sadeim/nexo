@@ -1,5 +1,5 @@
 <div class="tableActions">
-    <a class="btn" href="{{route('admin.bookings.edit', ['booking' => $instance->id])}}">
+    {{-- <a class="btn" href="{{route('admin.bookings.edit', ['booking' => $instance->id])}}">
         <span class="svg-icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="20"
                     height="20" viewBox="0 0 20 20">
@@ -16,7 +16,7 @@
             </svg>
 
         </span>
-    </a>
+    </a> --}}
     <a class="svg-icon" data-kt-docs-table-filter="delete_row" data-action="{{route('admin.bookings.destroy', ['booking'=> $instance->id])}}">
         <svg data-kt-docs-table-filter="delete_row" data-action="{{route('admin.bookings.destroy', ['booking'=> $instance->id])}}" xmlns="http://www.w3.org/2000/svg"
                 width="19.28" height="19.28"

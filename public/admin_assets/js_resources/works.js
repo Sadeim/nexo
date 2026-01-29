@@ -3,7 +3,7 @@
 window.columns = [
     {data: 'id'},
     {data: 'title'},
-    {data: 'category'},
+    // {data: 'category'},
     {data: 'created_at'},
     {data: 'operations'}
 ];

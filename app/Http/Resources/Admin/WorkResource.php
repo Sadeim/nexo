@@ -19,7 +19,7 @@ class WorkResource extends JsonResource
         return [
             'id'            => $this->id,
             'title'          => $this->title,
-            'category'          => $this->category,
+            // 'category'          => $this->category,
             'created_at'          => $this->created_at->format('d-m-Y'),
             'operations'    => $operations,
         ];

@@ -44,7 +44,7 @@ class WorkController extends Controller
     {
         try {
             DB::beginTransaction();
-            $data = $request->only(['title', 'category', 'description', 'status']);
+            $data = $request->only(['title', 'category', 'description', 'status','is_featured']);
             $data['slug'] = Str::slug($data['title'] . '-' . rand(1000,9999));
             if ($request->hasFile('image')) {
                 $data['image'] = $this->uploadImage($request->image, 'works');
@@ -68,7 +68,7 @@ class WorkController extends Controller
     {
         try {
             DB::beginTransaction();
-            $data = $request->only(['title', 'category', 'description', 'status']);
+            $data = $request->only(['title', 'category', 'description', 'status','is_featured']);
             $data['slug'] = Str::slug($data['title'] . '-' . rand(1000,9999));
             if ($request->hasFile('image')) {
                 $data['image'] = $this->uploadImage($request->image, 'works');

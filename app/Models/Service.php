@@ -15,8 +15,8 @@ class Service extends Model
         'name',
         'description',
         'status',
-        'icon', 
-        'image', 
+        'icon',
+        'image',
         'is_featured',
     ];
 
@@ -24,8 +24,13 @@ class Service extends Model
     {
         if (!empty($request->search['value'])) {
             $search = '%' . $request->search['value'] . '%';
-            return $query->where('name', 'LIKE' , $search);
+            return $query->where('name', 'LIKE', $search);
         }
         return $query;
+    }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
     }
 }

@@ -3,8 +3,8 @@
     <div class="container-fluid d-flex flex-column flex-md-row align-items-center justify-content-between">
         <!--begin::Copyright-->
         <div class="text-dark order-2 order-md-1">
-            <span class="text-muted fw-semibold me-1">2025</span>
-            <a href="" target="_blank" class="text-gray-800 text-hover-primary">Hrs</a>
+            <span class="text-muted fw-semibold me-1">2026</span>
+            <a href="" target="_blank" class="text-gray-800 text-hover-primary">{{ $settings->valueOf('site_title') }}</a>
         </div>
         <!--end::Copyright-->
         <!--begin::Menu-->

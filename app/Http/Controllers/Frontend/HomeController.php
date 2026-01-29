@@ -18,19 +18,15 @@ use App\Models\Feature;
 use App\Models\How;
 use App\Models\Instagram;
 use App\Models\Newsletter;
-use App\Models\Reason;
-use App\Models\ReasonTab;
+
 use App\Models\Section;
 use App\Models\Service;
 use App\Models\Setting;
 use App\Models\Slider;
-use App\Models\Team;
-use App\Models\Testimonial;
+
 use App\Models\UserMessages;
 use App\Models\Work;
-use App\Models\Approach;
-use App\Models\Product;
-use App\Models\Skill;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -41,150 +37,100 @@ class HomeController extends Controller
     {
         $data['slider'] = Slider::first();
         $data['about'] = About::first();
-        $data['services'] = Service::get();
         $data['works'] = Work::get();
-        $data['teams'] = Team::get();
-        $data['products'] = Product::get();
-        $data['testimonials'] = Testimonial::get();
-        $data['faqs'] = Faq::get();
-        $data['blogs'] = Blog::get();
-        $data['clients'] = Client::get();
-        $data['achievements'] = Achievement::get();  
+        $data['services'] = Service::where('is_featured', 1)->get();
+
         $data['sections'] = Section::whereIn('key', [
             'services_section',
-            'testimonials_section',
-            'works_section',
-            'about_section',
-            'teams_section',
-            'products_section',
-            'faqs_section',
-            'sliders_section',
-            'clients_section',
-            'blog_section',
-            'achievements_section',
+            'contact_page',
         ])->get()->keyBy('key');
-        $data['how'] = How::first();
-        
+
         return view('frontend.home', $data);
     }
 
-    public function storeConsultation(Request $request)
+    public function services()
     {
-        $validator = Validator::make($request->all(), [
-            'name'    => 'required|string|max:255',
-            'email'   => 'required|email|max:255',
-            'phone'   => 'required|string|max:20',
-            'service' => 'required', // تأكد من اختيار خدمة صحيحة
-            'message' => 'required|string',
-        ]);
+        $data['services'] = Service::get();
 
-        if ($validator->fails()) {
-            return response()->json([
-                'errors' => $validator->errors()
-            ], 422);
-        }
+        $data['works'] = Work::get();
 
-        $message = Consultation::create($request->all());
+        $data['sections'] = Section::whereIn('key', [
+            'services_section',
+        ])->get()->keyBy('key');
 
-        Mail::to(config('mail.admin_email'))->send(new AdminNotification($message, 'consultation'));
-
-        return response()->json([
-            'message' => 'Your consultation request has been received successfully!'
-        ]);
+        return view('frontend.services', $data);
     }
 
-    public function storeNewsletter(Request $request)
+    public function gallery()
     {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email|unique:newsletters,email',
-        ]);
+        $data['works'] = Work::where('is_featured', 1)->get();
 
-        if ($validator->fails()) {
-            return response()->json(['status' => 'error', 'message' => $validator->errors()->first()], 422);
-        }
-
-        Newsletter::create([
-            'email' => $request->email,
-        ]);
-
-        return response()->json(['status' => 'success', 'message' => 'Thanks for subscribing!']);
+        return view('frontend.gallery',$data);
     }
 
+    // Get all active services for the booking form
+    public function getServices()
+    {
+        $services = Service::get(['id', 'name']);
+        return response()->json(['services' => $services]);
+    }
+
+    // Store booking
     public function storeBooking(Request $request)
     {
         $validated = $request->validate([
-            'persons' => 'required|integer|min:1|max:6',
-            'date' => 'required|date',
-            'time' => 'required|date_format:H:i',
+            'name' => 'required|string|max:255',
+            'date' => 'required|date|after_or_equal:today',
+            'service_id' => 'required|exists:services,id',
+            'time' => 'required|string',
         ]);
+        $validated['persons'] = 1;
+        $validated['status'] = 'pending';
 
         Booking::create($validated);
 
-        return response()->json(['message' => 'Booking saved successfully.']);
+        return response()->json([
+            'success' => true,
+            'message' => 'Booking saved successfully.'
+        ], 200);
     }
 
     public function contactUs()
     {
-        $data['instagrams'] = Instagram::get();
-        $data['about'] = About::first();
-        $data['section'] = Section::where('key', 'contact_page')->first();
-        return view('frontend.contact_us', $data);
+        $data['sections'] = Section::whereIn('key', [
+            'contact_page',
+
+        ])->get()->keyBy('key');
+
+
+        return view('frontend.contact', $data);
     }
+
 
     public function contactStore(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
-            'phone' => ['required'],
             'email' => ['required', 'string', 'email', 'max:255'],
-            // 'subject' => ['required', 'string', 'max:255'],
+            'subject' => ['required', 'string', 'max:255'],
             'message' => ['required', 'string'],
-            // 'number' => 'required|string|max:20',
         ]);
 
         if ($validator->fails()) {
-            return $this->response_api(400, $validator->errors()->first(), '');
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first()
+            ], 400);
         }
 
-        $dataR = $request->only(['name', 'phone', 'email','subject','message']);
+        $dataR = $request->only(['name', 'email', 'subject', 'message']);
         $message = UserMessages::create($dataR);
         $email = Setting::where('key', 'email')->first()->value;
-         Mail::to($email)->send(new AdminNotification($message, 'contact'));
+        Mail::to($email)->send(new AdminNotification($message, 'contact'));
 
-        return $this->response_api(200, 'Done Successfully');
-    }
-
-    public function aboutUs()
-    {
-        $data['about'] = About::with(['openingHours' => function ($query) {
-                            $query->orderByRaw("FIELD(day, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday')");
-                        }])->first();
-                        
-        $data['testimonials'] = Testimonial::get();
-        $data['teams'] = Team::get();
-        $data['clients'] = Client::get();
-        $data['skills'] = Skill::first();
-        $data['reasons'] = Reason::get();
-        $data['how'] = How::first();
-        $data['approach'] = Approach::first();
-        $data['sections'] = Section::whereIn('key', [
-            'about_page',
-            'skills_section',
-            'approaches_section',
-            'reasons_section',
-        ])->get()->keyBy('key');
-        
-        return view('frontend.about_us', $data);
-    }
-
-    public function projects()
-    {
-        $data['works'] = Work::get();
-        $data['categories'] = Category::get();
-        $data['sections'] = Section::whereIn('key', [
-            'works_section',
-            'projects_section',
-        ])->get()->keyBy('key');
-        return view('frontend.projects', $data);
+        return response()->json([
+            'success' => true,
+            'message' => 'Done Successfully'
+        ], 200);
     }
 }

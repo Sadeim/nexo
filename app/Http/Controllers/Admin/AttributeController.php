@@ -14,13 +14,13 @@ use Illuminate\Support\Str;
 class AttributeController extends Controller
 {
 
-    public function __construct()
-    {
-        $this->middleware('permission:view_attributes|add_attributes', ['only' => ['index', 'store']]);
-        $this->middleware('permission:add_attributes', ['only' => ['create', 'store']]);
-        $this->middleware('permission:edit_attributes', ['only' => ['edit', 'update']]);
-        $this->middleware('permission:delete_attributes', ['only' => ['destroy']]);
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('permission:view_attributes|add_attributes', ['only' => ['index', 'store']]);
+    //     $this->middleware('permission:add_attributes', ['only' => ['create', 'store']]);
+    //     $this->middleware('permission:edit_attributes', ['only' => ['edit', 'update']]);
+    //     $this->middleware('permission:delete_attributes', ['only' => ['destroy']]);
+    // }
     /**
      * Display a listing of the resource.
      */

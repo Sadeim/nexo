@@ -211,8 +211,8 @@ Route::group(['middleware' => ['auth:admin', 'admin'], 'prefix' => 'admin', 'as'
     /* ------------------------------------- skill Routes --------------------------------- */
 
     /* ------------------------------------- work Routes --------------------------------- */
-    Route::resource('works', WorkController::class);
-    Route::group(['prefix' => 'works', 'as' => 'works.'], function () {
+    Route::resource('galleries', WorkController::class);
+    Route::group(['prefix' => 'galleries', 'as' => 'galleries.'], function () {
         Route::get('data/datatables', [WorkController::class, 'datatable'])->name('datatable');
     });
     /* ------------------------------------- work Routes --------------------------------- */

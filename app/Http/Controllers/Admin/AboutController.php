@@ -16,9 +16,9 @@ class AboutController extends Controller
 
     public function __construct()
     {
-        $this->middleware('permission:view_abouts|add_abouts', ['only' => ['index','store']]);
-        $this->middleware('permission:add_abouts', ['only' => ['create','store']]);
-        $this->middleware('permission:edit_abouts', ['only' => ['edit','update']]);
+        $this->middleware('permission:view_abouts|add_abouts', ['only' => ['index', 'store']]);
+        $this->middleware('permission:add_abouts', ['only' => ['create', 'store']]);
+        $this->middleware('permission:edit_abouts', ['only' => ['edit', 'update']]);
         $this->middleware('permission:delete_abouts', ['only' => ['destroy']]);
     }
 
@@ -42,10 +42,10 @@ class AboutController extends Controller
     {
         try {
             DB::beginTransaction();
-    
+
             // استخراج جميع الحقول ما عدا الصور وساعات العمل
             $data = $request->except(['image1', 'image2', 'opening_hours']);
-    
+
             // معالجة الصور
             $imageFields = ['image1', 'image2'];
             foreach ($imageFields as $field) {
@@ -53,7 +53,7 @@ class AboutController extends Controller
                     $data[$field] = $this->uploadImage($request->file($field), 'about');
                 }
             }
-    
+
             // تحديث أو إنشاء السجل
             $about = About::first();
             if ($about) {
@@ -61,12 +61,12 @@ class AboutController extends Controller
             } else {
                 $about = About::create($data);
             }
-    
+
             // تحديث ساعات العمل
             if ($request->has('opening_hours')) {
                 // حذف الساعات القديمة
                 $about->openingHours()->delete();
-    
+
                 // إضافة الجديدة
                 foreach ($request->input('opening_hours') as $day => $time) {
                     if (!empty($time['from']) && !empty($time['to'])) {
@@ -78,7 +78,7 @@ class AboutController extends Controller
                     }
                 }
             }
-    
+
             DB::commit();
             return $this->response_api(200, __('admin.form.added_successfully'), '');
         } catch (\Exception $e) {
@@ -86,7 +86,12 @@ class AboutController extends Controller
             return $this->response_api(400, $this->exMessage($e));
         }
     }
-    
+    // public function show($id)
+    // {
+    //     $about = About::findOrFail($id);
+    //     // return view('admin.abouts.show', compact('about'));
+    // }
+
 
 
     public function edit($id)
@@ -99,12 +104,14 @@ class AboutController extends Controller
     {
         try {
             DB::beginTransaction();
-    
+
             // استخراج البيانات ما عدا الصور وساعات العمل
             $data = $request->except([
-                'image1', 'image2', 'opening_hours'
+                'image1',
+                'image2',
+                'opening_hours'
             ]);
-    
+
             // معالجة الصور
             $imageFields = ['image1', 'image2'];
             foreach ($imageFields as $field) {
@@ -112,15 +119,15 @@ class AboutController extends Controller
                     $data[$field] = $this->uploadImage($request->file($field), 'about');
                 }
             }
-    
+
             // تحديث بيانات about
             $about->update($data);
-    
+
             // تحديث بيانات opening hours
             if ($request->has('opening_hours') && is_array($request->opening_hours)) {
                 // حذف السجلات القديمة
                 $about->openingHours()->delete();
-    
+
                 // إدخال السجلات الجديدة
                 foreach ($request->opening_hours as $hour) {
                     $about->openingHours()->create([
@@ -131,16 +138,15 @@ class AboutController extends Controller
                     ]);
                 }
             }
-    
+
             DB::commit();
             return $this->response_api(200, __('admin.form.updated_successfully'), '');
-    
         } catch (\Exception $e) {
             DB::rollBack();
             return $this->response_api(400, $this->exMessage($e));
         }
     }
-    
+
 
 
     public function destroy($id)

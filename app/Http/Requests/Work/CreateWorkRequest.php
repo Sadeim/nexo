@@ -31,7 +31,9 @@ class CreateWorkRequest extends BaseRequest
             'title' => 'required|string|max:255',
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp',
             'category' => 'nullable|string|max:255',
-            'description' => 'required|string',
+            'description' => 'nullable|string',
+            'is_featured'   => ['nullable', 'in:0,1'],
+
         ];
     }
 }
