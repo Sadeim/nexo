@@ -98,7 +98,7 @@
 
                                 <!-- Arrow Button -->
                                 <button onclick="window.location.href='{{ $about->button_link }}'"
-                                    class="absolute mt-6 md:mt-0 top-full md:top-2/3 -tanslate-y-2/3 left-12 w-16 h-16 rounded-full bg-ivory flex items-center justify-center hover:bg-white transition-colors hover:scale-110">
+                                    class="absolute mt-6 md:mt-0 bottom-0 md:bottom-8 left-12 w-16 h-16 rounded-full bg-ivory flex items-center justify-center hover:bg-white transition-colors hover:scale-110 z-50">
                                     <svg width="39" height="38" viewBox="0 0 39 38" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <path
@@ -113,7 +113,7 @@
                             <img src="{{ asset('frontend_assets/assets/images/NexoAbout.svg') }}"
                                 class="col-span-1 lg:col-span-8 w-[95%] mt-40 md:mt-4 mx-auto px-8" />
                             <!-- <img src="./assets/images/about-nexo.png"
-                                                                    class="col-span-1 lg:col-span-8 w-full mt-20 md:mt-0" /> -->
+                                                                        class="col-span-1 lg:col-span-8 w-full mt-20 md:mt-0" /> -->
 
 
                             <!-- Right Column - Text Content -->
@@ -527,7 +527,7 @@
                         <img src="{{ asset('frontend_assets/assets/images/nexo-standard.svg') }}" alt="X Scissors Logo"
                             class="w-96 h-[165px] mx-auto">
                         <!-- <img src="./assets/images/nexo-higher-standard.svg" alt="X Scissors Logo"
-                                                                class="w-96 h-48 opacity-80 mx-auto my-auto"> -->
+                                                                    class="w-96 h-48 opacity-80 mx-auto my-auto"> -->
                     </div>
 
                     <!-- Large X Scissors Logo Right -->
