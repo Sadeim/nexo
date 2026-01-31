@@ -37,7 +37,7 @@ class HomeController extends Controller
     {
         $data['slider'] = Slider::first();
         $data['about'] = About::first();
-        $data['works'] = Work::get();
+        $data['works'] = Work::where('is_featured',1)->get();
         $data['services'] = Service::where('is_featured', 1)->get();
 
         $data['sections'] = Section::whereIn('key', [
@@ -63,7 +63,7 @@ class HomeController extends Controller
 
     public function gallery()
     {
-        $data['works'] = Work::where('is_featured', 1)->get();
+        $data['works'] = Work::where('is_featured', 0)->get();
 
         return view('frontend.gallery',$data);
     }
