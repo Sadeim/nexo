@@ -1,5 +1,5 @@
 @extends('admin.layouts.master', ['is_active_parent' => 'home','is_active'=> 'sliders'])
-@section('title', isset($slider) ? __('admin.global.edit_slider') : __('admin.global.add_new_slider'))
+@section('title', isset($slider) ?'Edit Slider' : 'Add New Slider')
 
 @section('content')
     <form id="kt_form" class="form row d-flex flex-column flex-lg-row addForm" data-kt-redirect="{{ route('admin.sliders.index') }}"
@@ -10,7 +10,7 @@
         @endisset
 
         <div class="page-content-header mb-5">
-            <h2 class="table-title">{{ isset($slider) ? __('admin.global.edit_slider') : __('admin.global.add_new_slider') }}</h2>
+            <h2 class="table-title">{{ isset($slider) ? 'Edit Slider' : 'Add New Slider' }}</h2>
         </div>
         
         <!-- Sidebar: Status and Logo Image Section -->
@@ -57,11 +57,11 @@
                         <input type="text" name="button_text" class="form-control" placeholder="Enter slider button text"
                                value="{{ isset($slider) ? $slider->button_text : '' }}">
                     </div>
-                    <div class="mb-5">
+                    {{-- <div class="mb-5">
                         <label class="form-label">Button link</label>
                         <input type="text" name="button_link" class="form-control" placeholder="Enter slider button link"
                                value="{{ isset($slider) ? $slider->button_link : '' }}">
-                    </div>
+                    </div> --}}
                     {{-- <div class="mb-5">
                         <label class="form-label">Order</label>
                         <input type="text" name="order" class="form-control" placeholder="Enter slider order"
