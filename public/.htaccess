@@ -5,6 +5,15 @@
 
     RewriteEngine On
 
+    # منع mod_pagespeed من معالجة الصور - أضف هذا في البداية
+    <IfModule pagespeed_module>
+        ModPagespeed off
+    </IfModule>
+
+    <IfModule mod_pagespeed.c>
+        ModPagespeed off
+    </IfModule>
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
@@ -19,3 +28,40 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
+
+# منع ضغط الصور - أضف هذا القسم كاملاً
+<IfModule mod_deflate.c>
+    # منع ضغط الصور والخطوط
+    SetEnvIfNoCase Request_URI \.(gif|jpe?g|png|webp|svg|ico)$ no-gzip dont-vary
+    SetEnvIfNoCase Request_URI \.(woff|woff2|ttf|eot)$ no-gzip dont-vary
+    SetEnvIfNoCase Request_URI \.(pdf|zip|rar|exe|gz)$ no-gzip dont-vary
+</IfModule>
+
+# إعدادات Headers للصور - أضف هذا القسم
+<IfModule mod_headers.c>
+    <FilesMatch "\.(jpg|jpeg|png|gif|webp|svg|ico)$">
+        # Cache طويل للصور
+        Header set Cache-Control "public, max-age=31536000, immutable"
+        # منع التعديل على الصور
+        Header unset ETag
+        Header unset Vary
+        Header unset Pragma
+        Header unset Expires
+        # منع Cloudflare من التعديل
+        Header set CDN-Cache-Control "public, max-age=31536000"
+    </FilesMatch>
+</IfModule>
+
+# تحديد MIME types للصور - أضف هذا القسم
+<IfModule mod_mime.c>
+    AddType image/png .png
+    AddType image/jpeg .jpg .jpeg
+    AddType image/gif .gif
+    AddType image/webp .webp
+    AddType image/svg+xml .svg
+</IfModule>
+
+# منع PHP من معالجة الصور - أضف هذا
+<FilesMatch "\.(jpg|jpeg|png|gif|webp|svg|ico)$">
+    SetHandler None
+</FilesMatch>
