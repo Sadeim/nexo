@@ -15,7 +15,7 @@
                     class="w-full h-full object-cover opacity-90">
             </div>
 
-   
+
 
             <div class="container mx-auto px-4 md:px-8 lg:px-12 lg:pl-18 relative z-10">
                 <!-- Content -->
@@ -57,9 +57,15 @@
         <!-- About Start -->
         <section class="relative py-16 overflow-hidden">
             <!-- Background Pattern -->
-            <div class="absolute inset-0">
+            {{-- <div class="absolute inset-0">
                 <img src="{{ asset('frontend_assets/assets/images/bg-about.png') }}" alt="Background pattern"
                     class="w-full h-full object-cover">
+            </div> --}}
+            <div class="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                style="background-image: url('{{ asset('frontend_assets/assets/images/bg-about.png') }}'); 
+                background-size: cover; 
+                background-position: center;
+                will-change: transform;">
             </div>
 
             <div class="container mx-auto px-4 md:px-8 lg:px-12 relative z-10">
@@ -111,7 +117,7 @@
                             <img src="{{ asset('frontend_assets/assets/images/NexoAbout.svg') }}"
                                 class="col-span-1 lg:col-span-8 w-[95%] mt-40 md:mt-4 mx-auto px-8" />
                             <!-- <img src="./assets/images/about-nexo.png"
-                                                                        class="col-span-1 lg:col-span-8 w-full mt-20 md:mt-0" /> -->
+                                                                                class="col-span-1 lg:col-span-8 w-full mt-20 md:mt-0" /> -->
 
 
                             <!-- Right Column - Text Content -->
@@ -179,7 +185,7 @@
                                 <img src="{{ asset('frontend_assets/assets/images/Large-about-x.svg') }}" alt="X Logo">
                             </div>
                         </div>
-                       
+
                     </div>
 
                     <!-- Bottom Info Bar -->
@@ -497,7 +503,7 @@
                         <img src="{{ asset('frontend_assets/assets/images/nexo-standard.svg') }}" alt="X Scissors Logo"
                             class="w-96 h-[165px] mx-auto">
                         <!-- <img src="./assets/images/nexo-higher-standard.svg" alt="X Scissors Logo"
-                                                                    class="w-96 h-48 opacity-80 mx-auto my-auto"> -->
+                                                                            class="w-96 h-48 opacity-80 mx-auto my-auto"> -->
                     </div>
 
                     <!-- Large X Scissors Logo Right -->
