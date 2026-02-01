@@ -13,7 +13,7 @@
     <meta property="og:url" content="https://keenthemes.com/metronic" />
     <meta property="og:site_name" content="Keenthemes | Metronic" />
     <link rel="canonical" href="https://preview.keenthemes.com/metronic8" />
-    <link rel="shortcut icon" href="{{ $settings->valueOf('company_logo') }}" type="image/x-icon" />
+    <link rel="shortcut icon" href="{{ $settings->valueOf('browser_icon') }}" type="image/x-icon" />
     <!--begin::Fonts-->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
     <!--end::Fonts-->

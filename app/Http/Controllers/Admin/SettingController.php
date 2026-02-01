@@ -29,6 +29,9 @@ class SettingController extends Controller
                     if ($key === 'map_embed') {
                         $value = $this->extractIframeSrc($value);
                     }
+                    if (request()->has('browser_icon') && $key == 'browser_icon') {
+                        $value = $this->uploadImage($request->browser_icon, 'browser_icon');
+                    }
 
                     if (request()->has('company_logo') && $key == 'company_logo') {
                         $value = $this->uploadImage($request->company_logo, 'company_logo');
