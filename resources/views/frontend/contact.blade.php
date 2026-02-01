@@ -43,28 +43,7 @@
                                     class="w-full h-full object-cover">
                             </div>
                         </div>
-                        {{-- <form
-                            class="flex flex-col gap-4 bg-white px-4 py-10 w-full max-w-182.25 xl:max-w-154 xl:-ml-16 z-10 mx-auto xl:mx-0">
-                            <div class="flex flex-col md:flex-row gap-4 md:gap-8 w-full">
-                                <div class="flex flex-col gap-4 w-full">
-                                    <input type="text" id="name" name="name" placeholder="Name"
-                                        class="w-full p-2 border-b-2 border-[#283327] placeholder:text-[#283327] placeholder:font-league-gothic placeholder:tracking-wider placeholder:font-normal placeholder:text-base uppercase">
-                                </div>
-                                <div class="flex flex-col gap-4 w-full">
-                                    <input type="email" id="email" name="email" placeholder="Email"
-                                        class="w-full p-2 border-b-2 border-[#283327] placeholder:text-[#283327] placeholder:font-league-gothic placeholder:tracking-wider placeholder:font-normal placeholder:text-base uppercase">
-                                </div>
-                            </div>
-                            <div class="flex flex-col md:flex-row justify-between gap-4">
-                                <input type="text" id="subject" name="subject" placeholder="Subject"
-                                    class="w-full p-2 border-b-2 border-[#283327] placeholder:text-[#283327] placeholder:font-league-gothic placeholder:tracking-wider placeholder:font-normal placeholder:text-base uppercase">
-                            </div>
-                            <textarea id="message" name="message" placeholder="Message"
-                                class="w-full p-2 border-b-2 border-[#283327] placeholder:text-[#283327] placeholder:font-league-gothic placeholder:tracking-wider placeholder:font-normal placeholder:text-base uppercase resize-none"></textarea>
-                            <button type="submit"
-                                class="bg-evergreen text-white px-4 md:px-10 py-2 md:py-3 my-10 uppercase text-lg font-league-gothic tracking-wider w-full md:w-1/2">Send
-                                Message</button>
-                        </form> --}}
+                      
                         <form
                             class="flex flex-col gap-4 bg-white px-4 py-10 w-full max-w-182.25 xl:max-w-154 xl:-ml-16 z-10 mx-auto xl:mx-0">
                             <div class="flex flex-col md:flex-row gap-4 md:gap-8 w-full">

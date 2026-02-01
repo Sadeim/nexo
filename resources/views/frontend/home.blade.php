@@ -96,7 +96,7 @@
 
                                 <!-- Arrow Button -->
                                 <button onclick="window.location.href='{{ $about->button_link }}'"
-                                    class="absolute mt-6 md:mt-0 bottom-0 md:bottom-8 left-12 w-16 h-16 rounded-full bg-ivory flex items-center justify-center hover:bg-white transition-colors hover:scale-110 z-50">
+                                    class="absolute mt-6 md:mt-0 top-full md:top-5/6  -tanslate-y-2/3 left-12 w-16 h-16 rounded-full bg-ivory flex items-center justify-center hover:bg-white transition-colors hover:scale-110">
                                     <svg width="39" height="38" viewBox="0 0 39 38" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <path
@@ -470,7 +470,7 @@
                 </div>
 
                 <!-- Contact Info Grid -->
-                <div class="grid lg:grid-cols-3 gap-8 items-start pt-14 md:pt-24">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-start pt-14 md:pt-24">
                     <!-- Large X Scissors Logo Left -->
                     <div class="flex items-center justify-end mt-auto">
                         <img src="{{ asset('frontend_assets/assets/images/xLeft.svg') }}" alt="X Scissors Logo"
