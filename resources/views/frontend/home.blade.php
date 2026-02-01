@@ -15,9 +15,7 @@
                     class="w-full h-full object-cover opacity-90">
             </div>
 
-            <!-- Gradient Overlay (optional - to maintain the original color effect) -->
-            <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-ivory/40 to-[#1B4629]/40 pointer-events-none">
-            </div>
+   
 
             <div class="container mx-auto px-4 md:px-8 lg:px-12 lg:pl-18 relative z-10">
                 <!-- Content -->
