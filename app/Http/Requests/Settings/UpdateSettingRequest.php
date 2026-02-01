@@ -28,7 +28,7 @@ class UpdateSettingRequest extends BaseRequest
     {
         return [
             'site_title'            => ['nullable'],
-            'company_logo'          => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif'],
+            'company_logo'          => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg'],
             'company_logo_footer'   => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif'],
             'email'                 => ['nullable', 'max:255'],
             'phone'                 => ['nullable'],

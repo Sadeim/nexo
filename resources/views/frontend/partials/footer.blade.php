@@ -35,7 +35,7 @@
                  <h3 class="font-league-gothic text-2xl md:text-3xl mb-4 text-crimson">Contact</h3>
                  <ul class="space-y-2 text-xl md:text-2xl">
                      <li>{{ $settings->valueOf('phone') }}</li>
-                     <li>{{ $settings->valueOf('web_address') }}</li>
+                     <li>{{ $settings->valueOf('email') }}</li>
                      <li>{{ $settings->valueOf('address') }}</li>
                  </ul>
              </div>

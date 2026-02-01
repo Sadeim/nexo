@@ -113,7 +113,7 @@
                                                 fill="#F8EDD2" />
                                         </svg>
                                         <div class="font-league-gothic text-2xl text-center">
-                                            <p>{{ $settings->valueOf('address1') }}</p>
+                                            <p>{{ $settings->valueOf('address') }}</p>
                                             {{-- <p>New York</p> --}}
                                         </div>
                                     </div>
@@ -153,7 +153,7 @@
                                                         fill="#F8EDD2" />
                                                 </svg>
 
-                                                <span>{{ $settings->valueOf('web_address') }}</span>
+                                                <span>{{ $settings->valueOf('email') }}</span>
                                             </div>
                                         </div>
 

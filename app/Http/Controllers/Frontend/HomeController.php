@@ -52,7 +52,7 @@ class HomeController extends Controller
     {
         $data['services'] = Service::get();
 
-        $data['works'] = Work::get();
+        $data['works'] = Work::where('is_featured',1)->get();
 
         $data['sections'] = Section::whereIn('key', [
             'services_section',

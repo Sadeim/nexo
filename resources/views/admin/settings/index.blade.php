@@ -129,7 +129,7 @@
                                                     <div class="fv-plugins-message-container invalid-feedback"></div>
                                                 </div>
                                             </div>
-                                            <div class="row mb-8">
+                                            {{-- <div class="row mb-8">
                                                 <div class="col-xl-3">
                                                     <div class="fs-6 fw-semibold mt-2 mb-3">LinkedIn</div>
                                                 </div>
@@ -138,7 +138,7 @@
                                                         value="{{ $settings->valueOf('linkedin') }}">
                                                     <div class="fv-plugins-message-container invalid-feedback"></div>
                                                 </div>
-                                            </div>
+                                            </div> --}}
                                             <div class="row mb-8">
                                                 <div class="col-xl-3">
                                                     <div class="fs-6 fw-semibold mt-2 mb-3">Facebook</div>
@@ -179,7 +179,7 @@
                                                     <div class="fv-plugins-message-container invalid-feedback"></div>
                                                 </div>
                                             </div>
-                                            <div class="row mb-8">
+                                            {{-- <div class="row mb-8">
                                                 <div class="col-xl-3">
                                                     <div class="fs-6 fw-semibold mt-2 mb-3">Geographical Location 2 </div>
                                                 </div>
@@ -188,7 +188,7 @@
                                                         value="{{ $settings->valueOf('address1') }}">
                                                     <div class="fv-plugins-message-container invalid-feedback"></div>
                                                 </div>
-                                            </div>
+                                            </div> --}}
                                             <div class="row mb-8">
                                                 <div class="col-xl-3">
                                                     <div class="fs-6 fw-semibold mt-2 mb-3">Website URL</div>
@@ -240,7 +240,7 @@
                                                     <div class="fv-plugins-message-container invalid-feedback"></div>
                                                 </div>
                                             </div>
-                                            <div class="row mb-8">
+                                            {{-- <div class="row mb-8">
                                                 <div class="col-xl-3">
                                                     <div class="fs-6 fw-semibold mt-2 mb-3">Map Embed</div>
                                                 </div>
@@ -250,7 +250,7 @@
                                                         value="{{ $settings->valueOf('map_embed') }}">
                                                     <div class="fv-plugins-message-container invalid-feedback"></div>
                                                 </div>
-                                            </div>
+                                            </div> --}}
                                         </div>
                                         <div class="card-footer d-flex justify-content-end py-6 px-9">
                                             <button type="reset"

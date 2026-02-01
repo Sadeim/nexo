@@ -50,8 +50,8 @@
             <div class="flex items-center justify-between container mx-auto">
                 <!-- Logo -->
                 <a href="{{ route('home') }}">
-                    <img src="{{ asset('frontend_assets/assets/images/logoHeader.svg') }}" alt="NEXO Log">
-                    {{-- <img src="{{ asset($settings->valueOf('company_logo'))}}" alt="NEXO Log"> --}}
+                    {{-- <img src="{{ asset('frontend_assets/assets/images/logoHeader.svg') }}" alt="NEXO Log"> --}}
+                    <img src="{{ asset($settings->valueOf('company_logo'))}}" alt="NEXO Log">
                 </a>
 
                 <!-- Desktop Navigation -->

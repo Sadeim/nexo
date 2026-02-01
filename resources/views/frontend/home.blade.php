@@ -217,7 +217,7 @@
                         <div
                             class="bg-ivory py-4 px-8 lg:px-12 flex flex-col md:flex-row items-center justify-between gap-4 text-evergreen font-league-gothic text-3xl">
                             <div class="flex items-center gap-2">
-                                <span>{{ $settings->valueOf('web_address') }}</span>
+                                <span>{{ $settings->valueOf('email') }}</span>
                             </div>
                             <svg width="32" height="32" viewBox="0 0 32 32" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -516,7 +516,7 @@
                                         fill="#F8EDD2" />
                                 </svg>
                                 <div class="font-league-gothic text-lg md:text-2xl text-center">
-                                    <p>{{ $settings->valueOf('address1') }}</p>
+                                    <p>{{ $settings->valueOf('address') }}</p>
                                 </div>
                             </div>
                         </div>
@@ -555,7 +555,7 @@
                                                 fill="#F8EDD2" />
                                         </svg>
 
-                                        <span>{{ $settings->valueOf('web_address') }}</span>
+                                        <span>{{ $settings->valueOf('email') }}</span>
                                     </div>
                                 </div>
 
