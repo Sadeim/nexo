@@ -125,6 +125,77 @@
                                                     <div class="form-text">Allowed formats: png, jpg, jpeg.</div>
                                                 </div>
                                             </div>
+
+                                            <div class="row mb-5">
+                                                <div class="col-xl-3">
+                                                    <div class="fs-6 fw-semibold mt-2 mb-3">Green Background</div>
+                                                </div>
+                                                <div class="col-lg-8">
+                                                    <div class="image-input image-input-outline"
+                                                        data-kt-image-input="true"
+                                                        style="background-image: url('assets/media/svg/files/blank-image.svg')">
+                                                        <div class="image-input-wrapper w-125px h-125px bgi-position-center"
+                                                            style="background-size: 75%; background-image: url({{ $settings->valueOf('green_background') !== null ? $settings->valueOf('green_background') : asset('admin_assets/media/svg/brand-logos/volicity-9.svg') }})">
+                                                        </div>
+                                                        <label
+                                                            class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-white shadow"
+                                                            data-kt-image-input-action="change" data-bs-toggle="tooltip"
+                                                            data-kt-initialized="1">
+                                                            <i class="bi bi-pencil-fill fs-7"></i>
+                                                            <input type="file" name="green_background"
+                                                                accept=".png, .jpg, .jpeg">
+                                                        </label>
+                                                        <span
+                                                            class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-white shadow"
+                                                            data-kt-image-input-action="cancel" data-bs-toggle="tooltip"
+                                                            data-kt-initialized="1">
+                                                            <i class="bi bi-x fs-2"></i>
+                                                        </span>
+                                                        <span
+                                                            class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-white shadow"
+                                                            data-kt-image-input-action="remove" data-bs-toggle="tooltip"
+                                                            data-kt-initialized="1">
+                                                            <i class="bi bi-x fs-2"></i>
+                                                        </span>
+                                                    </div>
+                                                    <div class="form-text">Allowed formats: png, jpg, jpeg.</div>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-5">
+                                                <div class="col-xl-3">
+                                                    <div class="fs-6 fw-semibold mt-2 mb-3">Beige Background</div>
+                                                </div>
+                                                <div class="col-lg-8">
+                                                    <div class="image-input image-input-outline"
+                                                        data-kt-image-input="true"
+                                                        style="background-image: url('assets/media/svg/files/blank-image.svg')">
+                                                        <div class="image-input-wrapper w-125px h-125px bgi-position-center"
+                                                            style="background-size: 75%; background-image: url({{ $settings->valueOf('Beige_background') !== null ? $settings->valueOf('Beige_background') : asset('admin_assets/media/svg/brand-logos/volicity-9.svg') }})">
+                                                        </div>
+                                                        <label
+                                                            class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-white shadow"
+                                                            data-kt-image-input-action="change" data-bs-toggle="tooltip"
+                                                            data-kt-initialized="1">
+                                                            <i class="bi bi-pencil-fill fs-7"></i>
+                                                            <input type="file" name="Beige_background"
+                                                                accept=".png, .jpg, .jpeg">
+                                                        </label>
+                                                        <span
+                                                            class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-white shadow"
+                                                            data-kt-image-input-action="cancel" data-bs-toggle="tooltip"
+                                                            data-kt-initialized="1">
+                                                            <i class="bi bi-x fs-2"></i>
+                                                        </span>
+                                                        <span
+                                                            class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-white shadow"
+                                                            data-kt-image-input-action="remove" data-bs-toggle="tooltip"
+                                                            data-kt-initialized="1">
+                                                            <i class="bi bi-x fs-2"></i>
+                                                        </span>
+                                                    </div>
+                                                    <div class="form-text">Allowed formats: png, jpg, jpeg.</div>
+                                                </div>
+                                            </div>
                                             <div class="row mb-8">
                                                 <div class="col-xl-3">
                                                     <div class="fs-6 fw-semibold mt-2 mb-3">Site Title</div>

@@ -58,7 +58,7 @@
         <section class="relative py-16 overflow-hidden">
             <!-- Background Pattern -->
             <div class="absolute inset-0">
-                <img src="{{ asset('frontend_assets/assets/images/bg-about.png') }}" alt="Background pattern"
+                <img src="{{ asset($settings->valueOf('green_background'))}}" alt="Background pattern"
                     class="w-full h-full object-cover">
             </div>
             {{-- <div class="absolute inset-0">
@@ -259,7 +259,7 @@
         <section class="relative py-16 lg:py-24 overflow-hidden">
             <!-- Background Pattern -->
             <div class="absolute inset-0">
-                <img src="{{ asset('frontend_assets/assets/images/bg-left.png') }}" alt="Background pattern"
+                <img src="{{ asset($settings->valueOf('Beige_background'))}}" alt="Background pattern"
                     class="w-full h-full object-cover">
             </div>
 
@@ -327,7 +327,7 @@
         <section class="relative bg-evergreen py-10 overflow-hidden px-4 md:px-8">
             <!-- Background Pattern -->
             <div class="absolute inset-0">
-                <img src="{{ asset('frontend_assets/assets/images/bg-about.png') }}" alt="Background pattern"
+                <img src="{{ asset($settings->valueOf('green_background'))}}" alt="Background pattern"
                     class="w-full h-full object-cover">
             </div>
             <div class="container mx-auto relative z-10 border-2 border-ivory/30 pointer-events-none">

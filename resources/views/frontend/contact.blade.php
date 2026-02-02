@@ -9,7 +9,7 @@
         <section class="relative py-16 overflow-hidden">
             <!-- Background Pattern -->
             <div class="absolute inset-0">
-                <img src="{{ asset('frontend_assets/assets/images/bg-about.png') }}" alt="Background pattern"
+                <img src="{{ asset($settings->valueOf('green_background'))}}" alt="Background pattern"
                     class="w-full h-full object-cover">
             </div>
 

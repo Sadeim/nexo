@@ -39,6 +39,12 @@ class SettingController extends Controller
                     if (request()->has('company_logo_footer') && $key == 'company_logo_footer') {
                         $value = $this->uploadImage($request->company_logo_footer, 'company_logo_footer');
                     }
+                    if (request()->has('green_background') && $key == 'green_background') {
+                        $value = $this->uploadImage($request->green_background, 'green_background');
+                    }
+                    if (request()->has('Beige_background') && $key == 'Beige_background') {
+                        $value = $this->uploadImage($request->Beige_background, 'Beige_background');
+                    }
                     Setting::updateOrCreate(['key' => $key], ['value' => $value]);
                 }
             }

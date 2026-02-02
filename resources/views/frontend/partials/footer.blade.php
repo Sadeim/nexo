@@ -2,7 +2,7 @@
  <footer class="text-evergreen py-12 px-6 relative z-10 font-league-gothic">
      <!-- Background Pattern -->
      <div class="absolute inset-0 z-0">
-         <img src="{{ asset('frontend_assets/assets/images/bg-left.png') }}" alt="Background pattern"
+         <img src="{{ asset($settings->valueOf('Beige_background'))}}" alt="Background pattern"
              class="w-full h-full object-cover">
      </div>
      <div class="max-w-7xl mx-auto relative z-10">

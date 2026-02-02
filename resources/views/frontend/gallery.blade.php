@@ -7,7 +7,7 @@
     <main class="overflow-x-hidden">
         <section id="gallery-section" class="relative py-16 lg:py-32 overflow-hidden cursor-pointer">
             <div class="absolute inset-0">
-                <img src="{{ asset('frontend_assets/assets/images/bg-about.png') }}" alt="Background pattern"
+                <img src="{{ asset($settings->valueOf('green_background'))}}" alt="Background pattern"
                     class="w-full h-full object-cover">
             </div>
 

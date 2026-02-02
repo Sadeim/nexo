@@ -31,6 +31,9 @@ class UpdateSettingRequest extends BaseRequest
             'browser_icon'          => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg'],
             'company_logo'          => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg'],
             'company_logo_footer'   => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif'],
+            'green_background'      => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg'],
+            'Beige_background'      => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg'],
+
             'email'                 => ['nullable', 'max:255'],
             'phone'                 => ['nullable'],
             'whatsapp'              => ['nullable'],
