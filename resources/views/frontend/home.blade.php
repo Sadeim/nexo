@@ -114,7 +114,7 @@
 
                                 <!-- Arrow Button -->
                                 <button onclick="window.location.href='{{ $about->button_link }}'"
-                                    class="absolute mt-6 md:mt-0 top-full md:top-5/6  -tanslate-y-2/3 left-12 w-16 h-16 rounded-full bg-ivory flex items-center justify-center hover:bg-white transition-colors hover:scale-110">
+                                    class="absolute top-[calc(100%+1.5rem)] md:top-[calc(100%-0rem)] left-12 w-16 h-16 rounded-full bg-ivory flex items-center justify-center hover:bg-white transition-colors hover:scale-110 z-30" >
                                     <svg width="39" height="38" viewBox="0 0 39 38" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <path
