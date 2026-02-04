@@ -10,8 +10,20 @@
             class="relative bg-linear-to-r from-ivory/60 to-[#1B4629]/60 opacity-[52px] pb-10 min-h-fit 3xl:max-h-[60vh] flex pt-36 overflow-hidden">
 
             <!-- Single Background Image from Database -->
-            <div class="absolute inset-0 w-full h-full">
+            {{-- <div class="absolute inset-0 w-full h-full">
                 <img src="{{ asset($slider->image) }}" alt="Nexo Barbershop Background"
+                    class="w-full h-full object-cover opacity-90">
+            </div> --}}
+
+            <!-- Background Image - Desktop (green) -->
+            <div class="absolute inset-0 w-full h-full hidden md:block">
+                <img src="{{ asset($slider->image) }}" alt="Nexo Barbershop Background"
+                    class="w-full h-full object-cover opacity-90">
+            </div>
+
+            <!-- Background Image - Mobile (beige) -->
+            <div class="absolute inset-0 w-full h-full block md:hidden">
+                <img src="{{ asset($settings->valueOf('Beige_background')) }}" alt="Nexo Barbershop Background"
                     class="w-full h-full object-cover opacity-90">
             </div>
 
@@ -20,7 +32,8 @@
             <div class="container mx-auto px-4 md:px-8 lg:px-12 lg:pl-18 relative z-10">
                 <!-- Content -->
                 <div class="mb-10 md:mb-32 xl:mb-80">
-                    <div class="max-w-xl mx-auto lg:mx-0 text-center lg:text-left flex flex-col items-center lg:items-start">
+                    <div
+                        class="max-w-xl mx-auto lg:mx-0 text-center lg:text-left flex flex-col items-center lg:items-start">
                         <h1 class="font-league-gothic text-6xl md:text-7xl text-evergreen leading-tight mb-6">
                             {{ $slider->title }}
                         </h1>
@@ -58,7 +71,7 @@
         <section class="relative py-16 overflow-hidden">
             <!-- Background Pattern -->
             <div class="absolute inset-0">
-                <img src="{{ asset($settings->valueOf('green_background'))}}" alt="Background pattern"
+                <img src="{{ asset($settings->valueOf('green_background')) }}" alt="Background pattern"
                     class="w-full h-full object-cover">
             </div>
             {{-- <div class="absolute inset-0">
@@ -116,7 +129,7 @@
                             <img src="{{ asset('frontend_assets/assets/images/NexoAbout.svg') }}"
                                 class="col-span-1 lg:col-span-8 w-[95%] mt-40 md:mt-4 mx-auto px-8" />
                             <!-- <img src="./assets/images/about-nexo.png"
-                                                                            class="col-span-1 lg:col-span-8 w-full mt-20 md:mt-0" /> -->
+                                                                                class="col-span-1 lg:col-span-8 w-full mt-20 md:mt-0" /> -->
 
 
                             <!-- Right Column - Text Content -->
@@ -259,7 +272,7 @@
         <section class="relative py-16 lg:py-24 overflow-hidden">
             <!-- Background Pattern -->
             <div class="absolute inset-0">
-                <img src="{{ asset($settings->valueOf('Beige_background'))}}" alt="Background pattern"
+                <img src="{{ asset($settings->valueOf('Beige_background')) }}" alt="Background pattern"
                     class="w-full h-full object-cover">
             </div>
 
@@ -327,7 +340,7 @@
         <section class="relative bg-evergreen py-10 overflow-hidden px-4 md:px-8">
             <!-- Background Pattern -->
             <div class="absolute inset-0">
-                <img src="{{ asset($settings->valueOf('green_background'))}}" alt="Background pattern"
+                <img src="{{ asset($settings->valueOf('green_background')) }}" alt="Background pattern"
                     class="w-full h-full object-cover">
             </div>
             <div class="container mx-auto relative z-10 border-2 border-ivory/30 pointer-events-none">
@@ -502,7 +515,7 @@
                         <img src="{{ asset('frontend_assets/assets/images/nexo-standard.svg') }}" alt="X Scissors Logo"
                             class="w-96 h-[165px] mx-auto">
                         <!-- <img src="./assets/images/nexo-higher-standard.svg" alt="X Scissors Logo"
-                                                                        class="w-96 h-48 opacity-80 mx-auto my-auto"> -->
+                                                                            class="w-96 h-48 opacity-80 mx-auto my-auto"> -->
                     </div>
 
                     <!-- Large X Scissors Logo Right -->
