@@ -1,6 +1,18 @@
 @extends('frontend.layouts.app')
 
 @push('styles')
+    <style>
+        /* تطبيق على جميع صور الـ backgrounds */
+        section img[alt*="Background"],
+        section img[alt*="pattern"] {
+            image-rendering: -webkit-optimize-contrast !important;
+            image-rendering: crisp-edges !important;
+            image-rendering: high-quality !important;
+            -ms-interpolation-mode: bicubic !important;
+            backface-visibility: hidden !important;
+            transform: translateZ(0) !important;
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -129,7 +141,7 @@
                             <img src="{{ asset('frontend_assets/assets/images/NexoAbout.svg') }}"
                                 class="col-span-1 lg:col-span-8 w-[95%] mt-40 md:mt-4 mx-auto px-8" />
                             <!-- <img src="./assets/images/about-nexo.png"
-                                                                                    class="col-span-1 lg:col-span-8 w-full mt-20 md:mt-0" /> -->
+                                                                                            class="col-span-1 lg:col-span-8 w-full mt-20 md:mt-0" /> -->
 
 
                             <!-- Right Column - Text Content -->
@@ -467,7 +479,7 @@
                 </div>
             </div>
 
-      
+
 
             <!-- Contact Us Header -->
             <div class="container mx-auto relative z-10 pt-8">
@@ -494,13 +506,13 @@
 
                     <!-- Center - NEXO Logo -->
                     <div class="text-end flex items-end justify-end mt-0 md:mt-auto mb-10 max-h-[160px] block xl:hidden">
-                        <img src="{{ asset('frontend_assets/assets/images/nexo-standard.svg')}}" alt="X Scissors Logo"
+                        <img src="{{ asset('frontend_assets/assets/images/nexo-standard.svg') }}" alt="X Scissors Logo"
                             class="w-96 h-[165px] mx-auto">
                     </div>
 
                     <!-- Large X Scissors Logo Left -->
                     <div class="flex items-center justify-center mt-auto">
-                        <img src="{{ asset('frontend_assets/assets/images/xLeft.svg')}}" alt="X Scissors Logo"
+                        <img src="{{ asset('frontend_assets/assets/images/xLeft.svg') }}" alt="X Scissors Logo"
                             class="w-full h-full object-cover max-w-42 xl:max-w-52 max-h-66 z-10 -mt-[48px] xl:-mt-[58px]">
                         <!-- Address -->
                         <div
@@ -523,10 +535,10 @@
                     <!-- Center - NEXO Logo -->
                     <div
                         class="text-end flex items-end justify-end mt-0 md:mt-auto mb-6 md:mb-0 max-h-[160px] hidden xl:block">
-                        <img src="{{ asset('frontend_assets/assets/images/nexo-standard.svg')}}" alt="X Scissors Logo"
+                        <img src="{{ asset('frontend_assets/assets/images/nexo-standard.svg') }}" alt="X Scissors Logo"
                             class="w-96 h-[165px] mx-auto">
                         <!-- <img src="./assets/images/nexo-higher-standard.svg" alt="X Scissors Logo"
-                                class="w-96 h-48 opacity-80 mx-auto my-auto"> -->
+                                        class="w-96 h-48 opacity-80 mx-auto my-auto"> -->
                     </div>
 
                     <!-- Large X Scissors Logo Right -->
@@ -573,7 +585,7 @@
                                 </div>
                             </div>
                         </div>
-                        <img src="{{ asset('frontend_assets/assets/images/xRight.svg')}}" alt="X Scissors Logo"
+                        <img src="{{ asset('frontend_assets/assets/images/xRight.svg') }}" alt="X Scissors Logo"
                             class="w-full h-full object-cover max-w-42 xl:max-w-52 max-h-66 z-10">
                     </div>
                 </div>
