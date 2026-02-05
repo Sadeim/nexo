@@ -2,16 +2,30 @@
 
 @push('styles')
     <style>
-        /* تطبيق على جميع صور الـ backgrounds */
+        <style>
+
+        /* إصلاح جودة عرض الصور */
         section img[alt*="Background"],
         section img[alt*="pattern"] {
             image-rendering: -webkit-optimize-contrast !important;
+            image-rendering: -moz-crisp-edges !important;
             image-rendering: crisp-edges !important;
+            image-rendering: pixelated !important;
+            -ms-interpolation-mode: nearest-neighbor !important;
+        }
+
+        /* حل بديل - إجبار المتصفح على عرض الصورة بجودة عالية */
+        section div.absolute img {
+            image-rendering: auto !important;
             image-rendering: high-quality !important;
-            -ms-interpolation-mode: bicubic !important;
+            -webkit-backface-visibility: hidden !important;
+            -moz-backface-visibility: hidden !important;
             backface-visibility: hidden !important;
+            -webkit-transform: translateZ(0) !important;
+            -moz-transform: translateZ(0) !important;
             transform: translateZ(0) !important;
         }
+    </style>
     </style>
 @endpush
 
@@ -141,7 +155,7 @@
                             <img src="{{ asset('frontend_assets/assets/images/NexoAbout.svg') }}"
                                 class="col-span-1 lg:col-span-8 w-[95%] mt-40 md:mt-4 mx-auto px-8" />
                             <!-- <img src="./assets/images/about-nexo.png"
-                                                                                            class="col-span-1 lg:col-span-8 w-full mt-20 md:mt-0" /> -->
+                                                                                                class="col-span-1 lg:col-span-8 w-full mt-20 md:mt-0" /> -->
 
 
                             <!-- Right Column - Text Content -->
@@ -538,7 +552,7 @@
                         <img src="{{ asset('frontend_assets/assets/images/nexo-standard.svg') }}" alt="X Scissors Logo"
                             class="w-96 h-[165px] mx-auto">
                         <!-- <img src="./assets/images/nexo-higher-standard.svg" alt="X Scissors Logo"
-                                        class="w-96 h-48 opacity-80 mx-auto my-auto"> -->
+                                            class="w-96 h-48 opacity-80 mx-auto my-auto"> -->
                     </div>
 
                     <!-- Large X Scissors Logo Right -->
