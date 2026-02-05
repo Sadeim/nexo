@@ -9,7 +9,7 @@
         <section class="relative py-16 overflow-hidden">
             <!-- Background Pattern -->
             <div class="absolute inset-0">
-                <img src="{{ asset($settings->valueOf('green_background'))}}" alt="Background pattern"
+                <img src="{{ asset($settings->valueOf('green_background')) }}" alt="Background pattern"
                     class="w-full h-full object-cover">
             </div>
 
@@ -43,7 +43,7 @@
                                     class="w-full h-full object-cover">
                             </div>
                         </div>
-                      
+
                         <form
                             class="flex flex-col gap-4 bg-white px-4 py-10 w-full max-w-182.25 xl:max-w-154 xl:-ml-16 z-10 mx-auto xl:mx-0">
                             <div class="flex flex-col md:flex-row gap-4 md:gap-8 w-full">
@@ -73,48 +73,75 @@
                     </div>
 
                     <!-- Contact Us Header -->
-                    <div class="container mx-auto px-4 md:px-8 lg:px-12 relative z-10 pt-8">
+                    <div class="container mx-auto relative z-10 pt-8">
+                        <div class="flex items-center justify-between mb-8">
+                            <div class="flex items-center gap-6 w-full px-4">
+                                <h2
+                                    class="font-league-gothic text-ivory text-3xl lg:text-4xl uppercase block whitespace-nowrap">
+                                    Contact Us
+                                </h2>
+                                <div class="h-px bg-ivory w-full"></div>
+                                <svg width="42" height="71" viewBox="0 0 42 71" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M19.773 4.4375H25.2727C28.7461 4.4375 31.5516 7.25531 31.5516 10.6944V10.7388H31.6406C34.6465 10.7388 37.0734 13.1572 37.0734 16.1525C37.0734 19.1478 34.6465 21.5663 31.6406 21.5663H24.293L13.6055 26.7138V21.5663H13.4719C10.466 21.5663 8.03906 19.1478 8.03906 16.1525C8.03906 13.1572 10.466 10.7388 13.4719 10.7388H13.4941V10.6944C13.4941 7.23313 16.2996 4.4375 19.773 4.4375ZM31.6629 30.4413L13.6055 39.1609V43.9534L31.6629 35.2559V30.4413ZM31.6406 55.7794H24.7984L31.6629 52.4734V47.6809L14.8501 55.7794H13.4719C10.466 55.7794 8.03906 58.1978 8.03906 61.1931C8.03906 64.1884 10.466 66.6069 13.4719 66.6069H31.6406C34.6465 66.6069 37.0734 64.1884 37.0734 61.1931C37.0734 58.1978 34.6465 55.7794 31.6406 55.7794Z"
+                                        fill="#F8EDD2" />
+                                    <path
+                                        d="M13.6055 30.53L31.6629 21.8325V26.625L13.6055 35.3225V30.53ZM13.6055 47.7697L31.6629 39.0722V43.8647L13.6055 52.5622V47.7697Z"
+                                        fill="#F8EDD2" />
+                                </svg>
+                            </div>
+                        </div>
 
                         <!-- Contact Info Grid -->
-                        <div class="grid lg:grid-cols-3 gap-8 items-start pt-14 md:pt-24">
+                        <div class="grid xl:grid-cols-3 gap-8 items-start pt-14 md:pt-24">
+
+                            <!-- Center - NEXO Logo -->
+                            <div
+                                class="text-end flex items-end justify-end mt-0 md:mt-auto mb-10 max-h-[160px] block xl:hidden">
+                                <img src="{{ asset('frontend_assets/assets/images/nexo-standard.svg') }}"
+                                    alt="X Scissors Logo" class="w-96 h-[165px] mx-auto">
+                            </div>
+
                             <!-- Large X Scissors Logo Left -->
-                            <div class="flex items-center justify-end mt-auto">
+                            <div class="flex items-center justify-center mt-auto">
                                 <img src="{{ asset('frontend_assets/assets/images/xLeft.svg') }}" alt="X Scissors Logo"
-                                    class="w-full h-full object-cover max-w-52 max-h-66 z-10 -mt-[32px] sm:-mt-[66px]">
+                                    class="w-full h-full object-cover max-w-42 xl:max-w-52 max-h-66 z-10 -mt-[48px] xl:-mt-[58px]">
                                 <!-- Address -->
-                                <div class="flex items-start text-ivory max-w-72 w-full -ml-16">
+                                <div
+                                    class="flex items-start text-ivory max-w-62 xl:max-w-72 h-30 xl:h-[150px] w-full -ml-14 xl:-ml-18">
                                     <div
-                                        class="border border-ivory p-4 px-8 flex flex-col items-center justify-center gap-4 w-full">
+                                        class="border border-ivory p-4 px-8 flex flex-col items-center justify-center gap-4 w-full h-full">
                                         <svg width="20" height="28" viewBox="0 0 20 28" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
                                             <path fill-rule="evenodd" clip-rule="evenodd"
                                                 d="M9.8 0C4.382 0 0 4.382 0 9.8C0 15.638 6.188 23.688 8.736 26.754C9.296 27.426 10.318 27.426 10.878 26.754C13.412 23.688 19.6 15.638 19.6 9.8C19.6 4.382 15.218 0 9.8 0ZM9.8 13.3C7.868 13.3 6.3 11.732 6.3 9.8C6.3 7.868 7.868 6.3 9.8 6.3C11.732 6.3 13.3 7.868 13.3 9.8C13.3 11.732 11.732 13.3 9.8 13.3Z"
                                                 fill="#F8EDD2" />
                                         </svg>
-                                        <div class="font-league-gothic text-2xl text-center">
+                                        <div class="font-league-gothic text-lg xl:text-2xl text-center">
                                             <p>{{ $settings->valueOf('address') }}</p>
-                                            {{-- <p>New York</p> --}}
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Center - NEXO Logo -->
-                            <div class="text-end flex items-end justify-end mt-0 md:mt-auto mb-6 md:mb-0 max-h-[160px]">
+                            <div
+                                class="text-end flex items-end justify-end mt-0 md:mt-auto mb-6 md:mb-0 max-h-[160px] hidden xl:block">
                                 <img src="{{ asset('frontend_assets/assets/images/nexo-standard.svg') }}"
                                     alt="X Scissors Logo" class="w-96 h-[165px] mx-auto">
                                 <!-- <img src="./assets/images/nexo-higher-standard.svg" alt="X Scissors Logo"
-                                                                    class="w-96 h-48 opacity-80 mx-auto my-auto"> -->
+                                        class="w-96 h-48 opacity-80 mx-auto my-auto"> -->
                             </div>
 
                             <!-- Large X Scissors Logo Right -->
                             <div class="flex items-center justify-center">
                                 <!-- Address -->
-                                <div class="flex items-start text-ivory max-w-72 w-full -mr-16">
+                                <div class="flex items-start text-ivory h-[150px] max-w-72 w-full -mr-24">
                                     <div
-                                        class="border border-ivory p-4 flex flex-col items-start justify-center gap-1 w-full mt-[50px]">
+                                        class="border border-ivory px-2 2xl:p-4 flex flex-col items-start justify-center gap-1 w-6/7 h-full mt-[9px] xl:mt-[29.5px]">
                                         <!-- Phone and Website -->
-                                        <div class="space-y-2 font-league-gothic text-xl">
+                                        <div class="space-y-2 font-league-gothic text-base xl:text-xl">
                                             <div class="flex items-center gap-2">
                                                 <svg width="25" height="25" viewBox="0 0 25 25" fill="none"
                                                     xmlns="http://www.w3.org/2000/svg">
@@ -135,7 +162,6 @@
                                                 <span>{{ $settings->valueOf('email') }}</span>
                                             </div>
                                         </div>
-
                                         <div class="flex items-start gap-2">
                                             <svg width="25" height="25" viewBox="0 0 25 25" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">
@@ -145,15 +171,15 @@
                                             </svg>
 
                                             <!-- Hours -->
-                                            <div class="font-league-gothic text-xl ">
-                                                <p>{{ $settings->valueOf('hours_part1') }}</p>
+                                            <div class="font-league-gothic text-base xl:text-xl">
+                                                <p>{{ $settings->valueOf('hours_part1') }}</span></p>
                                                 <p>{{ $settings->valueOf('hours_part2') }}</p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <img src="{{ asset('frontend_assets/assets/images/xRight.svg') }}" alt="X Scissors Logo"
-                                    class="w-full h-full object-cover max-w-52 max-h-66 z-10">
+                                    class="w-full h-full object-cover max-w-42 xl:max-w-52 max-h-66 z-10">
                             </div>
                         </div>
                     </div>
