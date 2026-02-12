@@ -160,9 +160,35 @@
              <!-- Choose an hour -->
              <div>
                  <label class="block text-white text-base mb-2 uppercase">Choose time</label>
-                 <div class="field-container">
-                     <input type="time" id="booking-time" name="time" step="60" min="09:00" max="18:40"
-                         class="w-full px-4 py-3 rounded bg-white text-[#080B16] focus:outline-none focus:ring-2 focus:ring-ivory">
+                 <div class="field-container flex flex-wrap gap-3 items-center">
+                     <input type="hidden" id="booking-time" name="time" value="">
+                     <div class="relative flex-1 min-w-[80px]">
+                         <select id="booking-hour" class="w-full px-4 py-3 rounded bg-white text-[#080B16] focus:outline-none focus:ring-2 focus:ring-ivory appearance-none pr-10">
+                             <option value="">Hour</option>
+                         </select>
+                         <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                             <svg class="w-5 h-5 text-evergreen" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                         </div>
+                     </div>
+                     <span class="text-ivory font-bold">:</span>
+                     <div class="relative flex-1 min-w-[80px]">
+                         <select id="booking-minute" class="w-full px-4 py-3 rounded bg-white text-[#080B16] focus:outline-none focus:ring-2 focus:ring-ivory appearance-none pr-10">
+                             <option value="">Min</option>
+                         </select>
+                         <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                             <svg class="w-5 h-5 text-evergreen" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                         </div>
+                     </div>
+                     <div class="relative flex-1 min-w-[90px]">
+                         <select id="booking-ampm" class="w-full px-4 py-3 rounded bg-white text-[#080B16] focus:outline-none focus:ring-2 focus:ring-ivory appearance-none pr-10">
+                             <option value="">AM/PM</option>
+                             <option value="AM">AM</option>
+                             <option value="PM">PM</option>
+                         </select>
+                         <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                             <svg class="w-5 h-5 text-evergreen" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                         </div>
+                     </div>
                  </div>
              </div>
 
@@ -209,16 +235,94 @@
      const bookNowButtons = document.querySelectorAll('.book-now-btn');
      const bookingForm = document.getElementById('booking-form');
      const bookingTimeInput = document.getElementById('booking-time');
+     const bookingHourSelect = document.getElementById('booking-hour');
+     const bookingMinuteSelect = document.getElementById('booking-minute');
+     const bookingAmpmSelect = document.getElementById('booking-ampm');
 
-     // Set time input min/max by date: Sunday 10:00-15:40, others 9:00-18:40
-     function setBookingTimeLimits() {
+     // Sunday: 10:00-15:40. Other days: 9:00-18:40. Fill hour/minute options by date.
+     function getDateInfo() {
          const dateStr = document.getElementById('booking-date').value;
-         if (!dateStr) return;
+         if (!dateStr) return null;
          const d = new Date(dateStr + 'T12:00:00');
          const isSunday = d.getDay() === 0;
-         bookingTimeInput.min = isSunday ? '10:00' : '09:00';
-         bookingTimeInput.max = isSunday ? '15:40' : '18:40';
+         return {
+             isSunday: isSunday,
+             hours: isSunday ? [10, 11, 12, 1, 2, 3] : [9, 10, 11, 12, 1, 2, 3, 4, 5, 6],
+             lastHour12: isSunday ? 3 : 6,
+             lastMinute: 40
+         };
      }
+
+     function updateHourOptions() {
+         const info = getDateInfo();
+         if (!info) return;
+         const sel = bookingHourSelect;
+         sel.innerHTML = '<option value="">Hour</option>';
+         info.hours.forEach(function(h) {
+             const opt = document.createElement('option');
+             opt.value = h;
+             opt.textContent = h;
+             sel.appendChild(opt);
+         });
+         bookingTimeInput.value = '';
+         bookingMinuteSelect.innerHTML = '<option value="">Min</option>';
+         bookingAmpmSelect.value = '';
+         updateMinuteOptions();
+         updateAmpmOptions();
+     }
+
+     function updateMinuteOptions() {
+         const info = getDateInfo();
+         const hour = parseInt(bookingHourSelect.value, 10);
+         if (!info || !hour) {
+             bookingMinuteSelect.innerHTML = '<option value="">Min</option>';
+             return;
+         }
+         const isLastHour = (hour === info.lastHour12);
+         const maxMin = isLastHour ? info.lastMinute : 59;
+         const sel = bookingMinuteSelect;
+         sel.innerHTML = '<option value="">Min</option>';
+         for (let m = 0; m <= maxMin; m++) {
+             const opt = document.createElement('option');
+             opt.value = (m < 10 ? '0' : '') + m;
+             opt.textContent = opt.value;
+             sel.appendChild(opt);
+         }
+         updateBookingTimeFromDropdowns();
+     }
+
+     function updateAmpmOptions() {
+         const hour = parseInt(bookingHourSelect.value, 10);
+         const ampmSel = bookingAmpmSelect;
+         ampmSel.querySelectorAll('option').forEach(function(o) {
+             if (o.value === '') return;
+             o.disabled = (o.value === 'AM' && (hour === 12 || (hour >= 1 && hour <= 6))) || (o.value === 'PM' && hour >= 9 && hour <= 11);
+         });
+         if (hour >= 9 && hour <= 11) ampmSel.value = 'AM';
+         else if (hour === 12 || (hour >= 1 && hour <= 6)) ampmSel.value = 'PM';
+         updateBookingTimeFromDropdowns();
+     }
+
+     function updateBookingTimeFromDropdowns() {
+         const h = bookingHourSelect.value;
+         const m = bookingMinuteSelect.value;
+         const ampm = bookingAmpmSelect.value;
+         if (!h || !m || !ampm) {
+             bookingTimeInput.value = '';
+             return;
+         }
+         let h24 = parseInt(h, 10);
+         if (ampm === 'PM' && h24 !== 12) h24 += 12;
+         if (ampm === 'AM' && h24 === 12) h24 = 0;
+         bookingTimeInput.value = (h24 < 10 ? '0' : '') + h24 + ':' + m;
+     }
+
+     bookingHourSelect.addEventListener('change', function() {
+         updateMinuteOptions();
+         updateAmpmOptions();
+     });
+     bookingMinuteSelect.addEventListener('change', updateBookingTimeFromDropdowns);
+     bookingAmpmSelect.addEventListener('change', updateBookingTimeFromDropdowns);
 
      // Load services when modal opens
      function loadServices() {
@@ -251,11 +355,14 @@
              loadServices();
              bookingModal.classList.remove('hidden');
              setMinDate();
-             setBookingTimeLimits();
+             updateHourOptions();
          });
      });
 
-     document.getElementById('booking-date').addEventListener('change', setBookingTimeLimits);
+     document.getElementById('booking-date').addEventListener('change', function() {
+         bookingTimeInput.value = '';
+         updateHourOptions();
+     });
 
      // Set minimum date to today
      function setMinDate() {
