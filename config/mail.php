@@ -109,5 +109,5 @@ return [
     ],
 
 
-    'admin_email' => env('MAIL_ADMIN_EMAIL')
+    'admin_email' => env('MAIL_ADMIN_EMAIL', 'nexobarbers@gmail.com'),
 ];

@@ -19,9 +19,10 @@ class BookingResource extends JsonResource
         return [
             'id'            => $this->id,
             'name'          => $this->name,
-            'service'       => $this->service ? $this->service->name : 'N/A', 
-            'date'            => $this->date,
-            'time'            => $this->time,
+            'email'         => $this->email,
+            'service'       => $this->service ? $this->service->name : 'N/A',
+            'date'          => $this->date?->format('Y-m-d'),
+            'time'          => $this->time ? \Carbon\Carbon::parse($this->time)->format('H:i') : '',
             'created_at'    => $this->created_at->format('d-m-Y'),
             'operations'    => $operations,
         ];

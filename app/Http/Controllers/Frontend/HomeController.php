@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Mail\AdminNotification;
+use App\Mail\AdminBookingNotification;
+use App\Mail\BookingConfirmationMail;
 use App\Models\About;
 use App\Models\Achievement;
 use App\Models\Blog;
@@ -26,7 +28,9 @@ use App\Models\Slider;
 
 use App\Models\UserMessages;
 use App\Models\Work;
+use App\Services\BookingSlotService;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -80,18 +84,37 @@ class HomeController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'email' => 'required|email',
             'date' => 'required|date|after_or_equal:today',
             'service_id' => 'required|exists:services,id',
             'time' => 'required|string',
         ]);
+
+        $slotService = app(BookingSlotService::class);
+        if (!$slotService->isSlotValidAndAvailable($validated['date'], $validated['time'])) {
+            return response()->json([
+                'success' => false,
+                'message' => 'The selected time is not available. Please choose another slot.',
+            ], 422);
+        }
+
         $validated['persons'] = 1;
         $validated['status'] = 'pending';
+        $validated['time'] = Carbon::parse($validated['time'])->format('H:i:s');
 
-        Booking::create($validated);
+        $booking = Booking::create($validated);
+        $booking->load('service');
+
+        try {
+            Mail::to($validated['email'])->send(new BookingConfirmationMail($booking));
+            Mail::to(config('mail.admin_email'))->send(new AdminBookingNotification($booking));
+        } catch (\Throwable $e) {
+            \Log::warning('Booking emails failed: ' . $e->getMessage());
+        }
 
         return response()->json([
             'success' => true,
-            'message' => 'Booking saved successfully.'
+            'message' => 'Booking saved successfully. A confirmation email has been sent to your email.',
         ], 200);
     }
 

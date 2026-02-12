@@ -73,6 +73,7 @@
                                                 class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0 text-center">
                                                 <th>#</th>
                                                 <th>{{ __('admin.form.name') }}</th>
+                                                <th>Email</th>
                                                 <th>Service</th>
                                                 <th>Date</th>
                                                 <th>Time</th>

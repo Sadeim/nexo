@@ -118,6 +118,15 @@
                  </div>
              </div>
 
+             <!-- Email Field -->
+             <div>
+                 <label class="block text-white text-base mb-2 uppercase">EMAIL</label>
+                 <div class="field-container">
+                     <input type="email" id="booking-email" name="email" placeholder="your@email.com"
+                         class="w-full px-4 py-3 rounded bg-white placeholder-[#080B16] focus:outline-none focus:ring-2 focus:ring-ivory">
+                 </div>
+             </div>
+
              <!-- Date Field -->
              <div>
                  <label class="block text-white text-base mb-2 uppercase">Determine the date</label>
@@ -150,43 +159,10 @@
 
              <!-- Choose an hour -->
              <div>
-                 <label class="block text-white text-base mb-2 uppercase">Choose an hour</label>
+                 <label class="block text-white text-base mb-2 uppercase">Choose time</label>
                  <div class="field-container">
-                     <input type="hidden" id="booking-time" name="time" value="">
-                     <div class="flex gap-3 flex-wrap text-base" id="hour-buttons-container">
-                         <button type="button" data-time="09:00"
-                             class="hour-btn bg-evergreen text-ivory border border-ivory px-4 py-2 rounded hover:bg-ivory hover:text-evergreen transition-colors">
-                             09:00
-                         </button>
-                         <button type="button" data-time="10:00"
-                             class="hour-btn bg-evergreen text-ivory border border-ivory px-4 py-2 rounded hover:bg-ivory hover:text-evergreen transition-colors">
-                             10:00
-                         </button>
-                         <button type="button" data-time="11:00"
-                             class="hour-btn bg-evergreen text-ivory border border-ivory px-4 py-2 rounded hover:bg-ivory hover:text-evergreen transition-colors">
-                             11:00
-                         </button>
-                         <button type="button" data-time="12:00"
-                             class="hour-btn bg-evergreen text-ivory border border-ivory px-4 py-2 rounded hover:bg-ivory hover:text-evergreen transition-colors">
-                             12:00
-                         </button>
-                         <button type="button" data-time="13:00"
-                             class="hour-btn bg-evergreen text-ivory border border-ivory px-4 py-2 rounded hover:bg-ivory hover:text-evergreen transition-colors">
-                             13:00
-                         </button>
-                         <button type="button" data-time="14:00"
-                             class="hour-btn bg-evergreen text-ivory border border-ivory px-4 py-2 rounded hover:bg-ivory hover:text-evergreen transition-colors">
-                             14:00
-                         </button>
-                         <button type="button" data-time="15:00"
-                             class="hour-btn bg-evergreen text-ivory border border-ivory px-4 py-2 rounded hover:bg-ivory hover:text-evergreen transition-colors">
-                             15:00
-                         </button>
-                         <button type="button" data-time="16:00"
-                             class="hour-btn bg-evergreen text-ivory border border-ivory px-4 py-2 rounded hover:bg-ivory hover:text-evergreen transition-colors">
-                             16:00
-                         </button>
-                     </div>
+                     <input type="time" id="booking-time" name="time" step="60" min="09:00" max="18:40"
+                         class="w-full px-4 py-3 rounded bg-white text-[#080B16] focus:outline-none focus:ring-2 focus:ring-ivory">
                  </div>
              </div>
 
@@ -231,9 +207,18 @@
      const bookingModal = document.getElementById('booking-modal');
      const closeModalBtn = document.getElementById('close-modal');
      const bookNowButtons = document.querySelectorAll('.book-now-btn');
-     const hourButtons = document.querySelectorAll('.hour-btn');
      const bookingForm = document.getElementById('booking-form');
      const bookingTimeInput = document.getElementById('booking-time');
+
+     // Set time input min/max by date: Sunday 10:00-15:40, others 9:00-18:40
+     function setBookingTimeLimits() {
+         const dateStr = document.getElementById('booking-date').value;
+         if (!dateStr) return;
+         const d = new Date(dateStr + 'T12:00:00');
+         const isSunday = d.getDay() === 0;
+         bookingTimeInput.min = isSunday ? '10:00' : '09:00';
+         bookingTimeInput.max = isSunday ? '15:40' : '18:40';
+     }
 
      // Load services when modal opens
      function loadServices() {
@@ -263,18 +248,21 @@
      bookNowButtons.forEach(button => {
          button.addEventListener('click', function(e) {
              e.preventDefault();
-             loadServices(); // Load services when modal opens
+             loadServices();
              bookingModal.classList.remove('hidden');
-             setMinDate(); // Set minimum date to today
+             setMinDate();
+             setBookingTimeLimits();
          });
      });
+
+     document.getElementById('booking-date').addEventListener('change', setBookingTimeLimits);
 
      // Set minimum date to today
      function setMinDate() {
          const dateInput = document.getElementById('booking-date');
          const today = new Date().toISOString().split('T')[0];
          dateInput.setAttribute('min', today);
-         dateInput.value = today;
+         if (!dateInput.value) dateInput.value = today;
      }
 
      // Close modal when clicking close button
@@ -291,28 +279,6 @@
          }
      });
 
-     // Hour selection
-     hourButtons.forEach(button => {
-         button.addEventListener('click', function() {
-             // Remove validation error if exists
-             const timeContainer = document.getElementById('hour-buttons-container').parentElement;
-             const existingError = timeContainer.querySelector('.validation-error');
-             if (existingError) {
-                 existingError.remove();
-             }
-
-             // Update selected hour
-             hourButtons.forEach(btn => {
-                 btn.classList.remove('selected', 'bg-ivory', 'text-evergreen');
-                 btn.classList.add('bg-evergreen', 'text-ivory', 'border', 'border-ivory');
-             });
-             this.classList.add('selected', 'bg-ivory', 'text-evergreen');
-             this.classList.remove('bg-evergreen', 'text-ivory', 'border', 'border-ivory');
-
-             // Set the time value
-             bookingTimeInput.value = this.getAttribute('data-time');
-         });
-     });
 
      // Clear validation errors
      function clearValidationErrors() {
@@ -391,10 +357,6 @@
      function clearBookingForm() {
          bookingForm.reset();
          bookingTimeInput.value = '';
-         hourButtons.forEach(btn => {
-             btn.classList.remove('selected', 'bg-ivory', 'text-evergreen');
-             btn.classList.add('bg-evergreen', 'text-ivory', 'border', 'border-ivory');
-         });
          clearValidationErrors();
      }
 
@@ -408,6 +370,7 @@
          // Get form data
          const formData = {
              name: document.getElementById('booking-name').value,
+             email: document.getElementById('booking-email').value,
              date: document.getElementById('booking-date').value,
              service_id: document.getElementById('booking-service').value,
              time: bookingTimeInput.value,
@@ -417,22 +380,11 @@
          // Client-side validation
          let hasErrors = false;
          const fields = {
-             'booking-name': {
-                 message: 'The name field is required.',
-                 value: formData.name
-             },
-             'booking-date': {
-                 message: 'The date field is required.',
-                 value: formData.date
-             },
-             'booking-service': {
-                 message: 'Please select a service type.',
-                 value: formData.service_id
-             },
-             'booking-time': {
-                 message: 'Please select an hour.',
-                 value: formData.time
-             }
+             'booking-name': { message: 'The name field is required.', value: formData.name },
+             'booking-email': { message: 'Please enter a valid email.', value: formData.email },
+             'booking-date': { message: 'The date field is required.', value: formData.date },
+             'booking-service': { message: 'Please select a service type.', value: formData.service_id },
+             'booking-time': { message: 'Please choose a time.', value: formData.time }
          };
 
          for (const [fieldId, fieldData] of Object.entries(fields)) {
@@ -455,17 +407,22 @@
          // Send request using Axios
          axios.post('{{ route('bookings.store') }}', formData)
              .then(function(response) {
-                 showNotification('Booking confirmed successfully!', 'success');
+                 showNotification(response.data.message || 'Booking confirmed successfully! Check your email.', 'success');
                  clearBookingForm();
                  bookingModal.classList.add('hidden');
              })
              .catch(function(error) {
                  if (error.response && error.response.status === 422) {
-                     // Validation errors from server
-                     const errors = error.response.data.errors;
-                     for (const [field, messages] of Object.entries(errors)) {
-                         const fieldId = 'booking-' + field.replace('_', '-');
-                         showFieldError(fieldId, messages[0]);
+                     const data = error.response.data || {};
+                     if (data.message) {
+                         showNotification(data.message, 'error');
+                     }
+                     const errors = data.errors;
+                     if (errors) {
+                         for (const [field, messages] of Object.entries(errors)) {
+                             const fieldId = 'booking-' + field.replace('_', '-');
+                             showFieldError(fieldId, messages[0]);
+                         }
                      }
                  } else {
                      const errorMessage = error.response?.data?.message ||

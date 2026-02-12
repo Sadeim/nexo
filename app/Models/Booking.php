@@ -21,6 +21,10 @@ class Booking extends Model
         'service_id',
     ];
 
+    protected $casts = [
+        'date' => 'date',
+    ];
+
     public function service()
     {
         return $this->belongsTo(Service::class);
