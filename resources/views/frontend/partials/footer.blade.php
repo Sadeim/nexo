@@ -137,7 +137,7 @@
              </div>
 
              <!-- Service Type Field -->
-             <div>
+             {{-- <div>
                  <label class="block text-white text-base mb-2 uppercase">Service type</label>
                  <div class="field-container">
                      <div class="relative">
@@ -155,10 +155,28 @@
                          </div>
                      </div>
                  </div>
+             </div> --}}
+             <!-- Service Type Field -->
+             <div>
+                 <label class="block text-white text-base mb-2 uppercase">Service type</label>
+                 <div class="field-container select-wrapper">
+                     <select id="booking-service" name="service_id"
+                         class="w-full px-4 py-3 rounded bg-white text-[#080B16] focus:outline-none focus:ring-2 focus:ring-ivory appearance-none pr-10">
+                         <option value="">Select service type</option>
+                         <!-- Services will be loaded dynamically -->
+                     </select>
+                     <div class="select-arrow">
+                         <svg class="w-5 h-5 text-evergreen" fill="none" stroke="currentColor"
+                             viewBox="0 0 24 24">
+                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                 d="M19 9l-7 7-7-7"></path>
+                         </svg>
+                     </div>
+                 </div>
              </div>
 
              <!-- Choose an hour -->
-             <div>
+             {{-- <div>
                  <label class="block text-white text-base mb-2 uppercase">Choose time</label>
                  <div class="field-container flex flex-wrap gap-3 items-center">
                      <input type="hidden" id="booking-time" name="time" value="">
@@ -205,6 +223,60 @@
                          </div>
                      </div>
                  </div>
+             </div> --}}
+             <!-- Choose an hour -->
+             <div>
+                 <label class="block text-white text-base mb-2 uppercase">Choose time</label>
+                 <div class="field-container flex flex-wrap gap-3 items-center">
+                     <input type="hidden" id="booking-time" name="time" value="">
+
+                     <!-- Hour Dropdown -->
+                     <div class="time-select-container relative flex-1 min-w-[80px]">
+                         <select id="booking-hour" class="time-select">
+                             <option value="">Hour</option>
+                         </select>
+                         <div class="time-select-arrow">
+                             <svg class="w-5 h-5 text-evergreen" fill="none" stroke="currentColor"
+                                 viewBox="0 0 24 24">
+                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                     d="M19 9l-7 7-7-7"></path>
+                             </svg>
+                         </div>
+                     </div>
+
+                     <!-- Separator -->
+                     <span class="time-separator">:</span>
+
+                     <!-- Minute Dropdown -->
+                     <div class="time-select-container relative flex-1 min-w-[80px]">
+                         <select id="booking-minute" class="time-select">
+                             <option value="">Min</option>
+                         </select>
+                         <div class="time-select-arrow">
+                             <svg class="w-5 h-5 text-evergreen" fill="none" stroke="currentColor"
+                                 viewBox="0 0 24 24">
+                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                     d="M19 9l-7 7-7-7"></path>
+                             </svg>
+                         </div>
+                     </div>
+
+                     <!-- AM/PM Dropdown -->
+                     <div class="time-select-container relative flex-1 min-w-[90px]">
+                         <select id="booking-ampm" class="time-select">
+                             <option value="">AM/PM</option>
+                             <option value="AM">AM</option>
+                             <option value="PM">PM</option>
+                         </select>
+                         <div class="time-select-arrow">
+                             <svg class="w-5 h-5 text-evergreen" fill="none" stroke="currentColor"
+                                 viewBox="0 0 24 24">
+                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                     d="M19 9l-7 7-7-7"></path>
+                             </svg>
+                         </div>
+                     </div>
+                 </div>
              </div>
 
              <!-- Submit Button -->
@@ -214,6 +286,160 @@
              </button>
          </form>
      </div>
+
+     <style>
+         /* Custom styling for ALL form inputs and selects */
+         .field-container input[type="text"],
+         .field-container input[type="email"],
+         .field-container input[type="date"],
+         .field-container select,
+         .time-select {
+             appearance: none;
+             -webkit-appearance: none;
+             -moz-appearance: none;
+             width: 100%;
+             padding: 12px 16px;
+             border-radius: 4px;
+             background: white;
+             color: #080B16;
+             font-size: 16px;
+             font-weight: 500;
+             border: 2px solid transparent;
+             transition: all 0.3s ease;
+             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+         }
+
+         /* Special padding for selects to accommodate arrow */
+         .field-container select,
+         .time-select {
+             padding-right: 40px;
+             cursor: pointer;
+         }
+
+         /* Hover effects */
+         .field-container input:hover,
+         .field-container select:hover,
+         .time-select:hover {
+             border-color: #8C1C13;
+             box-shadow: 0 4px 12px rgba(140, 28, 19, 0.15);
+         }
+
+         /* Focus effects */
+         .field-container input:focus,
+         .field-container select:focus,
+         .time-select:focus {
+             outline: none;
+             border-color: #8C1C13;
+             box-shadow: 0 0 0 3px rgba(140, 28, 19, 0.1);
+         }
+
+         /* Placeholder styling */
+         .field-container input::placeholder {
+             color: #6B7280;
+             opacity: 0.7;
+         }
+
+         /* Date input calendar icon */
+         .field-container input[type="date"]::-webkit-calendar-picker-indicator {
+             cursor: pointer;
+             opacity: 0.6;
+             transition: opacity 0.3s ease;
+         }
+
+         .field-container input[type="date"]:hover::-webkit-calendar-picker-indicator {
+             opacity: 1;
+         }
+
+         /* Select options styling */
+         .field-container select option,
+         .time-select option {
+             padding: 12px;
+             font-size: 15px;
+             background: white;
+             color: #080B16;
+         }
+
+         /* Custom arrow container for dropdowns */
+         .select-wrapper {
+             position: relative;
+         }
+
+         .select-arrow {
+             position: absolute;
+             right: 12px;
+             top: 50%;
+             transform: translateY(-50%);
+             pointer-events: none;
+             transition: transform 0.3s ease;
+         }
+
+         .select-wrapper:hover .select-arrow {
+             transform: translateY(-50%) scale(1.1);
+         }
+
+         .select-wrapper select:focus~.select-arrow {
+             transform: translateY(-50%) rotate(180deg);
+         }
+
+         /* Time select specific styling */
+         .time-select-container {
+             position: relative;
+         }
+
+         .time-select-arrow {
+             position: absolute;
+             right: 12px;
+             top: 50%;
+             transform: translateY(-50%);
+             pointer-events: none;
+             transition: transform 0.3s ease;
+         }
+
+         .time-select-container:hover .time-select-arrow {
+             transform: translateY(-50%) scale(1.1);
+         }
+
+         .time-select:focus~.time-select-arrow {
+             transform: translateY(-50%) rotate(180deg);
+         }
+
+         /* Time separator styling */
+         .time-separator {
+             color: #F4EAD5;
+             font-size: 28px;
+             font-weight: bold;
+             margin: 0 4px;
+             display: flex;
+             align-items: center;
+         }
+
+         /* Error state styling */
+         .field-container input.ring-2.ring-red-500,
+         .field-container select.ring-2.ring-red-500 {
+             border-color: #DC2626;
+             box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+         }
+
+         /* Responsive adjustments */
+         @media (max-width: 640px) {
+
+             .field-container input,
+             .field-container select,
+             .time-select {
+                 padding: 10px 12px;
+                 font-size: 14px;
+             }
+
+             .field-container select,
+             .time-select {
+                 padding-right: 35px;
+             }
+
+             .time-separator {
+                 font-size: 24px;
+             }
+         }
+     </style>
  </div>
 
  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
