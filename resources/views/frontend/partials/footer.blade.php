@@ -2,7 +2,7 @@
  <footer class="text-evergreen py-12 px-6 relative z-10 font-league-gothic">
      <!-- Background Pattern -->
      <div class="absolute inset-0 z-0">
-         <img src="{{ asset($settings->valueOf('Beige_background'))}}" alt="Background pattern"
+         <img src="{{ asset($settings->valueOf('Beige_background')) }}" alt="Background pattern"
              class="w-full h-full object-cover">
      </div>
      <div class="max-w-7xl mx-auto relative z-10">
@@ -163,30 +163,45 @@
                  <div class="field-container flex flex-wrap gap-3 items-center">
                      <input type="hidden" id="booking-time" name="time" value="">
                      <div class="relative flex-1 min-w-[80px]">
-                         <select id="booking-hour" class="w-full px-4 py-3 rounded bg-white text-[#080B16] focus:outline-none focus:ring-2 focus:ring-ivory appearance-none pr-10">
+                         <select id="booking-hour"
+                             class="w-full px-4 py-3 rounded bg-white text-[#080B16] focus:outline-none focus:ring-2 focus:ring-ivory appearance-none pr-10">
                              <option value="">Hour</option>
                          </select>
                          <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                             <svg class="w-5 h-5 text-evergreen" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                             <svg class="w-5 h-5 text-evergreen" fill="none" stroke="currentColor"
+                                 viewBox="0 0 24 24">
+                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                     d="M19 9l-7 7-7-7"></path>
+                             </svg>
                          </div>
                      </div>
                      <span class="text-ivory font-bold">:</span>
                      <div class="relative flex-1 min-w-[80px]">
-                         <select id="booking-minute" class="w-full px-4 py-3 rounded bg-white text-[#080B16] focus:outline-none focus:ring-2 focus:ring-ivory appearance-none pr-10">
+                         <select id="booking-minute"
+                             class="w-full px-4 py-3 rounded bg-white text-[#080B16] focus:outline-none focus:ring-2 focus:ring-ivory appearance-none pr-10">
                              <option value="">Min</option>
                          </select>
                          <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                             <svg class="w-5 h-5 text-evergreen" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                             <svg class="w-5 h-5 text-evergreen" fill="none" stroke="currentColor"
+                                 viewBox="0 0 24 24">
+                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                     d="M19 9l-7 7-7-7"></path>
+                             </svg>
                          </div>
                      </div>
                      <div class="relative flex-1 min-w-[90px]">
-                         <select id="booking-ampm" class="w-full px-4 py-3 rounded bg-white text-[#080B16] focus:outline-none focus:ring-2 focus:ring-ivory appearance-none pr-10">
+                         <select id="booking-ampm"
+                             class="w-full px-4 py-3 rounded bg-white text-[#080B16] focus:outline-none focus:ring-2 focus:ring-ivory appearance-none pr-10">
                              <option value="">AM/PM</option>
                              <option value="AM">AM</option>
                              <option value="PM">PM</option>
                          </select>
                          <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                             <svg class="w-5 h-5 text-evergreen" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                             <svg class="w-5 h-5 text-evergreen" fill="none" stroke="currentColor"
+                                 viewBox="0 0 24 24">
+                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                     d="M19 9l-7 7-7-7"></path>
+                             </svg>
                          </div>
                      </div>
                  </div>
@@ -271,6 +286,25 @@
          updateAmpmOptions();
      }
 
+     //  function updateMinuteOptions() {
+     //      const info = getDateInfo();
+     //      const hour = parseInt(bookingHourSelect.value, 10);
+     //      if (!info || !hour) {
+     //          bookingMinuteSelect.innerHTML = '<option value="">Min</option>';
+     //          return;
+     //      }
+     //      const isLastHour = (hour === info.lastHour12);
+     //      const maxMin = isLastHour ? info.lastMinute : 59;
+     //      const sel = bookingMinuteSelect;
+     //      sel.innerHTML = '<option value="">Min</option>';
+     //      for (let m = 0; m <= maxMin; m++) {
+     //          const opt = document.createElement('option');
+     //          opt.value = (m < 10 ? '0' : '') + m;
+     //          opt.textContent = opt.value;
+     //          sel.appendChild(opt);
+     //      }
+     //      updateBookingTimeFromDropdowns();
+     //  }
      function updateMinuteOptions() {
          const info = getDateInfo();
          const hour = parseInt(bookingHourSelect.value, 10);
@@ -279,15 +313,34 @@
              return;
          }
          const isLastHour = (hour === info.lastHour12);
-         const maxMin = isLastHour ? info.lastMinute : 59;
          const sel = bookingMinuteSelect;
          sel.innerHTML = '<option value="">Min</option>';
-         for (let m = 0; m <= maxMin; m++) {
+
+         // Define the 3 time slots (20 minutes each)
+         const timeSlots = [{
+                 value: '00',
+                 label: '00 - 20'
+             },
+             {
+                 value: '20',
+                 label: '20 - 40'
+             },
+             {
+                 value: '40',
+                 label: '40 - 60'
+             }
+         ];
+
+         // If it's the last hour and maxMinute is 40, only show first 2 slots
+         const maxSlots = (isLastHour && info.lastMinute === 40) ? 2 : 3;
+
+         for (let i = 0; i < maxSlots; i++) {
              const opt = document.createElement('option');
-             opt.value = (m < 10 ? '0' : '') + m;
-             opt.textContent = opt.value;
+             opt.value = timeSlots[i].value;
+             opt.textContent = timeSlots[i].label;
              sel.appendChild(opt);
          }
+
          updateBookingTimeFromDropdowns();
      }
 
@@ -296,13 +349,27 @@
          const ampmSel = bookingAmpmSelect;
          ampmSel.querySelectorAll('option').forEach(function(o) {
              if (o.value === '') return;
-             o.disabled = (o.value === 'AM' && (hour === 12 || (hour >= 1 && hour <= 6))) || (o.value === 'PM' && hour >= 9 && hour <= 11);
+             o.disabled = (o.value === 'AM' && (hour === 12 || (hour >= 1 && hour <= 6))) || (o.value === 'PM' &&
+                 hour >= 9 && hour <= 11);
          });
          if (hour >= 9 && hour <= 11) ampmSel.value = 'AM';
          else if (hour === 12 || (hour >= 1 && hour <= 6)) ampmSel.value = 'PM';
          updateBookingTimeFromDropdowns();
      }
 
+     //  function updateBookingTimeFromDropdowns() {
+     //      const h = bookingHourSelect.value;
+     //      const m = bookingMinuteSelect.value;
+     //      const ampm = bookingAmpmSelect.value;
+     //      if (!h || !m || !ampm) {
+     //          bookingTimeInput.value = '';
+     //          return;
+     //      }
+     //      let h24 = parseInt(h, 10);
+     //      if (ampm === 'PM' && h24 !== 12) h24 += 12;
+     //      if (ampm === 'AM' && h24 === 12) h24 = 0;
+     //      bookingTimeInput.value = (h24 < 10 ? '0' : '') + h24 + ':' + m;
+     //  }
      function updateBookingTimeFromDropdowns() {
          const h = bookingHourSelect.value;
          const m = bookingMinuteSelect.value;
@@ -314,6 +381,8 @@
          let h24 = parseInt(h, 10);
          if (ampm === 'PM' && h24 !== 12) h24 += 12;
          if (ampm === 'AM' && h24 === 12) h24 = 0;
+
+         // Use the selected minute value (00, 20, or 40)
          bookingTimeInput.value = (h24 < 10 ? '0' : '') + h24 + ':' + m;
      }
 
@@ -487,11 +556,26 @@
          // Client-side validation
          let hasErrors = false;
          const fields = {
-             'booking-name': { message: 'The name field is required.', value: formData.name },
-             'booking-email': { message: 'Please enter a valid email.', value: formData.email },
-             'booking-date': { message: 'The date field is required.', value: formData.date },
-             'booking-service': { message: 'Please select a service type.', value: formData.service_id },
-             'booking-time': { message: 'Please choose a time.', value: formData.time }
+             'booking-name': {
+                 message: 'The name field is required.',
+                 value: formData.name
+             },
+             'booking-email': {
+                 message: 'Please enter a valid email.',
+                 value: formData.email
+             },
+             'booking-date': {
+                 message: 'The date field is required.',
+                 value: formData.date
+             },
+             'booking-service': {
+                 message: 'Please select a service type.',
+                 value: formData.service_id
+             },
+             'booking-time': {
+                 message: 'Please choose a time.',
+                 value: formData.time
+             }
          };
 
          for (const [fieldId, fieldData] of Object.entries(fields)) {
@@ -514,7 +598,8 @@
          // Send request using Axios
          axios.post('{{ route('bookings.store') }}', formData)
              .then(function(response) {
-                 showNotification(response.data.message || 'Booking confirmed successfully! Check your email.', 'success');
+                 showNotification(response.data.message ||
+                     'Booking confirmed successfully! Check your email.', 'success');
                  clearBookingForm();
                  bookingModal.classList.add('hidden');
              })
