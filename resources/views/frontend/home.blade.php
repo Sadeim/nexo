@@ -26,7 +26,6 @@
             transform: translateZ(0) !important;
         }
     </style>
-    </style>
 @endpush
 
 @section('content')

@@ -41,7 +41,7 @@ class HomeController extends Controller
     {
         $data['slider'] = Slider::first();
         $data['about'] = About::first();
-        $data['works'] = Work::where('is_featured',1)->get();
+        $data['works'] = Work::where('is_featured', 1)->get();
         $data['services'] = Service::where('is_featured', 1)->get();
 
         $data['sections'] = Section::whereIn('key', [
@@ -56,7 +56,7 @@ class HomeController extends Controller
     {
         $data['services'] = Service::get();
 
-        $data['works'] = Work::where('is_featured',1)->get();
+        $data['works'] = Work::where('is_featured', 1)->get();
 
         $data['sections'] = Section::whereIn('key', [
             'services_section',
@@ -69,7 +69,7 @@ class HomeController extends Controller
     {
         $data['works'] = Work::where('is_featured', 0)->get();
 
-        return view('frontend.gallery',$data);
+        return view('frontend.gallery', $data);
     }
 
     // Get all active services for the booking form
@@ -115,6 +115,52 @@ class HomeController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Booking saved successfully. A confirmation email has been sent to your email.',
+        ], 200);
+    }
+
+    // Get booked time slots for a specific date
+    public function getBookedSlots(Request $request)
+    {
+        $date = $request->query('date');
+
+        if (!$date) {
+            return response()->json(['success' => true, 'slots' => []], 200);
+        }
+
+        $bookedSlots = Booking::where('date', $date)
+            ->whereIn('status', ['pending', 'confirmed'])
+            ->get()
+            ->map(function ($booking) {
+                $carbonTime = \Carbon\Carbon::parse($booking->time);
+                $hour24 = $carbonTime->hour;
+                $minute = $carbonTime->minute;
+
+                // Convert to 12-hour format
+                $hour12 = $hour24 % 12;
+                if ($hour12 === 0) $hour12 = 12;
+                $ampm = $hour24 >= 12 ? 'PM' : 'AM';
+
+                // Determine which 20-minute slot
+                if ($minute >= 0 && $minute < 20) {
+                    $minuteSlot = '00';
+                } elseif ($minute >= 20 && $minute < 40) {
+                    $minuteSlot = '20';
+                } else {
+                    $minuteSlot = '40';
+                }
+
+                return [
+                    'hour' => (string)$hour12,  // IMPORTANT: Convert to string
+                    'minute' => $minuteSlot,
+                    'ampm' => $ampm
+                ];
+            })
+            ->values()
+            ->toArray();
+
+        return response()->json([
+            'success' => true,
+            'slots' => $bookedSlots
         ], 200);
     }
 
