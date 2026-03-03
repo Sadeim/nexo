@@ -232,10 +232,15 @@ Route::group(['middleware' => ['auth:admin', 'admin'], 'prefix' => 'admin', 'as'
     /* ------------------------------------- about Routes --------------------------------- */
 
     /* ------------------------------------- booking Routes --------------------------------- */
-    Route::resource('bookings', BookingController::class);
+
     Route::group(['prefix' => 'bookings', 'as' => 'bookings.'], function () {
         Route::get('data/datatables', [BookingController::class, 'datatable'])->name('datatable');
+        Route::get('calendar', [BookingController::class, 'calendar'])->name('calendar');
+        Route::get('calendar-events', [BookingController::class, 'calendarEvents'])->name('events');
     });
+    Route::resource('bookings', BookingController::class);
+
+
     /* ------------------------------------- booking Routes --------------------------------- */
 
     /* ------------------------------------- event Routes --------------------------------- */

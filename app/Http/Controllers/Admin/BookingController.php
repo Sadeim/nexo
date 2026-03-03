@@ -15,9 +15,9 @@ class BookingController extends Controller
 
     public function __construct()
     {
-        $this->middleware('permission:view_bookings|add_bookings', ['only' => ['index','store']]);
-        $this->middleware('permission:add_bookings', ['only' => ['create','store']]);
-        $this->middleware('permission:edit_bookings', ['only' => ['edit','update']]);
+        $this->middleware('permission:view_bookings|add_bookings', ['only' => ['index', 'store']]);
+        $this->middleware('permission:add_bookings', ['only' => ['create', 'store']]);
+        $this->middleware('permission:edit_bookings', ['only' => ['edit', 'update']]);
         $this->middleware('permission:delete_bookings', ['only' => ['destroy']]);
     }
 
@@ -26,7 +26,7 @@ class BookingController extends Controller
         return view('admin.bookings.index');
     }
 
-    public function datatable(Request $request) 
+    public function datatable(Request $request)
     {
         $items = Booking::query()->orderBy('id', 'DESC');
         return $this->filterDataTable($items, $request);
@@ -37,10 +37,7 @@ class BookingController extends Controller
         // return view('admin.bookings.create');
     }
 
-    public function store(CreateBookingRequest $request)
-    {
-
-    }
+    public function store(CreateBookingRequest $request) {}
 
     public function edit($id)
     {
@@ -48,14 +45,49 @@ class BookingController extends Controller
         return view('admin.bookings.create', compact('booking'));
     }
 
-    public function update(CreateBookingRequest $request, $id)
-    {
+  
 
-    }
+    public function update(CreateBookingRequest $request, $id) {}
 
     public function destroy($id)
     {
         Booking::destroy($id);
         return $this->response_api(200, __('admin.form.deleted_successfully'), '');
+    }
+
+    public function calendar()
+    {
+        return view('admin.bookings.calendar');
+    }
+
+    public function calendarEvents(Request $request)
+    {
+        $bookings = Booking::with('service')->get();
+
+        $events = $bookings->map(function ($booking) {
+            // دمج التاريخ مع الوقت
+            $start = $booking->date->format('Y-m-d');
+            if ($booking->time) {
+                $start .= 'T' . $booking->time;
+            }
+
+            return [
+                'id'    => $booking->id,
+                'title' => ($booking->service ? $booking->service->name : 'No Service') . ' - ' . $booking->name,
+                'start' => $start,
+                'extendedProps' => [
+                    'name'    => $booking->name,
+                    'email'   => $booking->email,
+                    'phone'   => $booking->phone,
+                    'persons' => $booking->persons,
+                    'service' => $booking->service ? $booking->service->name : '-',
+                    'time'    => $booking->time,
+                    'message' => $booking->message,
+                    'status'  => $booking->status,
+                ],
+            ];
+        });
+
+        return response()->json($events);
     }
 }

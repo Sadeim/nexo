@@ -25,6 +25,12 @@
                                             +
                                         </span>
                                     </a> --}}
+                                    <div class="card-toolbar flex-row-fluid d-flex justify-content-end gap-5">
+                                        <a class="btn btn-primary" href="{{ route('admin.bookings.calendar') }}">
+                                            <i class="fas fa-calendar-alt me-2"></i>
+                                            Calendar View
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
