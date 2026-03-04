@@ -372,7 +372,7 @@
                     </div>
                 @endif
                            
-                @if(auth()->user()->can('view_attributes')) 
+                @if (auth()->user()->can('view_attributes')) 
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'attributes' ? 'here show' : '' }}">
                         <span class="menu-link {{ $is_active == 'attributes' ? 'active' : '' }}">
                             <span class="menu-icon">
@@ -389,7 +389,7 @@
                         </span>
                     </div>
                 @endif
-                @if(auth()->user()->can('view_attribute_values')) 
+                @if (auth()->user()->can('view_attribute_values')) 
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'attribute_values' ? 'here show' : '' }}">
                         <span class="menu-link {{ $is_active == 'attribute_values' ? 'active' : '' }}">
                             <span class="menu-icon">
@@ -461,7 +461,7 @@
                             </span>
                             <span class="menu-title">
                                 <a class="{{ $is_active == 'bookings' ? 'active' : '' }}"
-                                    href="{{ route('admin.bookings.index') }}">
+                                    href="{{ route('admin.bookings.calendar') }}">
                                     <span class="menu-title">{{ __('admin.global.bookings') }}</span>
                                 </a>
                             </span>

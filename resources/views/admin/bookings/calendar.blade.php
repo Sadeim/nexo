@@ -115,14 +115,14 @@
                             <div class="col-3">
                                 <h2 class="table-title">{{ __('admin.global.bookings') }} - Calendar</h2>
                             </div>
-                            <div class="col-9">
+                            {{-- <div class="col-9">
                                 <div class="d-flex justify-content-end gap-3">
                                     <a class="btn btn-primary" href="{{ route('admin.bookings.index') }}">
                                         <i class="fas fa-list me-2"></i>
                                         List View
                                     </a>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
 
