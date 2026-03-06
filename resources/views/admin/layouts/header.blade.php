@@ -5,7 +5,7 @@
         <div
             class="container-fluid py-6 py-lg-0 d-flex flex-column flex-lg-row align-items-end justify-content-lg-between">
 
-            <div id="kt_aside_mobile_toggle" class="btn btn-icon btn-active-color-primary d-flex d-lg-none me-2" style="cursor:pointer;"><span class="svg-icon svg-icon-2x"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 7H21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M3 12H21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M3 17H21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></div>
+            <div id="kt_aside_mobile_toggle" class="btn btn-icon btn-active-color-primary d-flex d-lg-none me-2" style="cursor:pointer;"><span class="svg-icon svg-icon-2x"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 7H21" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/><path d="M3 12H21" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/><path d="M3 17H21" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/></svg></span></div>
             <div id="kt_aside_toggle"
                 class="btn btn-icon w-auto px-0 btn-active-color-primary aside-minimize d-none d-lg-flex"
                 data-kt-toggle="true" data-kt-toggle-state="active" data-kt-toggle-target="body"
