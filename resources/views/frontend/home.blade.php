@@ -31,18 +31,18 @@
 @section('content')
     <main>
         <!-- Hero Start -->
-       
+
         <section
             class="relative bg-linear-to-r from-ivory/60 to-[#1B4629]/60 opacity-[52px] pb-10 min-h-fit 3xl:max-h-[60vh] flex pt-36 overflow-hidden">
             <!-- Left Background Image -->
             <div class="absolute left-0 top-0 w-full md:w-2/3 h-full">
-                <img src="{{ asset('frontend_assets/assets/images/bg-left.png')}}" alt="Barber working" class="w-full h-full object-cover opacity-90">
+                <img src="{{ asset('frontend_assets/assets/images/bg-left.png') }}" alt="Barber working"
+                    class="w-full h-full object-cover opacity-90">
             </div>
 
             <!-- Right Background Pattern -->
             <div class="absolute right-0 top-0 w-1/3 h-full hidden lg:block">
-                <img src="{{ asset($slider->image) }}" alt="Pattern"
-                    class="w-full h-full object-cover opacity-20">
+                <img src="{{ asset($slider->image) }}" alt="Pattern" class="w-full h-full object-cover opacity-20">
             </div>
 
             <div class="container mx-auto px-4 md:px-8 lg:px-12 lg:pl-18 relative z-10">
@@ -74,14 +74,14 @@
                 <!-- Large NEXO Text Watermark -->
                 <div class="absolute left-18 bottom-0 w-1/2 pointer-events-none hidden md:block">
                     <!-- <img src="./assets/images/Large-NEXO-Watermark.png" /> -->
-                    <img src="{{ asset('frontend_assets/assets/images/NexoLogoHero.svg')}}" />
+                    <img src="{{ asset('frontend_assets/assets/images/NexoLogoHero.svg') }}" />
                 </div>
             </div>
 
             <!-- Large X Scissors Logo -->
             <div class="absolute right-1/5 pointer-events-none hidden xl:block">
                 <!-- <img src="./assets/images/Large-X-Scissors-Logo.png" /> -->
-                <img src="{{ asset('frontend_assets/assets/images/xlogo.svg')}}" />
+                <img src="{{ asset('frontend_assets/assets/images/xlogo.svg') }}" />
             </div>
         </section>
 
@@ -147,7 +147,7 @@
                             <img src="{{ asset('frontend_assets/assets/images/NexoAbout.svg') }}"
                                 class="col-span-1 lg:col-span-8 w-[95%] mt-40 md:mt-4 mx-auto px-8" />
                             <!-- <img src="./assets/images/about-nexo.png"
-                                                                                                    class="col-span-1 lg:col-span-8 w-full mt-20 md:mt-0" /> -->
+                                                                                                        class="col-span-1 lg:col-span-8 w-full mt-20 md:mt-0" /> -->
 
 
                             <!-- Right Column - Text Content -->
@@ -332,6 +332,21 @@
                                 <div class="flex justify-between items-center pb-1">
                                     <span class="text-[#444444]">{{ $service->name }}</span>
                                     <span class="text-crimson text-3xl">{{ $service->description }}$</span>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        <!-- Service Prices List -->
+                        <div class="space-y-4 mb-8 font-league-gothic text-2xl">
+                            <h3 class="text-black text-2xl md:text-3xl lg:text-4xl mb-6 uppercase">
+                                Service  Packages
+                            </h3>
+
+                            <!-- Price Items - Dynamic -->
+                            @foreach ($services_packages as $services_package)
+                                <div class="flex justify-between items-center pb-1">
+                                    <span class="text-[#444444]">{{ $services_package->name }}</span>
+                                    <span class="text-crimson text-3xl">{{ $services_package->description }}$</span>
                                 </div>
                             @endforeach
                         </div>
@@ -544,7 +559,7 @@
                         <img src="{{ asset('frontend_assets/assets/images/nexo-standard.svg') }}" alt="X Scissors Logo"
                             class="w-96 h-[165px] mx-auto">
                         <!-- <img src="./assets/images/nexo-higher-standard.svg" alt="X Scissors Logo"
-                                                class="w-96 h-48 opacity-80 mx-auto my-auto"> -->
+                                                    class="w-96 h-48 opacity-80 mx-auto my-auto"> -->
                     </div>
 
                     <!-- Large X Scissors Logo Right -->

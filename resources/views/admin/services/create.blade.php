@@ -18,7 +18,7 @@
             <div class="card card-flush">
                 <div class="card-header">
                     <div class="card-title">
-                        <h3>Is featured</h3>
+                        <h3>Is Packages</h3>
                     </div>
                     <div class="card-toolbar">
                         <label class="form-check form-switch form-check-custom form-check-solid">
@@ -85,7 +85,7 @@
                     </div>
                     <div class="mb-5">
                         <label class="form-label">Price</label>
-                        <textarea name="description" class="form-control" rows="4" placeholder="Enter Service Price">{{ isset($service) ? $service->description : '' }}</textarea>
+                        <textarea name="description" class="form-control" rows="4" placeholder=" Example: 50  OR  30 - 60 (range price)">{{ isset($service) ? $service->description : '' }}</textarea>
                     </div>
                 </div>
             </div>
