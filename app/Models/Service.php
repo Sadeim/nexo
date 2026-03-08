@@ -17,6 +17,7 @@ class Service extends Model
         'status',
         'icon',
         'image',
+        'is_featured'
     ];
 
     public function scopeSearch($query, $request)
