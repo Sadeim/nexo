@@ -147,7 +147,7 @@
                             <img src="{{ asset('frontend_assets/assets/images/NexoAbout.svg') }}"
                                 class="col-span-1 lg:col-span-8 w-[95%] mt-40 md:mt-4 mx-auto px-8" />
                             <!-- <img src="./assets/images/about-nexo.png"
-                                                                                                        class="col-span-1 lg:col-span-8 w-full mt-20 md:mt-0" /> -->
+                                                                                                            class="col-span-1 lg:col-span-8 w-full mt-20 md:mt-0" /> -->
 
 
                             <!-- Right Column - Text Content -->
@@ -336,20 +336,23 @@
                             @endforeach
                         </div>
 
-                        <!-- Service Prices List -->
-                        <div class="space-y-4 mb-8 font-league-gothic text-2xl">
-                            <h3 class="text-black text-2xl md:text-3xl lg:text-4xl mb-6 uppercase">
-                                Service  Packages
-                            </h3>
+                        @if ($services_packages->count())
+                            <!-- Service Prices List -->
+                            <div class="space-y-4 mb-8 font-league-gothic text-2xl">
+                                <h3 class="text-black text-2xl md:text-3xl lg:text-4xl mb-6 uppercase">
+                                    Service Packages
+                                </h3>
 
-                            <!-- Price Items - Dynamic -->
-                            @foreach ($services_packages as $services_package)
-                                <div class="flex justify-between items-center pb-1">
-                                    <span class="text-[#444444]">{{ $services_package->name }}</span>
-                                    <span class="text-crimson text-3xl">{{ $services_package->description }}$</span>
-                                </div>
-                            @endforeach
-                        </div>
+                                <!-- Price Items - Dynamic -->
+                                @foreach ($services_packages as $services_package)
+                                    <div class="flex justify-between items-center pb-1">
+                                        <span class="text-[#444444]">{{ $services_package->name }}</span>
+                                        <span class="text-crimson text-3xl">{{ $services_package->description }}$</span>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
+
 
                         <!-- All Services Button -->
                         <a href="{{ route('services') }}" class="relative inline-block">
@@ -559,7 +562,7 @@
                         <img src="{{ asset('frontend_assets/assets/images/nexo-standard.svg') }}" alt="X Scissors Logo"
                             class="w-96 h-[165px] mx-auto">
                         <!-- <img src="./assets/images/nexo-higher-standard.svg" alt="X Scissors Logo"
-                                                    class="w-96 h-48 opacity-80 mx-auto my-auto"> -->
+                                                        class="w-96 h-48 opacity-80 mx-auto my-auto"> -->
                     </div>
 
                     <!-- Large X Scissors Logo Right -->
