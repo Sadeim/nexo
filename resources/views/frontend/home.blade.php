@@ -355,7 +355,7 @@
 
 
                         <!-- All Services Button -->
-                        <a href="{{ route('services') }}" class="relative inline-block">
+                        {{-- <a href="{{ route('services') }}" class="relative inline-block">
                             <button
                                 class="bg-evergreen hover:bg-evergreen/80 text-ivory font-league-gothic text-lg md:text-2xl lg:text-3xl tracking-wider px-8 py-4 flex items-center gap-3 hover:bg-opacity-90 transition-all group active:bg-evergreen/70">
                                 All Services
@@ -366,7 +366,7 @@
                                         stroke-width="2" />
                                 </svg>
                             </button>
-                        </a>
+                        </a> --}}
                     </div>
                 </div>
             </div>
