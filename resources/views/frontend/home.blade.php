@@ -340,7 +340,7 @@
                             <!-- Service Prices List -->
                             <div class="space-y-4 mb-8 font-league-gothic text-2xl">
                                 <h3 class="text-black text-2xl md:text-3xl lg:text-4xl mb-6 uppercase">
-                                    Service Packages
+                                    Service Packages prices
                                 </h3>
 
                                 <!-- Price Items - Dynamic -->
