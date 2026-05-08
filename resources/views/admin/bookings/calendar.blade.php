@@ -150,6 +150,9 @@
                 <div class="modal-body" id="bookingDetailBody">
                 </div>
                 <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" id="cancelBookingBtn">
+                        <i class="fas fa-trash me-2"></i> Cancel Booking
+                    </button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -163,6 +166,9 @@
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
             var eventsUrl = "{{ route('admin.bookings.events') }}";
+            var destroyUrlTemplate = "{{ route('admin.bookings.destroy', ':id') }}";
+            var csrfToken = "{{ csrf_token() }}";
+            var currentBookingId = null;
 
             console.log('Events URL:', eventsUrl); // للتأكد من الرابط
 
@@ -206,7 +212,8 @@
                 selectable: true,
                 allDaySlot: false,
 
-                dayMaxEvents: 3, // عرض 3 أحداث كحد أقصى ثم "more"
+                dayMaxEvents: false, // عرض جميع الحجوزات بدون "more"
+                dayMaxEventRows: false,
                 eventDisplay: 'block',
 
                 // تخصيص محتوى الحدث في كل عرض
@@ -238,6 +245,7 @@
                 // عند الضغط على حدث - عرض Modal بكافة التفاصيل
                 eventClick: function(info) {
                     info.jsEvent.preventDefault();
+                    currentBookingId = info.event.id;
                     var props = info.event.extendedProps;
                     var startDate = info.event.start;
                     var formattedDate = startDate ? startDate.toLocaleDateString('en-US', {
@@ -287,6 +295,56 @@
             });
 
             calendar.render();
+
+            // زر إلغاء الحجز
+            document.getElementById('cancelBookingBtn').addEventListener('click', function() {
+                if (!currentBookingId) return;
+
+                if (!confirm('Are you sure you want to cancel this booking?')) return;
+
+                var btn = this;
+                btn.disabled = true;
+
+                var url = destroyUrlTemplate.replace(':id', currentBookingId);
+
+                fetch(url, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(function(response) {
+                        return response.json().then(function(data) {
+                            return {
+                                ok: response.ok,
+                                data: data
+                            };
+                        });
+                    })
+                    .then(function(result) {
+                        if (!result.ok) {
+                            alert(result.data.message || 'Failed to cancel booking');
+                            return;
+                        }
+
+                        var ev = calendar.getEventById(currentBookingId);
+                        if (ev) ev.remove();
+
+                        currentBookingId = null;
+                        var modalEl = document.getElementById('bookingDetailModal');
+                        var modal = bootstrap.Modal.getInstance(modalEl);
+                        if (modal) modal.hide();
+                    })
+                    .catch(function(err) {
+                        console.error(err);
+                        alert('Failed to cancel booking');
+                    })
+                    .finally(function() {
+                        btn.disabled = false;
+                    });
+            });
 
             // Helper Functions
             function buildDetailRow(label, value) {
