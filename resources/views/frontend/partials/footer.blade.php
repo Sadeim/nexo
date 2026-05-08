@@ -294,57 +294,20 @@
                      </div>
                  </div>
              </div> --}}
-             <!-- Choose an hour -->
+             <!-- Available Time Slot -->
              <div>
-                 <label class="block text-white text-base mb-2 uppercase">Choose time</label>
-                 <div class="field-container flex flex-wrap gap-3 items-center">
-                     <input type="hidden" id="booking-time" name="time" value="">
-
-                     <!-- Hour Dropdown -->
-                     <div class="time-select-container relative flex-1 min-w-[80px]">
-                         <select id="booking-hour" class="time-select">
-                             <option value="">Hour</option>
-                         </select>
-                         <div class="time-select-arrow">
-                             <svg class="w-5 h-5 text-evergreen" fill="none" stroke="currentColor"
-                                 viewBox="0 0 24 24">
-                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                     d="M19 9l-7 7-7-7"></path>
-                             </svg>
-                         </div>
-                     </div>
-
-                     <!-- Separator -->
-                     <span class="time-separator">:</span>
-
-                     <!-- Minute Dropdown -->
-                     <div class="time-select-container relative flex-1 min-w-[80px]">
-                         <select id="booking-minute" class="time-select">
-                             <option value="">Min</option>
-                         </select>
-                         <div class="time-select-arrow">
-                             <svg class="w-5 h-5 text-evergreen" fill="none" stroke="currentColor"
-                                 viewBox="0 0 24 24">
-                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                     d="M19 9l-7 7-7-7"></path>
-                             </svg>
-                         </div>
-                     </div>
-
-                     <!-- AM/PM Dropdown -->
-                     <div class="time-select-container relative flex-1 min-w-[90px]">
-                         <select id="booking-ampm" class="time-select">
-                             <option value="">AM/PM</option>
-                             <option value="AM">AM</option>
-                             <option value="PM">PM</option>
-                         </select>
-                         <div class="time-select-arrow">
-                             <svg class="w-5 h-5 text-evergreen" fill="none" stroke="currentColor"
-                                 viewBox="0 0 24 24">
-                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                     d="M19 9l-7 7-7-7"></path>
-                             </svg>
-                         </div>
+                 <label class="block text-white text-base mb-2 uppercase">Available time</label>
+                 <div class="field-container select-wrapper">
+                     <select id="booking-time" name="time"
+                         class="w-full px-4 py-3 rounded bg-white text-[#080B16] focus:outline-none focus:ring-2 focus:ring-ivory appearance-none pr-10">
+                         <option value="">Select date first</option>
+                     </select>
+                     <div class="select-arrow">
+                         <svg class="w-5 h-5 text-evergreen" fill="none" stroke="currentColor"
+                             viewBox="0 0 24 24">
+                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                 d="M19 9l-7 7-7-7"></path>
+                         </svg>
                      </div>
                  </div>
              </div>
@@ -530,415 +493,52 @@
              });
          });
      }
-     // Store booked slots globally
-     let bookedSlots = [];
-
-     // Fetch booked slots for selected date
-     async function fetchBookedSlots(date) {
-         if (!date) {
-             bookedSlots = [];
-             return;
-         }
-
-         try {
-             const response = await axios.get('{{ route('bookings.booked-slots') }}', {
-                 params: {
-                     date: date
-                 }
-             });
-
-             if (response.data.success) {
-                 bookedSlots = response.data.slots || [];
-                 console.log('✅ Loaded booked slots:', bookedSlots);
-             }
-         } catch (error) {
-             console.error('❌ Error fetching booked slots:', error);
-             bookedSlots = [];
-         }
-     }
-
-     // Check if a specific time slot is booked (ONE VERSION ONLY)
-     function isSlotBooked(hour, minute, ampm) {
-         const hourStr = String(hour);
-         const minuteStr = String(minute);
-         const ampmStr = String(ampm);
-
-         const found = bookedSlots.some(slot => {
-             return String(slot.hour) === hourStr &&
-                 String(slot.minute) === minuteStr &&
-                 String(slot.ampm) === ampmStr;
-         });
-
-         return found;
-     }
-
-     // Check if all 3 slots for a specific hour are booked
-     function isHourFullyBooked(hour, ampm) {
-         if (!ampm) return false;
-
-         const info = getDateInfo();
-         if (!info) return false;
-
-         const isLastHour = (hour === info.lastHour12);
-         const slotsToCheck = isLastHour && info.lastMinute === 40 ? ['00', '20'] : ['00', '20', '40'];
-
-         const bookedCount = slotsToCheck.filter(minute =>
-             isSlotBooked(hour, minute, ampm)
-         ).length;
-
-         console.log(`🔍 Checking hour ${hour} ${ampm}:`, {
-             slotsToCheck,
-             bookedCount,
-             totalSlots: slotsToCheck.length,
-             isFullyBooked: bookedCount === slotsToCheck.length
-         });
-
-         return bookedCount === slotsToCheck.length;
-     }
-
-     // Booking Modal
+     // Booking Modal references
      const bookingModal = document.getElementById('booking-modal');
      const closeModalBtn = document.getElementById('close-modal');
      const bookNowButtons = document.querySelectorAll('.book-now-btn');
      const bookingForm = document.getElementById('booking-form');
-     const bookingTimeInput = document.getElementById('booking-time');
-     const bookingHourSelect = document.getElementById('booking-hour');
-     const bookingMinuteSelect = document.getElementById('booking-minute');
-     const bookingAmpmSelect = document.getElementById('booking-ampm');
+     const bookingTimeSelect = document.getElementById('booking-time');
 
-     function getDateInfo() {
-         const dateStr = document.getElementById('booking-date').value;
-         if (!dateStr) return null;
-         const d = new Date(dateStr + 'T12:00:00');
-         const isSunday = d.getDay() === 0;
-         return {
-             isSunday: isSunday,
-             hours: isSunday ? [10, 11, 12, 1, 2, 3] : [9, 10, 11, 12, 1, 2, 3, 4, 5, 6],
-             lastHour12: isSunday ? 3 : 6,
-             lastMinute: 40
-         };
-     }
+     // Fetch available time slots for the chosen date and populate the dropdown
+     async function loadAvailableSlots(date) {
+         resetTimeSelect('Loading...');
 
-     //  function updateHourOptions() {
-     //      const info = getDateInfo();
-     //      if (!info) return;
-
-     //      const sel = bookingHourSelect;
-     //      const ampm = bookingAmpmSelect.value;
-     //      const currentHour = bookingHourSelect.value; // Save current selection
-
-     //      sel.innerHTML = '<option value="">Hour</option>';
-
-     //      info.hours.forEach(function(h) {
-     //          const opt = document.createElement('option');
-     //          opt.value = h;
-
-     //          const fullyBooked = ampm ? isHourFullyBooked(h, ampm) : false;
-
-     //          if (fullyBooked) {
-     //              opt.textContent = '🚫 ' + h + ' (Fully Booked)';
-     //              opt.disabled = true;
-     //              opt.setAttribute('style',
-     //                  'color: #DC2626 !important; background-color: #FEE2E2 !important; font-weight: bold !important;'
-     //              );
-     //          } else {
-     //              opt.textContent = h;
-     //          }
-
-     //          sel.appendChild(opt);
-     //      });
-
-     //      // Restore selection if it was valid
-     //      //  if (currentHour && !isHourFullyBooked(parseInt(currentHour, 10), ampm)) {
-     //      //      bookingHourSelect.value = currentHour;
-     //      //  }
-     //      if (currentHour) {
-     //          const isCurrentFullyBooked = ampm ? isHourFullyBooked(parseInt(currentHour, 10), ampm) : false;
-     //          if (!isCurrentFullyBooked) {
-     //              bookingHourSelect.value = currentHour;
-     //          } else {
-     //              // If current hour is now fully booked, clear selection
-     //              bookingHourSelect.value = '';
-     //          }
-     //      }
-
-     //      bookingTimeInput.value = '';
-     //      bookingMinuteSelect.innerHTML = '<option value="">Min</option>';
-
-     //      // CRITICAL: Update minutes after restoring hour
-     //      if (bookingHourSelect.value && ampm) {
-     //          updateMinuteOptions();
-     //      }
-     //  }
-     function updateHourOptions() {
-         const info = getDateInfo();
-         if (!info) return;
-
-         const sel = bookingHourSelect;
-         const ampm = bookingAmpmSelect.value;
-         const currentHour = bookingHourSelect.value;
-
-         console.log('🔄 تحديث الساعات - AM/PM:', ampm, 'الساعة الحالية:', currentHour);
-         console.log('📊 الحجوزات المتاحة:', bookedSlots);
-
-         sel.innerHTML = '<option value="">Hour</option>';
-
-         info.hours.forEach(function(h) {
-             const opt = document.createElement('option');
-             opt.value = h;
-
-             // ✅ الحل النهائي: تحقق من الحجوزات لكل ساعة بغض النظر عن AM/PM المحدد
-             let fullyBooked = false;
-
-             // تحديد الفترة الافتراضية لهذه الساعة
-             let hourAmpm = '';
-             if (h >= 9 && h <= 11) {
-                 hourAmpm = 'AM';
-             } else if (h === 12 || (h >= 1 && h <= 6)) {
-                 hourAmpm = 'PM';
-             }
-
-             // ✅ دائماً تحقق باستخدام الفترة الافتراضية للساعة
-             if (hourAmpm) {
-                 fullyBooked = isHourFullyBooked(h, hourAmpm);
-             }
-
-             if (fullyBooked) {
-                 opt.textContent = h + ' (Fully Booked)';
-                 opt.disabled = true;
-                 //  opt.setAttribute('style',
-                 //      'color: #DC2626 !important; background-color: #FEE2E2 !important; font-weight: bold !important;'
-                 //  );
-                 console.log('🚫 الساعة', h, hourAmpm, 'محجوزة بالكامل');
-             } else {
-                 opt.textContent = h;
-             }
-
-             sel.appendChild(opt);
-         });
-
-         // استعادة الاختيار إذا كان صالحاً
-         if (currentHour) {
-             const currentHourNum = parseInt(currentHour, 10);
-             let currentHourAmpm = '';
-             if (currentHourNum >= 9 && currentHourNum <= 11) {
-                 currentHourAmpm = 'AM';
-             } else if (currentHourNum === 12 || (currentHourNum >= 1 && currentHourNum <= 6)) {
-                 currentHourAmpm = 'PM';
-             }
-
-             const isCurrentFullyBooked = currentHourAmpm ? isHourFullyBooked(currentHourNum, currentHourAmpm) : false;
-
-             if (!isCurrentFullyBooked) {
-                 bookingHourSelect.value = currentHour;
-             } else {
-                 bookingHourSelect.value = '';
-             }
-         }
-
-         bookingTimeInput.value = '';
-         bookingMinuteSelect.innerHTML = '<option value="">Min</option>';
-
-         // تحديث الدقائق بعد استعادة الساعة
-         if (bookingHourSelect.value && ampm) {
-             updateMinuteOptions();
-         }
-     }
-
-     function updateMinuteOptions() {
-         const info = getDateInfo();
-         const hour = parseInt(bookingHourSelect.value, 10);
-         const ampm = bookingAmpmSelect.value;
-
-         if (!info || !hour || !ampm) {
-             bookingMinuteSelect.innerHTML = '<option value="">Min</option>';
+         if (!date) {
+             resetTimeSelect('Select date first');
              return;
          }
 
-         const isLastHour = (hour === info.lastHour12);
-         const sel = bookingMinuteSelect;
-         sel.innerHTML = '<option value="">Min</option>';
+         try {
+             const response = await axios.get('{{ route('bookings.available-slots') }}', {
+                 params: { date: date }
+             });
 
-         const timeSlots = [{
-                 value: '00',
-                 label: '00 - 20'
-             },
-             {
-                 value: '20',
-                 label: '20 - 40'
-             },
-             {
-                 value: '40',
-                 label: '40 - 60'
-             }
-         ];
-
-         const maxSlots = (isLastHour && info.lastMinute === 40) ? 2 : 3;
-
-         for (let i = 0; i < maxSlots; i++) {
-             const opt = document.createElement('option');
-             opt.value = timeSlots[i].value;
-
-             const isBooked = isSlotBooked(hour, timeSlots[i].value, ampm);
-
-             if (isBooked) {
-                 opt.textContent = timeSlots[i].label + ' Booke';
-                 opt.disabled = true;
-                 //  opt.setAttribute('style',
-                 //      'color: #DC2626 !important; background-color: #FEE2E2 !important; font-weight: bold !important;'
-                 //  );
-             } else {
-                 opt.textContent = timeSlots[i].label;
-             }
-
-             sel.appendChild(opt);
+             const slots = (response.data && response.data.slots) || [];
+             populateTimeSelect(slots);
+         } catch (error) {
+             console.error('Error fetching available slots:', error);
+             resetTimeSelect('Could not load times');
          }
-
-         updateBookingTimeFromDropdowns();
      }
 
-     //  function updateAmpmOptions() {
-     //      const hour = parseInt(bookingHourSelect.value, 10);
-     //      const ampmSel = bookingAmpmSelect;
+     function resetTimeSelect(placeholderText) {
+         bookingTimeSelect.innerHTML = '<option value="">' + placeholderText + '</option>';
+     }
 
-     //      ampmSel.querySelectorAll('option').forEach(function(o) {
-     //          if (o.value === '') return;
-     //          o.disabled = (o.value === 'AM' && (hour === 12 || (hour >= 1 && hour <= 6))) ||
-     //              (o.value === 'PM' && hour >= 9 && hour <= 11);
-     //      });
-
-     //      const previousAmpm = ampmSel.value; // Save previous value
-
-     //      if (hour >= 9 && hour <= 11) {
-     //          ampmSel.value = 'AM';
-     //      } else if (hour === 12 || (hour >= 1 && hour <= 6)) {
-     //          ampmSel.value = 'PM';
-     //      }
-
-     //      const newAmpm = ampmSel.value;
-
-     //      // If AM/PM was just set (changed from empty to a value)
-     //      if (!previousAmpm && newAmpm) {
-     //          // Refresh hours to show fully booked status
-     //          setTimeout(() => {
-     //              const currentHour = bookingHourSelect.value;
-     //              updateHourOptions();
-     //              // Restore hour selection after refresh
-     //              if (currentHour) {
-     //                  bookingHourSelect.value = currentHour;
-     //                  updateMinuteOptions();
-     //              }
-     //          }, 0);
-     //      } else {
-     //          // AM/PM was already set, just update minutes
-     //          updateMinuteOptions();
-     //      }
-
-     //      updateBookingTimeFromDropdowns();
-     //  }
-     //  async function updateAmpmOptions() {
-     //      const hour = parseInt(bookingHourSelect.value, 10);
-     //      const ampmSel = bookingAmpmSelect;
-
-     //      ampmSel.querySelectorAll('option').forEach(function(o) {
-     //          if (o.value === '') return;
-     //          o.disabled = (o.value === 'AM' && (hour === 12 || (hour >= 1 && hour <= 6))) ||
-     //              (o.value === 'PM' && hour >= 9 && hour <= 11);
-     //      });
-
-     //      const previousAmpm = ampmSel.value;
-
-     //      if (hour >= 9 && hour <= 11) {
-     //          ampmSel.value = 'AM';
-     //      } else if (hour === 12 || (hour >= 1 && hour <= 6)) {
-     //          ampmSel.value = 'PM';
-     //      }
-
-     //      const newAmpm = ampmSel.value;
-
-     //      // إذا تم تحديد AM/PM لأول مرة، نحدّث الساعات بعد تحميل البيانات
-     //      if (!previousAmpm && newAmpm) {
-     //          // ✅ الحل: انتظر تحميل البيانات قبل تحديث الساعات
-     //          const currentDate = document.getElementById('booking-date').value;
-     //          if (currentDate) {
-     //              await fetchBookedSlots(currentDate);
-     //          }
-
-     //          setTimeout(() => {
-     //              const currentHour = bookingHourSelect.value;
-     //              updateHourOptions();
-     //              if (currentHour) {
-     //                  bookingHourSelect.value = currentHour;
-     //                  updateMinuteOptions();
-     //              }
-     //          }, 0);
-     //      } else {
-     //          updateMinuteOptions();
-     //      }
-
-     //      updateBookingTimeFromDropdowns();
-     //  }
-
-     function updateBookingTimeFromDropdowns() {
-         const h = bookingHourSelect.value;
-         const m = bookingMinuteSelect.value;
-         const ampm = bookingAmpmSelect.value;
-
-         if (!h || !m || !ampm) {
-             bookingTimeInput.value = '';
+     function populateTimeSelect(slots) {
+         if (!slots.length) {
+             resetTimeSelect('No available times for this date');
              return;
          }
-
-         let h24 = parseInt(h, 10);
-         if (ampm === 'PM' && h24 !== 12) h24 += 12;
-         if (ampm === 'AM' && h24 === 12) h24 = 0;
-
-         bookingTimeInput.value = (h24 < 10 ? '0' : '') + h24 + ':' + m;
-     }
-
-     // Event Listeners
-     bookingHourSelect.addEventListener('change', async function() {
-         bookingMinuteSelect.value = '';
-
-         const previousAmpm = bookingAmpmSelect.value;
-
-         // Set AM/PM based on hour
-         const hour = parseInt(this.value, 10);
-         const ampmSel = bookingAmpmSelect;
-
-         ampmSel.querySelectorAll('option').forEach(function(o) {
-             if (o.value === '') return;
-             o.disabled = (o.value === 'AM' && (hour === 12 || (hour >= 1 && hour <= 6))) ||
-                 (o.value === 'PM' && hour >= 9 && hour <= 11);
+         bookingTimeSelect.innerHTML = '<option value="">Select a time</option>';
+         slots.forEach(function(slot) {
+             const opt = document.createElement('option');
+             opt.value = slot.value;
+             opt.textContent = slot.label;
+             bookingTimeSelect.appendChild(opt);
          });
-
-         if (hour >= 9 && hour <= 11) {
-             ampmSel.value = 'AM';
-         } else if (hour === 12 || (hour >= 1 && hour <= 6)) {
-             ampmSel.value = 'PM';
-         }
-
-         const newAmpm = ampmSel.value;
-
-         // ✅ الحل الرئيسي: إذا تم تحديد AM/PM لأول مرة، حدّث الساعات فوراً
-         if (!previousAmpm && newAmpm) {
-             // انتظر قليلاً ثم حدّث الساعات لإظهار الحجوزات
-             await new Promise(resolve => setTimeout(resolve, 50));
-             updateHourOptions();
-         }
-
-         updateMinuteOptions();
-         updateBookingTimeFromDropdowns();
-     });
-
-     bookingMinuteSelect.addEventListener('change', updateBookingTimeFromDropdowns);
-
-     bookingAmpmSelect.addEventListener('change', function() {
-         // Update hours display then restore and update minutes
-         updateHourOptions();
-         updateMinuteOptions();
-         updateBookingTimeFromDropdowns();
-     });
+     }
 
      // Load services when modal opens
      async function loadServices() {
@@ -955,56 +555,26 @@
                  option.textContent = service.name;
                  serviceSelect.appendChild(option);
              });
-
-             // ✅ تحميل الحجوزات مباشرة عند فتح النافذة
-             const currentDate = document.getElementById('booking-date').value;
-             if (currentDate) {
-                 await fetchBookedSlots(currentDate);
-                 console.log('✅ تم تحميل الحجوزات عند فتح النافذة:', bookedSlots);
-             }
-
          } catch (error) {
              console.error('Error loading services:', error);
              showNotification('Failed to load services', 'error');
          }
      }
+
      // Show modal when clicking any BOOK NOW button
-     //  bookNowButtons.forEach(button => {
-     //      button.addEventListener('click', function(e) {
-     //          e.preventDefault();
-     //          loadServices();
-     //          bookingModal.classList.remove('hidden');
-     //          setMinDate();
-     //          updateHourOptions();
-     //      });
-     //  });
      bookNowButtons.forEach(button => {
          button.addEventListener('click', async function(e) {
              e.preventDefault();
              await loadServices();
              bookingModal.classList.remove('hidden');
              setMinDate();
-             // Fetch slots for today's date
              const todayDate = document.getElementById('booking-date').value;
-             if (todayDate) {
-                 await fetchBookedSlots(todayDate);
-             }
-             updateHourOptions();
+             await loadAvailableSlots(todayDate);
          });
      });
 
-     //  document.getElementById('booking-date').addEventListener('change', function() {
-     //      bookingTimeInput.value = '';
-     //      updateHourOptions();
-     //  });
      document.getElementById('booking-date').addEventListener('change', async function() {
-         bookingTimeInput.value = '';
-         bookingHourSelect.value = '';
-         bookingMinuteSelect.innerHTML = '<option value="">Min</option>';
-         bookingAmpmSelect.value = '';
-
-         await fetchBookedSlots(this.value);
-         updateHourOptions();
+         await loadAvailableSlots(this.value);
      });
      // Set minimum date to today
      function setMinDate() {
@@ -1105,7 +675,7 @@
      // Clear booking form
      function clearBookingForm() {
          bookingForm.reset();
-         bookingTimeInput.value = '';
+         bookingTimeSelect.value = '';
          clearValidationErrors();
      }
 
@@ -1122,7 +692,7 @@
              email: document.getElementById('booking-email').value,
              date: document.getElementById('booking-date').value,
              service_id: document.getElementById('booking-service').value,
-             time: bookingTimeInput.value,
+             time: bookingTimeSelect.value,
              _token: '{{ csrf_token() }}'
          };
 
