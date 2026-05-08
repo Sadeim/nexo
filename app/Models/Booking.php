@@ -19,10 +19,12 @@ class Booking extends Model
         'message',
         'status',
         'service_id',
+        'reminder_sent_at',
     ];
 
     protected $casts = [
         'date' => 'date',
+        'reminder_sent_at' => 'datetime',
     ];
 
     public function service()
