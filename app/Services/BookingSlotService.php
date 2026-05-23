@@ -7,59 +7,44 @@ use Carbon\Carbon;
 
 class BookingSlotService
 {
-    public const WORK_START_MIN = 9 * 60;   // 9:00 AM
-    public const WORK_END_MIN = 18 * 60;    // 6:00 PM (last appointment must end by this)
+    public const BOOKING_DURATION_MINUTES = 20;
 
-    /**
-     * Returns the slot/booking interval (minutes) for the given date.
-     * Wed–Sat: 10 minutes. Sun, Mon, Tue: 20 minutes.
-     */
-    public function getDayInterval(Carbon $date): int
-    {
-        $dow = $date->dayOfWeek; // Sun=0, Mon=1, Tue=2, Wed=3, Thu=4, Fri=5, Sat=6
-        return ($dow >= 3 && $dow <= 6) ? 10 : 20;
-    }
-
-    /**
-     * Check if a time is aligned with the day's slot grid and within working hours.
-     */
     public function isTimeInWorkingHours(string $date, string $time): bool
     {
         $dateCarbon = Carbon::parse($date);
         $t = Carbon::parse($time);
         $minutes = $t->hour * 60 + $t->minute;
-        $interval = $this->getDayInterval($dateCarbon);
+        $isSunday = $dateCarbon->isSunday();
 
-        if ($minutes < self::WORK_START_MIN) return false;
-        if ($minutes + $interval > self::WORK_END_MIN) return false;
-        if (($minutes - self::WORK_START_MIN) % $interval !== 0) return false;
+        if ($isSunday) {
+            $startMin = 10 * 60;   // 10:00 AM
+            $endMin   = 16 * 60 + 40;  // 4:40 PM
+        } else {
+            $startMin = 9 * 60;    // 9:00 AM
+            $endMin   = 19 * 60 + 40;  // 7:40 PM
+        }
 
-        return true;
+        return $minutes >= $startMin && $minutes <= $endMin;
     }
 
-    /**
-     * Check if time is within hours and does not overlap with any existing booking.
-     */
     public function isSlotValidAndAvailable(string $date, string $time): bool
     {
         if (!$this->isTimeInWorkingHours($date, $time)) {
             return false;
         }
 
-        $dateCarbon = Carbon::parse($date);
-        $interval = $this->getDayInterval($dateCarbon);
-
         $newStart = Carbon::parse($time)->hour * 60 + Carbon::parse($time)->minute;
-        $newEnd = $newStart + $interval;
+        $newEnd   = $newStart + self::BOOKING_DURATION_MINUTES;
 
         $bookings = Booking::where('date', $date)
             ->where('status', '!=', 'cancelled')
             ->get();
 
         foreach ($bookings as $b) {
-            $bTime = Carbon::parse($b->time);
+            $bTime  = Carbon::parse($b->time);
             $bStart = $bTime->hour * 60 + $bTime->minute;
-            $bEnd = $bStart + $interval;
+            $bEnd   = $bStart + self::BOOKING_DURATION_MINUTES;
+
             if ($newEnd > $bStart && $newStart < $bEnd) {
                 return false;
             }
@@ -68,16 +53,13 @@ class BookingSlotService
         return true;
     }
 
-    /**
-     * Build all available time slots for a given date, excluding booked ones
-     * and past slots if date is today.
-     *
-     * @return array<int, array{value: string, label: string}>
-     */
     public function getAvailableSlots(string $date): array
     {
         $dateCarbon = Carbon::parse($date)->startOfDay();
-        $interval = $this->getDayInterval($dateCarbon);
+        $isSunday   = $dateCarbon->isSunday();
+
+        $startMin = $isSunday ? 10 * 60 : 9 * 60;
+        $endMin   = $isSunday ? 16 * 60 + 40 : 19 * 60 + 40;
 
         $bookings = Booking::where('date', $date)
             ->whereIn('status', ['pending', 'confirmed'])
@@ -88,19 +70,21 @@ class BookingSlotService
             })
             ->toArray();
 
-        $now = Carbon::now();
-        $isToday = $dateCarbon->isSameDay($now);
+        $now        = Carbon::now();
+        $isToday    = $dateCarbon->isSameDay($now);
         $nowMinutes = $now->hour * 60 + $now->minute;
 
         $slots = [];
-        for ($m = self::WORK_START_MIN; $m + $interval <= self::WORK_END_MIN; $m += $interval) {
-            // Skip past slots if booking for today
+        $interval = self::BOOKING_DURATION_MINUTES;
+
+        for ($m = $startMin; $m + $interval <= $endMin + $interval; $m += $interval) {
+            if ($m > $endMin) break;
+
             if ($isToday && $m <= $nowMinutes) {
                 continue;
             }
 
-            // Skip if overlaps with an existing booking
-            $newEnd = $m + $interval;
+            $newEnd  = $m + $interval;
             $blocked = false;
             foreach ($bookings as $bStart) {
                 $bEnd = $bStart + $interval;
@@ -111,10 +95,10 @@ class BookingSlotService
             }
             if ($blocked) continue;
 
-            $hour = intdiv($m, 60);
+            $hour   = intdiv($m, 60);
             $minute = $m % 60;
-            $value = sprintf('%02d:%02d', $hour, $minute);
-            $label = Carbon::createFromTime($hour, $minute)->format('g:i A');
+            $value  = sprintf('%02d:%02d', $hour, $minute);
+            $label  = Carbon::createFromTime($hour, $minute)->format('g:i A');
 
             $slots[] = [
                 'value' => $value,

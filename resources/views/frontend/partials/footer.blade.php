@@ -295,7 +295,7 @@
                  </div>
              </div> --}}
              <!-- Available Time Slot -->
-             <div>
+             {{-- <div>
                  <label class="block text-white text-base mb-2 uppercase">Available time</label>
                  <div class="field-container select-wrapper">
                      <select id="booking-time" name="time"
@@ -310,8 +310,58 @@
                          </svg>
                      </div>
                  </div>
-             </div>
+             </div> --}}
 
+             <!-- Choose time -->
+             <div>
+                 <label class="block text-white text-base mb-2 uppercase">Choose time</label>
+                 <div class="field-container flex flex-wrap gap-3 items-center">
+                     <input type="hidden" id="booking-time" name="time" value="">
+
+                     <div class="time-select-container relative flex-1 min-w-[80px]">
+                         <select id="booking-hour" class="time-select">
+                             <option value="">Hour</option>
+                         </select>
+                         <div class="time-select-arrow">
+                             <svg class="w-5 h-5 text-evergreen" fill="none" stroke="currentColor"
+                                 viewBox="0 0 24 24">
+                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                     d="M19 9l-7 7-7-7"></path>
+                             </svg>
+                         </div>
+                     </div>
+
+                     <span class="time-separator">:</span>
+
+                     <div class="time-select-container relative flex-1 min-w-[80px]">
+                         <select id="booking-minute" class="time-select">
+                             <option value="">Min</option>
+                         </select>
+                         <div class="time-select-arrow">
+                             <svg class="w-5 h-5 text-evergreen" fill="none" stroke="currentColor"
+                                 viewBox="0 0 24 24">
+                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                     d="M19 9l-7 7-7-7"></path>
+                             </svg>
+                         </div>
+                     </div>
+
+                     <div class="time-select-container relative flex-1 min-w-[90px]">
+                         <select id="booking-ampm" class="time-select">
+                             <option value="">AM/PM</option>
+                             <option value="AM">AM</option>
+                             <option value="PM">PM</option>
+                         </select>
+                         <div class="time-select-arrow">
+                             <svg class="w-5 h-5 text-evergreen" fill="none" stroke="currentColor"
+                                 viewBox="0 0 24 24">
+                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                     d="M19 9l-7 7-7-7"></path>
+                             </svg>
+                         </div>
+                     </div>
+                 </div>
+             </div>
              <!-- Submit Button -->
              <button type="submit"
                  class="w-full bg-ivory text-black font-league-gothic text-xl md:text-2xl tracking-wider py-3 rounded hover:bg-opacity-90 transition-colors font-bold uppercase">
@@ -482,8 +532,6 @@
              menuIcon.classList.toggle('hidden');
              closeIcon.classList.toggle('hidden');
          });
-
-         // Close mobile menu when clicking on a link
          const mobileMenuLinks = mobileMenu.querySelectorAll('a');
          mobileMenuLinks.forEach(link => {
              link.addEventListener('click', function() {
@@ -493,54 +541,226 @@
              });
          });
      }
-     // Booking Modal references
+
+     let bookedSlots = [];
+
+     async function fetchBookedSlots(date) {
+         if (!date) {
+             bookedSlots = [];
+             return;
+         }
+         try {
+             const response = await axios.get('{{ route('bookings.booked-slots') }}', {
+                 params: {
+                     date: date
+                 }
+             });
+             if (response.data.success) {
+                 bookedSlots = response.data.slots || [];
+             }
+         } catch (error) {
+             console.error('Error fetching booked slots:', error);
+             bookedSlots = [];
+         }
+     }
+
+     function isSlotBooked(hour, minute, ampm) {
+         return bookedSlots.some(slot =>
+             String(slot.hour) === String(hour) &&
+             String(slot.minute) === String(minute) &&
+             String(slot.ampm) === String(ampm)
+         );
+     }
+
+     function isHourFullyBooked(hour, ampm) {
+         if (!ampm) return false;
+         const info = getDateInfo();
+         if (!info) return false;
+         const isLastHour = (hour === info.lastHour12);
+         const slotsToCheck = (isLastHour && info.lastMinute === 40) ? ['00', '20'] : ['00', '20', '40'];
+         return slotsToCheck.filter(minute => isSlotBooked(hour, minute, ampm)).length === slotsToCheck.length;
+     }
+
      const bookingModal = document.getElementById('booking-modal');
      const closeModalBtn = document.getElementById('close-modal');
      const bookNowButtons = document.querySelectorAll('.book-now-btn');
      const bookingForm = document.getElementById('booking-form');
-     const bookingTimeSelect = document.getElementById('booking-time');
+     const bookingTimeInput = document.getElementById('booking-time');
+     const bookingHourSelect = document.getElementById('booking-hour');
+     const bookingMinuteSelect = document.getElementById('booking-minute');
+     const bookingAmpmSelect = document.getElementById('booking-ampm');
 
-     // Fetch available time slots for the chosen date and populate the dropdown
-     async function loadAvailableSlots(date) {
-         resetTimeSelect('Loading...');
-
-         if (!date) {
-             resetTimeSelect('Select date first');
-             return;
-         }
-
-         try {
-             const response = await axios.get('{{ route('bookings.available-slots') }}', {
-                 params: { date: date }
-             });
-
-             const slots = (response.data && response.data.slots) || [];
-             populateTimeSelect(slots);
-         } catch (error) {
-             console.error('Error fetching available slots:', error);
-             resetTimeSelect('Could not load times');
-         }
+     function getDateInfo() {
+         const dateStr = document.getElementById('booking-date').value;
+         if (!dateStr) return null;
+         const d = new Date(dateStr + 'T12:00:00');
+         const isSunday = d.getDay() === 0;
+         return {
+             isSunday: isSunday,
+             hours: isSunday ? [10, 11, 12, 1, 2, 3, 4] : [9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7],
+             lastHour12: isSunday ? 4 : 7,
+             lastMinute: 40
+         };
      }
 
-     function resetTimeSelect(placeholderText) {
-         bookingTimeSelect.innerHTML = '<option value="">' + placeholderText + '</option>';
-     }
+     function updateHourOptions() {
+         const info = getDateInfo();
+         if (!info) return;
 
-     function populateTimeSelect(slots) {
-         if (!slots.length) {
-             resetTimeSelect('No available times for this date');
-             return;
-         }
-         bookingTimeSelect.innerHTML = '<option value="">Select a time</option>';
-         slots.forEach(function(slot) {
+         const sel = bookingHourSelect;
+         const ampm = bookingAmpmSelect.value;
+         const currentHour = bookingHourSelect.value;
+
+         sel.innerHTML = '<option value="">Hour</option>';
+
+         info.hours.forEach(function(h) {
              const opt = document.createElement('option');
-             opt.value = slot.value;
-             opt.textContent = slot.label;
-             bookingTimeSelect.appendChild(opt);
+             opt.value = h;
+
+             let hourAmpm = '';
+             if (h >= 9 && h <= 11) {
+                 hourAmpm = 'AM';
+             } else if (h === 12 || (h >= 1 && h <= 7)) {
+                 hourAmpm = 'PM';
+             }
+
+             const fullyBooked = hourAmpm ? isHourFullyBooked(h, hourAmpm) : false;
+
+             if (fullyBooked) {
+                 opt.textContent = h + ' (Fully Booked)';
+                 opt.disabled = true;
+             } else {
+                 opt.textContent = h;
+             }
+
+             sel.appendChild(opt);
          });
+
+         if (currentHour) {
+             const currentHourNum = parseInt(currentHour, 10);
+             let currentHourAmpm = '';
+             if (currentHourNum >= 9 && currentHourNum <= 11) {
+                 currentHourAmpm = 'AM';
+             } else if (currentHourNum === 12 || (currentHourNum >= 1 && currentHourNum <= 7)) {
+                 currentHourAmpm = 'PM';
+             }
+             const isCurrentFullyBooked = currentHourAmpm ? isHourFullyBooked(currentHourNum, currentHourAmpm) : false;
+             if (!isCurrentFullyBooked) {
+                 bookingHourSelect.value = currentHour;
+             } else {
+                 bookingHourSelect.value = '';
+             }
+         }
+
+         bookingTimeInput.value = '';
+         bookingMinuteSelect.innerHTML = '<option value="">Min</option>';
+
+         if (bookingHourSelect.value && ampm) {
+             updateMinuteOptions();
+         }
      }
 
-     // Load services when modal opens
+     function updateMinuteOptions() {
+         const info = getDateInfo();
+         const hour = parseInt(bookingHourSelect.value, 10);
+         const ampm = bookingAmpmSelect.value;
+
+         if (!info || !hour || !ampm) {
+             bookingMinuteSelect.innerHTML = '<option value="">Min</option>';
+             return;
+         }
+
+         const isLastHour = (hour === info.lastHour12);
+         const sel = bookingMinuteSelect;
+         sel.innerHTML = '<option value="">Min</option>';
+
+         const timeSlots = [{
+                 value: '00',
+                 label: '00 - 20'
+             },
+             {
+                 value: '20',
+                 label: '20 - 40'
+             },
+             {
+                 value: '40',
+                 label: '40 - 60'
+             }
+         ];
+
+         const maxSlots = (isLastHour && info.lastMinute === 40) ? 2 : 3;
+
+         for (let i = 0; i < maxSlots; i++) {
+             const opt = document.createElement('option');
+             opt.value = timeSlots[i].value;
+             const isBooked = isSlotBooked(hour, timeSlots[i].value, ampm);
+             if (isBooked) {
+                 opt.textContent = timeSlots[i].label + ' (Booked)';
+                 opt.disabled = true;
+             } else {
+                 opt.textContent = timeSlots[i].label;
+             }
+             sel.appendChild(opt);
+         }
+
+         updateBookingTimeFromDropdowns();
+     }
+
+     function updateBookingTimeFromDropdowns() {
+         const h = bookingHourSelect.value;
+         const m = bookingMinuteSelect.value;
+         const ampm = bookingAmpmSelect.value;
+
+         if (!h || !m || !ampm) {
+             bookingTimeInput.value = '';
+             return;
+         }
+
+         let h24 = parseInt(h, 10);
+         if (ampm === 'PM' && h24 !== 12) h24 += 12;
+         if (ampm === 'AM' && h24 === 12) h24 = 0;
+
+         bookingTimeInput.value = (h24 < 10 ? '0' : '') + h24 + ':' + m;
+     }
+
+     bookingHourSelect.addEventListener('change', async function() {
+         bookingMinuteSelect.value = '';
+
+         const previousAmpm = bookingAmpmSelect.value;
+         const hour = parseInt(this.value, 10);
+         const ampmSel = bookingAmpmSelect;
+
+         ampmSel.querySelectorAll('option').forEach(function(o) {
+             if (o.value === '') return;
+             o.disabled = (o.value === 'AM' && (hour === 12 || (hour >= 1 && hour <= 7))) ||
+                 (o.value === 'PM' && hour >= 9 && hour <= 11);
+         });
+
+         if (hour >= 9 && hour <= 11) {
+             ampmSel.value = 'AM';
+         } else if (hour === 12 || (hour >= 1 && hour <= 7)) {
+             ampmSel.value = 'PM';
+         }
+
+         const newAmpm = ampmSel.value;
+
+         if (!previousAmpm && newAmpm) {
+             await new Promise(resolve => setTimeout(resolve, 50));
+             updateHourOptions();
+         }
+
+         updateMinuteOptions();
+         updateBookingTimeFromDropdowns();
+     });
+
+     bookingMinuteSelect.addEventListener('change', updateBookingTimeFromDropdowns);
+
+     bookingAmpmSelect.addEventListener('change', function() {
+         updateHourOptions();
+         updateMinuteOptions();
+         updateBookingTimeFromDropdowns();
+     });
+
      async function loadServices() {
          try {
              const response = await axios.get('{{ route('services.get') }}');
@@ -548,20 +768,23 @@
              const services = response.data.services;
 
              serviceSelect.innerHTML = '<option value="">Select service type</option>';
-
              services.forEach(service => {
                  const option = document.createElement('option');
                  option.value = service.id;
                  option.textContent = service.name;
                  serviceSelect.appendChild(option);
              });
+
+             const currentDate = document.getElementById('booking-date').value;
+             if (currentDate) {
+                 await fetchBookedSlots(currentDate);
+             }
          } catch (error) {
              console.error('Error loading services:', error);
              showNotification('Failed to load services', 'error');
          }
      }
 
-     // Show modal when clicking any BOOK NOW button
      bookNowButtons.forEach(button => {
          button.addEventListener('click', async function(e) {
              e.preventDefault();
@@ -569,14 +792,22 @@
              bookingModal.classList.remove('hidden');
              setMinDate();
              const todayDate = document.getElementById('booking-date').value;
-             await loadAvailableSlots(todayDate);
+             if (todayDate) {
+                 await fetchBookedSlots(todayDate);
+             }
+             updateHourOptions();
          });
      });
 
      document.getElementById('booking-date').addEventListener('change', async function() {
-         await loadAvailableSlots(this.value);
+         bookingTimeInput.value = '';
+         bookingHourSelect.value = '';
+         bookingMinuteSelect.innerHTML = '<option value="">Min</option>';
+         bookingAmpmSelect.value = '';
+         await fetchBookedSlots(this.value);
+         updateHourOptions();
      });
-     // Set minimum date to today
+
      function setMinDate() {
          const dateInput = document.getElementById('booking-date');
          const today = new Date().toISOString().split('T')[0];
@@ -584,13 +815,11 @@
          if (!dateInput.value) dateInput.value = today;
      }
 
-     // Close modal when clicking close button
      closeModalBtn.addEventListener('click', function() {
          bookingModal.classList.add('hidden');
          clearBookingForm();
      });
 
-     // Close modal when clicking outside
      bookingModal.addEventListener('click', function(e) {
          if (e.target === bookingModal) {
              bookingModal.classList.add('hidden');
@@ -598,38 +827,25 @@
          }
      });
 
-
-     // Clear validation errors
      function clearValidationErrors() {
-         const errorElements = document.querySelectorAll('.validation-error');
-         errorElements.forEach(el => el.remove());
-
-         const inputs = bookingForm.querySelectorAll('input, select');
-         inputs.forEach(input => {
+         document.querySelectorAll('.validation-error').forEach(el => el.remove());
+         bookingForm.querySelectorAll('input, select').forEach(input => {
              input.classList.remove('ring-2', 'ring-red-500');
          });
      }
 
-     // Show field validation error
      function showFieldError(fieldId, message) {
          const field = document.getElementById(fieldId);
          if (!field) return;
-
          const fieldContainer = field.closest('.field-container');
          if (!fieldContainer) return;
 
-         // Add error styling
          field.classList.add('ring-2', 'ring-red-500');
-
-         // Create error message element
          const errorDiv = document.createElement('div');
          errorDiv.className = 'validation-error text-red-500 text-sm mt-2';
          errorDiv.textContent = message;
-
-         // Insert after the field container
          fieldContainer.appendChild(errorDiv);
 
-         // Remove error when user interacts
          field.addEventListener('change', function() {
              field.classList.remove('ring-2', 'ring-red-500');
              const error = fieldContainer.querySelector('.validation-error');
@@ -639,30 +855,26 @@
          });
      }
 
-     // Notification function
      function showNotification(message, type) {
          const notification = document.createElement('div');
          notification.className = `fixed top-5 right-5 px-6 py-4 rounded shadow-lg z-50 transition-all duration-300 ${
-            type === 'success' ? 'bg-green-600 text-white' : 'bg-red-600 text-white'
-        }`;
+        type === 'success' ? 'bg-green-600 text-white' : 'bg-red-600 text-white'
+    }`;
          notification.innerHTML = `
-            <div class="flex items-center gap-3">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    ${type === 'success' 
-                        ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>'
-                        : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>'
-                    }
-                </svg>
-                <span class="font-league-gothic text-lg tracking-wider">${message}</span>
-            </div>
-        `;
-
+        <div class="flex items-center gap-3">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                ${type === 'success'
+                    ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>'
+                    : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>'
+                }
+            </svg>
+            <span class="font-league-gothic text-lg tracking-wider">${message}</span>
+        </div>
+    `;
          document.body.appendChild(notification);
-
          setTimeout(() => {
              notification.style.transform = 'translateX(0)';
          }, 10);
-
          setTimeout(() => {
              notification.style.transform = 'translateX(400px)';
              notification.style.opacity = '0';
@@ -672,31 +884,25 @@
          }, 5000);
      }
 
-     // Clear booking form
      function clearBookingForm() {
          bookingForm.reset();
-         bookingTimeSelect.value = '';
+         bookingTimeInput.value = '';
          clearValidationErrors();
      }
 
-     // Form submission
      bookingForm.addEventListener('submit', function(e) {
          e.preventDefault();
-
-         // Clear previous validation errors
          clearValidationErrors();
 
-         // Get form data
          const formData = {
              name: document.getElementById('booking-name').value,
              email: document.getElementById('booking-email').value,
              date: document.getElementById('booking-date').value,
              service_id: document.getElementById('booking-service').value,
-             time: bookingTimeSelect.value,
+             time: bookingTimeInput.value,
              _token: '{{ csrf_token() }}'
          };
 
-         // Client-side validation
          let hasErrors = false;
          const fields = {
              'booking-name': {
@@ -728,17 +934,13 @@
              }
          }
 
-         if (hasErrors) {
-             return;
-         }
+         if (hasErrors) return;
 
-         // Disable submit button
          const submitButton = bookingForm.querySelector('button[type="submit"]');
          const originalText = submitButton.textContent;
          submitButton.disabled = true;
          submitButton.textContent = 'BOOKING...';
 
-         // Send request using Axios
          axios.post('{{ route('bookings.store') }}', formData)
              .then(function(response) {
                  showNotification(response.data.message ||
@@ -749,20 +951,14 @@
              .catch(function(error) {
                  if (error.response && error.response.status === 422) {
                      const data = error.response.data || {};
-                     if (data.message) {
-                         showNotification(data.message, 'error');
-                     }
-                     const errors = data.errors;
-                     if (errors) {
-                         for (const [field, messages] of Object.entries(errors)) {
-                             const fieldId = 'booking-' + field.replace('_', '-');
-                             showFieldError(fieldId, messages[0]);
+                     if (data.message) showNotification(data.message, 'error');
+                     if (data.errors) {
+                         for (const [field, messages] of Object.entries(data.errors)) {
+                             showFieldError('booking-' + field.replace('_', '-'), messages[0]);
                          }
                      }
                  } else {
-                     const errorMessage = error.response?.data?.message ||
-                         'An error occurred. Please try again.';
-                     showNotification(errorMessage, 'error');
+                     showNotification(error.response?.data?.message || 'An error occurred.', 'error');
                  }
              })
              .finally(function() {

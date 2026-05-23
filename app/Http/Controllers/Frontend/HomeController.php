@@ -35,6 +35,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
+use App\Jobs\SendBookingReminderJob;
+
+
 class HomeController extends Controller
 {
     public function home()
@@ -82,14 +85,52 @@ class HomeController extends Controller
     }
 
     // Store booking
+    // public function storeBooking(Request $request)
+    // {
+    //     $validated = $request->validate([
+    //         'name' => 'required|string|max:255',
+    //         'email' => 'required|email',
+    //         'date' => 'required|date|after_or_equal:today',
+    //         'service_id' => 'required|exists:services,id',
+    //         'time' => 'required|string',
+    //     ]);
+
+    //     $slotService = app(BookingSlotService::class);
+    //     if (!$slotService->isSlotValidAndAvailable($validated['date'], $validated['time'])) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'The selected time is not available. Please choose another slot.',
+    //         ], 422);
+    //     }
+
+    //     $validated['persons'] = 1;
+    //     $validated['status'] = 'pending';
+    //     $validated['time'] = Carbon::parse($validated['time'])->format('H:i:s');
+
+    //     $booking = Booking::create($validated);
+    //     $booking->load('service');
+
+    //     try {
+    //         Mail::to($validated['email'])->send(new BookingConfirmationMail($booking));
+    //         Mail::to(config('mail.admin_email'))->send(new AdminBookingNotification($booking));
+    //     } catch (\Throwable $e) {
+    //         \Log::warning('Booking emails failed: ' . $e->getMessage());
+    //     }
+
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => 'Booking saved successfully. A confirmation email has been sent to your email.',
+    //     ], 200);
+    // }
+
     public function storeBooking(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email',
-            'date' => 'required|date|after_or_equal:today',
+            'name'       => 'required|string|max:255',
+            'email'      => 'required|email',
+            'date'       => 'required|date|after_or_equal:today',
             'service_id' => 'required|exists:services,id',
-            'time' => 'required|string',
+            'time'       => 'required|string',
         ]);
 
         $slotService = app(BookingSlotService::class);
@@ -101,17 +142,30 @@ class HomeController extends Controller
         }
 
         $validated['persons'] = 1;
-        $validated['status'] = 'pending';
-        $validated['time'] = Carbon::parse($validated['time'])->format('H:i:s');
+        $validated['status']  = 'pending';
+        $validated['time']    = \Carbon\Carbon::parse($validated['time'])->format('H:i:s');
 
         $booking = Booking::create($validated);
         $booking->load('service');
 
+        // إرسال إيميل التأكيد
         try {
             Mail::to($validated['email'])->send(new BookingConfirmationMail($booking));
             Mail::to(config('mail.admin_email'))->send(new AdminBookingNotification($booking));
         } catch (\Throwable $e) {
             \Log::warning('Booking emails failed: ' . $e->getMessage());
+        }
+
+        // جدولة إشعار التذكير قبل الموعد بـ 30 دقيقة
+        $appointmentDateTime = \Carbon\Carbon::parse(
+            $booking->date->format('Y-m-d') . ' ' . $booking->time
+        );
+        $reminderTime = $appointmentDateTime->subMinutes(30);
+
+        // أرسل التذكير فقط إذا كان وقت التذكير في المستقبل
+        if ($reminderTime->isFuture()) {
+            SendBookingReminderJob::dispatch($booking)
+                ->delay($reminderTime);
         }
 
         return response()->json([

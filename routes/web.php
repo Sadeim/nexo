@@ -30,5 +30,5 @@ Route::post('subscribe', [HomeController::class, 'storeNewsletter'])->name('news
 
 Route::get('services', [HomeController::class, 'getServices'])->name('services.get');
 Route::post('bookings', [HomeController::class, 'storeBooking'])->name('bookings.store');
-Route::get('/bookings/available-slots', [HomeController::class, 'getAvailableSlots'])->name('bookings.available-slots');
+Route::get('/bookings/available-slots', [HomeController::class, 'getAvailableSlots'])->name('bookings.booked-slots');
 

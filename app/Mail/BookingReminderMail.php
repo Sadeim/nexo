@@ -9,18 +9,18 @@ use Illuminate\Queue\SerializesModels;
 
 class BookingReminderMail extends Mailable
 {
-    use Queueable, SerializesModels;
+  use Queueable, SerializesModels;
 
-    public Booking $booking;
+  public Booking $booking;
 
-    public function __construct(Booking $booking)
-    {
-        $this->booking = $booking;
-    }
+  public function __construct(Booking $booking)
+  {
+    $this->booking = $booking;
+  }
 
-    public function build()
-    {
-        return $this->subject(__('Reminder: Your appointment is in 30 minutes - Nexo Barbers'))
-            ->view('mail.booking_reminder');
-    }
+  public function build()
+  {
+    return $this->subject(__('Reminder: Your Appointment in 30 Minutes - Nexo Barbers'))
+      ->view('mail.booking_reminder');
+  }
 }
