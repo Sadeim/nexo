@@ -158,6 +158,7 @@
      </div>
  </footer>
 
+ @if (config('booking.enabled'))
  <!-- Booking Modal -->
  <div id="booking-modal"
      class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/70 bg-opacity-50 p-4 font-poppins">
@@ -465,6 +466,7 @@
          }
      </style>
  </div>
+ @endif
 
  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
@@ -493,6 +495,7 @@
              });
          });
      }
+     @if (config('booking.enabled'))
      // Booking Modal references
      const bookingModal = document.getElementById('booking-modal');
      const closeModalBtn = document.getElementById('close-modal');
@@ -770,4 +773,5 @@
                  submitButton.textContent = originalText;
              });
      });
+     @endif
  </script>

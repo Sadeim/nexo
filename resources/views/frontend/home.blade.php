@@ -58,6 +58,7 @@
                             CALL US: {{ $settings->valueOf('phone') }}
                         </p>
 
+                        @if (config('booking.enabled'))
                         <button
                             class="book-now-btn bg-evergreen cursor-pointer text-ivory font-league-gothic text-xl tracking-wider px-6 py-3 flex items-center justify-center lg:justify-start gap-3 hover:bg-opacity-90 transition-all">
                             {{ $slider->button_text }}
@@ -68,6 +69,7 @@
                                     fill="#F8EDD2" />
                             </svg>
                         </button>
+                        @endif
                     </div>
                 </div>
 
@@ -155,6 +157,7 @@
                                 <p class="font-league-gothic text-xl font-normal leading-relaxed uppercase">
                                     {{ $about->description }}
                                 </p>
+                                @if (config('booking.enabled'))
                                 <button
                                     class="book-now-btn mt-6 bg-ivory text-evergreen font-league-gothic text-xl tracking-wider px-6 py-2 flex items-center gap-2 hover:bg-white transition-colors cursor-pointer mx-auto lg:mx-0">
                                     BOOK NOW
@@ -165,6 +168,7 @@
                                             fill="currentColor" />
                                     </svg>
                                 </button>
+                                @endif
                             </div>
                         </div>
                     </div>
