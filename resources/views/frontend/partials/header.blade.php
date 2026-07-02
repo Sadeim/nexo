@@ -109,6 +109,7 @@
                         </li>
                     </ul>
 
+                    @if (config('booking.enabled'))
                     <button
                         class="book-now-btn bg-ivory text-evergreen font-league-gothic text-xl tracking-wider p-2 flex items-center gap-3 hover:bg-white transition-colors">
                         BOOK NOW
@@ -119,6 +120,7 @@
                                 fill="#283326" />
                         </svg>
                     </button>
+                    @endif
                 </div>
 
                 <!-- Mobile Hamburger Button -->
@@ -175,6 +177,7 @@
                             CONTACT US
                         </a>
                     </li>
+                    @if (config('booking.enabled'))
                     <li class="pt-2">
                         <button
                             class="book-now-btn w-full bg-ivory text-evergreen font-league-gothic text-xl tracking-wider p-2 flex items-center justify-center gap-3 hover:bg-white transition-colors">
@@ -187,6 +190,7 @@
                             </svg>
                         </button>
                     </li>
+                    @endif
                 </ul>
             </div>
         </nav>

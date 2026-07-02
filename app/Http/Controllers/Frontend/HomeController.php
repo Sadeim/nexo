@@ -125,6 +125,13 @@ class HomeController extends Controller
 
     public function storeBooking(Request $request)
     {
+        if (!config('booking.enabled')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Bookings are temporarily unavailable. Please call us to reserve.',
+            ], 403);
+        }
+
         $validated = $request->validate([
             'name'       => 'required|string|max:255',
             'email'      => 'required|email',
@@ -177,6 +184,10 @@ class HomeController extends Controller
     // Get available time slots for a specific date
     public function getAvailableSlots(Request $request)
     {
+        if (!config('booking.enabled')) {
+            return response()->json(['success' => true, 'slots' => []], 200);
+        }
+
         $date = $request->query('date');
 
         if (!$date) {
