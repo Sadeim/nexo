@@ -71,9 +71,8 @@
                 <button id="pos-pay-cash" type="button" class="pos-btn pos-btn-cash" onclick="POS.pay('cash')" disabled>
                     Cash
                 </button>
-                <button id="pos-pay-card" type="button" class="pos-btn pos-btn-card" disabled
-                        title="Card payments coming soon">
-                    Card (soon)
+                <button id="pos-pay-card" type="button" class="pos-btn pos-btn-card" onclick="POS.payCard()" disabled>
+                    Card
                 </button>
             </div>
             <button type="button" class="pos-btn pos-btn-ghost pos-clear" style="width:100%;"
@@ -122,11 +121,28 @@
         </div>
     </div>
 
+    {{-- Card (PlutoPay Terminal) status modal --}}
+    <div id="pos-card-wait" class="pos-overlay" onclick="event.stopPropagation()">
+        <div class="pos-modal" onclick="event.stopPropagation()">
+            <div class="pos-card-spinner" id="pos-card-spinner"></div>
+            <h3 id="pos-card-wait-title">Waiting for card…</h3>
+            <p class="muted" id="pos-card-wait-msg">Present the card on the reader.</p>
+            <div class="pos-receipt">
+                <div class="row"><span>Total</span><span class="big" id="pos-card-total">$0.00</span></div>
+            </div>
+            <button type="button" id="pos-card-close" class="pos-btn pos-btn-ghost" style="width:100%; display:none;"
+                    onclick="POS.closeCardWait()">Close</button>
+        </div>
+    </div>
+
     <script>
     const POS = (function () {
         const storeUrl = @json(route('pos.transactions.store'));
+        const cardStartUrl = @json(route('pos.card.start'));
+        const cardStatusTpl = @json(route('pos.card.status', ['transaction' => '__ID__']));
         const csrf = document.querySelector('meta[name="csrf-token"]').content;
         const MAX_PRICE = 1000000;
+        const CARD_TIMEOUT_MS = 90000;   // 90s wait for the card read
 
         // cart line: { id, name, original(string), custom(string|null), qty }
         let cart = [];
@@ -287,6 +303,7 @@
             document.getElementById('pos-total').textContent = fmt(subtotal);
             document.getElementById('pos-cart-count').textContent = itemCount + (itemCount === 1 ? ' item' : ' items');
             document.getElementById('pos-pay-cash').disabled = !(allValid && cart.length && !busy);
+            document.getElementById('pos-pay-card').disabled = !(allValid && cart.length && !busy);
         }
 
         /* ---- payment ---- */
@@ -330,6 +347,113 @@
             }
         }
 
+        /* ---- card payment (PlutoPay Terminal) ---- */
+        let cardPoll = null;
+        let cardDeadline = 0;
+
+        function uuid() {
+            if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+                const r = Math.random() * 16 | 0;
+                return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+            });
+        }
+        function cardStatusUrl(id) { return cardStatusTpl.replace('__ID__', id); }
+
+        function cardItems() {
+            return cart.map(l => {
+                const item = { service_id: l.id, quantity: l.qty };
+                if (l.custom !== null) item.custom_price = l.custom;
+                return item;
+            });
+        }
+
+        async function payCard() {
+            if (busy) return;
+            if (!cart.length) { alert('Cart is empty.'); return; }
+            if (!cart.every(lineValid)) { alert('Fix invalid prices before paying.'); return; }
+
+            busy = true; render();
+            showCardWait();
+
+            // One idempotency key per attempt: a double-click => one charge.
+            const payload = { idempotency_key: uuid(), items: cardItems() };
+
+            try {
+                const res = await fetch(cardStartUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': csrf },
+                    body: JSON.stringify(payload),
+                });
+                const data = await res.json();
+
+                if (!res.ok || !data.transaction_id) {
+                    cardError(data.message || 'Could not start the card payment.');
+                    busy = false; render();
+                    return;
+                }
+                if (data.status === 'completed') { onCardSuccess(data); return; }
+                if (data.status === 'failed')    { cardError('Payment failed: ' + (data.failure_reason || 'declined')); busy = false; render(); return; }
+
+                startCardPolling(data.transaction_id);
+            } catch (e) {
+                cardError('Network error. Please try again.');
+                busy = false; render();
+            }
+        }
+
+        function startCardPolling(id) {
+            cardDeadline = Date.now() + CARD_TIMEOUT_MS;
+            clearInterval(cardPoll);
+            cardPoll = setInterval(async () => {
+                if (Date.now() > cardDeadline) {
+                    clearInterval(cardPoll);
+                    cardPending();               // NOT paid — manual verification
+                    busy = false; render();
+                    return;
+                }
+                try {
+                    const res = await fetch(cardStatusUrl(id), { headers: { 'Accept': 'application/json' } });
+                    const data = await res.json();
+                    if (data.status === 'completed') { clearInterval(cardPoll); onCardSuccess(data); }
+                    else if (data.status === 'failed')   { clearInterval(cardPoll); cardError('Payment failed: ' + (data.failure_reason || 'declined')); busy = false; render(); }
+                    else if (data.status === 'canceled') { clearInterval(cardPoll); cardError('Payment canceled.'); busy = false; render(); }
+                } catch (e) { /* transient — keep polling until the deadline */ }
+            }, 2000);
+        }
+
+        function onCardSuccess(data) {
+            hideCardWait();
+            cart = [];
+            busy = false; render();
+            showSuccess(data.transaction_id, data.total);   // reuse the cash success modal
+        }
+
+        /* card modal state helpers */
+        function showCardWait() {
+            document.getElementById('pos-card-total').textContent = document.getElementById('pos-total').textContent;
+            document.getElementById('pos-card-wait-title').textContent = 'Waiting for card…';
+            document.getElementById('pos-card-wait-msg').textContent = 'Present the card on the reader.';
+            document.getElementById('pos-card-spinner').style.display = '';
+            document.getElementById('pos-card-close').style.display = 'none';
+            document.getElementById('pos-card-wait').classList.add('open');
+        }
+        function hideCardWait() { document.getElementById('pos-card-wait').classList.remove('open'); }
+        function closeCardWait() { clearInterval(cardPoll); hideCardWait(); }
+        function cardError(msg) {
+            document.getElementById('pos-card-wait-title').textContent = 'Payment failed';
+            document.getElementById('pos-card-wait-msg').textContent = msg;
+            document.getElementById('pos-card-spinner').style.display = 'none';
+            document.getElementById('pos-card-close').style.display = '';
+        }
+        function cardPending() {
+            document.getElementById('pos-card-wait-title').textContent = 'Still pending';
+            document.getElementById('pos-card-wait-msg').textContent =
+                'No confirmation received. Do NOT treat this as paid — verify manually before retrying.';
+            document.getElementById('pos-card-spinner').style.display = 'none';
+            document.getElementById('pos-card-close').style.display = '';
+        }
+
         /* ---- success modal ---- */
         let successTimer = null;
         function showSuccess(invoice, total) {
@@ -352,7 +476,7 @@
             ));
         }
 
-        return { addService, changeQty, setQty, remove, clear, pay,
+        return { addService, changeQty, setQty, remove, clear, pay, payCard, closeCardWait,
                  openCustom, closeCustom, applyCustom, resetCustom, closeSuccess };
     })();
     </script>

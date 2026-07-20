@@ -375,3 +375,15 @@ body.pos-body {
 .pos-modal-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
 .pos-modal-actions.single { grid-template-columns: 1fr; }
 .pos-btn-evergreen { background: var(--color-evergreen); color: var(--color-ivory); }
+
+/* ---- Card (PlutoPay Terminal) waiting spinner ---- */
+.pos-card-spinner {
+    width: 54px;
+    height: 54px;
+    margin: 4px auto 14px;
+    border: 5px solid rgba(0, 0, 0, .12);
+    border-top-color: var(--color-evergreen, #1f6f54);
+    border-radius: 50%;
+    animation: posSpin .9s linear infinite;
+}
+@keyframes posSpin { to { transform: rotate(360deg); } }

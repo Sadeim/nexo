@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Pos\AuthController;
+use App\Http\Controllers\Pos\CardPaymentController;
 use App\Http\Controllers\Pos\PosController;
 use App\Http\Controllers\Pos\TransactionController;
 use Illuminate\Support\Facades\Route;
@@ -24,5 +25,9 @@ Route::group(['prefix' => 'pos', 'as' => 'pos.'], function () {
     Route::group(['middleware' => 'pos'], function () {
         Route::get('/', [PosController::class, 'index'])->name('index');
         Route::post('transactions', [TransactionController::class, 'store'])->name('transactions.store');
+
+        // Card (PlutoPay Terminal). start() drives the reader; status() is polled.
+        Route::post('card/start', [CardPaymentController::class, 'start'])->name('card.start');
+        Route::get('card/{transaction}/status', [CardPaymentController::class, 'status'])->name('card.status');
     });
 });

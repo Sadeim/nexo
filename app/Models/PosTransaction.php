@@ -15,6 +15,11 @@ class PosTransaction extends Model
         'payment_method',
         'status',
         'reference',
+        'payment_intent_id',
+        'currency',
+        'amount_cents',
+        'failure_reason',
+        'idempotency_key',
     ];
 
     protected $casts = [

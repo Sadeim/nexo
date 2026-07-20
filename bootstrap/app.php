@@ -45,6 +45,12 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         $middleware->web(append: [
         ]);
+
+        // Inbound PlutoPay webhooks carry no session/CSRF token; they are
+        // authenticated by their HMAC signature instead.
+        $middleware->validateCsrfTokens(except: [
+            'webhooks/plutopay',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
