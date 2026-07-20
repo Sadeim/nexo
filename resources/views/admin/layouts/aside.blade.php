@@ -684,6 +684,31 @@
                     </div>
                 @endif --}}
 
+                @if (auth()->user()->hasRole('admin'))
+                    <div class="menu-item">
+                        <a class="menu-link {{ $is_active == 'accounts' ? 'active' : '' }}"
+                            href="{{ route('admin.accounts.index') }}">
+                            <span class="menu-icon">
+                                <span class="svg-icon svg-icon-2">
+                                    <i class="fa-solid fa-users"></i>
+                                </span>
+                            </span>
+                            <span class="menu-title">Users</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a class="menu-link {{ $is_active == 'pos_transactions' ? 'active' : '' }}"
+                            href="{{ route('admin.pos_transactions.index') }}">
+                            <span class="menu-icon">
+                                <span class="svg-icon svg-icon-2">
+                                    <i class="fa-solid fa-receipt"></i>
+                                </span>
+                            </span>
+                            <span class="menu-title">POS Transactions</span>
+                        </a>
+                    </div>
+                @endif
+
                 @if (auth()->user()->can('view_settings'))
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'settings' ? 'here show' : '' }}">
                         <span class="menu-link {{ $is_active == 'settings' ? 'active' : '' }}">

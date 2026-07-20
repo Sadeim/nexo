@@ -84,8 +84,15 @@
                                value="{{ isset($service) ? $service->name : ''}}">
                     </div>
                     <div class="mb-5">
-                        <label class="form-label">Price</label>
-                        <textarea name="description" class="form-control" rows="4" placeholder=" Example: 50  OR  30 - 60 (range price)">{{ isset($service) ? $service->description : '' }}</textarea>
+                        <label class="form-label">Price ($)</label>
+                        <input type="number" name="price" step="0.01" min="0" class="form-control"
+                               placeholder="e.g. 150.00 — leave empty if not sold in POS"
+                               value="{{ isset($service) && $service->price !== null ? $service->price : '' }}">
+                        <div class="text-muted fs-8 mt-1">Used by the POS. Leave empty to make the service non-sellable there.</div>
+                    </div>
+                    <div class="mb-5">
+                        <label class="form-label">Description</label>
+                        <textarea name="description" class="form-control" rows="4" placeholder="Service description">{{ isset($service) ? $service->description : '' }}</textarea>
                     </div>
                 </div>
             </div>

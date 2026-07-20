@@ -2,15 +2,17 @@
 
 window.columns = [
     {data: 'id'},
-    {data: 'name'},
-    {data: 'price'},
+    {data: 'employee'},
+    {data: 'total'},
+    {data: 'method'},
+    {data: 'date'},
     {data: 'operations'}
 ];
 window.columnDefs = [
     {
         targets: 0,
         orderable: false,
-        sorting:false
+        sorting: false
     },
     {
         targets: -1,

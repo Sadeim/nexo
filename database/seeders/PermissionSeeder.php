@@ -54,5 +54,11 @@ class PermissionSeeder extends Seeder
                 Permission::create(['name_key' => $type, 'guard_name' => 'admin', 'name' => "$type" . "_" . $parent, 'parent' => $parent]);
             }
         }
+
+        // POS access permission (single gate for the cashier POS screen).
+        Permission::firstOrCreate(
+            ['name' => 'pos.access', 'guard_name' => 'admin'],
+            ['name_key' => 'access', 'parent' => 'pos']
+        );
     }
 }

@@ -18,7 +18,10 @@ return Application::configure(basePath: dirname(__DIR__))
      
             Route::middleware('web')
                 ->group(base_path('routes/admin.php'));
-                
+
+            Route::middleware('web')
+                ->group(base_path('routes/pos.php'));
+
             Route::middleware('api')
                 ->group(base_path('routes/api.php'));
         },
@@ -33,6 +36,8 @@ return Application::configure(basePath: dirname(__DIR__))
 
             'auth' => \App\Http\Middleware\Authenticate::class,
             'admin' => \App\Http\Middleware\Admin::class,
+            'admin.role' => \App\Http\Middleware\EnsureAdminRole::class,
+            'pos' => \App\Http\Middleware\PosAuthenticate::class,
             // 'OAuth2'    => \App\Http\Middleware\OAuth2::class,
             'Image' => Intervention\Image\Facades\Image::class,
             'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
