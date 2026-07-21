@@ -128,7 +128,10 @@ class CardPaymentController extends Controller
             // Step 2 (docs): connection token — initialises the reader session.
             $this->pluto()->connectionToken();
 
-            // Step 3: create the payment intent (idempotent on our key).
+            // Step 3: create the payment intent (idempotent on our key). Store
+            // BOTH ids: payment_intent_id (pi_...) drives process-payment and
+            // likely the webhook; provider_payment_id (UUID) is a fallback the
+            // webhook may reference instead.
             if (!$transaction->payment_intent_id) {
                 $payment = $this->pluto()->createPayment(
                     (int) $transaction->amount_cents,
@@ -137,12 +140,13 @@ class CardPaymentController extends Controller
                 );
 
                 $transaction->update([
-                    'payment_intent_id' => $payment['id'],
-                    'reference'         => $payment['reference'],
+                    'payment_intent_id'   => $payment['payment_intent_id'],
+                    'provider_payment_id' => $payment['provider_id'],
+                    'reference'           => $payment['reference'],
                 ]);
             }
 
-            // Step 4: start the read on the physical reader.
+            // Step 4: start the read on the reader (uses the pi_ intent id).
             $this->pluto()->processPayment($transaction->payment_intent_id);
 
             $transaction->update(['status' => 'processing']);

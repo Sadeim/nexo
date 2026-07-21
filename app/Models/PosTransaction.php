@@ -16,6 +16,7 @@ class PosTransaction extends Model
         'status',
         'reference',
         'payment_intent_id',
+        'provider_payment_id',
         'currency',
         'amount_cents',
         'failure_reason',

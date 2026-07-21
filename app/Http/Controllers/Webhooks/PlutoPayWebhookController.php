@@ -76,7 +76,11 @@ class PlutoPayWebhookController extends Controller
             return; // Non-payment event (refund/payout/etc.) — nothing to settle here.
         }
 
-        $transaction = PosTransaction::where('payment_intent_id', $paymentIntentId)->first();
+        // The event's data.id may be the pi_ intent id OR the provider UUID, so
+        // match against either stored id.
+        $transaction = PosTransaction::where('payment_intent_id', $paymentIntentId)
+            ->orWhere('provider_payment_id', $paymentIntentId)
+            ->first();
         if (!$transaction) {
             Log::info('PlutoPay webhook for unknown intent', ['intent' => $paymentIntentId, 'type' => $eventType]);
             return;

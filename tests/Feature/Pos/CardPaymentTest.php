@@ -64,7 +64,8 @@ class CardPaymentTest extends TestCase
         Http::fake([
             '*connection-token' => Http::response(['data' => ['secret' => 'ct_x']], 200),
             '*create-payment'   => Http::response(['data' => [
-                'id' => 'pi_123', 'reference' => 'ref_1', 'client_secret' => 'cs_1',
+                'id' => 'uuid_123', 'payment_intent_id' => 'pi_123',
+                'reference' => 'ref_1', 'client_secret' => 'cs_1',
                 'amount' => 4750, 'currency' => 'usd', 'status' => 'pending',
             ]], 200),
             '*process-payment'  => Http::response(['data' => [

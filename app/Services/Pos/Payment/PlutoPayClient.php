@@ -75,7 +75,12 @@ class PlutoPayClient
      * POST /v1/terminal/create-payment. $idempotencyKey MUST be a stable value
      * per logical sale so a double-click never creates two charges.
      *
-     * @return array{id:string,reference:?string,client_secret:?string,amount:int,currency:string,status:string}
+     * The response carries TWO ids (confirmed against the live test API):
+     *   - data.payment_intent_id (pi_...) -> REQUIRED by process-payment.
+     *   - data.id (a provider UUID)       -> the record id.
+     * We surface both; `payment_intent_id` is the operational one.
+     *
+     * @return array{provider_id:string,payment_intent_id:string,reference:?string,client_secret:?string,amount:int,currency:string,status:string}
      */
     public function createPayment(int $amountCents, string $idempotencyKey, array $metadata = []): array
     {
@@ -91,12 +96,14 @@ class PlutoPayClient
         );
 
         return [
-            'id'            => (string) ($data['id'] ?? ''),
-            'reference'     => $data['reference'] ?? null,
-            'client_secret' => $data['client_secret'] ?? null,
-            'amount'        => (int) ($data['amount'] ?? $amountCents),
-            'currency'      => (string) ($data['currency'] ?? $this->currency),
-            'status'        => (string) ($data['status'] ?? 'pending'),
+            'provider_id'       => (string) ($data['id'] ?? ''),
+            // Fall back to provider_id only if the pi_ field is somehow absent.
+            'payment_intent_id' => (string) ($data['payment_intent_id'] ?? ($data['id'] ?? '')),
+            'reference'         => $data['reference'] ?? null,
+            'client_secret'     => $data['client_secret'] ?? null,
+            'amount'            => (int) ($data['amount'] ?? $amountCents),
+            'currency'          => (string) ($data['currency'] ?? $this->currency),
+            'status'            => (string) ($data['status'] ?? 'pending'),
         ];
     }
 
@@ -132,20 +139,47 @@ class PlutoPayClient
     }
 
     /**
-     * POST /v1/terminals — register a (simulated, in test mode) reader.
-     * Returns the created device (id like tmr_... / tmr_simulated_...).
+     * POST /v1/terminals — create a SIMULATED test terminal/reader.
+     *
+     * Confirmed by probing the live test API (2026-07): a simulated device is
+     * created with {name, location, simulated:true} and NO registration_code
+     * (registration_code is for pairing a physical reader). The returned id is
+     * a plain UUID that serves as BOTH terminal_id and reader_id.
      */
-    public function registerTerminal(string $name, string $registrationCode): array
+    public function registerSimulatedTerminal(string $name, string $location = 'Main Store'): array
     {
         $data = $this->unwrap($this->http()->post('v1/terminals', [
-            'name'              => $name,
-            'registration_code' => $registrationCode,
+            'name'      => $name,
+            'location'  => $location,
+            'simulated' => true,
         ]));
 
         return [
             'id'   => (string) ($data['id'] ?? ''),
             'name' => (string) ($data['name'] ?? $name),
         ];
+    }
+
+    /**
+     * Diagnostic POST that returns the raw status + decoded body WITHOUT
+     * throwing, so a command can probe an endpoint and show exactly what
+     * PlutoPay replied. TEST-MODE guard still applies (constructor).
+     *
+     * @return array{status:int,ok:bool,body:mixed}
+     */
+    public function debugPost(string $path, array $body): array
+    {
+        $res = $this->http()->post($path, $body);
+
+        return ['status' => $res->status(), 'ok' => $res->successful(), 'body' => $res->json()];
+    }
+
+    /** Diagnostic GET returning raw status + body without throwing. */
+    public function debugGet(string $path): array
+    {
+        $res = $this->http()->get($path);
+
+        return ['status' => $res->status(), 'ok' => $res->successful(), 'body' => $res->json()];
     }
 
     /** GET /v1/terminal/readers -> list of readers (each has an id). */
