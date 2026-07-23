@@ -85,6 +85,23 @@
     <script>
         window.datatable_url = "{{ route('admin.pos_orders.datatable') }}";
 
+        // Column definitions inlined to avoid a stale/404 external JS file.
+        window.columns = [
+            { data: 'order_number' },
+            { data: 'employee' },
+            { data: 'cashier' },
+            { data: 'subtotal' },
+            { data: 'tip' },
+            { data: 'total' },
+            { data: 'method' },
+            { data: 'date' },
+            { data: 'operations' }
+        ];
+        window.columnDefs = [
+            { targets: 0, orderable: false, sorting: false },
+            { targets: -1, orderable: false },
+        ];
+
         function applyPosOrdersFilter() {
             myData = {
                 employee_id: document.getElementById('f_employee').value,
@@ -105,6 +122,5 @@
         }
     </script>
     <script src="{{ asset('admin_assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
-    <script src="{{ asset('admin_assets/js_resources/pos_orders.js') }}"></script>
     <script src="{{ asset('admin_assets/js/dashboard/handleDataTable.js') }}"></script>
 @endpush

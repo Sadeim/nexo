@@ -718,6 +718,17 @@
                             <span class="menu-title">POS Orders (Mobile)</span>
                         </a>
                     </div>
+                    <div class="menu-item">
+                        <a class="menu-link {{ $is_active == 'employees' ? 'active' : '' }}"
+                            href="{{ route('admin.employees.index') }}">
+                            <span class="menu-icon">
+                                <span class="svg-icon svg-icon-2">
+                                    <i class="fa-solid fa-user-tie"></i>
+                                </span>
+                            </span>
+                            <span class="menu-title">Employees (POS)</span>
+                        </a>
+                    </div>
                 @endif
 
                 @if (auth()->user()->can('view_settings'))

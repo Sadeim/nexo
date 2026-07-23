@@ -29,4 +29,13 @@ class Employee extends Model
     {
         return $q->where('is_active', true);
     }
+
+    public function scopeSearch($query, $request)
+    {
+        if (!empty($request->search['value'])) {
+            $search = '%' . $request->search['value'] . '%';
+            return $query->where('name', 'LIKE', $search);
+        }
+        return $query;
+    }
 }

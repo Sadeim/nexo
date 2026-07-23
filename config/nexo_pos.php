@@ -31,5 +31,7 @@ return [
         'reader_id'        => env('NEXO_POS_PLUTOPAY_READER_ID'),
         'currency'         => env('NEXO_POS_PLUTOPAY_CURRENCY', 'usd'),
         'min_amount_cents' => (int) env('NEXO_POS_PLUTOPAY_MIN_CENTS', 50),
+        // Set to false to hard-disable live keys even if one is in .env.
+        'allow_live'       => (bool) env('NEXO_POS_PLUTOPAY_ALLOW_LIVE', true),
     ],
 ];
