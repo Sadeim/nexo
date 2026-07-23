@@ -36,6 +36,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\HowWorkController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\AccountController;
+use App\Http\Controllers\Admin\PosOrderController;
 use App\Http\Controllers\Admin\PosTransactionController;
 
 
@@ -55,11 +56,18 @@ Route::group(['middleware' => ['auth:admin', 'admin', 'admin.role'], 'prefix' =>
     });
     Route::resource('accounts', AccountController::class)->except(['show']);
 
-    /* ------------------------------------- POS Transactions (read-only) --------------------------------- */
+    /* ------------------------------------- POS Transactions (Web POS, read-only) --------------------------------- */
     Route::group(['prefix' => 'pos-transactions', 'as' => 'pos_transactions.'], function () {
         Route::get('/', [PosTransactionController::class, 'index'])->name('index');
         Route::get('data/datatables', [PosTransactionController::class, 'datatable'])->name('datatable');
         Route::get('{id}', [PosTransactionController::class, 'show'])->name('show');
+    });
+
+    /* ------------------------------------- POS Orders (Flutter mobile app, read-only) --------------------------------- */
+    Route::group(['prefix' => 'pos-orders', 'as' => 'pos_orders.'], function () {
+        Route::get('/', [PosOrderController::class, 'index'])->name('index');
+        Route::get('data/datatables', [PosOrderController::class, 'datatable'])->name('datatable');
+        Route::get('{id}', [PosOrderController::class, 'show'])->name('show');
     });
 
     /* ------------------------------------- Product Routes --------------------------------- */

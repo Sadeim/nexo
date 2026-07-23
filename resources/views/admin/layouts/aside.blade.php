@@ -707,6 +707,17 @@
                             <span class="menu-title">POS Transactions</span>
                         </a>
                     </div>
+                    <div class="menu-item">
+                        <a class="menu-link {{ $is_active == 'pos_orders' ? 'active' : '' }}"
+                            href="{{ route('admin.pos_orders.index') }}">
+                            <span class="menu-icon">
+                                <span class="svg-icon svg-icon-2">
+                                    <i class="fa-solid fa-mobile-screen"></i>
+                                </span>
+                            </span>
+                            <span class="menu-title">POS Orders (Mobile)</span>
+                        </a>
+                    </div>
                 @endif
 
                 @if (auth()->user()->can('view_settings'))
