@@ -27,6 +27,8 @@ class CreateServiceRequest extends BaseRequest
             'icon'          => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif'],
             'name'          => 'required|string|max:255',
             'description'   => 'nullable|string',
+            // POS price. Nullable => not sellable until a real price is set.
+            'price'         => ['nullable', 'numeric', 'min:0', 'max:1000000'],
             'image'         => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif'],
             'is_featured'   => ['nullable', 'in:0,1'],
         ];

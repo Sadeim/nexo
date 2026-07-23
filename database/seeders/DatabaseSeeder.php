@@ -42,6 +42,7 @@ class DatabaseSeeder extends Seeder
         $this->call(HowSeeder::class);
         $this->call(ApproachSeeder::class);
         $this->call(SectionSeeder::class);
+        $this->call(PosSeeder::class);
 
     }
 }

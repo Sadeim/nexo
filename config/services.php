@@ -52,4 +52,24 @@ return [
         'redirect'      => env('APPLE_REDIRECT_URI'),
     ],
 
+    /*
+    | PlutoPay Terminal (in-person card). TEST MODE ONLY in this phase.
+    | Base URL is under /api (NOT an api. subdomain) — confirmed from docs.
+    | retrieve_path is the one endpoint the public docs don't spell out; it is
+    | configurable so we can correct it without a code change.
+    */
+    'plutopay' => [
+        'base_url'        => env('PLUTOPAY_BASE_URL', 'https://plutopayus.com/api'),
+        'secret_key'      => env('PLUTOPAY_SECRET_KEY'),
+        'publishable_key' => env('PLUTOPAY_PUBLISHABLE_KEY'),
+        'webhook_secret'  => env('PLUTOPAY_WEBHOOK_SECRET'),
+        'terminal_id'     => env('PLUTOPAY_TERMINAL_ID'),
+        'reader_id'       => env('PLUTOPAY_READER_ID'),
+        'currency'        => env('PLUTOPAY_CURRENCY', 'usd'),
+        // GET single payment (reconciliation). {id} is replaced at runtime.
+        'retrieve_path'   => env('PLUTOPAY_RETRIEVE_PATH', 'v1/terminal/payment/{id}'),
+        // Card lower bound in cents (docs: minimum 50).
+        'min_amount_cents' => 50,
+    ],
+
 ];

@@ -44,6 +44,13 @@ return [
             'driver' => 'session',
             'provider' => 'admins',
         ],
+        // POS cashiers. Separate session guard on the SAME admins provider so
+        // cashiers reuse the existing admins/roles system but cannot reach the
+        // /admin dashboard (which is gated on the 'admin' guard).
+        'pos' => [
+            'driver' => 'session',
+            'provider' => 'admins',
+        ],
         'user' => [
             'driver' => 'session',
             'provider' => 'users',

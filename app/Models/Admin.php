@@ -76,4 +76,10 @@ class Admin extends Authenticatable
         }
         return $query;
     }
+
+    /** POS sales made by this account (cashier/admin). */
+    public function posTransactions()
+    {
+        return $this->hasMany(PosTransaction::class);
+    }
 }

@@ -35,6 +35,8 @@ use App\Http\Controllers\Admin\AttributeValueController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\HowWorkController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\AccountController;
+use App\Http\Controllers\Admin\PosTransactionController;
 
 
 /* ------------------------------------- Auth Routes --------------------------------- */
@@ -43,8 +45,22 @@ Route::get('admin/login', [LoginController::class, 'showLoginForm'])->middleware
 Route::post('admin/login', [LoginController::class, 'login'])->middleware('guest:admin')->name('admin.login.post');
 Route::post('admin/logout', [LoginController::class, 'logout'])->name('admin.logout');
 /* ------------------------------------- Admin Dashboard --------------------------------- */
-Route::group(['middleware' => ['auth:admin', 'admin'], 'prefix' => 'admin', 'as' => 'admin.'], function () {
+Route::group(['middleware' => ['auth:admin', 'admin', 'admin.role'], 'prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
+
+    /* ------------------------------------- User Accounts (admins + roles) --------------------------------- */
+    Route::group(['prefix' => 'accounts', 'as' => 'accounts.'], function () {
+        Route::get('data/datatables', [AccountController::class, 'datatable'])->name('datatable');
+        Route::post('activate/{id}', [AccountController::class, 'activate'])->name('active');
+    });
+    Route::resource('accounts', AccountController::class)->except(['show']);
+
+    /* ------------------------------------- POS Transactions (read-only) --------------------------------- */
+    Route::group(['prefix' => 'pos-transactions', 'as' => 'pos_transactions.'], function () {
+        Route::get('/', [PosTransactionController::class, 'index'])->name('index');
+        Route::get('data/datatables', [PosTransactionController::class, 'datatable'])->name('datatable');
+        Route::get('{id}', [PosTransactionController::class, 'show'])->name('show');
+    });
 
     /* ------------------------------------- Product Routes --------------------------------- */
     Route::resource('products', ProductController::class);

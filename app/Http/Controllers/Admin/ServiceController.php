@@ -42,7 +42,7 @@ class ServiceController extends Controller
     {
         try {
             DB::beginTransaction();
-            $data = $request->only('name', 'description', 'is_featured',);
+            $data = $request->only('name', 'description', 'price', 'is_featured',);
             // معالجة الصور
             $imageFields = [
                 'image', 'icon',
@@ -72,7 +72,7 @@ class ServiceController extends Controller
     {
         try {
             DB::beginTransaction();
-            $data = $request->only('name', 'description', 'is_featured');
+            $data = $request->only('name', 'description', 'price', 'is_featured');
             $imageFields = [
                 'image', 'icon',
             ];

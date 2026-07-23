@@ -19,7 +19,11 @@ class ServiceResource extends JsonResource
         return [
             'id'            => $this->id,
             'name'          => $this->name,
-            'description'   => $this->description,
+            // Price column reads from the dedicated `price` column (NOT the
+            // legacy `description`). NULL => shown as "—" (no price set).
+            'price'         => $this->price !== null
+                ? '$' . number_format((float) $this->price, 2)
+                : '—',
             'operations'    => $operations,
         ];
     }

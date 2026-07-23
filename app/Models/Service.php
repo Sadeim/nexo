@@ -14,11 +14,29 @@ class Service extends Model
     protected $fillable = [
         'name',
         'description',
+        'price',
         'status',
         'icon',
         'image',
         'is_featured'
     ];
+
+    protected $casts = [
+        'price' => 'decimal:2',
+    ];
+
+    /**
+     * A service can be sold in the POS only when it has a trusted price.
+     */
+    public function scopeSellable($query)
+    {
+        return $query->whereNotNull('price');
+    }
+
+    public function isSellable(): bool
+    {
+        return $this->price !== null;
+    }
 
     public function scopeSearch($query, $request)
     {

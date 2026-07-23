@@ -1,5 +1,6 @@
 <?php
 
+use App\Console\Commands\ReconcileCardPayments;
 use App\Console\Commands\SendBookingReminders;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
@@ -10,5 +11,10 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote')->hourly();
 
 Schedule::command(SendBookingReminders::class)
+    ->everyMinute()
+    ->withoutOverlapping();
+
+// Safety net for lost/late PlutoPay webhooks — reconcile stuck card sales.
+Schedule::command(ReconcileCardPayments::class)
     ->everyMinute()
     ->withoutOverlapping();
