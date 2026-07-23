@@ -729,16 +729,56 @@
                             <span class="menu-title">Employees (POS)</span>
                         </a>
                     </div>
-                    <div class="menu-item">
-                        <a class="menu-link {{ $is_active == 'employees_report' ? 'active' : '' }}"
-                            href="{{ route('admin.reports.employees.index') }}">
+                @endif
+
+                @if (auth()->user()->hasRole('admin'))
+                    <div class="menu-item menu-accordion {{ $is_active_parent == 'reports' ? 'here show' : '' }}">
+                        <span class="menu-link">
                             <span class="menu-icon">
                                 <span class="svg-icon svg-icon-2">
-                                    <i class="fa-solid fa-money-check-dollar"></i>
+                                    <i class="fa-solid fa-chart-line"></i>
                                 </span>
                             </span>
-                            <span class="menu-title">Employee Payroll</span>
-                        </a>
+                            <span class="menu-title">Reports</span>
+                            <span class="menu-arrow"></span>
+                        </span>
+                        <div class="menu-sub menu-sub-accordion">
+                            <div class="menu-item">
+                                <a class="menu-link {{ $is_active == 'reports_hub' ? 'active' : '' }}"
+                                    href="{{ route('admin.reports.index') }}">
+                                    <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                    <span class="menu-title">All reports</span>
+                                </a>
+                            </div>
+                            <div class="menu-item">
+                                <a class="menu-link {{ $is_active == 'sales_report' ? 'active' : '' }}"
+                                    href="{{ route('admin.reports.sales') }}">
+                                    <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                    <span class="menu-title">Sales overview</span>
+                                </a>
+                            </div>
+                            <div class="menu-item">
+                                <a class="menu-link {{ $is_active == 'services_report' ? 'active' : '' }}"
+                                    href="{{ route('admin.reports.services') }}">
+                                    <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                    <span class="menu-title">Services</span>
+                                </a>
+                            </div>
+                            <div class="menu-item">
+                                <a class="menu-link {{ $is_active == 'cashiers_report' ? 'active' : '' }}"
+                                    href="{{ route('admin.reports.cashiers') }}">
+                                    <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                    <span class="menu-title">Cashiers</span>
+                                </a>
+                            </div>
+                            <div class="menu-item">
+                                <a class="menu-link {{ $is_active == 'employees_report' ? 'active' : '' }}"
+                                    href="{{ route('admin.reports.employees.index') }}">
+                                    <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                    <span class="menu-title">Employee Payroll</span>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 @endif
 
