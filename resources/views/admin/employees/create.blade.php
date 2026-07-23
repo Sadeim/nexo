@@ -38,6 +38,22 @@
                     </div>
                 </div>
 
+                <div class="row g-9 mb-7">
+                    <div class="col-md-4 fv-row">
+                        <label class="fs-6 fw-semibold mb-2">Commission rate (% of sales)</label>
+                        <div class="input-group">
+                            <input type="number" step="0.01" min="0" max="100" class="form-control"
+                                   name="commission_rate" placeholder="0"
+                                   value="{{ isset($employee) ? number_format((float) $employee->commission_rate, 2, '.', '') : '0' }}">
+                            <span class="input-group-text">%</span>
+                        </div>
+                        <div class="text-muted fs-8 mt-1">
+                            Percent of service subtotal that goes to this employee. Tips are always paid 100% on top.
+                            Set to 0 for tips-only.
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row g-9">
                     <div class="col-md-6 fv-row">
                         <label class="fs-6 fw-semibold mb-2">Avatar (optional)</label>

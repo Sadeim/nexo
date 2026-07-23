@@ -37,6 +37,7 @@ use App\Http\Controllers\Admin\HowWorkController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Admin\EmployeeController;
+use App\Http\Controllers\Admin\EmployeeReportController;
 use App\Http\Controllers\Admin\PosOrderController;
 use App\Http\Controllers\Admin\PosTransactionController;
 
@@ -77,6 +78,14 @@ Route::group(['middleware' => ['auth:admin', 'admin', 'admin.role'], 'prefix' =>
         Route::post('activate/{id}', [EmployeeController::class, 'activate'])->name('active');
     });
     Route::resource('employees', EmployeeController::class)->except(['show']);
+
+    /* ------------------------------------- Reports --------------------------------- */
+    Route::group(['prefix' => 'reports/employees', 'as' => 'reports.employees.'], function () {
+        Route::get('/', [EmployeeReportController::class, 'index'])->name('index');
+        Route::post('pay', [EmployeeReportController::class, 'pay'])->name('pay');
+        Route::delete('payments/{id}', [EmployeeReportController::class, 'destroyPayment'])->name('pay.destroy');
+        Route::get('{id}/history', [EmployeeReportController::class, 'history'])->name('history');
+    });
 
     /* ------------------------------------- Product Routes --------------------------------- */
     Route::resource('products', ProductController::class);
