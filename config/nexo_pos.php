@@ -16,4 +16,20 @@ return [
     'apk_url'       => env('NEXO_POS_APK_URL'),
     'mandatory'     => (bool) env('NEXO_POS_MANDATORY', false),
     'release_notes' => env('NEXO_POS_RELEASE_NOTES', 'Initial release'),
+
+    /*
+    | PlutoPay Terminal — dedicated to the Flutter POS. Isolated from the
+    | Web POS's `services.plutopay` block so both flows can coexist without
+    | stepping on each other. TEST MODE ONLY in this phase.
+    */
+    'plutopay' => [
+        'base_url'         => env('NEXO_POS_PLUTOPAY_BASE_URL', 'https://plutopayus.com/api'),
+        'secret_key'       => env('NEXO_POS_PLUTOPAY_SECRET_KEY'),
+        'publishable_key'  => env('NEXO_POS_PLUTOPAY_PUBLISHABLE_KEY'),
+        'webhook_secret'   => env('NEXO_POS_PLUTOPAY_WEBHOOK_SECRET'),
+        'terminal_id'      => env('NEXO_POS_PLUTOPAY_TERMINAL_ID'),
+        'reader_id'        => env('NEXO_POS_PLUTOPAY_READER_ID'),
+        'currency'         => env('NEXO_POS_PLUTOPAY_CURRENCY', 'usd'),
+        'min_amount_cents' => (int) env('NEXO_POS_PLUTOPAY_MIN_CENTS', 50),
+    ],
 ];

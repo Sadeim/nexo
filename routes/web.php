@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Frontend\BlogController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\MessageController;
+use App\Http\Controllers\Webhooks\NexoPosWebhookController;
 use App\Http\Controllers\Webhooks\PlutoPayWebhookController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -11,6 +12,10 @@ use Illuminate\Support\Facades\Route;
 // PlutoPay Terminal webhooks (public; secured by HMAC signature, CSRF-exempt).
 Route::post('webhooks/plutopay', [PlutoPayWebhookController::class, 'handle'])
     ->name('webhooks.plutopay');
+
+// Nexo POS (Flutter) PlutoPay webhooks — isolated endpoint, own handler.
+Route::post('webhooks/nexo-pos-plutopay', [NexoPosWebhookController::class, 'handle'])
+    ->name('webhooks.nexo_pos_plutopay');
 
 // Auth::routes();
 // Route::get('verify_otp_form', [RegisterController::class, 'showOtpForm'])->name('verify_otp_form');

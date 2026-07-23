@@ -21,6 +21,14 @@ class PosOrder extends Model
         'tip',
         'total',
         'payment_method',
+        'status',
+        'payment_intent_id',
+        'provider_payment_id',
+        'reference',
+        'amount_cents',
+        'currency',
+        'failure_reason',
+        'idempotency_key',
         'customer_email',
         'receipt_sent_at',
         'notes',
@@ -30,8 +38,17 @@ class PosOrder extends Model
         'subtotal' => 'decimal:2',
         'tip' => 'decimal:2',
         'total' => 'decimal:2',
+        'amount_cents' => 'integer',
         'receipt_sent_at' => 'datetime',
     ];
+
+    /** Card status flow: awaiting_payment → processing → completed | failed | canceled. */
+    public const TERMINAL_STATUSES = ['completed', 'failed', 'canceled'];
+
+    public function isTerminal(): bool
+    {
+        return in_array($this->status, self::TERMINAL_STATUSES, true);
+    }
 
     public function items()
     {

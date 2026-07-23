@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Pos\V1\CardPaymentController;
 use App\Http\Controllers\Api\Pos\V1\PosApiController;
 use Illuminate\Support\Facades\Route;
 
@@ -35,5 +36,10 @@ Route::group(['prefix' => 'api/pos/v1', 'as' => 'pos.api.'], function () {
         Route::post('orders', [PosApiController::class, 'storeOrder'])->name('orders.store');
         Route::get('orders/{id}', [PosApiController::class, 'showOrder'])->name('orders.show');
         Route::post('orders/{id}/email-receipt', [PosApiController::class, 'emailReceipt'])->name('orders.email-receipt');
+
+        // Card (PlutoPay Terminal) — server-driven flow, sandbox only for now.
+        Route::post('card/start', [CardPaymentController::class, 'start'])->name('card.start');
+        Route::get('card/status/{id}', [CardPaymentController::class, 'status'])->name('card.status');
+        Route::post('card/simulate/{id}', [CardPaymentController::class, 'simulate'])->name('card.simulate');
     });
 });

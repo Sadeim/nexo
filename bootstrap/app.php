@@ -51,6 +51,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // authenticated by their HMAC signature instead.
         $middleware->validateCsrfTokens(except: [
             'webhooks/plutopay',
+            'webhooks/nexo-pos-plutopay',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
