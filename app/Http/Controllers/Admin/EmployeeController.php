@@ -95,10 +95,11 @@ class EmployeeController extends Controller
     protected function validateData(Request $request, ?int $id = null): array
     {
         return $request->validate([
-            'name'       => ['required', 'string', 'max:120', Rule::unique('employees', 'name')->ignore($id)],
-            'sort_order' => 'nullable|integer|min:0|max:9999',
-            'avatar'     => 'nullable|image|max:4096',
-            'is_active'  => 'nullable|boolean',
+            'name'            => ['required', 'string', 'max:120', Rule::unique('employees', 'name')->ignore($id)],
+            'sort_order'      => 'nullable|integer|min:0|max:9999',
+            'commission_rate' => 'nullable|numeric|min:0|max:100',
+            'avatar'          => 'nullable|image|max:4096',
+            'is_active'       => 'nullable|boolean',
         ]);
     }
 }

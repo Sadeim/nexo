@@ -14,15 +14,28 @@ class Employee extends Model
         'avatar',
         'is_active',
         'sort_order',
+        'commission_rate',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
+        'commission_rate' => 'decimal:2',
     ];
 
     public function posOrders()
     {
         return $this->hasMany(PosOrder::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(EmployeePayment::class);
+    }
+
+    /** Commission earned on a subtotal amount (in currency, not %). */
+    public function commissionOn(float $subtotal): float
+    {
+        return round($subtotal * (float) $this->commission_rate / 100, 2);
     }
 
     public function scopeActive($q)

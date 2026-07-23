@@ -729,6 +729,17 @@
                             <span class="menu-title">Employees (POS)</span>
                         </a>
                     </div>
+                    <div class="menu-item">
+                        <a class="menu-link {{ $is_active == 'employees_report' ? 'active' : '' }}"
+                            href="{{ route('admin.reports.employees.index') }}">
+                            <span class="menu-icon">
+                                <span class="svg-icon svg-icon-2">
+                                    <i class="fa-solid fa-money-check-dollar"></i>
+                                </span>
+                            </span>
+                            <span class="menu-title">Employee Payroll</span>
+                        </a>
+                    </div>
                 @endif
 
                 @if (auth()->user()->can('view_settings'))
