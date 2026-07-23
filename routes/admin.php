@@ -38,6 +38,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Admin\EmployeeReportController;
+use App\Http\Controllers\Admin\ReportsController;
 use App\Http\Controllers\Admin\PosOrderController;
 use App\Http\Controllers\Admin\PosTransactionController;
 
@@ -80,11 +81,18 @@ Route::group(['middleware' => ['auth:admin', 'admin', 'admin.role'], 'prefix' =>
     Route::resource('employees', EmployeeController::class)->except(['show']);
 
     /* ------------------------------------- Reports --------------------------------- */
-    Route::group(['prefix' => 'reports/employees', 'as' => 'reports.employees.'], function () {
-        Route::get('/', [EmployeeReportController::class, 'index'])->name('index');
-        Route::post('pay', [EmployeeReportController::class, 'pay'])->name('pay');
-        Route::delete('payments/{id}', [EmployeeReportController::class, 'destroyPayment'])->name('pay.destroy');
-        Route::get('{id}/history', [EmployeeReportController::class, 'history'])->name('history');
+    Route::group(['prefix' => 'reports', 'as' => 'reports.'], function () {
+        Route::get('/',         [ReportsController::class, 'index'])->name('index');
+        Route::get('sales',     [ReportsController::class, 'sales'])->name('sales');
+        Route::get('services',  [ReportsController::class, 'services'])->name('services');
+        Route::get('cashiers',  [ReportsController::class, 'cashiers'])->name('cashiers');
+
+        Route::group(['prefix' => 'employees', 'as' => 'employees.'], function () {
+            Route::get('/',                  [EmployeeReportController::class, 'index'])->name('index');
+            Route::post('pay',               [EmployeeReportController::class, 'pay'])->name('pay');
+            Route::delete('payments/{id}',   [EmployeeReportController::class, 'destroyPayment'])->name('pay.destroy');
+            Route::get('{id}/history',       [EmployeeReportController::class, 'history'])->name('history');
+        });
     });
 
     /* ------------------------------------- Product Routes --------------------------------- */

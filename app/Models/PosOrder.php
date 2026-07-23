@@ -73,4 +73,15 @@ class PosOrder extends Model
 
         return $number;
     }
+
+    /** Convenience for the reports: completed orders in a date-range window. */
+    public function scopeCompletedIn($query, \Carbon\Carbon $from, \Carbon\Carbon $to)
+    {
+        return $query
+            ->where('status', 'completed')
+            ->whereBetween('created_at', [
+                $from->copy()->startOfDay(),
+                $to->copy()->endOfDay(),
+            ]);
+    }
 }
