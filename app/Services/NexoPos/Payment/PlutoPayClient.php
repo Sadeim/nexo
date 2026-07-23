@@ -18,8 +18,9 @@ use Illuminate\Support\Facades\Http;
  *   POST /v1/terminal/simulate-payment → { status }  (test-mode only)
  *   GET  /v1/terminal/readers          → { data: [ { id, processor_terminal_id, ... } ] }
  *
- * TEST-MODE GUARD: constructor throws unless PLUTOPAY_SECRET_KEY starts with
- * `sk_test_`. Prevents accidental live use during rollout.
+ * KEY-SHAPE GUARD: constructor throws unless PLUTOPAY_SECRET_KEY starts with
+ * `sk_test_` OR `sk_live_`. Any other value is treated as unconfigured.
+ * (You can constrain this further with NEXO_POS_PLUTOPAY_ALLOW_LIVE=false.)
  */
 class PlutoPayClient
 {
@@ -34,9 +35,18 @@ class PlutoPayClient
         $cfg = config('nexo_pos.plutopay');
         $secret = (string) ($cfg['secret_key'] ?? '');
 
-        if (!str_starts_with($secret, 'sk_test_')) {
+        $isTest = str_starts_with($secret, 'sk_test_');
+        $isLive = str_starts_with($secret, 'sk_live_');
+
+        if (!$isTest && !$isLive) {
             throw new PlutoPayException(
-                'Nexo POS PlutoPay is locked to TEST MODE: NEXO_POS_PLUTOPAY_SECRET_KEY must start with "sk_test_".'
+                'Nexo POS PlutoPay is not configured: NEXO_POS_PLUTOPAY_SECRET_KEY must start with "sk_test_" or "sk_live_".'
+            );
+        }
+
+        if ($isLive && !($cfg['allow_live'] ?? true)) {
+            throw new PlutoPayException(
+                'A live PlutoPay key was provided but NEXO_POS_PLUTOPAY_ALLOW_LIVE=false. Refusing to send real payments.'
             );
         }
 

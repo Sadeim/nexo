@@ -36,6 +36,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\HowWorkController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\AccountController;
+use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Admin\PosOrderController;
 use App\Http\Controllers\Admin\PosTransactionController;
 
@@ -69,6 +70,13 @@ Route::group(['middleware' => ['auth:admin', 'admin', 'admin.role'], 'prefix' =>
         Route::get('data/datatables', [PosOrderController::class, 'datatable'])->name('datatable');
         Route::get('{id}', [PosOrderController::class, 'show'])->name('show');
     });
+
+    /* ------------------------------------- Employees (POS "who served") --------------------------------- */
+    Route::group(['prefix' => 'employees', 'as' => 'employees.'], function () {
+        Route::get('data/datatables', [EmployeeController::class, 'datatable'])->name('datatable');
+        Route::post('activate/{id}', [EmployeeController::class, 'activate'])->name('active');
+    });
+    Route::resource('employees', EmployeeController::class)->except(['show']);
 
     /* ------------------------------------- Product Routes --------------------------------- */
     Route::resource('products', ProductController::class);
