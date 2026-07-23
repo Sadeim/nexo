@@ -38,6 +38,7 @@ Route::group(['prefix' => 'api/pos/v1', 'as' => 'pos.api.'], function () {
         Route::post('orders/{id}/email-receipt', [PosApiController::class, 'emailReceipt'])->name('orders.email-receipt');
 
         // Card (PlutoPay Terminal) — server-driven flow, sandbox only for now.
+        Route::get('card/readers', [CardPaymentController::class, 'readers'])->name('card.readers');
         Route::post('card/start', [CardPaymentController::class, 'start'])->name('card.start');
         Route::get('card/status/{id}', [CardPaymentController::class, 'status'])->name('card.status');
         Route::post('card/simulate/{id}', [CardPaymentController::class, 'simulate'])->name('card.simulate');

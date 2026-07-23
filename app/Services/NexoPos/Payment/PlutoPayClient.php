@@ -84,12 +84,16 @@ class PlutoPayClient
         ];
     }
 
-    /** Send the payment to the physical/simulated reader. */
-    public function processPayment(string $paymentIntentId): array
+    /**
+     * Send the payment to a physical/simulated reader. When $readerIdOverride
+     * is null we fall back to the reader configured in .env (single-tablet
+     * setups); the mobile app usually sends its own picked reader.
+     */
+    public function processPayment(string $paymentIntentId, ?string $readerIdOverride = null): array
     {
         $data = $this->unwrap($this->http()->post('v1/terminal/process-payment', [
             'payment_intent_id' => $paymentIntentId,
-            'reader_id'         => $this->readerId,
+            'reader_id'         => $readerIdOverride ?: $this->readerId,
         ]));
 
         return [
@@ -101,12 +105,12 @@ class PlutoPayClient
 
     /**
      * Simulate a card tap on the sandbox reader. TEST MODE ONLY — live keys
-     * return 400 by design.
+     * return 400 by design. Accepts a per-request reader override.
      */
-    public function simulatePayment(): array
+    public function simulatePayment(?string $readerIdOverride = null): array
     {
         $data = $this->unwrap($this->http()->post('v1/terminal/simulate-payment', [
-            'reader_id' => $this->readerId,
+            'reader_id' => $readerIdOverride ?: $this->readerId,
         ]));
 
         return ['status' => (string) ($data['status'] ?? '')];
