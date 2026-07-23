@@ -65,18 +65,19 @@ class PosApiController extends Controller
     }
 
     /**
-     * Advertised app version for OTA self-update. Bump `version_code` and set
-     * `apk_url` after uploading a new APK build (e.g. to /public/downloads/).
+     * Advertised app version for OTA self-update. Values are read from
+     * config/nexo_pos.php (env-driven) so bumping is a `.env` edit +
+     * `php artisan config:cache` on the server — no code change.
      */
     public function appVersion()
     {
         return response()->json([
             'success' => true,
-            'version_code' => 1,
-            'version_name' => '1.0.0',
-            'apk_url' => null,
-            'mandatory' => false,
-            'release_notes' => 'Initial release',
+            'version_code'  => (int) config('nexo_pos.version_code'),
+            'version_name'  => (string) config('nexo_pos.version_name'),
+            'apk_url'       => config('nexo_pos.apk_url'),
+            'mandatory'     => (bool) config('nexo_pos.mandatory'),
+            'release_notes' => (string) config('nexo_pos.release_notes'),
         ]);
     }
 
