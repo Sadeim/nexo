@@ -34,11 +34,32 @@ class CardPaymentController extends Controller
         return app(PlutoPayClient::class);
     }
 
+    /**
+     * List available terminal readers so the tablet can let the cashier pick
+     * one (Loarien-style setup screen). Each entry carries an `id` (uuid, used
+     * as `terminal_id` in create-payment) and `processor_terminal_id` (tmr_...,
+     * the reader the customer physically taps).
+     */
+    public function readers()
+    {
+        try {
+            $readers = $this->pluto()->listReaders();
+        } catch (PlutoPayException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 502);
+        }
+
+        return response()->json(['success' => true, 'readers' => $readers]);
+    }
+
     public function start(Request $request)
     {
         $data = $request->validate([
             'employee_id' => ['required', Rule::exists('employees', 'id')->where('is_active', true)],
             'idempotency_key' => 'required|string|min:8|max:64',
+            'reader_id' => 'nullable|string|max:128',
             'items' => 'required|array|min:1',
             'items.*.service_id' => 'nullable|exists:services,id',
             'items.*.name' => 'required|string|max:255',
@@ -71,7 +92,7 @@ class CardPaymentController extends Controller
         // Idempotent replay
         $existing = PosOrder::where('idempotency_key', $data['idempotency_key'])->first();
         if ($existing) {
-            return $this->driveAndRespond($existing);
+            return $this->driveAndRespond($existing, $data['reader_id'] ?? null);
         }
 
         try {
@@ -110,14 +131,14 @@ class CardPaymentController extends Controller
             $order = PosOrder::where('idempotency_key', $data['idempotency_key'])->firstOrFail();
         }
 
-        return $this->driveAndRespond($order);
+        return $this->driveAndRespond($order, $data['reader_id'] ?? null);
     }
 
     /**
      * Drive PlutoPay for a row that still needs the reader, then reply with its
      * current status. Safe to re-enter (Idempotency-Key on create-payment).
      */
-    private function driveAndRespond(PosOrder $order)
+    private function driveAndRespond(PosOrder $order, ?string $readerId = null)
     {
         if ($order->isTerminal()) {
             return $this->statusPayload($order);
@@ -143,7 +164,7 @@ class CardPaymentController extends Controller
                 ]);
             }
 
-            $this->pluto()->processPayment($order->payment_intent_id);
+            $this->pluto()->processPayment($order->payment_intent_id, $readerId);
             $order->update(['status' => 'processing']);
         } catch (PlutoPayException $e) {
             Log::warning('NexoPos PlutoPay start failed', [
@@ -181,6 +202,10 @@ class CardPaymentController extends Controller
      */
     public function simulate(Request $request, $id)
     {
+        $data = $request->validate([
+            'reader_id' => 'nullable|string|max:128',
+        ]);
+
         $order = PosOrder::findOrFail($id);
         $admin = $request->attributes->get('pos_admin');
 
@@ -189,7 +214,7 @@ class CardPaymentController extends Controller
         }
 
         try {
-            $this->pluto()->simulatePayment();
+            $this->pluto()->simulatePayment($data['reader_id'] ?? null);
         } catch (PlutoPayException $e) {
             return response()->json([
                 'success' => false,
