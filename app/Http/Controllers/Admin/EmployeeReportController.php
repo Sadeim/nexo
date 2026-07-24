@@ -33,10 +33,15 @@ class EmployeeReportController extends Controller
 
         $employees = Employee::orderBy('sort_order')->orderBy('name')->get();
 
-        $rows = $employees->map(function (Employee $employee) use ($from, $to) {
+        // Convert the caller-timezone range to UTC once so every sub-query on
+        // this page uses the same, correct boundaries.
+        $fromUtc = $from->copy()->startOfDay()->utc();
+        $toUtc   = $to->copy()->endOfDay()->utc();
+
+        $rows = $employees->map(function (Employee $employee) use ($fromUtc, $toUtc) {
             $orders = PosOrder::where('employee_id', $employee->id)
                 ->where('status', 'completed')
-                ->whereBetween('created_at', [$from->copy()->startOfDay(), $to->copy()->endOfDay()])
+                ->whereBetween('created_at', [$fromUtc, $toUtc])
                 ->get();
 
             $subtotalSum = (float) $orders->sum('subtotal');
@@ -45,7 +50,7 @@ class EmployeeReportController extends Controller
             $earned      = round($commission + $tipSum, 2);
 
             $paid = (float) EmployeePayment::where('employee_id', $employee->id)
-                ->whereBetween('paid_at', [$from->copy()->startOfDay(), $to->copy()->endOfDay()])
+                ->whereBetween('paid_at', [$fromUtc, $toUtc])
                 ->sum('amount');
 
             return [
@@ -103,7 +108,10 @@ class EmployeeReportController extends Controller
 
         $payments = EmployeePayment::with('admin')
             ->where('employee_id', $employee->id)
-            ->whereBetween('paid_at', [$from->copy()->startOfDay(), $to->copy()->endOfDay()])
+            ->whereBetween('paid_at', [
+                $from->copy()->startOfDay()->utc(),
+                $to->copy()->endOfDay()->utc(),
+            ])
             ->orderBy('paid_at', 'desc')
             ->get();
 

@@ -74,14 +74,19 @@ class PosOrder extends Model
         return $number;
     }
 
-    /** Convenience for the reports: completed orders in a date-range window. */
+    /**
+     * Completed orders whose created_at falls inside [from-startOfDay,
+     * to-endOfDay] in the CALLER's timezone. The boundaries are converted to
+     * UTC before the query is issued so a Chicago "today" doesn't leak into
+     * the previous UTC day on the DB side.
+     */
     public function scopeCompletedIn($query, \Carbon\Carbon $from, \Carbon\Carbon $to)
     {
         return $query
             ->where('status', 'completed')
             ->whereBetween('created_at', [
-                $from->copy()->startOfDay(),
-                $to->copy()->endOfDay(),
+                $from->copy()->startOfDay()->utc(),
+                $to->copy()->endOfDay()->utc(),
             ]);
     }
 }
