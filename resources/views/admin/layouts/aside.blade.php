@@ -729,6 +729,17 @@
                             <span class="menu-title">Employees (POS)</span>
                         </a>
                     </div>
+                    <div class="menu-item">
+                        <a class="menu-link {{ $is_active == 'pos_services' ? 'active' : '' }}"
+                            href="{{ route('admin.pos_services.index') }}">
+                            <span class="menu-icon">
+                                <span class="svg-icon svg-icon-2">
+                                    <i class="fa-solid fa-tags"></i>
+                                </span>
+                            </span>
+                            <span class="menu-title">POS Services</span>
+                        </a>
+                    </div>
                 @endif
 
                 @if (auth()->user()->hasRole('admin'))

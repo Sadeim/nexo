@@ -40,6 +40,7 @@ use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Admin\EmployeeReportController;
 use App\Http\Controllers\Admin\ReportsController;
 use App\Http\Controllers\Admin\PosOrderController;
+use App\Http\Controllers\Admin\PosServiceController;
 use App\Http\Controllers\Admin\PosTransactionController;
 
 
@@ -79,6 +80,17 @@ Route::group(['middleware' => ['auth:admin', 'admin', 'admin.role'], 'prefix' =>
         Route::post('activate/{id}', [EmployeeController::class, 'activate'])->name('active');
     });
     Route::resource('employees', EmployeeController::class)->except(['show']);
+
+    /* ------------------------------------- POS Services (separate catalog for the tablet) --------------------------------- */
+    Route::group(['prefix' => 'pos-services', 'as' => 'pos_services.'], function () {
+        Route::get('data/datatables', [PosServiceController::class, 'datatable'])->name('datatable');
+        Route::post('activate/{id}',  [PosServiceController::class, 'activate'])->name('active');
+        Route::post('import',         [PosServiceController::class, 'importFromWebsite'])->name('import');
+    });
+    Route::resource('pos-services', PosServiceController::class)
+        ->parameters(['pos-services' => 'pos_service'])
+        ->names('pos_services')
+        ->except(['show']);
 
     /* ------------------------------------- Reports --------------------------------- */
     Route::group(['prefix' => 'reports', 'as' => 'reports.'], function () {

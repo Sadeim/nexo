@@ -9,7 +9,7 @@ use App\Models\Employee;
 use App\Models\PosApiToken;
 use App\Models\PosOrder;
 use App\Models\PosOrderItem;
-use App\Models\Service;
+use App\Models\PosService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -123,13 +123,17 @@ class PosApiController extends Controller
 
     public function services()
     {
-        $services = Service::query()
-            ->whereNotNull('price')
+        // Reads the DEDICATED pos_services catalog — the marketing `services`
+        // table is now separate so POS prices can move without touching the
+        // public site.
+        $services = PosService::query()
+            ->active()
+            ->orderBy('sort_order')
             ->orderBy('name')
             ->get(['id', 'name', 'price']);
 
         return response()->json([
-            'success' => true,
+            'success'  => true,
             'services' => $services,
         ]);
     }
@@ -143,7 +147,7 @@ class PosApiController extends Controller
             'customer_email' => 'nullable|email',
             'notes' => 'nullable|string|max:1000',
             'items' => 'required|array|min:1',
-            'items.*.service_id' => 'nullable|exists:services,id',
+            'items.*.service_id' => 'nullable|exists:pos_services,id',
             'items.*.name' => 'required|string|max:255',
             'items.*.price' => 'required|numeric|min:0',
             'items.*.quantity' => 'nullable|integer|min:1',
@@ -211,6 +215,55 @@ class PosApiController extends Controller
         return response()->json([
             'success' => true,
             'order' => $this->serializeOrder($order),
+        ]);
+    }
+
+    /**
+     * Last N orders (default 10) for the "Last transactions" tablet screen.
+     * Only completed rows so an in-flight card sale doesn't confuse the UI.
+     */
+    public function recentOrders(Request $request)
+    {
+        $limit = (int) $request->query('limit', 10);
+        $limit = max(1, min(50, $limit));
+
+        $orders = PosOrder::with(['items', 'employee'])
+            ->where('status', 'completed')
+            ->orderByDesc('id')
+            ->limit($limit)
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'orders'  => $orders->map(fn($o) => $this->serializeOrder($o))->all(),
+        ]);
+    }
+
+    /**
+     * Reassign an order's employee — behind a PIN. The PIN lives in
+     * config('nexo_pos.edit_order_pin') so an owner can rotate it via .env.
+     */
+    public function updateOrderEmployee(Request $request, $id)
+    {
+        $data = $request->validate([
+            'employee_id' => ['required', Rule::exists('employees', 'id')->where('is_active', true)],
+            'pin'         => 'required|string|max:32',
+        ]);
+
+        $expected = (string) config('nexo_pos.edit_order_pin', '1975');
+        if (!hash_equals($expected, (string) $data['pin'])) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Wrong PIN.',
+            ], 403);
+        }
+
+        $order = PosOrder::findOrFail($id);
+        $order->forceFill(['employee_id' => $data['employee_id']])->save();
+
+        return response()->json([
+            'success' => true,
+            'order'   => $this->serializeOrder($order->fresh(['items', 'employee'])),
         ]);
     }
 
