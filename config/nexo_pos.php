@@ -17,6 +17,9 @@ return [
     'mandatory'     => (bool) env('NEXO_POS_MANDATORY', false),
     'release_notes' => env('NEXO_POS_RELEASE_NOTES', 'Initial release'),
 
+    // PIN the tablet must enter to reassign an order's employee.
+    'edit_order_pin' => env('NEXO_POS_EDIT_ORDER_PIN', '1975'),
+
     /*
     | PlutoPay Terminal — dedicated to the Flutter POS. Isolated from the
     | Web POS's `services.plutopay` block so both flows can coexist without
