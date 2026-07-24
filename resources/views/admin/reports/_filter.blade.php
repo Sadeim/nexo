@@ -17,6 +17,7 @@
             <div class="col-md-6 d-flex flex-wrap gap-2">
                 <button class="btn btn-sm btn-primary">Apply</button>
                 <a href="{{ route($route, ['from' => now()->toDateString(), 'to' => now()->toDateString()]) }}" class="btn btn-sm btn-light">Today</a>
+                <a href="{{ route($route, ['from' => now()->subDay()->toDateString(), 'to' => now()->subDay()->toDateString()]) }}" class="btn btn-sm btn-light">Yesterday</a>
                 <a href="{{ route($route, ['from' => now()->subDays(6)->toDateString(), 'to' => now()->toDateString()]) }}" class="btn btn-sm btn-light">Last 7 days</a>
                 <a href="{{ route($route, ['from' => now()->startOfMonth()->toDateString(), 'to' => now()->endOfMonth()->toDateString()]) }}" class="btn btn-sm btn-light">This month</a>
                 <a href="{{ route($route, ['from' => now()->subDays(29)->toDateString(), 'to' => now()->toDateString()]) }}" class="btn btn-sm btn-light">Last 30 days</a>

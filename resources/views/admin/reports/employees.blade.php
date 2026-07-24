@@ -25,9 +25,10 @@
                                 <label class="fs-7 fw-semibold mb-2">To</label>
                                 <input type="date" name="to" value="{{ $to->format('Y-m-d') }}" class="form-control form-control-sm">
                             </div>
-                            <div class="col-md-6 d-flex gap-2">
+                            <div class="col-md-6 d-flex flex-wrap gap-2">
                                 <button class="btn btn-sm btn-primary">Apply</button>
                                 <a href="{{ route('admin.reports.employees.index', ['from' => now()->toDateString(), 'to' => now()->toDateString()]) }}" class="btn btn-sm btn-light">Today</a>
+                                <a href="{{ route('admin.reports.employees.index', ['from' => now()->subDay()->toDateString(), 'to' => now()->subDay()->toDateString()]) }}" class="btn btn-sm btn-light">Yesterday</a>
                                 <a href="{{ route('admin.reports.employees.index', ['from' => now()->startOfWeek()->toDateString(), 'to' => now()->endOfWeek()->toDateString()]) }}" class="btn btn-sm btn-light">This week</a>
                                 <a href="{{ route('admin.reports.employees.index', ['from' => now()->startOfMonth()->toDateString(), 'to' => now()->endOfMonth()->toDateString()]) }}" class="btn btn-sm btn-light">This month</a>
                             </div>

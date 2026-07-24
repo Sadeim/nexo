@@ -30,8 +30,11 @@
                                 <label class="fs-7 fw-semibold mb-2">To</label>
                                 <input type="date" name="to" value="{{ $to->format('Y-m-d') }}" class="form-control form-control-sm">
                             </div>
-                            <div class="col-md-6 d-flex gap-2">
+                            <div class="col-md-6 d-flex flex-wrap gap-2">
                                 <button class="btn btn-sm btn-primary">Apply</button>
+                                <a href="{{ route('admin.reports.employees.history', ['id' => $employee->id, 'from' => now()->toDateString(), 'to' => now()->toDateString()]) }}" class="btn btn-sm btn-light">Today</a>
+                                <a href="{{ route('admin.reports.employees.history', ['id' => $employee->id, 'from' => now()->subDay()->toDateString(), 'to' => now()->subDay()->toDateString()]) }}" class="btn btn-sm btn-light">Yesterday</a>
+                                <a href="{{ route('admin.reports.employees.history', ['id' => $employee->id, 'from' => now()->startOfMonth()->toDateString(), 'to' => now()->endOfMonth()->toDateString()]) }}" class="btn btn-sm btn-light">This month</a>
                                 <a href="{{ route('admin.reports.employees.history', $employee->id) }}" class="btn btn-sm btn-light">Last 90 days</a>
                             </div>
                         </form>
