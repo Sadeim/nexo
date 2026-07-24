@@ -732,8 +732,9 @@
                 @endif
 
                 @if (auth()->user()->hasRole('admin'))
-                    <div class="menu-item menu-accordion {{ $is_active_parent == 'reports' ? 'here show' : '' }}">
-                        <span class="menu-link">
+                    <div data-kt-menu-trigger="click"
+                        class="menu-item menu-accordion {{ $is_active_parent == 'reports' ? 'here show' : '' }}">
+                        <span class="menu-link menu-accordion">
                             <span class="menu-icon">
                                 <span class="svg-icon svg-icon-2">
                                     <i class="fa-solid fa-chart-line"></i>
