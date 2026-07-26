@@ -62,9 +62,9 @@ class EmployeeReportController extends Controller
                 'subtotal'        => $subtotalSum,
                 'tips'            => $tipSum,
                 // How the money actually came in — what's physically in the
-                // drawer vs what settled to the bank.
+                // drawer vs what settled to the bank. Cash sales carry no tip,
+                // so only the card column shows one.
                 'cash_total'      => (float) $cashOrders->sum('total'),
-                'cash_tips'       => (float) $cashOrders->sum('tip'),
                 'card_total'      => (float) $cardOrders->sum('total'),
                 'card_tips'       => (float) $cardOrders->sum('tip'),
                 'commission_rate' => (float) $employee->commission_rate,
@@ -79,7 +79,6 @@ class EmployeeReportController extends Controller
             'subtotal'   => (float) $rows->sum('subtotal'),
             'tips'       => (float) $rows->sum('tips'),
             'cash_total' => (float) $rows->sum('cash_total'),
-            'cash_tips'  => (float) $rows->sum('cash_tips'),
             'card_total' => (float) $rows->sum('card_total'),
             'card_tips'  => (float) $rows->sum('card_tips'),
             'commission' => (float) $rows->sum('commission'),

@@ -70,9 +70,6 @@
                                             <td class="text-end text-success">${{ number_format($r['tips'], 2) }}</td>
                                             <td class="text-end bg-light-success">
                                                 ${{ number_format($r['cash_total'], 2) }}
-                                                @if ($r['cash_tips'] > 0)
-                                                    <div class="text-muted fs-8">incl. tip ${{ number_format($r['cash_tips'], 2) }}</div>
-                                                @endif
                                             </td>
                                             <td class="text-end bg-light-info">
                                                 ${{ number_format($r['card_total'], 2) }}
