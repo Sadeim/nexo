@@ -12,6 +12,30 @@
 
                 @include('admin.reports._filter', ['route' => 'admin.reports.sales'])
 
+                @php
+                    $expectedGross = round($totals['subtotal'] + $totals['tips'], 2);
+                    $grossDrift    = round($expectedGross - $totals['gross'], 2);
+                @endphp
+                @if (abs($grossDrift) >= 0.01)
+                    <div class="alert alert-warning d-flex align-items-center">
+                        <i class="fa-solid fa-triangle-exclamation me-3 fs-3"></i>
+                        <div>
+                            <strong>Totals don't add up.</strong>
+                            Subtotal (${{ number_format($totals['subtotal'], 2) }})
+                            + Tips (${{ number_format($totals['tips'], 2) }})
+                            = ${{ number_format($expectedGross, 2) }},
+                            but Gross reads ${{ number_format($totals['gross'], 2) }}
+                            — a ${{ number_format(abs($grossDrift), 2) }} gap.
+                            <div class="fs-8 mt-1">
+                                Some orders have a stored <code>total</code> that isn't
+                                <code>subtotal + tip</code>. Fix them on the server with
+                                <code>php artisan nexo-pos:repair-totals</code>
+                                (add <code>--dry-run</code> first to preview).
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
                 {{-- KPI cards --}}
                 <div class="row g-4 mb-5">
                     @php

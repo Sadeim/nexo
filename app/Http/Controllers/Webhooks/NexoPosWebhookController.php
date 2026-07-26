@@ -96,13 +96,17 @@ class NexoPosWebhookController extends Controller
             $isFailed  = in_array($eventType, ['payment.failed', 'payment_intent.payment_failed'], true);
 
             if ($isSuccess) {
-                // On-reader tipping: final amount + tip come from the webhook.
-                $data       = $payload['data'] ?? [];
-                $amountCents = (int) ($data['amount'] ?? $data['amount_captured'] ?? $fresh->amount_cents ?? 0);
-                $tipCents    = (int) ($data['tip_amount'] ?? 0);
+                $data = $payload['data'] ?? [];
 
-                $newTotal = $amountCents > 0 ? round($amountCents / 100, 2) : (float) $fresh->total;
+                // On-reader tipping. PlutoPay's `data.amount` echoes the amount
+                // the intent was CREATED with — i.e. our base/subtotal — and
+                // reports the customer's tip separately in `tip_amount`. So the
+                // real charge is subtotal + tip; never trust `amount` as the
+                // final total or the tip silently disappears from the books.
+                $tipCents = (int) ($data['tip_amount'] ?? 0);
                 $newTip   = $tipCents > 0 ? round($tipCents / 100, 2) : (float) $fresh->tip;
+
+                $newTotal = round((float) $fresh->subtotal + $newTip, 2);
 
                 $fresh->update([
                     'status'    => 'completed',
