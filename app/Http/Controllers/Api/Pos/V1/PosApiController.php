@@ -143,7 +143,6 @@ class PosApiController extends Controller
         $data = $request->validate([
             'employee_id' => ['required', Rule::exists('employees', 'id')->where('is_active', true)],
             'payment_method' => 'required|in:cash,card',
-            'tip' => 'nullable|numeric|min:0',
             'customer_email' => 'nullable|email',
             'notes' => 'nullable|string|max:1000',
             'items' => 'required|array|min:1',
@@ -160,8 +159,12 @@ class PosApiController extends Controller
         foreach ($data['items'] as $item) {
             $subtotal += ((float) $item['price']) * ($item['quantity'] ?? 1);
         }
-        $tip = (float) ($data['tip'] ?? 0);
-        $total = round($subtotal + $tip, 2);
+
+        // Cash sales never carry a tip. Card tips come from the reader via the
+        // webhook, never from the tablet. Anything a client sends is ignored so
+        // an older installed APK can't reintroduce cash tips.
+        $tip   = 0.0;
+        $total = round($subtotal, 2);
 
         try {
             $order = DB::transaction(function () use ($data, $admin, $subtotal, $tip, $total) {
