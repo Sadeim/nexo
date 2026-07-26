@@ -44,6 +44,9 @@ class EmployeeReportController extends Controller
                 ->whereBetween('created_at', [$fromUtc, $toUtc])
                 ->get();
 
+            $cashOrders = $orders->where('payment_method', 'cash');
+            $cardOrders = $orders->where('payment_method', 'card');
+
             $subtotalSum = (float) $orders->sum('subtotal');
             $tipSum      = (float) $orders->sum('tip');
             $commission  = $employee->commissionOn($subtotalSum);
@@ -58,6 +61,12 @@ class EmployeeReportController extends Controller
                 'orders_count'    => $orders->count(),
                 'subtotal'        => $subtotalSum,
                 'tips'            => $tipSum,
+                // How the money actually came in — what's physically in the
+                // drawer vs what settled to the bank.
+                'cash_total'      => (float) $cashOrders->sum('total'),
+                'cash_tips'       => (float) $cashOrders->sum('tip'),
+                'card_total'      => (float) $cardOrders->sum('total'),
+                'card_tips'       => (float) $cardOrders->sum('tip'),
                 'commission_rate' => (float) $employee->commission_rate,
                 'commission'      => $commission,
                 'earned'          => $earned,
@@ -69,6 +78,10 @@ class EmployeeReportController extends Controller
         $totals = [
             'subtotal'   => (float) $rows->sum('subtotal'),
             'tips'       => (float) $rows->sum('tips'),
+            'cash_total' => (float) $rows->sum('cash_total'),
+            'cash_tips'  => (float) $rows->sum('cash_tips'),
+            'card_total' => (float) $rows->sum('card_total'),
+            'card_tips'  => (float) $rows->sum('card_tips'),
             'commission' => (float) $rows->sum('commission'),
             'earned'     => (float) $rows->sum('earned'),
             'paid'       => (float) $rows->sum('paid'),

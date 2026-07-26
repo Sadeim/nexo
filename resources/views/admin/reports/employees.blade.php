@@ -51,6 +51,8 @@
                                         <th class="text-center">Orders</th>
                                         <th class="text-end">Sales</th>
                                         <th class="text-end">Tips</th>
+                                        <th class="text-end bg-light-success">Cash in</th>
+                                        <th class="text-end bg-light-info">Card in</th>
                                         <th class="text-center">Rate</th>
                                         <th class="text-end">Commission</th>
                                         <th class="text-end">Earned</th>
@@ -66,7 +68,25 @@
                                             <td class="text-center">{{ $r['orders_count'] }}</td>
                                             <td class="text-end">${{ number_format($r['subtotal'], 2) }}</td>
                                             <td class="text-end text-success">${{ number_format($r['tips'], 2) }}</td>
-                                            <td class="text-center">{{ number_format($r['commission_rate'], 2) }}%</td>
+                                            <td class="text-end bg-light-success">
+                                                ${{ number_format($r['cash_total'], 2) }}
+                                                @if ($r['cash_tips'] > 0)
+                                                    <div class="text-muted fs-8">incl. tip ${{ number_format($r['cash_tips'], 2) }}</div>
+                                                @endif
+                                            </td>
+                                            <td class="text-end bg-light-info">
+                                                ${{ number_format($r['card_total'], 2) }}
+                                                @if ($r['card_tips'] > 0)
+                                                    <div class="text-muted fs-8">incl. tip ${{ number_format($r['card_tips'], 2) }}</div>
+                                                @endif
+                                            </td>
+                                            <td class="text-center">
+                                                {{ number_format($r['commission_rate'], 2) }}%
+                                                @if ($r['commission_rate'] == 0)
+                                                    <a href="{{ route('admin.employees.edit', $r['employee']->id) }}"
+                                                       class="d-block fs-8 text-primary" title="Set a commission rate">set</a>
+                                                @endif
+                                            </td>
                                             <td class="text-end">${{ number_format($r['commission'], 2) }}</td>
                                             <td class="text-end fw-bold">${{ number_format($r['earned'], 2) }}</td>
                                             <td class="text-end">${{ number_format($r['paid'], 2) }}</td>
@@ -94,7 +114,7 @@
                                             </td>
                                         </tr>
                                     @empty
-                                        <tr><td colspan="10" class="text-center text-muted py-10">No employees.</td></tr>
+                                        <tr><td colspan="12" class="text-center text-muted py-10">No employees.</td></tr>
                                     @endforelse
                                 </tbody>
                                 <tfoot>
@@ -103,6 +123,8 @@
                                         <td></td>
                                         <td class="text-end">${{ number_format($totals['subtotal'], 2) }}</td>
                                         <td class="text-end text-success">${{ number_format($totals['tips'], 2) }}</td>
+                                        <td class="text-end bg-light-success">${{ number_format($totals['cash_total'], 2) }}</td>
+                                        <td class="text-end bg-light-info">${{ number_format($totals['card_total'], 2) }}</td>
                                         <td></td>
                                         <td class="text-end">${{ number_format($totals['commission'], 2) }}</td>
                                         <td class="text-end">${{ number_format($totals['earned'], 2) }}</td>
