@@ -19,6 +19,7 @@ class PosOrder extends Model
         'admin_id',
         'subtotal',
         'tip',
+        'card_fee',
         'total',
         'payment_method',
         'status',
@@ -37,10 +38,20 @@ class PosOrder extends Model
     protected $casts = [
         'subtotal' => 'decimal:2',
         'tip' => 'decimal:2',
+        'card_fee' => 'decimal:2',
         'total' => 'decimal:2',
         'amount_cents' => 'integer',
         'receipt_sent_at' => 'datetime',
     ];
+
+    /** What the customer is charged: services + card surcharge + tip. */
+    public function getChargeableTotalAttribute(): float
+    {
+        return round(
+            (float) $this->subtotal + (float) $this->card_fee + (float) $this->tip,
+            2
+        );
+    }
 
     /** Card status flow: awaiting_payment → processing → completed | failed | canceled. */
     public const TERMINAL_STATUSES = ['completed', 'failed', 'canceled'];

@@ -50,6 +50,7 @@
                                         <th>Employee</th>
                                         <th class="text-center">Orders</th>
                                         <th class="text-end">Sales</th>
+                                        <th class="text-end">Card fees</th>
                                         <th class="text-end">Tips</th>
                                         <th class="text-end bg-light-success">Cash in</th>
                                         <th class="text-end bg-light-warning">Zelle in</th>
@@ -68,6 +69,10 @@
                                             <td class="fw-bold">{{ $r['employee']->name }}</td>
                                             <td class="text-center">{{ $r['orders_count'] }}</td>
                                             <td class="text-end">${{ number_format($r['subtotal'], 2) }}</td>
+                                            <td class="text-end text-muted"
+                                                title="Surcharge collected on top of the services — kept by the shop, not part of commission">
+                                                {{ $r['card_fees'] > 0 ? '+$' . number_format($r['card_fees'], 2) : '—' }}
+                                            </td>
                                             <td class="text-end text-success">${{ number_format($r['tips'], 2) }}</td>
                                             <td class="text-end bg-light-success">
                                                 ${{ number_format($r['cash_total'], 2) }}
@@ -121,7 +126,7 @@
                                             </td>
                                         </tr>
                                     @empty
-                                        <tr><td colspan="13" class="text-center text-muted py-10">No employees.</td></tr>
+                                        <tr><td colspan="14" class="text-center text-muted py-10">No employees.</td></tr>
                                     @endforelse
                                 </tbody>
                                 <tfoot>
@@ -129,6 +134,9 @@
                                         <td>TOTAL</td>
                                         <td></td>
                                         <td class="text-end">${{ number_format($totals['subtotal'], 2) }}</td>
+                                        <td class="text-end text-muted">
+                                            {{ $totals['card_fees'] > 0 ? '+$' . number_format($totals['card_fees'], 2) : '—' }}
+                                        </td>
                                         <td class="text-end text-success">${{ number_format($totals['tips'], 2) }}</td>
                                         <td class="text-end bg-light-success">${{ number_format($totals['cash_total'], 2) }}</td>
                                         <td class="text-end bg-light-warning">${{ number_format($totals['zelle_total'], 2) }}</td>

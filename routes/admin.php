@@ -41,6 +41,7 @@ use App\Http\Controllers\Admin\EmployeeReportController;
 use App\Http\Controllers\Admin\ReportsController;
 use App\Http\Controllers\Admin\PosOrderController;
 use App\Http\Controllers\Admin\PosServiceController;
+use App\Http\Controllers\Admin\PosSettingController;
 use App\Http\Controllers\Admin\PosTransactionController;
 
 
@@ -91,6 +92,12 @@ Route::group(['middleware' => ['auth:admin', 'admin', 'admin.role'], 'prefix' =>
         ->parameters(['pos-services' => 'pos_service'])
         ->names('pos_services')
         ->except(['show']);
+
+    /* ------------------------------------- POS Settings (card fee, ...) --------------------------------- */
+    Route::group(['prefix' => 'pos-settings', 'as' => 'pos_settings.'], function () {
+        Route::get('/',  [PosSettingController::class, 'index'])->name('index');
+        Route::post('/', [PosSettingController::class, 'update'])->name('update');
+    });
 
     /* ------------------------------------- Reports --------------------------------- */
     Route::group(['prefix' => 'reports', 'as' => 'reports.'], function () {

@@ -10,6 +10,7 @@ use App\Models\PosApiToken;
 use App\Models\PosOrder;
 use App\Models\PosOrderItem;
 use App\Models\PosService;
+use App\Support\PosSettings;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -161,16 +162,23 @@ class PosApiController extends Controller
             $subtotal += ((float) $item['price']) * ($item['quantity'] ?? 1);
         }
         $tip = (float) ($data['tip'] ?? 0);
-        $total = round($subtotal + $tip, 2);
+
+        // Card surcharge ADDED on top of the services — the customer pays it.
+        // Cash and Zelle never carry one. Snapshotted so a later settings
+        // change can't rewrite this order.
+        $cardFee = $data['payment_method'] === 'card' ? PosSettings::cardFee() : 0.0;
+
+        $total = round($subtotal + $cardFee + $tip, 2);
 
         try {
-            $order = DB::transaction(function () use ($data, $admin, $subtotal, $tip, $total) {
+            $order = DB::transaction(function () use ($data, $admin, $subtotal, $tip, $total, $cardFee) {
                 $order = PosOrder::create([
                     'order_number' => PosOrder::generateOrderNumber(),
                     'employee_id' => $data['employee_id'],
                     'admin_id' => $admin->id,
                     'subtotal' => round($subtotal, 2),
                     'tip' => $tip,
+                    'card_fee' => $cardFee,
                     'total' => $total,
                     'payment_method' => $data['payment_method'],
                     'customer_email' => $data['customer_email'] ?? null,
@@ -346,6 +354,7 @@ class PosApiController extends Controller
                 'name' => $order->employee->name,
             ] : null,
             'subtotal' => (float) $order->subtotal,
+            'card_fee' => (float) $order->card_fee,
             'tip' => (float) $order->tip,
             'total' => (float) $order->total,
             'payment_method' => $order->payment_method,

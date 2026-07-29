@@ -106,7 +106,12 @@ class NexoPosWebhookController extends Controller
                 $tipCents = (int) ($data['tip_amount'] ?? 0);
                 $newTip   = $tipCents > 0 ? round($tipCents / 100, 2) : (float) $fresh->tip;
 
-                $newTotal = round((float) $fresh->subtotal + $newTip, 2);
+                // The charge was subtotal + card surcharge; the reader adds the
+                // tip on top of that.
+                $newTotal = round(
+                    (float) $fresh->subtotal + (float) $fresh->card_fee + $newTip,
+                    2
+                );
 
                 $fresh->update([
                     'status'    => 'completed',
