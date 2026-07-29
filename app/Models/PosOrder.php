@@ -20,6 +20,7 @@ class PosOrder extends Model
         'subtotal',
         'tip',
         'card_fee',
+        'tip_remainder',
         'total',
         'payment_method',
         'status',
@@ -39,16 +40,38 @@ class PosOrder extends Model
         'subtotal' => 'decimal:2',
         'tip' => 'decimal:2',
         'card_fee' => 'decimal:2',
+        'tip_remainder' => 'decimal:2',
         'total' => 'decimal:2',
         'amount_cents' => 'integer',
         'receipt_sent_at' => 'datetime',
     ];
 
-    /** What the customer is charged: services + card surcharge + tip. */
+    /**
+     * What the customer actually tipped — the employee's whole-dollar share
+     * plus the fraction the house keeps. Use this on customer-facing receipts.
+     */
+    public function getCustomerTipAttribute(): float
+    {
+        return round((float) $this->tip + (float) $this->tip_remainder, 2);
+    }
+
+    /**
+     * Everything the shop keeps as fees: the card surcharge plus any cents
+     * skimmed off a card tip.
+     */
+    public function getShopFeesAttribute(): float
+    {
+        return round((float) $this->card_fee + (float) $this->tip_remainder, 2);
+    }
+
+    /** What the customer is charged: services + surcharge + full tip. */
     public function getChargeableTotalAttribute(): float
     {
         return round(
-            (float) $this->subtotal + (float) $this->card_fee + (float) $this->tip,
+            (float) $this->subtotal
+            + (float) $this->card_fee
+            + (float) $this->tip
+            + (float) $this->tip_remainder,
             2
         );
     }

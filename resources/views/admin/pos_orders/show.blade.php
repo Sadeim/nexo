@@ -99,8 +99,23 @@
                                     @endif
                                     @if ((float) $order->tip > 0)
                                         <tr>
-                                            <td colspan="3" class="text-end fw-semibold">Tip</td>
+                                            <td colspan="3" class="text-end fw-semibold">
+                                                Tip <span class="text-muted fw-normal fs-8">(to {{ $order->employee->name ?? 'employee' }})</span>
+                                            </td>
                                             <td class="text-end fw-semibold">${{ number_format((float) $order->tip, 2) }}</td>
+                                        </tr>
+                                    @endif
+                                    @if ((float) $order->tip_remainder > 0)
+                                        <tr>
+                                            <td colspan="3" class="text-end fw-semibold text-primary">
+                                                Tip cents
+                                                <span class="text-muted fw-normal fs-8">
+                                                    (fraction of the ${{ number_format($order->customer_tip, 2) }} tip — kept by the shop)
+                                                </span>
+                                            </td>
+                                            <td class="text-end fw-semibold text-primary">
+                                                +${{ number_format((float) $order->tip_remainder, 2) }}
+                                            </td>
                                         </tr>
                                     @endif
                                     <tr>

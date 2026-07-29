@@ -243,7 +243,7 @@ class CardPaymentController extends Controller
             'failure_reason' => $order->failure_reason,
             'subtotal'       => (float) $order->subtotal,
             'card_fee'       => (float) $order->card_fee,
-            'tip'            => (float) $order->tip,
+            'tip'            => (float) $order->customer_tip,
             'total'          => (float) $order->total,
         ]);
     }

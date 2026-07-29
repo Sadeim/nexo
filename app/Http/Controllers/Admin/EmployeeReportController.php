@@ -51,10 +51,12 @@ class EmployeeReportController extends Controller
             $subtotalSum = (float) $orders->sum('subtotal');
             $tipSum      = (float) $orders->sum('tip');
 
-            // Card surcharges are collected ON TOP of the services and belong
-            // to the shop, so they're shown for reference but never enter the
-            // employee's commission base.
-            $feesSum = (float) $orders->sum('card_fee');
+            // Shop fees: the card surcharge plus the cents skimmed off card
+            // tips. Collected on top of the services, so they're shown for
+            // reference but never enter the employee's commission base.
+            // `tip` already holds only the employee's whole-dollar share.
+            $feesSum = (float) $orders->sum('card_fee')
+                     + (float) $orders->sum('tip_remainder');
 
             $commission = $employee->commissionOn($subtotalSum);
             $earned     = round($commission + $tipSum, 2);

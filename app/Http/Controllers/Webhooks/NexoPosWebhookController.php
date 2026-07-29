@@ -103,21 +103,37 @@ class NexoPosWebhookController extends Controller
                 // reports the customer's tip separately in `tip_amount`. So the
                 // real charge is subtotal + tip; never trust `amount` as the
                 // final total or the tip silently disappears from the books.
+                // House rule: a card tip is credited to the employee in whole
+                // dollars and the fraction joins the shop's fees. $12.70 tip →
+                // $12.00 to the employee, $0.70 to fees. Split in integer cents
+                // so no float rounding can leak a cent either way.
                 $tipCents = (int) ($data['tip_amount'] ?? 0);
-                $newTip   = $tipCents > 0 ? round($tipCents / 100, 2) : (float) $fresh->tip;
 
-                // The charge was subtotal + card surcharge; the reader adds the
-                // tip on top of that.
+                if ($tipCents > 0) {
+                    $employeeTipCents = intdiv($tipCents, 100) * 100;
+                    $remainderCents   = $tipCents - $employeeTipCents;
+                } else {
+                    // No tip reported — keep whatever was already recorded.
+                    $employeeTipCents = (int) round((float) $fresh->tip * 100);
+                    $remainderCents   = (int) round((float) $fresh->tip_remainder * 100);
+                }
+
+                $newTip       = round($employeeTipCents / 100, 2);
+                $newRemainder = round($remainderCents / 100, 2);
+
+                // The charge was subtotal + surcharge; the reader adds the full
+                // tip (employee share + remainder) on top of that.
                 $newTotal = round(
-                    (float) $fresh->subtotal + (float) $fresh->card_fee + $newTip,
+                    (float) $fresh->subtotal + (float) $fresh->card_fee + $newTip + $newRemainder,
                     2
                 );
 
                 $fresh->update([
-                    'status'    => 'completed',
-                    'reference' => $data['reference'] ?? $fresh->reference,
-                    'tip'       => $newTip,
-                    'total'     => $newTotal,
+                    'status'        => 'completed',
+                    'reference'     => $data['reference'] ?? $fresh->reference,
+                    'tip'           => $newTip,
+                    'tip_remainder' => $newRemainder,
+                    'total'         => $newTotal,
                 ]);
 
                 $this->sendReceiptIfRequested($fresh->fresh(['items', 'employee']));
