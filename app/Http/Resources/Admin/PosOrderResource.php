@@ -22,11 +22,17 @@ class PosOrderResource extends JsonResource
             ? '$' . number_format($tip, 2)
             : '<span class="text-muted">—</span>';
 
+        $fee = (float) $this->card_fee;
+        $feeCell = $fee > 0
+            ? '<span class="text-primary">+$' . number_format($fee, 2) . '</span>'
+            : '<span class="text-muted">—</span>';
+
         return [
             'order_number' => e($this->order_number),
             'employee'     => e($this->employee->name ?? '—'),
             'cashier'      => e($this->admin->name ?? $this->admin->email ?? '—'),
             'subtotal'     => '$' . number_format((float) $this->subtotal, 2),
+            'card_fee'     => $feeCell,
             'tip'          => $tipCell,
             'total'        => '$' . number_format((float) $this->total, 2),
             'method'       => $methodBadge,
