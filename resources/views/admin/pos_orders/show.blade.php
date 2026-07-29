@@ -86,6 +86,17 @@
                                         <td colspan="3" class="text-end fw-semibold">Subtotal</td>
                                         <td class="text-end fw-semibold">${{ number_format((float) $order->subtotal, 2) }}</td>
                                     </tr>
+                                    @if ((float) $order->card_fee > 0)
+                                        <tr>
+                                            <td colspan="3" class="text-end fw-semibold text-primary">
+                                                Card fee
+                                                <span class="text-muted fw-normal fs-8">(surcharge, kept by the shop)</span>
+                                            </td>
+                                            <td class="text-end fw-semibold text-primary">
+                                                +${{ number_format((float) $order->card_fee, 2) }}
+                                            </td>
+                                        </tr>
+                                    @endif
                                     @if ((float) $order->tip > 0)
                                         <tr>
                                             <td colspan="3" class="text-end fw-semibold">Tip</td>

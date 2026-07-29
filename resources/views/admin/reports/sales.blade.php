@@ -60,6 +60,7 @@
                             $kpi('Cash',         '$' . number_format($totals['cash'], 2), $totals['cash_count'] . ' orders', 'success'),
                             $kpi('Zelle',        '$' . number_format($totals['zelle'], 2), $totals['zelle_count'] . ' orders', 'warning'),
                             $kpi('Card',         '$' . number_format($totals['card'], 2), $totals['card_count'] . ' orders', 'info'),
+                            $kpi('Card fees',    '$' . number_format($totals['card_fees'], 2), 'surcharge collected', 'primary'),
                             $kpi('Avg. ticket',  '$' . number_format($totals['avg_ticket'], 2), null, 'dark'),
                         ];
                     @endphp
@@ -89,6 +90,7 @@
                                         <th>Date</th>
                                         <th class="text-center">Orders</th>
                                         <th class="text-end">Subtotal</th>
+                                        <th class="text-end">Card fees</th>
                                         <th class="text-end">Tips</th>
                                         <th class="text-end">Cash</th>
                                         <th class="text-end">Zelle</th>
@@ -102,6 +104,9 @@
                                             <td class="fw-bold">{{ \Carbon\Carbon::parse($d['date'])->format('D, M j Y') }}</td>
                                             <td class="text-center">{{ $d['orders'] }}</td>
                                             <td class="text-end">${{ number_format($d['subtotal'], 2) }}</td>
+                                            <td class="text-end {{ $d['card_fees'] > 0 ? 'text-primary' : 'text-muted' }}">
+                                                {{ $d['card_fees'] > 0 ? '+$' . number_format($d['card_fees'], 2) : '—' }}
+                                            </td>
                                             <td class="text-end text-success">${{ number_format($d['tips'], 2) }}</td>
                                             <td class="text-end">${{ number_format($d['cash'], 2) }}</td>
                                             <td class="text-end">${{ number_format($d['zelle'], 2) }}</td>
@@ -109,7 +114,7 @@
                                             <td class="text-end fw-bold">${{ number_format($d['total'], 2) }}</td>
                                         </tr>
                                     @empty
-                                        <tr><td colspan="8" class="text-center text-muted py-10">No sales in this range.</td></tr>
+                                        <tr><td colspan="9" class="text-center text-muted py-10">No sales in this range.</td></tr>
                                     @endforelse
                                 </tbody>
                             </table>

@@ -64,6 +64,7 @@
                                                 <th>Employee</th>
                                                 <th>Cashier</th>
                                                 <th>Subtotal</th>
+                                                <th>Card fee</th>
                                                 <th>Tip</th>
                                                 <th>Total</th>
                                                 <th>Method</th>
@@ -92,6 +93,7 @@
             { data: 'employee' },
             { data: 'cashier' },
             { data: 'subtotal' },
+            { data: 'card_fee' },
             { data: 'tip' },
             { data: 'total' },
             { data: 'method' },
