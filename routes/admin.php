@@ -43,6 +43,7 @@ use App\Http\Controllers\Admin\PosOrderController;
 use App\Http\Controllers\Admin\PosServiceController;
 use App\Http\Controllers\Admin\PosSettingController;
 use App\Http\Controllers\Admin\PosTransactionController;
+use App\Http\Controllers\Admin\TransactionsController;
 
 
 /* ------------------------------------- Auth Routes --------------------------------- */
@@ -74,6 +75,9 @@ Route::group(['middleware' => ['auth:admin', 'admin', 'admin.role'], 'prefix' =>
         Route::get('data/datatables', [PosOrderController::class, 'datatable'])->name('datatable');
         Route::get('{id}', [PosOrderController::class, 'show'])->name('show');
     });
+
+    /* ------------------------------------- Transactions (full POS ledger) --------------------------------- */
+    Route::get('transactions', [TransactionsController::class, 'index'])->name('transactions.index');
 
     /* ------------------------------------- Employees (POS "who served") --------------------------------- */
     Route::group(['prefix' => 'employees', 'as' => 'employees.'], function () {
