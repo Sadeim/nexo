@@ -21,6 +21,7 @@
                                         <th>Cashier</th>
                                         <th class="text-center">Orders</th>
                                         <th class="text-end">Cash</th>
+                                        <th class="text-end">Zelle</th>
                                         <th class="text-end">Card</th>
                                         <th class="text-end">Tips</th>
                                         <th class="text-end">Gross</th>
@@ -37,12 +38,13 @@
                                             </td>
                                             <td class="text-center">{{ $r['orders'] }}</td>
                                             <td class="text-end">${{ number_format($r['cash'], 2) }}</td>
+                                            <td class="text-end">${{ number_format($r['zelle'], 2) }}</td>
                                             <td class="text-end">${{ number_format($r['card'], 2) }}</td>
                                             <td class="text-end text-success">${{ number_format($r['tips'], 2) }}</td>
                                             <td class="text-end fw-bold">${{ number_format($r['gross'], 2) }}</td>
                                         </tr>
                                     @empty
-                                        <tr><td colspan="6" class="text-center text-muted py-10">No sales in this range.</td></tr>
+                                        <tr><td colspan="7" class="text-center text-muted py-10">No sales in this range.</td></tr>
                                     @endforelse
                                 </tbody>
                                 <tfoot>
@@ -50,6 +52,7 @@
                                         <td>TOTAL</td>
                                         <td class="text-center">{{ $totals['orders'] }}</td>
                                         <td class="text-end">${{ number_format($totals['cash'], 2) }}</td>
+                                        <td class="text-end">${{ number_format($totals['zelle'], 2) }}</td>
                                         <td class="text-end">${{ number_format($totals['card'], 2) }}</td>
                                         <td class="text-end text-success">${{ number_format($totals['tips'], 2) }}</td>
                                         <td class="text-end">${{ number_format($totals['gross'], 2) }}</td>

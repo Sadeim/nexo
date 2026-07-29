@@ -38,6 +38,7 @@ Route::group(['prefix' => 'api/pos/v1', 'as' => 'pos.api.'], function () {
         Route::get('orders/{id}', [PosApiController::class, 'showOrder'])->name('orders.show');
         Route::post('orders/{id}/email-receipt', [PosApiController::class, 'emailReceipt'])->name('orders.email-receipt');
         Route::patch('orders/{id}/employee', [PosApiController::class, 'updateOrderEmployee'])->name('orders.employee');
+        Route::delete('orders/{id}', [PosApiController::class, 'destroyOrder'])->name('orders.destroy');
 
         // Card (PlutoPay Terminal) — server-driven flow, sandbox only for now.
         Route::get('card/readers', [CardPaymentController::class, 'readers'])->name('card.readers');

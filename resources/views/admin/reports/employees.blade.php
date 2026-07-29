@@ -52,6 +52,7 @@
                                         <th class="text-end">Sales</th>
                                         <th class="text-end">Tips</th>
                                         <th class="text-end bg-light-success">Cash in</th>
+                                        <th class="text-end bg-light-warning">Zelle in</th>
                                         <th class="text-end bg-light-info">Card in</th>
                                         <th class="text-center">Rate</th>
                                         <th class="text-end">Commission</th>
@@ -72,6 +73,12 @@
                                                 ${{ number_format($r['cash_total'], 2) }}
                                                 @if ($r['cash_tips'] > 0)
                                                     <div class="text-muted fs-8">incl. tip ${{ number_format($r['cash_tips'], 2) }}</div>
+                                                @endif
+                                            </td>
+                                            <td class="text-end bg-light-warning">
+                                                ${{ number_format($r['zelle_total'], 2) }}
+                                                @if ($r['zelle_tips'] > 0)
+                                                    <div class="text-muted fs-8">incl. tip ${{ number_format($r['zelle_tips'], 2) }}</div>
                                                 @endif
                                             </td>
                                             <td class="text-end bg-light-info">
@@ -114,7 +121,7 @@
                                             </td>
                                         </tr>
                                     @empty
-                                        <tr><td colspan="12" class="text-center text-muted py-10">No employees.</td></tr>
+                                        <tr><td colspan="13" class="text-center text-muted py-10">No employees.</td></tr>
                                     @endforelse
                                 </tbody>
                                 <tfoot>
@@ -124,6 +131,7 @@
                                         <td class="text-end">${{ number_format($totals['subtotal'], 2) }}</td>
                                         <td class="text-end text-success">${{ number_format($totals['tips'], 2) }}</td>
                                         <td class="text-end bg-light-success">${{ number_format($totals['cash_total'], 2) }}</td>
+                                        <td class="text-end bg-light-warning">${{ number_format($totals['zelle_total'], 2) }}</td>
                                         <td class="text-end bg-light-info">${{ number_format($totals['card_total'], 2) }}</td>
                                         <td></td>
                                         <td class="text-end">${{ number_format($totals['commission'], 2) }}</td>

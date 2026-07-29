@@ -142,7 +142,7 @@ class PosApiController extends Controller
     {
         $data = $request->validate([
             'employee_id' => ['required', Rule::exists('employees', 'id')->where('is_active', true)],
-            'payment_method' => 'required|in:cash,card',
+            'payment_method' => 'required|in:cash,card,zelle',
             'tip' => 'nullable|numeric|min:0',
             'customer_email' => 'nullable|email',
             'notes' => 'nullable|string|max:1000',
@@ -265,6 +265,41 @@ class PosApiController extends Controller
             'success' => true,
             'order'   => $this->serializeOrder($order->fresh(['items', 'employee'])),
         ]);
+    }
+
+    /**
+     * Delete a mistyped order — behind the same PIN as reassigning an employee.
+     *
+     * Card sales are NOT deletable here: the money already moved through
+     * PlutoPay, so removing our row would silently desync the books from the
+     * processor. Those need a refund on the reader instead.
+     */
+    public function destroyOrder(Request $request, $id)
+    {
+        $data = $request->validate([
+            'pin' => 'required|string|max:32',
+        ]);
+
+        $expected = (string) config('nexo_pos.edit_order_pin', '1975');
+        if (!hash_equals($expected, (string) $data['pin'])) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Wrong PIN.',
+            ], 403);
+        }
+
+        $order = PosOrder::findOrFail($id);
+
+        if ($order->payment_method === 'card') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Card orders cannot be deleted — refund it on the reader instead.',
+            ], 422);
+        }
+
+        $order->delete(); // order items cascade
+
+        return response()->json(['success' => true]);
     }
 
     public function emailReceipt(Request $request, $id)

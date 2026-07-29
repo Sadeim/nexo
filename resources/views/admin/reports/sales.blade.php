@@ -51,8 +51,9 @@
                             $kpi('Orders',       $totals['orders']),
                             $kpi('Gross',        '$' . number_format($totals['gross'], 2), 'Subtotal $' . number_format($totals['subtotal'], 2) . ' + Tips $' . number_format($totals['tips'], 2)),
                             $kpi('Cash',         '$' . number_format($totals['cash'], 2), $totals['cash_count'] . ' orders', 'success'),
+                            $kpi('Zelle',        '$' . number_format($totals['zelle'], 2), $totals['zelle_count'] . ' orders', 'warning'),
                             $kpi('Card',         '$' . number_format($totals['card'], 2), $totals['card_count'] . ' orders', 'info'),
-                            $kpi('Avg. ticket',  '$' . number_format($totals['avg_ticket'], 2), null, 'warning'),
+                            $kpi('Avg. ticket',  '$' . number_format($totals['avg_ticket'], 2), null, 'dark'),
                         ];
                     @endphp
                     @foreach ($kpis as $k)
@@ -83,6 +84,7 @@
                                         <th class="text-end">Subtotal</th>
                                         <th class="text-end">Tips</th>
                                         <th class="text-end">Cash</th>
+                                        <th class="text-end">Zelle</th>
                                         <th class="text-end">Card</th>
                                         <th class="text-end">Total</th>
                                     </tr>
@@ -95,11 +97,12 @@
                                             <td class="text-end">${{ number_format($d['subtotal'], 2) }}</td>
                                             <td class="text-end text-success">${{ number_format($d['tips'], 2) }}</td>
                                             <td class="text-end">${{ number_format($d['cash'], 2) }}</td>
+                                            <td class="text-end">${{ number_format($d['zelle'], 2) }}</td>
                                             <td class="text-end">${{ number_format($d['card'], 2) }}</td>
                                             <td class="text-end fw-bold">${{ number_format($d['total'], 2) }}</td>
                                         </tr>
                                     @empty
-                                        <tr><td colspan="7" class="text-center text-muted py-10">No sales in this range.</td></tr>
+                                        <tr><td colspan="8" class="text-center text-muted py-10">No sales in this range.</td></tr>
                                     @endforelse
                                 </tbody>
                             </table>

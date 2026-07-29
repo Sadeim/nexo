@@ -31,6 +31,7 @@
                                     <select id="f_method" class="form-select form-select-sm">
                                         <option value="">All</option>
                                         <option value="cash">Cash</option>
+                                        <option value="zelle">Zelle</option>
                                         <option value="card">Card</option>
                                     </select>
                                 </div>

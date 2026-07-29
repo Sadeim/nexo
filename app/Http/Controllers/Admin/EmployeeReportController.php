@@ -44,8 +44,9 @@ class EmployeeReportController extends Controller
                 ->whereBetween('created_at', [$fromUtc, $toUtc])
                 ->get();
 
-            $cashOrders = $orders->where('payment_method', 'cash');
-            $cardOrders = $orders->where('payment_method', 'card');
+            $cashOrders  = $orders->where('payment_method', 'cash');
+            $cardOrders  = $orders->where('payment_method', 'card');
+            $zelleOrders = $orders->where('payment_method', 'zelle');
 
             $subtotalSum = (float) $orders->sum('subtotal');
             $tipSum      = (float) $orders->sum('tip');
@@ -65,6 +66,8 @@ class EmployeeReportController extends Controller
                 // drawer vs what settled to the bank.
                 'cash_total'      => (float) $cashOrders->sum('total'),
                 'cash_tips'       => (float) $cashOrders->sum('tip'),
+                'zelle_total'     => (float) $zelleOrders->sum('total'),
+                'zelle_tips'      => (float) $zelleOrders->sum('tip'),
                 'card_total'      => (float) $cardOrders->sum('total'),
                 'card_tips'       => (float) $cardOrders->sum('tip'),
                 'commission_rate' => (float) $employee->commission_rate,
@@ -78,10 +81,12 @@ class EmployeeReportController extends Controller
         $totals = [
             'subtotal'   => (float) $rows->sum('subtotal'),
             'tips'       => (float) $rows->sum('tips'),
-            'cash_total' => (float) $rows->sum('cash_total'),
-            'cash_tips'  => (float) $rows->sum('cash_tips'),
-            'card_total' => (float) $rows->sum('card_total'),
-            'card_tips'  => (float) $rows->sum('card_tips'),
+            'cash_total'  => (float) $rows->sum('cash_total'),
+            'cash_tips'   => (float) $rows->sum('cash_tips'),
+            'zelle_total' => (float) $rows->sum('zelle_total'),
+            'zelle_tips'  => (float) $rows->sum('zelle_tips'),
+            'card_total'  => (float) $rows->sum('card_total'),
+            'card_tips'   => (float) $rows->sum('card_tips'),
             'commission' => (float) $rows->sum('commission'),
             'earned'     => (float) $rows->sum('earned'),
             'paid'       => (float) $rows->sum('paid'),
