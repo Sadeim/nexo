@@ -236,7 +236,7 @@ class PosApiController extends Controller
         $limit = max(1, min(50, $limit));
 
         $orders = PosOrder::with(['items', 'employee'])
-            ->where('status', 'completed')
+            ->settled()
             ->orderByDesc('id')
             ->limit($limit)
             ->get();

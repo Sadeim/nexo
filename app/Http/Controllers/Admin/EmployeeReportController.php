@@ -40,7 +40,7 @@ class EmployeeReportController extends Controller
 
         $rows = $employees->map(function (Employee $employee) use ($fromUtc, $toUtc) {
             $orders = PosOrder::where('employee_id', $employee->id)
-                ->where('status', 'completed')
+                ->settled()
                 ->whereBetween('created_at', [$fromUtc, $toUtc])
                 ->get();
 

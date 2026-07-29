@@ -109,7 +109,23 @@ class PosOrder extends Model
     }
 
     /**
-     * Completed orders whose created_at falls inside [from-startOfDay,
+     * The ONLY orders that may appear in any listing, report or total.
+     *
+     * A card sale sits at awaiting_payment/processing until PlutoPay's webhook
+     * confirms it, and may end at failed/canceled — money never moved on those.
+     * Counting them anywhere would overstate takings and pay employees for
+     * sales that never happened, so every read path funnels through here.
+     *
+     * Deliberately NOT a global scope: the card flow itself has to find its own
+     * pending rows by idempotency key to drive and settle them.
+     */
+    public function scopeSettled($query)
+    {
+        return $query->where('status', 'completed');
+    }
+
+    /**
+     * Settled orders whose created_at falls inside [from-startOfDay,
      * to-endOfDay] in the CALLER's timezone. The boundaries are converted to
      * UTC before the query is issued so a Chicago "today" doesn't leak into
      * the previous UTC day on the DB side.
@@ -117,7 +133,7 @@ class PosOrder extends Model
     public function scopeCompletedIn($query, \Carbon\Carbon $from, \Carbon\Carbon $to)
     {
         return $query
-            ->where('status', 'completed')
+            ->settled()
             ->whereBetween('created_at', [
                 $from->copy()->startOfDay()->utc(),
                 $to->copy()->endOfDay()->utc(),

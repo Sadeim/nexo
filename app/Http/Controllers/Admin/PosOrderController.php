@@ -22,7 +22,8 @@ class PosOrderController extends Controller
 
     public function datatable(Request $request)
     {
-        $items = PosOrder::query()->with(['employee', 'admin']);
+        // Settled only — a card sale that never cleared is not a sale.
+        $items = PosOrder::query()->settled()->with(['employee', 'admin']);
 
         if ($request->filled('employee_id')) {
             $items->where('employee_id', $request->employee_id);

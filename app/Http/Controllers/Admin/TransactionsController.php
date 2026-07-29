@@ -17,6 +17,10 @@ use Illuminate\Http\Request;
  * a separate `pos_transactions` table with a different shape and no employee
  * attribution, so mixing the two here would produce numbers that don't
  * reconcile; it keeps its own screen.
+ *
+ * Only SETTLED orders are listed. A card sale that is still awaiting_payment /
+ * processing, or that ended failed / canceled, never moved money and must not
+ * show up in any list or total.
  */
 class TransactionsController extends Controller
 {
@@ -28,6 +32,7 @@ class TransactionsController extends Controller
         [$from, $to] = $this->parseRange($request, defaultDays: 29);
 
         $query = PosOrder::query()
+            ->settled()
             ->with(['items', 'employee', 'admin'])
             ->whereBetween('created_at', [
                 $from->copy()->startOfDay()->utc(),
@@ -42,9 +47,6 @@ class TransactionsController extends Controller
         }
         if ($request->filled('payment_method')) {
             $query->where('payment_method', $request->payment_method);
-        }
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
         }
         if ($request->filled('q')) {
             $term = trim($request->q);

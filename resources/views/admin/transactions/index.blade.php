@@ -8,7 +8,8 @@
                 <div class="page-content-header mb-5">
                     <h2 class="table-title">Transactions</h2>
                     <div class="text-muted fs-8 mt-1">
-                        Every field of every sale taken on the POS tablet.
+                        Every field of every <strong>settled</strong> sale taken on the POS tablet.
+                        Card payments that never cleared are excluded from this list and from every total.
                     </div>
                 </div>
 
@@ -51,23 +52,13 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-2">
-                                <label class="fs-8 fw-semibold mb-1">Status</label>
-                                <select name="status" class="form-select form-select-sm">
-                                    <option value="">All</option>
-                                    @foreach (['completed', 'awaiting_payment', 'processing', 'failed', 'canceled'] as $s)
-                                        <option value="{{ $s }}" @selected(request('status') === $s)>{{ ucfirst(str_replace('_', ' ', $s)) }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
                             <div class="col-md-4">
                                 <label class="fs-8 fw-semibold mb-1">Search</label>
                                 <input type="text" name="q" value="{{ request('q') }}"
                                        class="form-control form-control-sm"
                                        placeholder="Order #, customer email, reference, payment intent">
                             </div>
-                            <div class="col-md-8 d-flex flex-wrap gap-2">
+                            <div class="col-md-6 d-flex flex-wrap gap-2">
                                 <button class="btn btn-sm btn-primary">Apply</button>
                                 <a href="{{ route('admin.transactions.index') }}" class="btn btn-sm btn-light">Reset</a>
                                 <a href="{{ route('admin.transactions.index', ['from' => now()->toDateString(), 'to' => now()->toDateString()]) }}" class="btn btn-sm btn-light">Today</a>
@@ -119,8 +110,6 @@
                                         <th class="text-end">Tip</th>
                                         <th class="text-end">Total</th>
                                         <th class="text-center">Method</th>
-                                        <th class="text-center">Status</th>
-                                        <th>Customer / ref</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -131,11 +120,6 @@
                                                 'cash'  => 'badge-light-success',
                                                 'zelle' => 'badge-light-warning',
                                                 default => 'badge-light-info',
-                                            };
-                                            $statusClass = match ($o->status) {
-                                                'completed' => 'badge-light-success',
-                                                'failed', 'canceled' => 'badge-light-danger',
-                                                default => 'badge-light-warning',
                                             };
                                             $fees = (float) $o->card_fee + (float) $o->tip_remainder;
                                         @endphp
@@ -176,32 +160,12 @@
                                             <td class="text-center">
                                                 <span class="badge {{ $methodClass }} text-uppercase">{{ $o->payment_method }}</span>
                                             </td>
-                                            <td class="text-center">
-                                                <span class="badge {{ $statusClass }}">{{ str_replace('_', ' ', $o->status) }}</span>
-                                                @if ($o->failure_reason)
-                                                    <div class="fs-9 text-danger">{{ $o->failure_reason }}</div>
-                                                @endif
-                                            </td>
-                                            <td class="text-muted fs-8" style="max-width: 180px; word-break: break-all;">
-                                                @if ($o->customer_email)
-                                                    <div>{{ $o->customer_email }}</div>
-                                                @endif
-                                                @if ($o->reference)
-                                                    <div>{{ $o->reference }}</div>
-                                                @endif
-                                                @if ($o->payment_intent_id)
-                                                    <div>{{ $o->payment_intent_id }}</div>
-                                                @endif
-                                                @if (!$o->customer_email && !$o->reference && !$o->payment_intent_id)
-                                                    —
-                                                @endif
-                                            </td>
                                             <td class="text-end">
                                                 <a href="{{ route('admin.pos_orders.show', $o->id) }}" class="btn btn-sm btn-light">View</a>
                                             </td>
                                         </tr>
                                     @empty
-                                        <tr><td colspan="13" class="text-center text-muted py-10">No transactions match these filters.</td></tr>
+                                        <tr><td colspan="11" class="text-center text-muted py-10">No transactions match these filters.</td></tr>
                                     @endforelse
                                 </tbody>
                             </table>
