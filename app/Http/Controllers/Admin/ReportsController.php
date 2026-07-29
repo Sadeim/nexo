@@ -123,6 +123,7 @@ class ReportsController extends Controller
                     'cash'     => (float) $group->where('payment_method', 'cash')->sum('total'),
                     'zelle'    => (float) $group->where('payment_method', 'zelle')->sum('total'),
                     'card'     => (float) $group->where('payment_method', 'card')->sum('total'),
+                    'fees'     => (float) $group->sum('card_fee') + (float) $group->sum('tip_remainder'),
                     'tips'     => (float) $group->sum('tip'),
                 ];
             })
@@ -135,6 +136,7 @@ class ReportsController extends Controller
             'cash'   => (float) $rows->sum('cash'),
             'zelle'  => (float) $rows->sum('zelle'),
             'card'   => (float) $rows->sum('card'),
+            'fees'   => (float) $rows->sum('fees'),
             'tips'   => (float) $rows->sum('tips'),
         ];
 
