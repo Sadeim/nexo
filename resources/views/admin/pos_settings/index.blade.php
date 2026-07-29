@@ -52,8 +52,16 @@
                                                 the shop's and never enters their commission. Any tip the
                                                 customer adds on the reader is on top of that.
                                             </div>
+                                            <div class="mt-2">
+                                                <strong>Tip cents also go to fees.</strong> A card tip is credited
+                                                to the employee in whole dollars only — a <strong>$12.70</strong>
+                                                tip pays the employee <strong>$12.00</strong> and the
+                                                <strong>$0.70</strong> joins the fees. On the example above the
+                                                fees for that sale total <strong>$1.70</strong>.
+                                            </div>
                                             <div class="mt-2 text-muted">
-                                                <strong>Card only</strong> — cash and Zelle sales never carry a fee.
+                                                <strong>Card only</strong> — cash and Zelle sales carry no fee and
+                                                their tips are never rounded.
                                                 The fee in force is saved on each order when it is created, so
                                                 changing this value never rewrites past reports.
                                             </div>

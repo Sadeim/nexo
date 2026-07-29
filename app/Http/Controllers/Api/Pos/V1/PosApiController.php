@@ -354,8 +354,10 @@ class PosApiController extends Controller
                 'name' => $order->employee->name,
             ] : null,
             'subtotal' => (float) $order->subtotal,
-            'card_fee' => (float) $order->card_fee,
-            'tip' => (float) $order->tip,
+            // Surcharge + cents skimmed off a card tip: one number for the app.
+            'card_fee' => (float) $order->shop_fees,
+            // What the customer tipped, not the employee's whole-dollar share.
+            'tip' => (float) $order->customer_tip,
             'total' => (float) $order->total,
             'payment_method' => $order->payment_method,
             'customer_email' => $order->customer_email,

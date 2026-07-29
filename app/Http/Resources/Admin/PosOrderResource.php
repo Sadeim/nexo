@@ -22,7 +22,8 @@ class PosOrderResource extends JsonResource
             ? '$' . number_format($tip, 2)
             : '<span class="text-muted">—</span>';
 
-        $fee = (float) $this->card_fee;
+        // Surcharge + any cents skimmed off a card tip.
+        $fee = (float) $this->shop_fees;
         $feeCell = $fee > 0
             ? '<span class="text-primary">+$' . number_format($fee, 2) . '</span>'
             : '<span class="text-muted">—</span>';

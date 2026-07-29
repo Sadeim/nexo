@@ -52,10 +52,11 @@
                 <td style="padding: 4px 0; text-align: right;">${{ number_format($order->card_fee, 2) }}</td>
             </tr>
             @endif
-            @if ((float) $order->tip > 0)
+            {{-- Customers see the tip they actually gave, not our internal split. --}}
+            @if ($order->customer_tip > 0)
             <tr>
                 <td style="padding: 4px 0; color: #555;">Tip</td>
-                <td style="padding: 4px 0; text-align: right;">${{ number_format($order->tip, 2) }}</td>
+                <td style="padding: 4px 0; text-align: right;">${{ number_format($order->customer_tip, 2) }}</td>
             </tr>
             @endif
             <tr>
