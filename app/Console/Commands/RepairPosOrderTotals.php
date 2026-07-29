@@ -29,27 +29,28 @@ class RepairPosOrderTotals extends Command
         $dryRun = (bool) $this->option('dry-run');
 
         $mismatched = PosOrder::query()
-            ->whereRaw('ROUND(total, 2) <> ROUND(subtotal + tip, 2)')
+            ->whereRaw('ROUND(total, 2) <> ROUND(subtotal + card_fee + tip, 2)')
             ->orderBy('id')
             ->get();
 
         if ($mismatched->isEmpty()) {
-            $this->info('Nothing to repair — every order already has total = subtotal + tip.');
+            $this->info('Nothing to repair — every order already has total = subtotal + card_fee + tip.');
             return self::SUCCESS;
         }
 
-        $this->warn($mismatched->count() . ' order(s) have a total that disagrees with subtotal + tip:');
+        $this->warn($mismatched->count() . ' order(s) have a total that disagrees with subtotal + card_fee + tip:');
 
         $rows = [];
         $delta = 0.0;
         foreach ($mismatched as $o) {
-            $correct = round((float) $o->subtotal + (float) $o->tip, 2);
+            $correct = round((float) $o->subtotal + (float) $o->card_fee + (float) $o->tip, 2);
             $delta += $correct - (float) $o->total;
             $rows[] = [
                 $o->id,
                 $o->order_number,
                 $o->payment_method,
                 number_format((float) $o->subtotal, 2),
+                number_format((float) $o->card_fee, 2),
                 number_format((float) $o->tip, 2),
                 number_format((float) $o->total, 2),
                 number_format($correct, 2),
@@ -57,7 +58,7 @@ class RepairPosOrderTotals extends Command
         }
 
         $this->table(
-            ['ID', 'Order #', 'Method', 'Subtotal', 'Tip', 'Total (old)', 'Total (fixed)'],
+            ['ID', 'Order #', 'Method', 'Subtotal', 'Card fee', 'Tip', 'Total (old)', 'Total (fixed)'],
             $rows
         );
         $this->line('Net change to reported gross: $' . number_format($delta, 2));
@@ -70,7 +71,7 @@ class RepairPosOrderTotals extends Command
         $fixed = 0;
         foreach ($mismatched as $o) {
             $o->forceFill([
-                'total' => round((float) $o->subtotal + (float) $o->tip, 2),
+                'total' => round((float) $o->subtotal + (float) $o->card_fee + (float) $o->tip, 2),
             ])->save();
             $fixed++;
         }

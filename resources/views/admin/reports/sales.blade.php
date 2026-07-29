@@ -13,7 +13,7 @@
                 @include('admin.reports._filter', ['route' => 'admin.reports.sales'])
 
                 @php
-                    $expectedGross = round($totals['subtotal'] + $totals['tips'], 2);
+                    $expectedGross = round($totals['subtotal'] + $totals['card_fees'] + $totals['tips'], 2);
                     $grossDrift    = round($expectedGross - $totals['gross'], 2);
                 @endphp
                 @if (abs($grossDrift) >= 0.01)
@@ -22,13 +22,14 @@
                         <div>
                             <strong>Totals don't add up.</strong>
                             Subtotal (${{ number_format($totals['subtotal'], 2) }})
+                            + Card fees (${{ number_format($totals['card_fees'], 2) }})
                             + Tips (${{ number_format($totals['tips'], 2) }})
                             = ${{ number_format($expectedGross, 2) }},
                             but Gross reads ${{ number_format($totals['gross'], 2) }}
                             — a ${{ number_format(abs($grossDrift), 2) }} gap.
                             <div class="fs-8 mt-1">
                                 Some orders have a stored <code>total</code> that isn't
-                                <code>subtotal + tip</code>. Fix them on the server with
+                                <code>subtotal + card_fee + tip</code>. Fix them on the server with
                                 <code>php artisan nexo-pos:repair-totals</code>
                                 (add <code>--dry-run</code> first to preview).
                             </div>
@@ -49,7 +50,13 @@
                         };
                         $kpis = [
                             $kpi('Orders',       $totals['orders']),
-                            $kpi('Gross',        '$' . number_format($totals['gross'], 2), 'Subtotal $' . number_format($totals['subtotal'], 2) . ' + Tips $' . number_format($totals['tips'], 2)),
+                            $kpi(
+                                'Gross',
+                                '$' . number_format($totals['gross'], 2),
+                                'Services $' . number_format($totals['subtotal'], 2)
+                                    . ($totals['card_fees'] > 0 ? ' + Fees $' . number_format($totals['card_fees'], 2) : '')
+                                    . ' + Tips $' . number_format($totals['tips'], 2)
+                            ),
                             $kpi('Cash',         '$' . number_format($totals['cash'], 2), $totals['cash_count'] . ' orders', 'success'),
                             $kpi('Zelle',        '$' . number_format($totals['zelle'], 2), $totals['zelle_count'] . ' orders', 'warning'),
                             $kpi('Card',         '$' . number_format($totals['card'], 2), $totals['card_count'] . ' orders', 'info'),

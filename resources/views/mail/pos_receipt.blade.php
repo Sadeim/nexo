@@ -46,6 +46,12 @@
                 <td style="padding: 4px 0; color: #555;">Subtotal</td>
                 <td style="padding: 4px 0; text-align: right;">${{ number_format($order->subtotal, 2) }}</td>
             </tr>
+            @if ((float) $order->card_fee > 0)
+            <tr>
+                <td style="padding: 4px 0; color: #555;">Card fee</td>
+                <td style="padding: 4px 0; text-align: right;">${{ number_format($order->card_fee, 2) }}</td>
+            </tr>
+            @endif
             @if ((float) $order->tip > 0)
             <tr>
                 <td style="padding: 4px 0; color: #555;">Tip</td>

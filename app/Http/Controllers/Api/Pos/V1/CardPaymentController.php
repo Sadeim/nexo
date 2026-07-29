@@ -8,6 +8,7 @@ use App\Models\PosOrder;
 use App\Models\PosOrderItem;
 use App\Services\NexoPos\Payment\Exceptions\PlutoPayException;
 use App\Services\NexoPos\Payment\PlutoPayClient;
+use App\Support\PosSettings;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -79,7 +80,12 @@ class CardPaymentController extends Controller
             $subtotal += ((float) $item['price']) * ($item['quantity'] ?? 1);
         }
         $subtotal = round($subtotal, 2);
-        $amountCents = (int) round($subtotal * 100);
+
+        // Card surcharge on top of the services — the customer really pays it,
+        // so it goes into the amount we send to the reader.
+        $cardFee = PosSettings::cardFee();
+        $chargeable = round($subtotal + $cardFee, 2);
+        $amountCents = (int) round($chargeable * 100);
 
         $min = (int) config('nexo_pos.plutopay.min_amount_cents', 50);
         if ($amountCents < $min) {
@@ -96,14 +102,15 @@ class CardPaymentController extends Controller
         }
 
         try {
-            $order = DB::transaction(function () use ($data, $admin, $subtotal, $amountCents) {
+            $order = DB::transaction(function () use ($data, $admin, $subtotal, $amountCents, $cardFee, $chargeable) {
                 $order = PosOrder::create([
                     'order_number'    => PosOrder::generateOrderNumber(),
                     'employee_id'     => $data['employee_id'],
                     'admin_id'        => $admin->id,
                     'subtotal'        => $subtotal,
                     'tip'             => 0,
-                    'total'           => $subtotal,
+                    'card_fee'        => $cardFee,
+                    'total'           => $chargeable,
                     'amount_cents'    => $amountCents,
                     'currency'        => config('nexo_pos.plutopay.currency', 'usd'),
                     'payment_method'  => 'card',
@@ -235,6 +242,7 @@ class CardPaymentController extends Controller
             'paid'           => $order->status === 'completed',
             'failure_reason' => $order->failure_reason,
             'subtotal'       => (float) $order->subtotal,
+            'card_fee'       => (float) $order->card_fee,
             'tip'            => (float) $order->tip,
             'total'          => (float) $order->total,
         ]);

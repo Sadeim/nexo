@@ -50,8 +50,14 @@ class EmployeeReportController extends Controller
 
             $subtotalSum = (float) $orders->sum('subtotal');
             $tipSum      = (float) $orders->sum('tip');
-            $commission  = $employee->commissionOn($subtotalSum);
-            $earned      = round($commission + $tipSum, 2);
+
+            // Card surcharges are collected ON TOP of the services and belong
+            // to the shop, so they're shown for reference but never enter the
+            // employee's commission base.
+            $feesSum = (float) $orders->sum('card_fee');
+
+            $commission = $employee->commissionOn($subtotalSum);
+            $earned     = round($commission + $tipSum, 2);
 
             $paid = (float) EmployeePayment::where('employee_id', $employee->id)
                 ->whereBetween('paid_at', [$fromUtc, $toUtc])
@@ -61,6 +67,7 @@ class EmployeeReportController extends Controller
                 'employee'        => $employee,
                 'orders_count'    => $orders->count(),
                 'subtotal'        => $subtotalSum,
+                'card_fees'       => $feesSum,
                 'tips'            => $tipSum,
                 // How the money actually came in — what's physically in the
                 // drawer vs what settled to the bank.
@@ -80,6 +87,7 @@ class EmployeeReportController extends Controller
 
         $totals = [
             'subtotal'   => (float) $rows->sum('subtotal'),
+            'card_fees'  => (float) $rows->sum('card_fees'),
             'tips'       => (float) $rows->sum('tips'),
             'cash_total'  => (float) $rows->sum('cash_total'),
             'cash_tips'   => (float) $rows->sum('cash_tips'),
