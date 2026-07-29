@@ -11,9 +11,11 @@ class PosOrderResource extends JsonResource
     {
         $operations = view('admin.pos_orders.sub.operations', ['instance' => $this])->render();
 
-        $methodBadge = $this->payment_method === 'cash'
-            ? '<span class="badge badge-light-success text-uppercase">cash</span>'
-            : '<span class="badge badge-light-info text-uppercase">card</span>';
+        $methodBadge = match ($this->payment_method) {
+            'cash'  => '<span class="badge badge-light-success text-uppercase">cash</span>',
+            'zelle' => '<span class="badge badge-light-warning text-uppercase">zelle</span>',
+            default => '<span class="badge badge-light-info text-uppercase">card</span>',
+        };
 
         $tip = (float) $this->tip;
         $tipCell = $tip > 0

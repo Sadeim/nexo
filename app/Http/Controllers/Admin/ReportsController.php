@@ -37,10 +37,12 @@ class ReportsController extends Controller
             'gross'      => (float) $orders->sum('total'),
             'subtotal'   => (float) $orders->sum('subtotal'),
             'tips'       => (float) $orders->sum('tip'),
-            'cash'       => (float) $orders->where('payment_method', 'cash')->sum('total'),
-            'card'       => (float) $orders->where('payment_method', 'card')->sum('total'),
-            'cash_count' => $orders->where('payment_method', 'cash')->count(),
-            'card_count' => $orders->where('payment_method', 'card')->count(),
+            'cash'        => (float) $orders->where('payment_method', 'cash')->sum('total'),
+            'card'        => (float) $orders->where('payment_method', 'card')->sum('total'),
+            'zelle'       => (float) $orders->where('payment_method', 'zelle')->sum('total'),
+            'cash_count'  => $orders->where('payment_method', 'cash')->count(),
+            'card_count'  => $orders->where('payment_method', 'card')->count(),
+            'zelle_count' => $orders->where('payment_method', 'zelle')->count(),
             'avg_ticket' => $orders->count() > 0
                 ? round($orders->sum('total') / $orders->count(), 2)
                 : 0.0,
@@ -57,6 +59,7 @@ class ReportsController extends Controller
                     'tips'       => (float) $dayOrders->sum('tip'),
                     'total'      => (float) $dayOrders->sum('total'),
                     'cash'       => (float) $dayOrders->where('payment_method', 'cash')->sum('total'),
+                    'zelle'      => (float) $dayOrders->where('payment_method', 'zelle')->sum('total'),
                     'card'       => (float) $dayOrders->where('payment_method', 'card')->sum('total'),
                 ];
             })
@@ -116,6 +119,7 @@ class ReportsController extends Controller
                     'orders'   => $group->count(),
                     'gross'    => (float) $group->sum('total'),
                     'cash'     => (float) $group->where('payment_method', 'cash')->sum('total'),
+                    'zelle'    => (float) $group->where('payment_method', 'zelle')->sum('total'),
                     'card'     => (float) $group->where('payment_method', 'card')->sum('total'),
                     'tips'     => (float) $group->sum('tip'),
                 ];
@@ -127,6 +131,7 @@ class ReportsController extends Controller
             'orders' => (int) $rows->sum('orders'),
             'gross'  => (float) $rows->sum('gross'),
             'cash'   => (float) $rows->sum('cash'),
+            'zelle'  => (float) $rows->sum('zelle'),
             'card'   => (float) $rows->sum('card'),
             'tips'   => (float) $rows->sum('tips'),
         ];
