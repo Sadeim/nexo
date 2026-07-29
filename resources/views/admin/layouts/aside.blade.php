@@ -708,6 +708,17 @@
                         </a>
                     </div>
                     <div class="menu-item">
+                        <a class="menu-link {{ $is_active == 'transactions' ? 'active' : '' }}"
+                            href="{{ route('admin.transactions.index') }}">
+                            <span class="menu-icon">
+                                <span class="svg-icon svg-icon-2">
+                                    <i class="fa-solid fa-list-ul"></i>
+                                </span>
+                            </span>
+                            <span class="menu-title">Transactions</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
                         <a class="menu-link {{ $is_active == 'pos_orders' ? 'active' : '' }}"
                             href="{{ route('admin.pos_orders.index') }}">
                             <span class="menu-icon">
