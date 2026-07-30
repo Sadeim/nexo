@@ -44,19 +44,26 @@ class EmployeeReportController extends Controller
                 ->whereBetween('created_at', [$fromUtc, $toUtc])
                 ->get();
 
-            $cashOrders  = $orders->where('payment_method', 'cash');
-            $cardOrders  = $orders->where('payment_method', 'card');
-            $zelleOrders = $orders->where('payment_method', 'zelle');
+            // Standalone tips are cash the customer handed straight to the
+            // employee — they count as tips earned but never reached the
+            // drawer, so they're kept out of the payment-method columns and
+            // are treated as already settled at the bottom.
+            $sales      = $orders->where('is_tip_only', false);
+            $directTips = (float) $orders->where('is_tip_only', true)->sum('tip');
 
-            $subtotalSum = (float) $orders->sum('subtotal');
-            $tipSum      = (float) $orders->sum('tip');
+            $cashOrders  = $sales->where('payment_method', 'cash');
+            $cardOrders  = $sales->where('payment_method', 'card');
+            $zelleOrders = $sales->where('payment_method', 'zelle');
+
+            $subtotalSum = (float) $sales->sum('subtotal');
+            $tipSum      = (float) $orders->sum('tip'); // service tips + direct tips
 
             // Shop fees: the card surcharge plus the cents skimmed off card
             // tips. Collected on top of the services, so they're shown for
             // reference but never enter the employee's commission base.
             // `tip` already holds only the employee's whole-dollar share.
-            $feesSum = (float) $orders->sum('card_fee')
-                     + (float) $orders->sum('tip_remainder');
+            $feesSum = (float) $sales->sum('card_fee')
+                     + (float) $sales->sum('tip_remainder');
 
             $commission = $employee->commissionOn($subtotalSum);
             $earned     = round($commission + $tipSum, 2);
@@ -67,10 +74,11 @@ class EmployeeReportController extends Controller
 
             return [
                 'employee'        => $employee,
-                'orders_count'    => $orders->count(),
+                'orders_count'    => $sales->count(),
                 'subtotal'        => $subtotalSum,
                 'card_fees'       => $feesSum,
                 'tips'            => $tipSum,
+                'direct_tips'     => $directTips,
                 // How the money actually came in — what's physically in the
                 // drawer vs what settled to the bank.
                 'cash_total'      => (float) $cashOrders->sum('total'),
@@ -83,14 +91,17 @@ class EmployeeReportController extends Controller
                 'commission'      => $commission,
                 'earned'          => $earned,
                 'paid'            => $paid,
-                'balance'         => round($earned - $paid, 2),
+                // Direct tips are already in the employee's pocket, so they
+                // count as earned but must not inflate what the shop still owes.
+                'balance'         => round($earned - $directTips - $paid, 2),
             ];
         });
 
         $totals = [
             'subtotal'   => (float) $rows->sum('subtotal'),
-            'card_fees'  => (float) $rows->sum('card_fees'),
-            'tips'       => (float) $rows->sum('tips'),
+            'card_fees'   => (float) $rows->sum('card_fees'),
+            'tips'        => (float) $rows->sum('tips'),
+            'direct_tips' => (float) $rows->sum('direct_tips'),
             'cash_total'  => (float) $rows->sum('cash_total'),
             'cash_tips'   => (float) $rows->sum('cash_tips'),
             'zelle_total' => (float) $rows->sum('zelle_total'),

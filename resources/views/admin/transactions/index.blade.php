@@ -74,11 +74,12 @@
                 <div class="row g-4 mb-5">
                     @php
                         $cards = [
-                            ['Orders',   number_format($totals['orders']),            'dark'],
-                            ['Services', '$' . number_format($totals['subtotal'], 2), 'primary'],
-                            ['Fees',     '$' . number_format($totals['fees'], 2),     'info'],
-                            ['Tips',     '$' . number_format($totals['tips'], 2),     'success'],
-                            ['Total',    '$' . number_format($totals['total'], 2),    'warning'],
+                            ['Orders',      number_format($totals['orders']),               'dark'],
+                            ['Services',    '$' . number_format($totals['subtotal'], 2),    'primary'],
+                            ['Fees',        '$' . number_format($totals['fees'], 2),        'info'],
+                            ['Tips',        '$' . number_format($totals['tips'], 2),        'success'],
+                            ['Direct tips', '$' . number_format($totals['direct_tips'], 2), 'secondary'],
+                            ['Total',       '$' . number_format($totals['total'], 2),       'warning'],
                         ];
                     @endphp
                     @foreach ($cards as [$label, $value, $color])
@@ -132,6 +133,10 @@
                                             <td class="text-nowrap">{{ $o->employee->name ?? '—' }}</td>
                                             <td class="text-nowrap text-muted">{{ $o->admin->name ?? $o->admin->email ?? '—' }}</td>
                                             <td style="min-width: 200px;">
+                                                @if ($o->is_tip_only)
+                                                    <span class="badge badge-light-dark">DIRECT TIP</span>
+                                                    <div class="fs-9 text-muted">handed to the employee, not through the drawer</div>
+                                                @endif
                                                 @forelse ($o->items as $item)
                                                     <div class="d-flex justify-content-between gap-3">
                                                         <span>
@@ -143,7 +148,9 @@
                                                         <span class="text-muted">${{ number_format($item->price * $item->quantity, 2) }}</span>
                                                     </div>
                                                 @empty
-                                                    <span class="text-muted">—</span>
+                                                    @unless ($o->is_tip_only)
+                                                        <span class="text-muted">—</span>
+                                                    @endunless
                                                 @endforelse
                                             </td>
                                             <td class="text-end text-nowrap">${{ number_format((float) $o->subtotal, 2) }}</td>

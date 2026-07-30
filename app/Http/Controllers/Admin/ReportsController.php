@@ -30,7 +30,7 @@ class ReportsController extends Controller
     {
         [$from, $to] = $this->parseRange($request, defaultDays: 29);
 
-        $orders = PosOrder::completedIn($from, $to)->get();
+        $orders = PosOrder::completedIn($from, $to)->where('is_tip_only', false)->get();
 
         $totals = [
             'orders'     => $orders->count(),
@@ -86,7 +86,7 @@ class ReportsController extends Controller
                 DB::raw('COUNT(*) as line_count'),
             ])
             ->whereHas('posOrder', function ($q) use ($from, $to) {
-                $q->completedIn($from, $to);
+                $q->completedIn($from, $to)->where('is_tip_only', false);
             })
             ->groupBy('name', 'is_custom')
             ->orderByDesc('revenue')
@@ -109,6 +109,7 @@ class ReportsController extends Controller
 
         $rows = PosOrder::query()
             ->completedIn($from, $to)
+            ->where('is_tip_only', false)
             ->with('admin:id,name,email')
             ->get()
             ->groupBy('admin_id')
