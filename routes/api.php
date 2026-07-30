@@ -34,6 +34,7 @@ Route::group(['prefix' => 'api/pos/v1', 'as' => 'pos.api.'], function () {
         Route::get('services', [PosApiController::class, 'services'])->name('services');
 
         Route::post('orders', [PosApiController::class, 'storeOrder'])->name('orders.store');
+        Route::post('tips', [PosApiController::class, 'storeTip'])->name('tips.store');
         Route::get('orders/recent', [PosApiController::class, 'recentOrders'])->name('orders.recent');
         Route::get('orders/{id}', [PosApiController::class, 'showOrder'])->name('orders.show');
         Route::post('orders/{id}/email-receipt', [PosApiController::class, 'emailReceipt'])->name('orders.email-receipt');

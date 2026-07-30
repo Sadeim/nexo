@@ -52,6 +52,7 @@
                                         <th class="text-end">Sales</th>
                                         <th class="text-end">Card fees</th>
                                         <th class="text-end">Tips</th>
+                                        <th class="text-end">Direct tips</th>
                                         <th class="text-end bg-light-success">Cash in</th>
                                         <th class="text-end bg-light-warning">Zelle in</th>
                                         <th class="text-end bg-light-info">Card in</th>
@@ -74,6 +75,10 @@
                                                 {{ $r['card_fees'] > 0 ? '+$' . number_format($r['card_fees'], 2) : '—' }}
                                             </td>
                                             <td class="text-end text-success">${{ number_format($r['tips'], 2) }}</td>
+                                            <td class="text-end text-muted"
+                                                title="Cash handed straight to the employee — already in their pocket, so it is not part of the balance owed">
+                                                {{ $r['direct_tips'] > 0 ? '−$' . number_format($r['direct_tips'], 2) : '—' }}
+                                            </td>
                                             <td class="text-end bg-light-success">
                                                 ${{ number_format($r['cash_total'], 2) }}
                                                 @if ($r['cash_tips'] > 0)
@@ -126,7 +131,7 @@
                                             </td>
                                         </tr>
                                     @empty
-                                        <tr><td colspan="14" class="text-center text-muted py-10">No employees.</td></tr>
+                                        <tr><td colspan="15" class="text-center text-muted py-10">No employees.</td></tr>
                                     @endforelse
                                 </tbody>
                                 <tfoot>
@@ -138,6 +143,9 @@
                                             {{ $totals['card_fees'] > 0 ? '+$' . number_format($totals['card_fees'], 2) : '—' }}
                                         </td>
                                         <td class="text-end text-success">${{ number_format($totals['tips'], 2) }}</td>
+                                        <td class="text-end text-muted">
+                                            {{ $totals['direct_tips'] > 0 ? '−$' . number_format($totals['direct_tips'], 2) : '—' }}
+                                        </td>
                                         <td class="text-end bg-light-success">${{ number_format($totals['cash_total'], 2) }}</td>
                                         <td class="text-end bg-light-warning">${{ number_format($totals['zelle_total'], 2) }}</td>
                                         <td class="text-end bg-light-info">${{ number_format($totals['card_total'], 2) }}</td>

@@ -216,6 +216,46 @@ class PosApiController extends Controller
         ], 201);
     }
 
+    /**
+     * Record a standalone cash tip handed to an employee outside a sale — the
+     * customer tipping on the way out after the ticket is already closed.
+     *
+     * Stored as a pos_order flagged `is_tip_only` so it inherits the employee,
+     * cashier and timestamp plumbing, but with no items and a zero subtotal.
+     * Reports treat it as tip income for the employee and NOT as shop takings.
+     */
+    public function storeTip(Request $request)
+    {
+        $data = $request->validate([
+            'employee_id' => ['required', Rule::exists('employees', 'id')->where('is_active', true)],
+            'amount'      => 'required|numeric|min:0.01|max:10000',
+            'notes'       => 'nullable|string|max:500',
+        ]);
+
+        $admin  = $request->attributes->get('pos_admin');
+        $amount = round((float) $data['amount'], 2);
+
+        $order = PosOrder::create([
+            'order_number'   => PosOrder::generateOrderNumber(),
+            'employee_id'    => $data['employee_id'],
+            'admin_id'       => $admin->id,
+            'subtotal'       => 0,
+            'tip'            => $amount,
+            'card_fee'       => 0,
+            'tip_remainder'  => 0,
+            'total'          => $amount,
+            'payment_method' => 'cash',
+            'is_tip_only'    => true,
+            'status'         => 'completed',
+            'notes'          => $data['notes'] ?? null,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'order'   => $this->serializeOrder($order->fresh(['items', 'employee'])),
+        ], 201);
+    }
+
     public function showOrder($id)
     {
         $order = PosOrder::with(['items', 'employee'])->findOrFail($id);
@@ -360,6 +400,7 @@ class PosApiController extends Controller
             'tip' => (float) $order->customer_tip,
             'total' => (float) $order->total,
             'payment_method' => $order->payment_method,
+            'is_tip_only' => (bool) $order->is_tip_only,
             'customer_email' => $order->customer_email,
             'receipt_sent_at' => optional($order->receipt_sent_at)->toIso8601String(),
             'notes' => $order->notes,

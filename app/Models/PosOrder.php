@@ -23,6 +23,7 @@ class PosOrder extends Model
         'tip_remainder',
         'total',
         'payment_method',
+        'is_tip_only',
         'status',
         'payment_intent_id',
         'provider_payment_id',
@@ -43,6 +44,7 @@ class PosOrder extends Model
         'tip_remainder' => 'decimal:2',
         'total' => 'decimal:2',
         'amount_cents' => 'integer',
+        'is_tip_only' => 'boolean',
         'receipt_sent_at' => 'datetime',
     ];
 
@@ -122,6 +124,22 @@ class PosOrder extends Model
     public function scopeSettled($query)
     {
         return $query->where('status', 'completed');
+    }
+
+    /**
+     * Settled SALES — excludes standalone tips, whose cash went straight from
+     * the customer to the employee and never reached the drawer. Use this for
+     * anything measuring shop takings.
+     */
+    public function scopeSales($query)
+    {
+        return $query->settled()->where('is_tip_only', false);
+    }
+
+    /** Standalone tips handed directly to an employee. */
+    public function scopeTipOnly($query)
+    {
+        return $query->settled()->where('is_tip_only', true);
     }
 
     /**

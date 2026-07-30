@@ -59,23 +59,28 @@ class TransactionsController extends Controller
         }
 
         // Totals cover the WHOLE filtered set, not just the visible page.
+        // Standalone tips never reached the drawer, so they're summed apart
+        // from shop takings rather than folded into them.
         $sums = (clone $query)
             ->selectRaw('
-                COUNT(*)                AS orders,
-                COALESCE(SUM(subtotal), 0)      AS subtotal,
-                COALESCE(SUM(card_fee), 0)      AS card_fee,
-                COALESCE(SUM(tip_remainder), 0) AS tip_remainder,
-                COALESCE(SUM(tip), 0)           AS tip,
-                COALESCE(SUM(total), 0)         AS total
+                COUNT(*)                                                       AS rows_all,
+                COALESCE(SUM(CASE WHEN is_tip_only = 0 THEN 1 ELSE 0 END), 0)  AS orders,
+                COALESCE(SUM(CASE WHEN is_tip_only = 0 THEN subtotal END), 0)      AS subtotal,
+                COALESCE(SUM(CASE WHEN is_tip_only = 0 THEN card_fee END), 0)      AS card_fee,
+                COALESCE(SUM(CASE WHEN is_tip_only = 0 THEN tip_remainder END), 0) AS tip_remainder,
+                COALESCE(SUM(CASE WHEN is_tip_only = 0 THEN tip END), 0)           AS tip,
+                COALESCE(SUM(CASE WHEN is_tip_only = 0 THEN total END), 0)         AS total,
+                COALESCE(SUM(CASE WHEN is_tip_only = 1 THEN tip END), 0)           AS direct_tips
             ')
             ->first();
 
         $totals = [
-            'orders'   => (int) ($sums->orders ?? 0),
-            'subtotal' => (float) ($sums->subtotal ?? 0),
-            'fees'     => (float) ($sums->card_fee ?? 0) + (float) ($sums->tip_remainder ?? 0),
-            'tips'     => (float) ($sums->tip ?? 0),
-            'total'    => (float) ($sums->total ?? 0),
+            'orders'      => (int) ($sums->orders ?? 0),
+            'subtotal'    => (float) ($sums->subtotal ?? 0),
+            'fees'        => (float) ($sums->card_fee ?? 0) + (float) ($sums->tip_remainder ?? 0),
+            'tips'        => (float) ($sums->tip ?? 0),
+            'direct_tips' => (float) ($sums->direct_tips ?? 0),
+            'total'       => (float) ($sums->total ?? 0),
         ];
 
         $orders = $query->orderByDesc('id')
