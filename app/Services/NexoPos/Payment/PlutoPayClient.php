@@ -29,6 +29,7 @@ class PlutoPayClient
     private string $terminalId;
     private string $readerId;
     private string $currency;
+    private string $retrievePath;
 
     public function __construct()
     {
@@ -54,7 +55,8 @@ class PlutoPayClient
         $this->baseUrl    = rtrim((string) ($cfg['base_url'] ?? 'https://plutopayus.com/api'), '/');
         $this->terminalId = (string) ($cfg['terminal_id'] ?? '');
         $this->readerId   = (string) ($cfg['reader_id'] ?? '');
-        $this->currency   = (string) ($cfg['currency'] ?? 'usd');
+        $this->currency     = (string) ($cfg['currency'] ?? 'usd');
+        $this->retrievePath = (string) ($cfg['retrieve_path'] ?? 'v1/transactions/{id}');
     }
 
     private function http(): PendingRequest
@@ -124,6 +126,38 @@ class PlutoPayClient
         ]));
 
         return ['status' => (string) ($data['status'] ?? '')];
+    }
+
+    /**
+     * Ask the provider what actually happened to a payment.
+     *
+     * This is the escape hatch when a webhook never lands — during a host
+     * outage, say. Without it a sale the customer really paid stays stuck at
+     * `processing` forever and the tablet spins.
+     *
+     * Returns null when the id is unknown to the provider (a 404), so the
+     * caller can tell "not found" apart from "request failed".
+     *
+     * @return array{id:string,status:string,reference:?string,amount:?int,tip_amount:?int}|null
+     */
+    public function retrievePayment(string $id): ?array
+    {
+        $path = str_replace('{id}', rawurlencode($id), $this->retrievePath);
+        $res  = $this->http()->get($path);
+
+        if ($res->status() === 404) {
+            return null;
+        }
+
+        $data = $this->unwrap($res);
+
+        return [
+            'id'         => (string) ($data['id'] ?? $id),
+            'status'     => (string) ($data['status'] ?? ''),
+            'reference'  => $data['reference'] ?? null,
+            'amount'     => isset($data['amount']) ? (int) $data['amount'] : null,
+            'tip_amount' => isset($data['tip_amount']) ? (int) $data['tip_amount'] : null,
+        ];
     }
 
     /** GET /v1/terminal/readers */
