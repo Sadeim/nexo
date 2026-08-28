@@ -34,6 +34,10 @@ return [
         'reader_id'        => env('NEXO_POS_PLUTOPAY_READER_ID'),
         'currency'         => env('NEXO_POS_PLUTOPAY_CURRENCY', 'usd'),
         'min_amount_cents' => (int) env('NEXO_POS_PLUTOPAY_MIN_CENTS', 50),
+        // GET a single transaction, used to reconcile a sale whose webhook
+        // never arrived. {id} is replaced at runtime. Configurable because a
+        // provider path change must not need a code deploy.
+        'retrieve_path'    => env('NEXO_POS_PLUTOPAY_RETRIEVE_PATH', 'v1/transactions/{id}'),
         // Set to false to hard-disable live keys even if one is in .env.
         'allow_live'       => (bool) env('NEXO_POS_PLUTOPAY_ALLOW_LIVE', true),
     ],
