@@ -30,6 +30,7 @@ class ReconcileNexoPosCards extends Command
 {
     protected $signature = 'nexo-pos:reconcile-cards
         {--minutes=2 : Only touch orders left pending for at least this long}
+        {--limit=50 : Max orders per run — PlutoPay allows 100 requests/minute and live sales share that budget}
         {--dry-run : Report what would change without writing}';
 
     protected $description = 'Settle card orders whose PlutoPay webhook never arrived.';
@@ -44,12 +45,14 @@ class ReconcileNexoPosCards extends Command
     {
         $dryRun  = (bool) $this->option('dry-run');
         $minutes = max(0, (int) $this->option('minutes'));
+        $limit   = max(1, (int) $this->option('limit'));
 
         $stuck = PosOrder::query()
             ->where('payment_method', 'card')
             ->whereIn('status', ['awaiting_payment', 'processing'])
             ->where('updated_at', '<=', now()->subMinutes($minutes))
             ->orderBy('id')
+            ->limit($limit)
             ->get();
 
         if ($stuck->isEmpty()) {
@@ -57,44 +60,41 @@ class ReconcileNexoPosCards extends Command
             return self::SUCCESS;
         }
 
-        $this->line("Checking {$stuck->count()} pending card order(s) with PlutoPay...");
+        $this->line("Checking {$stuck->count()} pending card order(s) with PlutoPay (max {$limit} per run)...");
 
         $settled = $failed = $unknown = 0;
 
         foreach ($stuck as $order) {
-            // create-payment hands back two ids; the provider's own UUID is the
-            // one its transaction endpoint knows, so try that first.
-            $ids = array_values(array_filter([
-                $order->provider_payment_id,
-                $order->payment_intent_id,
-            ]));
+            // The transactions endpoint keys off the provider's own UUID —
+            // data.id, which create-payment hands back as provider_payment_id.
+            // payment_intent_id is a pi_… value and reference is a txn_… value;
+            // PlutoPay answers both with a 500 rather than a 404 (their bug,
+            // confirmed by their support), so sending either would turn a
+            // harmless "unknown id" into a hard error. Only the UUID is safe.
+            $uuid = (string) $order->provider_payment_id;
 
-            if (empty($ids)) {
-                // Never reached the provider — nothing was charged.
-                $this->warn("#{$order->order_number}: no provider id, never sent. Leaving alone.");
+            if ($uuid === '') {
+                $this->warn("#{$order->order_number}: no provider UUID recorded, cannot look it up. Leaving alone.");
                 $unknown++;
                 continue;
             }
 
-            $remote = null;
-            foreach ($ids as $id) {
-                try {
-                    $remote = $this->pluto()->retrievePayment($id);
-                } catch (PlutoPayException $e) {
-                    Log::warning('NexoPos reconcile lookup failed', [
-                        'order_id' => $order->id,
-                        'id'       => $id,
-                        'error'    => $e->getMessage(),
-                    ]);
-                    $this->warn("#{$order->order_number}: lookup failed ({$e->getMessage()})");
-                    break;
-                }
-                if ($remote !== null) {
-                    break; // found it
-                }
+            try {
+                $remote = $this->pluto()->retrievePayment($uuid);
+            } catch (PlutoPayException $e) {
+                Log::warning('NexoPos reconcile lookup failed', [
+                    'order_id' => $order->id,
+                    'id'       => $uuid,
+                    'error'    => $e->getMessage(),
+                ]);
+                $this->warn("#{$order->order_number}: lookup failed ({$e->getMessage()})");
+                $unknown++;
+                continue;
             }
 
             if ($remote === null) {
+                // A clean 404 — the provider has never heard of it.
+                $this->line("#{$order->order_number}: unknown to the provider, leaving pending.");
                 $unknown++;
                 continue;
             }
