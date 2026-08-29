@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -52,7 +53,7 @@ class DiagnoseNexoPosCards extends Command
             ->whereBetween('id', [$from, $to])
             ->orderBy('id')
             ->get(['id', 'order_number', 'payment_method', 'status', 'total', 'created_at']);
-        $this->renderOrEmpty($rows, ['id', 'order_number', 'method', 'status', 'total', 'created_at (UTC)']);
+        $this->renderOrEmpty($rows, ['id', 'order_number', 'method', 'status', 'total', 'created (shop)', 'created (UTC)']);
 
         $this->newLine();
         $this->info("3. Tablet POS (pos_orders) — card activity on {$date} UTC");
@@ -61,7 +62,7 @@ class DiagnoseNexoPosCards extends Command
             ->whereBetween('created_at', ["{$date} 00:00:00", "{$date} 23:59:59"])
             ->orderBy('created_at')
             ->get(['id', 'order_number', 'status', 'total', 'created_at']);
-        $this->renderOrEmpty($rows, ['id', 'order_number', 'status', 'total', 'created_at (UTC)']);
+        $this->renderOrEmpty($rows, ['id', 'order_number', 'status', 'total', 'created (shop)', 'created (UTC)']);
 
         $this->newLine();
         $this->info('4. Web POS (pos_transactions) — is it even in use?');
@@ -85,6 +86,20 @@ class DiagnoseNexoPosCards extends Command
             $this->warn('   (none found)');
             return;
         }
-        $this->table($headers, $rows->map(fn ($r) => (array) $r)->all());
+
+        // created_at is stored in the shop's own timezone (APP_TIMEZONE), and
+        // a raw query builder hands it back as an unconverted string. The
+        // provider quotes everything in UTC, so print both — labelling shop
+        // time as UTC would put every comparison five hours out.
+        $tz = config('app.timezone');
+
+        $this->table($headers, $rows->map(function ($r) use ($tz) {
+            $row   = (array) $r;
+            $local = Carbon::parse($row['created_at'], $tz);
+            $row['created_at'] = $local->format('M j H:i');
+            $row['created_utc'] = $local->copy()->utc()->format('M j H:i');
+
+            return $row;
+        })->all());
     }
 }
