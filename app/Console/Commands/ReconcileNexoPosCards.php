@@ -31,6 +31,7 @@ class ReconcileNexoPosCards extends Command
     protected $signature = 'nexo-pos:reconcile-cards
         {--minutes=2 : Only touch orders left pending for at least this long}
         {--limit=50 : Max orders per run — PlutoPay allows 100 requests/minute and live sales share that budget}
+        {--settle-only : Record successes but never mark anything failed — safe to run while a webhook replay is in flight}
         {--dry-run : Report what would change without writing}';
 
     protected $description = 'Settle card orders whose PlutoPay webhook never arrived.';
@@ -46,6 +47,13 @@ class ReconcileNexoPosCards extends Command
         $dryRun  = (bool) $this->option('dry-run');
         $minutes = max(0, (int) $this->option('minutes'));
         $limit   = max(1, (int) $this->option('limit'));
+
+        // `failed` is terminal, and the webhook handler skips terminal orders.
+        // So writing a failure while the provider is replaying events would
+        // make those replays no-ops and lock in the wrong answer permanently.
+        // --settle-only takes the money-safe half of the job and leaves the
+        // destructive half for when the queue has drained.
+        $settleOnly = (bool) $this->option('settle-only');
 
         $stuck = PosOrder::query()
             ->where('payment_method', 'card')
@@ -108,6 +116,11 @@ class ReconcileNexoPosCards extends Command
                 }
                 $settled++;
             } elseif (in_array($status, self::DEAD, true)) {
+                if ($settleOnly) {
+                    $this->line("#{$order->order_number}: provider says {$status} — left alone (--settle-only).");
+                    $unknown++;
+                    continue;
+                }
                 $this->warn("#{$order->order_number}: provider says {$status} → marking failed.");
                 if (!$dryRun) {
                     $order->forceFill([
