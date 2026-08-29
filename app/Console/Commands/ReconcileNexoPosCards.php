@@ -109,19 +109,30 @@ class ReconcileNexoPosCards extends Command
 
             $status = strtolower($remote['status'] ?? '');
 
+            // The provider identifies unmatched payments by amount and UTC
+            // time, so print ours the same way — otherwise there is no way to
+            // tell a genuinely abandoned intent from one the cashier retried
+            // by hand on the reader.
+            $label = sprintf(
+                '#%s  $%s  %s UTC',
+                $order->order_number,
+                number_format($order->amount_cents / 100, 2),
+                $order->created_at->utc()->format('M j H:i')
+            );
+
             if (in_array($status, self::PAID, true)) {
-                $this->info("#{$order->order_number}: provider says {$status} → settling.");
+                $this->info("{$label}: provider says {$status} → settling.");
                 if (!$dryRun) {
                     $this->settle($order, $remote);
                 }
                 $settled++;
             } elseif (in_array($status, self::DEAD, true)) {
                 if ($settleOnly) {
-                    $this->line("#{$order->order_number}: provider says {$status} — left alone (--settle-only).");
+                    $this->line("{$label}: provider says {$status} — left alone (--settle-only).");
                     $unknown++;
                     continue;
                 }
-                $this->warn("#{$order->order_number}: provider says {$status} → marking failed.");
+                $this->warn("{$label}: provider says {$status} → marking failed.");
                 if (!$dryRun) {
                     $order->forceFill([
                         'status'         => 'failed',
@@ -131,7 +142,7 @@ class ReconcileNexoPosCards extends Command
                 $failed++;
             } else {
                 // Still genuinely in flight — the customer may not have tapped yet.
-                $this->line("#{$order->order_number}: still '{$status}', leaving pending.");
+                $this->line("{$label}: still '{$status}', leaving pending.");
                 $unknown++;
             }
         }
