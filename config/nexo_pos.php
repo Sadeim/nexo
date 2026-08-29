@@ -35,8 +35,10 @@ return [
         'currency'         => env('NEXO_POS_PLUTOPAY_CURRENCY', 'usd'),
         'min_amount_cents' => (int) env('NEXO_POS_PLUTOPAY_MIN_CENTS', 50),
         // GET a single transaction, used to reconcile a sale whose webhook
-        // never arrived. {id} is replaced at runtime. Configurable because a
-        // provider path change must not need a code deploy.
+        // never arrived. {id} is replaced at runtime with the provider's UUID
+        // (data.id / provider_payment_id) — NOT the pi_… intent id and NOT the
+        // txn_… reference, both of which PlutoPay answers with a 500 instead
+        // of a 404. Configurable so a provider path change needs no deploy.
         'retrieve_path'    => env('NEXO_POS_PLUTOPAY_RETRIEVE_PATH', 'v1/transactions/{id}'),
         // Set to false to hard-disable live keys even if one is in .env.
         'allow_live'       => (bool) env('NEXO_POS_PLUTOPAY_ALLOW_LIVE', true),
