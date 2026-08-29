@@ -44,22 +44,34 @@ class DiagnoseNexoPosCards extends Command
         $this->table(['status', 'orders', 'total'], $rows->map(fn ($r) => (array) $r)->all());
 
         $this->newLine();
-        $this->info("2. Web POS (pos_transactions) — card activity on {$date} UTC");
-        $this->line('   These are the ones the provider may be reporting as ours.');
-        $rows = DB::table('pos_transactions')
-            ->whereBetween('created_at', ["{$date} 00:00:00", "{$date} 23:59:59"])
-            ->orderBy('created_at')
-            ->get(['id', 'payment_method', 'status', 'total', 'created_at']);
-        $this->renderOrEmpty($rows, ['id', 'method', 'status', 'total', 'created_at (UTC)']);
-
-        $this->newLine();
-        $this->info("3. Web POS (pos_transactions) — ids {$from}–{$to}");
-        $this->line('   The provider quoted sequential numbers; ours are never sequential.');
-        $rows = DB::table('pos_transactions')
+        $this->info("2. Tablet POS (pos_orders) — ids {$from}-{$to}, the numbers the provider quoted");
+        $this->line('   We send pos_orders.id as metadata, NOT the N… order number, so the');
+        $this->line('   provider\'s sequential numbers are these rows. Anything still pending');
+        $this->line('   here that the provider called successful is a real contradiction.');
+        $rows = DB::table('pos_orders')
             ->whereBetween('id', [$from, $to])
             ->orderBy('id')
-            ->get(['id', 'payment_method', 'status', 'total', 'created_at']);
-        $this->renderOrEmpty($rows, ['id', 'method', 'status', 'total', 'created_at (UTC)']);
+            ->get(['id', 'order_number', 'payment_method', 'status', 'total', 'created_at']);
+        $this->renderOrEmpty($rows, ['id', 'order_number', 'method', 'status', 'total', 'created_at (UTC)']);
+
+        $this->newLine();
+        $this->info("3. Tablet POS (pos_orders) — card activity on {$date} UTC");
+        $rows = DB::table('pos_orders')
+            ->where('payment_method', 'card')
+            ->whereBetween('created_at', ["{$date} 00:00:00", "{$date} 23:59:59"])
+            ->orderBy('created_at')
+            ->get(['id', 'order_number', 'status', 'total', 'created_at']);
+        $this->renderOrEmpty($rows, ['id', 'order_number', 'status', 'total', 'created_at (UTC)']);
+
+        $this->newLine();
+        $this->info('4. Web POS (pos_transactions) — is it even in use?');
+        $wp = DB::table('pos_transactions')
+            ->selectRaw('COUNT(*) AS rows_total, MAX(id) AS max_id, MAX(created_at) AS last_seen')
+            ->first();
+        $this->table(
+            ['rows', 'max id', 'last activity'],
+            [[$wp->rows_total ?? 0, $wp->max_id ?? '-', $wp->last_seen ?? '-']]
+        );
 
         $this->newLine();
         $this->comment('Read-only — nothing was written.');
