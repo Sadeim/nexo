@@ -140,7 +140,7 @@ class PlutoPayClient
      * Returns null when the id is unknown to the provider (a 404), so the
      * caller can tell "not found" apart from "request failed".
      *
-     * @return array{id:string,status:string,reference:?string,amount:?int,tip_amount:?int}|null
+     * @return array{id:string,status:string,reference:?string,amount:?int,tip_amount:?int,processor_id:string,metadata:array}|null
      */
     public function retrievePayment(string $id): ?array
     {
@@ -156,6 +156,11 @@ class PlutoPayClient
             'reference'  => $data['reference'] ?? null,
             'amount'     => isset($data['amount']) ? (int) $data['amount'] : null,
             'tip_amount' => isset($data['tip_amount']) ? (int) $data['tip_amount'] : null,
+            // The Stripe PaymentIntent behind the charge. It is the only id
+            // that reaches the processor, so it is what to quote when asking
+            // about anything this endpoint does not report — tips included.
+            'processor_id' => (string) ($data['processor_transaction_id'] ?? ''),
+            'metadata'     => is_array($data['metadata'] ?? null) ? $data['metadata'] : [],
         ];
     }
 
