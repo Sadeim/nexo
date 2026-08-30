@@ -74,31 +74,62 @@ class FindOrphanNexoPosPayments extends Command
             ->filter()
             ->flip();
 
-        $rows = [];
-        $missingCents = 0;
-
-        foreach ($remote as $r) {
+        $orphans = array_values(array_filter($remote, function ($r) use ($known) {
             $id = (string) ($r['id'] ?? '');
-            if ($id === '' || $known->has($id)) {
-                continue;
-            }
 
+            return $id !== '' && !$known->has($id);
+        }));
+
+        if (empty($orphans)) {
+            $this->newLine();
+            $this->info('Every provider transaction in that window has a matching order.');
+
+            return self::SUCCESS;
+        }
+
+        $this->line('Fetching tip detail for ' . count($orphans) . ' unmatched payment(s)...');
+
+        $rows         = [];
+        $missingCents = 0;
+        $tipsUnknown  = 0;
+        $client       = new PlutoPayClient();
+
+        foreach ($orphans as $r) {
+            $id     = (string) $r['id'];
             $amount = (int) ($r['amount'] ?? 0);
-            $tip    = (int) ($r['tip_amount'] ?? 0);
             $status = strtolower((string) ($r['status'] ?? ''));
             $when   = $r['created_at'] ?? ($r['created'] ?? ($r['date'] ?? null));
             $local  = $when ? Carbon::parse($when)->setTimezone($tz) : null;
 
+            // List rows carry no tip. The provider reports tips only on the
+            // terminal event, the same way it reports metadata, so a $0.00
+            // read from the list is silence rather than zero — and printing
+            // it as zero would understate what a barber is owed.
+            $tip = null;
+            try {
+                $detail = $client->retrievePayment($id);
+                if ($detail !== null) {
+                    $amount = $detail['amount'] ?? $amount;
+                    $tip    = $detail['tip_amount'];
+                }
+            } catch (PlutoPayException $e) {
+                // Leave the tip unknown rather than guessing at it.
+            }
+
+            if ($tip === null) {
+                $tipsUnknown++;
+            }
+
             if (in_array($status, ['succeeded', 'completed', 'paid', 'captured'], true)) {
-                $missingCents += $amount + $tip;
+                $missingCents += $amount + (int) $tip;
             }
 
             $rows[] = [
                 $id,
                 $status,
                 '$' . number_format($amount / 100, 2),
-                '$' . number_format($tip / 100, 2),
-                '$' . number_format(($amount + $tip) / 100, 2),
+                $tip === null ? '?' : '$' . number_format($tip / 100, 2),
+                $tip === null ? '?' : '$' . number_format(($amount + $tip) / 100, 2),
                 $local?->format('M j H:i') ?? '-',
                 $local?->copy()->utc()->format('M j H:i') ?? '-',
             ];
@@ -119,7 +150,16 @@ class FindOrphanNexoPosPayments extends Command
         );
 
         $this->newLine();
-        $this->error('Unrecorded takings: $' . number_format($missingCents / 100, 2));
+        $this->error(
+            ($tipsUnknown > 0 ? 'Unrecorded takings, AT LEAST: $' : 'Unrecorded takings: $')
+            . number_format($missingCents / 100, 2)
+        );
+        if ($tipsUnknown > 0) {
+            $this->warn(
+                "Tips could not be confirmed for {$tipsUnknown} payment(s) — the real figure is higher. "
+                . 'Ask the provider for the tip on each id before paying anyone.'
+            );
+        }
         $this->line('These need an employee attached before payroll is correct.');
         $this->comment('Read-only — no orders were created.');
 
