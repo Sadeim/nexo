@@ -144,14 +144,11 @@ class PlutoPayClient
      */
     public function retrievePayment(string $id): ?array
     {
-        $path = str_replace('{id}', rawurlencode($id), $this->retrievePath);
-        $res  = $this->http()->get($path);
+        $data = $this->retrievePaymentRaw($id);
 
-        if ($res->status() === 404) {
+        if ($data === null) {
             return null;
         }
-
-        $data = $this->unwrap($res);
 
         return [
             'id'         => (string) ($data['id'] ?? $id),
@@ -190,6 +187,22 @@ class PlutoPayClient
         }
 
         return array_values(array_filter($data, 'is_array'));
+    }
+
+    /**
+     * The unflattened transaction payload, for when a field we expect is
+     * missing and we need to see where the provider actually put it.
+     */
+    public function retrievePaymentRaw(string $id): ?array
+    {
+        $path = str_replace('{id}', rawurlencode($id), $this->retrievePath);
+        $res  = $this->http()->get($path);
+
+        if ($res->status() === 404) {
+            return null;
+        }
+
+        return $this->unwrap($res);
     }
 
     /** GET /v1/terminal/readers */

@@ -27,12 +27,33 @@ class FindOrphanNexoPosPayments extends Command
     protected $signature = 'nexo-pos:find-orphan-payments
         {--from= : Start date YYYY-MM-DD (default: 7 days ago)}
         {--to= : End date YYYY-MM-DD (default: today)}
-        {--pages=10 : Max pages of 100 to pull — the provider allows 100 requests/minute}';
+        {--pages=10 : Max pages of 100 to pull — the provider allows 100 requests/minute}
+        {--dump= : Print one transaction\'s raw payload and exit — use it to find a field we are not reading}';
 
     protected $description = 'Read-only: list provider card payments that have no matching order.';
 
     public function handle(): int
     {
+        if ($dumpId = (string) $this->option('dump')) {
+            try {
+                $raw = (new PlutoPayClient())->retrievePaymentRaw($dumpId);
+            } catch (PlutoPayException $e) {
+                $this->error("Lookup failed: {$e->getMessage()}");
+
+                return self::FAILURE;
+            }
+
+            if ($raw === null) {
+                $this->warn('The provider does not recognise that id.');
+
+                return self::SUCCESS;
+            }
+
+            $this->line(json_encode($raw, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+
+            return self::SUCCESS;
+        }
+
         $tz   = config('app.timezone');
         $from = (string) ($this->option('from') ?: Carbon::now($tz)->subDays(7)->toDateString());
         $to   = (string) ($this->option('to') ?: Carbon::now($tz)->toDateString());
