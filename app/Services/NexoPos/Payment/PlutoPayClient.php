@@ -30,6 +30,7 @@ class PlutoPayClient
     private string $readerId;
     private string $currency;
     private string $retrievePath;
+    private string $listPath;
 
     public function __construct()
     {
@@ -57,6 +58,7 @@ class PlutoPayClient
         $this->readerId   = (string) ($cfg['reader_id'] ?? '');
         $this->currency     = (string) ($cfg['currency'] ?? 'usd');
         $this->retrievePath = (string) ($cfg['retrieve_path'] ?? 'v1/transactions/{id}');
+        $this->listPath     = (string) ($cfg['list_path'] ?? 'v1/transactions');
     }
 
     private function http(): PendingRequest
@@ -158,6 +160,36 @@ class PlutoPayClient
             'amount'     => isset($data['amount']) ? (int) $data['amount'] : null,
             'tip_amount' => isset($data['tip_amount']) ? (int) $data['tip_amount'] : null,
         ];
+    }
+
+    /**
+     * List transactions in a date window (YYYY-MM-DD, inclusive).
+     *
+     * This is the only way to see a payment that has no order on our side —
+     * retrievePayment can only confirm ids we already know about, so a charge
+     * taken outside our app is invisible to it by construction.
+     *
+     * Pagination is `size` and `page`. The published guide says `per_page`,
+     * which is silently ignored and hands back pages of 10 while looking like
+     * it worked — confirmed wrong by their support. Max size is 100.
+     *
+     * @return array<int,array<string,mixed>>
+     */
+    public function listPayments(string $dateFrom, string $dateTo, int $page = 1, int $size = 100): array
+    {
+        $data = $this->unwrap($this->http()->get($this->listPath, [
+            'date_from' => $dateFrom,
+            'date_to'   => $dateTo,
+            'page'      => $page,
+            'size'      => min(max($size, 1), 100),
+        ]));
+
+        // Some responses nest the rows one level deeper than others.
+        if (isset($data['data']) && is_array($data['data'])) {
+            $data = $data['data'];
+        }
+
+        return array_values(array_filter($data, 'is_array'));
     }
 
     /** GET /v1/terminal/readers */

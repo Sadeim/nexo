@@ -40,6 +40,9 @@ return [
         // txn_… reference, both of which PlutoPay answers with a 500 instead
         // of a 404. Configurable so a provider path change needs no deploy.
         'retrieve_path'    => env('NEXO_POS_PLUTOPAY_RETRIEVE_PATH', 'v1/transactions/{id}'),
+        // List transactions in a date window — the only way to spot a charge
+        // the provider has but we have no order for.
+        'list_path'        => env('NEXO_POS_PLUTOPAY_LIST_PATH', 'v1/transactions'),
         // Set to false to hard-disable live keys even if one is in .env.
         'allow_live'       => (bool) env('NEXO_POS_PLUTOPAY_ALLOW_LIVE', true),
     ],
