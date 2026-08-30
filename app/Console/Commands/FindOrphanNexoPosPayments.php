@@ -108,11 +108,11 @@ class FindOrphanNexoPosPayments extends Command
             return self::SUCCESS;
         }
 
-        $this->line('Fetching tip detail for ' . count($orphans) . ' unmatched payment(s)...');
+        $this->line('Fetching detail for ' . count($orphans) . ' unmatched payment(s)...');
 
         $rows         = [];
         $missingCents = 0;
-        $tipsUnknown  = 0;
+        $mislinked    = 0;
         $client       = new PlutoPayClient();
 
         foreach ($orphans as $r) {
@@ -122,35 +122,40 @@ class FindOrphanNexoPosPayments extends Command
             $when   = $r['created_at'] ?? ($r['created'] ?? ($r['date'] ?? null));
             $local  = $when ? Carbon::parse($when)->setTimezone($tz) : null;
 
-            // List rows carry no tip. The provider reports tips only on the
-            // terminal event, the same way it reports metadata, so a $0.00
-            // read from the list is silence rather than zero — and printing
-            // it as zero would understate what a barber is owed.
-            $tip = null;
+            // This endpoint reports no tip at all — not a zero, no field. So
+            // the base amount is the most these rows can ever tell us, and
+            // the tip has to be asked for by Stripe id. It does return the
+            // metadata, though, which settles what kind of gap each row is.
+            $processorId = '';
+            $stampedWith = null;
             try {
                 $detail = $client->retrievePayment($id);
                 if ($detail !== null) {
-                    $amount = $detail['amount'] ?? $amount;
-                    $tip    = $detail['tip_amount'];
+                    $amount      = $detail['amount'] ?? $amount;
+                    $processorId = $detail['processor_id'];
+                    $stampedWith = $detail['metadata']['pos_order_id'] ?? null;
                 }
             } catch (PlutoPayException $e) {
-                // Leave the tip unknown rather than guessing at it.
+                // Fall back to what the list row gave us.
             }
 
-            if ($tip === null) {
-                $tipsUnknown++;
+            // A charge carrying our order id is a different failure from one
+            // taken outside the app: the sale did start with us and we lost
+            // the link to it. Same money missing, entirely different bug.
+            if ($stampedWith !== null) {
+                $mislinked++;
             }
 
             if (in_array($status, ['succeeded', 'completed', 'paid', 'captured'], true)) {
-                $missingCents += $amount + (int) $tip;
+                $missingCents += $amount;
             }
 
             $rows[] = [
                 $id,
                 $status,
                 '$' . number_format($amount / 100, 2),
-                $tip === null ? '?' : '$' . number_format($tip / 100, 2),
-                $tip === null ? '?' : '$' . number_format(($amount + $tip) / 100, 2),
+                $processorId !== '' ? $processorId : '-',
+                $stampedWith !== null ? "order {$stampedWith}" : 'none',
                 $local?->format('M j H:i') ?? '-',
                 $local?->copy()->utc()->format('M j H:i') ?? '-',
             ];
@@ -166,21 +171,25 @@ class FindOrphanNexoPosPayments extends Command
 
         $this->warn(count($rows) . ' provider payment(s) with no order on our side:');
         $this->table(
-            ['provider id', 'status', 'amount', 'tip', 'captured', 'shop time', 'UTC'],
+            ['provider id', 'status', 'amount', 'stripe id', 'our order id', 'shop time', 'UTC'],
             $rows
         );
 
         $this->newLine();
-        $this->error(
-            ($tipsUnknown > 0 ? 'Unrecorded takings, AT LEAST: $' : 'Unrecorded takings: $')
-            . number_format($missingCents / 100, 2)
+        $this->error('Unrecorded takings, BEFORE TIPS: $' . number_format($missingCents / 100, 2));
+        $this->warn(
+            'This endpoint does not report tips — no field, not a zero. Ask the provider '
+            . 'for the tip on each Stripe id above before paying anyone.'
         );
-        if ($tipsUnknown > 0) {
-            $this->warn(
-                "Tips could not be confirmed for {$tipsUnknown} payment(s) — the real figure is higher. "
-                . 'Ask the provider for the tip on each id before paying anyone.'
+
+        if ($mislinked > 0) {
+            $this->newLine();
+            $this->error(
+                "{$mislinked} of these carry OUR order id in their metadata. Those sales did start "
+                . 'in our app and we lost the link — a separate bug from a charge taken outside it.'
             );
         }
+
         $this->line('These need an employee attached before payroll is correct.');
         $this->comment('Read-only — no orders were created.');
 
