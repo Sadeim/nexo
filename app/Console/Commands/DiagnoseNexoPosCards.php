@@ -2,8 +2,9 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
+use App\Models\PosOrder;
 use Carbon\Carbon;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -73,6 +74,43 @@ class DiagnoseNexoPosCards extends Command
             ['rows', 'max id', 'last activity'],
             [[$wp->rows_total ?? 0, $wp->max_id ?? '-', $wp->last_seen ?? '-']]
         );
+
+        $this->newLine();
+        $this->info("5. Webhooks received on {$date} — did any touch an order?");
+        $this->line('   The handler cannot create an order, only update one that already');
+        $this->line('   exists, so an event with no order changed nothing in the books.');
+        $events = DB::table('pos_api_webhook_events')
+            ->whereBetween('created_at', ["{$date} 00:00:00", "{$date} 23:59:59"])
+            ->orderBy('created_at')
+            ->get(['event_type', 'payment_intent_id', 'created_at']);
+
+        if ($events->isEmpty()) {
+            $this->warn('   (none received)');
+        } else {
+            $ids = $events->pluck('payment_intent_id')->filter()->all();
+            $linked = PosOrder::query()
+                ->whereIn('provider_payment_id', $ids)
+                ->orWhereIn('payment_intent_id', $ids)
+                ->get(['id', 'provider_payment_id', 'payment_intent_id']);
+
+            $this->table(
+                ['event', 'payment id', 'touched order', 'received (shop)'],
+                $events->map(function ($e) use ($linked) {
+                    $hit = $linked->first(fn ($o) => in_array(
+                        $e->payment_intent_id,
+                        [$o->provider_payment_id, $o->payment_intent_id],
+                        true
+                    ));
+
+                    return [
+                        $e->event_type,
+                        $e->payment_intent_id ?: '-',
+                        $hit ? "order {$hit->id}" : 'NOTHING',
+                        Carbon::parse($e->created_at, config('app.timezone'))->format('M j H:i'),
+                    ];
+                })->all()
+            );
+        }
 
         $this->newLine();
         $this->comment('Read-only — nothing was written.');
