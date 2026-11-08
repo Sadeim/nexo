@@ -131,4 +131,40 @@ trait SaveImageTrait
 
         return '/' . $directory . '/' . $new_name;
     }
+
+    /**
+     * Store an image resized to a maximum width and re-encoded as WebP.
+     *
+     * Sits beside uploadImage(), which copies the original byte-for-byte.
+     * A barber's portrait is rendered on a public page at a known size, so
+     * serving a 4MB phone photo would cost the visitor far more than it shows
+     * them. Same destination and same returned path shape as uploadImage, so
+     * callers and the document root treat both identically.
+     *
+     * Never upscales: a smaller image keeps its own dimensions.
+     *
+     * @return string Web path, e.g. /uploads/store/barbers/652f1a.webp
+     */
+    protected function uploadWebpImage($file, string $path = '', int $maxWidth = 800, int $quality = 85): string
+    {
+        $directory   = 'uploads/store/' . $path;
+        $destination = public_path($directory);
+
+        if (!file_exists($destination)) {
+            mkdir($destination, 0755, true);
+        }
+
+        $name     = uniqid() . '.webp';
+        $fullPath = $destination . '/' . $name;
+
+        Image::make($file)
+            ->resize($maxWidth, null, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            })
+            ->encode('webp', $quality)
+            ->save($fullPath);
+
+        return '/' . $directory . '/' . $name;
+    }
 }

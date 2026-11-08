@@ -308,6 +308,7 @@ Route::group(['middleware' => ['auth:admin', 'admin', 'admin.role'], 'prefix' =>
     Route::group(['prefix' => 'bookings', 'as' => 'bookings.'], function () {
         Route::get('data/datatables', [BookingController::class, 'datatable'])->name('datatable');
         Route::get('calendar', [BookingController::class, 'calendar'])->name('calendar');
+        Route::post('{id}/barber', [BookingController::class, 'assignBarber'])->name('assign_barber');
         Route::get('calendar-events', [BookingController::class, 'calendarEvents'])->name('events');
     });
     Route::resource('bookings', BookingController::class);

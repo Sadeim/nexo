@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\EmployeeResource;
 use App\Models\Employee;
+use App\Models\Service;
 use App\Traits\SaveImageTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 /**
@@ -32,7 +34,15 @@ class EmployeeController extends Controller
 
     public function create()
     {
-        return view('admin.employees.create');
+        return view('admin.employees.create', [
+            'services' => $this->specialtyOptions(),
+        ]);
+    }
+
+    /** Marketing services offered as specialties on the public profile. */
+    private function specialtyOptions()
+    {
+        return Service::orderBy('name')->get(['id', 'name', 'price']);
     }
 
     public function store(Request $request)
@@ -43,6 +53,9 @@ class EmployeeController extends Controller
             DB::beginTransaction();
             if ($request->hasFile('avatar')) {
                 $data['avatar'] = $this->uploadImage($request->file('avatar'), 'employees');
+            }
+            if ($request->hasFile('photo')) {
+                $data['photo_path'] = $this->uploadWebpImage($request->file('photo'), 'barbers');
             }
             Employee::create($data);
             DB::commit();
@@ -56,7 +69,11 @@ class EmployeeController extends Controller
     public function edit($id)
     {
         $employee = Employee::findOrFail($id);
-        return view('admin.employees.create', compact('employee'));
+
+        return view('admin.employees.create', [
+            'employee' => $employee,
+            'services' => $this->specialtyOptions(),
+        ]);
     }
 
     public function update(Request $request, $id)
@@ -68,6 +85,11 @@ class EmployeeController extends Controller
             DB::beginTransaction();
             if ($request->hasFile('avatar')) {
                 $data['avatar'] = $this->uploadImage($request->file('avatar'), 'employees');
+            }
+            if ($request->hasFile('photo')) {
+                $data['photo_path'] = $this->uploadWebpImage($request->file('photo'), 'barbers');
+            } elseif ($request->boolean('remove_photo')) {
+                $data['photo_path'] = null;
             }
             $employee->update($data);
             DB::commit();
@@ -94,12 +116,92 @@ class EmployeeController extends Controller
 
     protected function validateData(Request $request, ?int $id = null): array
     {
-        return $request->validate([
+        $data = $request->validate([
             'name'            => ['required', 'string', 'max:120', Rule::unique('employees', 'name')->ignore($id)],
             'sort_order'      => 'nullable|integer|min:0|max:9999',
             'commission_rate' => 'nullable|numeric|min:0|max:100',
             'avatar'          => 'nullable|image|max:4096',
             'is_active'       => 'nullable|boolean',
+
+            // Public profile
+            'public_profile'  => 'nullable|boolean',
+            'slug'            => ['nullable', 'string', 'max:160', 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/', Rule::unique('employees', 'slug')->ignore($id)],
+            'title'           => 'nullable|string|max:120',
+            'bio'             => 'nullable|string|max:5000',
+            'instagram'       => 'nullable|string|max:120',
+            'specialties'     => 'nullable|array',
+            'specialties.*'   => 'integer|exists:services,id',
+            'photo'           => 'nullable|image|max:5120',
+            'remove_photo'    => 'nullable|boolean',
+        ], [
+            'slug.regex'  => 'The URL must be lowercase letters, numbers and single hyphens.',
+            'photo.max'   => 'The photo may not be larger than 5MB.',
+            'slug.unique' => 'Another barber already uses that URL.',
         ]);
+
+        // A published barber with no slug has no reachable page, so one is
+        // derived rather than left to fail silently at 404 time.
+        $data['slug'] = $this->resolveSlug($data['slug'] ?? null, $data['name'], $id);
+
+        // Stored as a bare handle so the view owns how it is displayed and
+        // linked. Accepts whatever the owner pastes — "@omar", a profile URL,
+        // or the handle itself.
+        $data['instagram'] = $this->normalizeInstagram($data['instagram'] ?? null);
+
+        // An empty multi-select sends nothing at all, which must clear the
+        // list rather than leave the previous one in place.
+        $data['specialties'] = array_values(array_unique(array_map(
+            'intval',
+            $request->input('specialties', [])
+        )));
+
+        // Not columns.
+        unset($data['photo'], $data['remove_photo']);
+
+        return $data;
+    }
+
+    /**
+     * The submitted slug, or one derived from the name, made unique.
+     */
+    private function resolveSlug(?string $submitted, string $name, ?int $ignoreId): string
+    {
+        $base = Str::slug($submitted ?: $name) ?: 'barber';
+        $slug = $base;
+        $n    = 1;
+
+        while (
+            Employee::where('slug', $slug)
+                ->when($ignoreId, fn ($q) => $q->where('id', '!=', $ignoreId))
+                ->exists()
+        ) {
+            $slug = $base . '-' . (++$n);
+        }
+
+        return $slug;
+    }
+
+    /**
+     * Reduce anything Instagram-shaped to the bare handle.
+     */
+    private function normalizeInstagram(?string $value): ?string
+    {
+        $value = trim((string) $value);
+
+        if ($value === '') {
+            return null;
+        }
+
+        // Pull the handle out of a pasted profile URL.
+        if (str_contains($value, 'instagram.com')) {
+            $path  = parse_url($value, PHP_URL_PATH) ?? '';
+            $value = trim($path, '/');
+            $value = explode('/', $value)[0] ?? '';
+        }
+
+        $value = ltrim($value, '@');
+        $value = trim($value, '/');
+
+        return $value === '' ? null : $value;
     }
 }
