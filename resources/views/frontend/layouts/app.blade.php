@@ -5,8 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="{{ asset('frontend_assets/src/output.css') }}" rel="stylesheet">
-    <title>{{ $settings->valueOf('site_title') }}</title>
+    {{-- Pages that have their own title set it; everything else keeps the
+         site-wide one, so this change is invisible to existing pages. --}}
+    <title>@yield('title', $settings->valueOf('site_title'))</title>
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset($settings->valueOf('browser_icon')) }}">
+
+    @stack('meta')
 
 
 

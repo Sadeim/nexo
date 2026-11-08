@@ -44,8 +44,21 @@ use App\Jobs\SendBookingReminderJob;
 
 class HomeController extends Controller
 {
-    public function home()
+    public function home(Request $request)
     {
+        // Barbers published for the website, in the owner's chosen order.
+        $data['barbers'] = Employee::publicBarbers()
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get();
+
+        // ?barber=slug arrives from a "Book with X" button. Resolved to an id
+        // here so the form only ever deals in ids and a slug can never reach
+        // the validator or the database.
+        $data['preselectedBarber'] = $request->filled('barber')
+            ? $data['barbers']->firstWhere('slug', $request->query('barber'))
+            : null;
+
         $data['slider'] = Slider::first();
         $data['about'] = About::first();
         $data['works'] = Work::where('is_featured', 1)->get();
