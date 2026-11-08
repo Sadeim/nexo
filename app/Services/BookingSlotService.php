@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
+use App\Exceptions\SlotUnavailableException;
 use App\Models\Booking;
 use App\Models\Employee;
 use Carbon\Carbon;
+use Illuminate\Database\QueryException;
 
 /**
  * The single authority on when the shop can take a booking.
@@ -24,6 +26,23 @@ use Carbon\Carbon;
  * That gives two questions, and a slot must pass both:
  *   - is the shop full at this time?            total occupants < capacity
  *   - is THIS barber already busy at this time? only when one was named
+ *
+ * HOW EACH HALF IS ENFORCED
+ * The two halves of the rule are protected by different mechanisms, because
+ * only one of them can be expressed as a constraint:
+ *
+ *   - per-barber: CONSTRAINT-protected. `bookings.slot_key` carries a unique
+ *     index, so a second booking for the same barber at the same time is
+ *     rejected by the database no matter how the two requests interleave or
+ *     what isolation level the server runs. Wrap such a write in
+ *     guardSlotUniqueness() to turn the collision into a plain refusal.
+ *
+ *   - capacity ("any available barber"): LOCK-protected. A count against a
+ *     limit cannot be a unique index, so this half is a read followed by a
+ *     write and relies on running inside a transaction with $forUpdate set,
+ *     which holds the slot's existing rows for the duration. That is a narrow
+ *     window rather than a closed one; under REPEATABLE READ InnoDB's gap
+ *     locks also block a competing insert, under READ COMMITTED they do not.
  *
  * OCCUPANCY
  * "Occupied" means any booking whose status is not `cancelled` — matching
@@ -181,6 +200,64 @@ class BookingSlotService
         }
 
         return $slots;
+    }
+
+    /**
+     * Run a write that may hit the per-barber uniqueness constraint, and
+     * answer a collision the same way the rule itself would.
+     *
+     * Without this the customer sees a 500 from a race they cannot do
+     * anything about, instead of being told the barber is busy.
+     *
+     * @template T
+     * @param  callable():T  $write
+     * @return T
+     *
+     * @throws SlotUnavailableException
+     */
+    public function guardSlotUniqueness(callable $write): mixed
+    {
+        try {
+            return $write();
+        } catch (QueryException $e) {
+            if ($this->isSlotKeyCollision($e)) {
+                throw SlotUnavailableException::forBarber();
+            }
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Was this integrity error our slot constraint, rather than some other
+     * one?
+     *
+     * Matched on each driver's constraint signature:
+     *   MySQL  — Duplicate entry '...' for key 'bookings_slot_key_unique'
+     *   SQLite — UNIQUE constraint failed: bookings.slot_key
+     *
+     * Deliberately NOT matched on the bare column name. QueryException's
+     * message embeds the whole failing statement, and an insert into bookings
+     * names slot_key in its column list — so any failed write to this table,
+     * a missing-date NOT NULL violation included, looked like a busy barber
+     * and got reported to the customer as one.
+     *
+     * Any other integrity violation is someone else's bug and is rethrown
+     * rather than dressed up as an unavailable slot.
+     */
+    private function isSlotKeyCollision(QueryException $e): bool
+    {
+        if ((string) $e->getCode() !== '23000') {
+            return false;
+        }
+
+        // errorInfo[2] is the driver's own message, without the SQL. Preferred
+        // when present; the message is the fallback, matched on the same two
+        // signatures so the SQL text cannot trigger it.
+        $haystack = $e->errorInfo[2] ?? $e->getMessage();
+
+        return str_contains($haystack, 'bookings_slot_key_unique')
+            || str_contains($haystack, 'bookings.slot_key');
     }
 
     // ---------- Internals ----------
