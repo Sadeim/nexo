@@ -6,10 +6,11 @@ use App\Models\Admin;
 use App\Models\PosTransaction;
 use App\Models\Role;
 use App\Models\Service;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Spatie\Permission\PermissionRegistrar;
+use Tests\Concerns\SeedsAccessControl;
 use Tests\TestCase;
 
 /**
@@ -21,13 +22,16 @@ use Tests\TestCase;
  */
 class CardPaymentTest extends TestCase
 {
-    use DatabaseTransactions;
+    use RefreshDatabase;
+    use SeedsAccessControl;
 
     private string $webhookSecret = 'whsec_test_secret';
 
     protected function setUp(): void
     {
         parent::setUp();
+
+        $this->seedAccessControl();
 
         // Lock the gateway to TEST MODE for the whole suite.
         config()->set('services.plutopay.secret_key', 'sk_test_dummy');

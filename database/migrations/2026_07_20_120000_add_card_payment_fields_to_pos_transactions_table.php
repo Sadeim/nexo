@@ -38,13 +38,27 @@ return new class extends Migration
             $table->index('payment_intent_id');
         });
 
-        // Widen the status enum for the card lifecycle. MySQL-specific ALTER;
-        // both dev and prod are MySQL. Default stays 'completed' (cash path).
-        DB::statement(
-            "ALTER TABLE pos_transactions MODIFY status "
-            . "ENUM('completed','pending','awaiting_payment','processing','failed','canceled') "
-            . "NOT NULL DEFAULT 'completed'"
-        );
+        // Widen the status column for the card lifecycle. Default stays
+        // 'completed' (the cash path).
+        //
+        // MySQL has no portable way to alter an ENUM, so it needs raw SQL.
+        // SQLite has no ENUM at all — Laravel emits a CHECK constraint
+        // instead — and MODIFY is not SQLite syntax, so the statement below
+        // used to abort any migration run on SQLite. That is why the test
+        // suite could not use an in-memory database. On SQLite the column is
+        // redefined as a plain string, which drops the narrow CHECK and
+        // accepts the same values.
+        if (DB::connection()->getDriverName() === 'sqlite') {
+            Schema::table('pos_transactions', function (Blueprint $table) {
+                $table->string('status', 32)->default('completed')->change();
+            });
+        } else {
+            DB::statement(
+                "ALTER TABLE pos_transactions MODIFY status "
+                . "ENUM('completed','pending','awaiting_payment','processing','failed','canceled') "
+                . "NOT NULL DEFAULT 'completed'"
+            );
+        }
     }
 
     public function down(): void
@@ -54,10 +68,16 @@ return new class extends Migration
             "UPDATE pos_transactions SET status = 'pending' "
             . "WHERE status IN ('awaiting_payment','processing','failed','canceled')"
         );
-        DB::statement(
-            "ALTER TABLE pos_transactions MODIFY status "
-            . "ENUM('completed','pending') NOT NULL DEFAULT 'completed'"
-        );
+        if (DB::connection()->getDriverName() === 'sqlite') {
+            Schema::table('pos_transactions', function (Blueprint $table) {
+                $table->string('status', 32)->default('completed')->change();
+            });
+        } else {
+            DB::statement(
+                "ALTER TABLE pos_transactions MODIFY status "
+                . "ENUM('completed','pending') NOT NULL DEFAULT 'completed'"
+            );
+        }
 
         Schema::table('pos_transactions', function (Blueprint $table) {
             $table->dropIndex(['payment_intent_id']);

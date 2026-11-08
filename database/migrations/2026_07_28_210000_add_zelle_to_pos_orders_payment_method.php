@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
@@ -20,10 +21,19 @@ return new class extends Migration
             return;
         }
 
-        DB::statement(
-            "ALTER TABLE `pos_orders`
-             MODIFY `payment_method` ENUM('cash','card','zelle') NOT NULL DEFAULT 'cash'"
-        );
+        // SQLite has no ENUM (Laravel emits a CHECK constraint) and no MODIFY,
+        // so the raw statement is MySQL-only. On SQLite the column becomes a
+        // plain string, dropping the CHECK that would reject 'zelle'.
+        if (DB::connection()->getDriverName() === 'sqlite') {
+            Schema::table('pos_orders', function (Blueprint $table) {
+                $table->string('payment_method', 16)->default('cash')->change();
+            });
+        } else {
+            DB::statement(
+                "ALTER TABLE `pos_orders`
+                 MODIFY `payment_method` ENUM('cash','card','zelle') NOT NULL DEFAULT 'cash'"
+            );
+        }
     }
 
     public function down(): void
@@ -38,9 +48,15 @@ return new class extends Migration
             'payment_method' => 'cash',
         ]);
 
-        DB::statement(
-            "ALTER TABLE `pos_orders`
-             MODIFY `payment_method` ENUM('cash','card') NOT NULL DEFAULT 'cash'"
-        );
+        if (DB::connection()->getDriverName() === 'sqlite') {
+            Schema::table('pos_orders', function (Blueprint $table) {
+                $table->string('payment_method', 16)->default('cash')->change();
+            });
+        } else {
+            DB::statement(
+                "ALTER TABLE `pos_orders`
+                 MODIFY `payment_method` ENUM('cash','card') NOT NULL DEFAULT 'cash'"
+            );
+        }
     }
 };
