@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use App\Http\Resources\Admin\BookingResource;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Booking extends Model
 {
+    use HasFactory;
+
     public $resource = BookingResource::class;
 
     protected $fillable = [
@@ -19,6 +22,7 @@ class Booking extends Model
         'message',
         'status',
         'service_id',
+        'barber_id',
         'reminder_sent_at',
     ];
 
@@ -30,5 +34,11 @@ class Booking extends Model
     public function service()
     {
         return $this->belongsTo(Service::class);
+    }
+
+    /** The requested barber, or null for "any available barber". */
+    public function barber()
+    {
+        return $this->belongsTo(Employee::class, 'barber_id');
     }
 }
