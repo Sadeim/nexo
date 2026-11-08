@@ -4,6 +4,7 @@ namespace Tests\Feature\Booking;
 
 use App\Models\Booking;
 use App\Models\Employee;
+use App\Mail\BookingConfirmationMail;
 use App\Models\Service;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
@@ -215,5 +216,28 @@ class StoreBookingTest extends TestCase
         $this->getJson(route('bookings.booked-slots', [
             'date' => self::WEDNESDAY, 'barber_id' => $hidden->id,
         ]))->assertStatus(422)->assertJsonValidationErrors('barber_id');
+    }
+
+    // ---------- confirmation email ----------
+
+    public function test_the_confirmation_email_names_the_barber(): void
+    {
+        $barber = Employee::factory()->published()->create(['name' => 'Omar Haddad']);
+
+        $this->postJson(route('bookings.store'), $this->payload(['barber_id' => $barber->id]))
+            ->assertOk();
+
+        Mail::assertSent(BookingConfirmationMail::class, function (BookingConfirmationMail $mail) {
+            return str_contains($mail->render(), 'Omar Haddad');
+        });
+    }
+
+    public function test_the_confirmation_email_says_any_available_barber_when_none_was_chosen(): void
+    {
+        $this->postJson(route('bookings.store'), $this->payload())->assertOk();
+
+        Mail::assertSent(BookingConfirmationMail::class, function (BookingConfirmationMail $mail) {
+            return str_contains($mail->render(), 'Any available barber');
+        });
     }
 }
