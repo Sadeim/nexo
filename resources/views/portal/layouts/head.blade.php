@@ -12,7 +12,7 @@
 
 @if (! $portalIsDesktop)
     {{-- Installable on phones only. /work has no manifest and no worker. --}}
-    <link rel="manifest" href="{{ asset('portal_assets/manifest.webmanifest') }}">
+    <link rel="manifest" href="{{ \App\Support\Portal::asset('portal_assets/manifest.webmanifest') }}">
 
     {{-- iOS Safari ignores the manifest for "Add to Home Screen" and reads
          these instead. Without them the installed app opens in browser chrome
@@ -27,7 +27,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=League+Gothic&family=Inter:wght@400;600&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="{{ asset('portal_assets/css/portal.css') }}">
+<link rel="stylesheet" href="{{ \App\Support\Portal::asset('portal_assets/css/portal.css') }}">
 
 @if ($portalIsDesktop && $portalCounterpart)
     {{-- The handover. /work is a sidebar and a table; below the desktop

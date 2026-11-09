@@ -385,13 +385,79 @@ class PortalScreensTest extends TestCase
         // The fetch is started from the handler itself. Moved inside a then(),
         // waitUntil() throws and the update quietly stops happening.
         $this->assertStringContainsString('event.waitUntil(fresh);', $source);
+
+        /*
+         * And both fetches go past the browser's own HTTP cache, which holds
+         * this host's static files for seven days without revalidating. A
+         * plain fetch() here revalidates nothing: it is answered from that
+         * cache, and the worker diligently re-caches the stale file it was
+         * just handed.
+         */
+        $this->assertStringContainsString("cache: 'no-cache'", $source,
+            'The revalidation is answered by the browser HTTP cache.');
+
+        $this->assertStringContainsString("cache: 'reload'", $source,
+            'A fresh install copies the shell out of the browser HTTP cache.');
     }
 
     /**
-     * The cache name is the only thing that evicts a stale shell, so it has to
-     * move when the shell does. Pinned to the version the current assets were
-     * released with: changing portal.css without changing this is the mistake
-     * that produced the test above it.
+     * The real defence against a stale shell, and the reason the cache name
+     * above is no longer load-bearing.
+     *
+     * This host answers static files with `Cache-Control: public,
+     * max-age=604800`. Seven days, no revalidation: a browser that has the
+     * stylesheet will keep using it for a week whatever the server holds, and
+     * the service worker's own fetches are answered from that same cache, so
+     * bumping the worker's version only makes it re-copy the stale file. A
+     * URL that changes with the contents is the one thing all three caches —
+     * browser, worker and CDN — agree to treat as new.
+     */
+    public function test_the_shell_assets_carry_a_fingerprint_of_their_contents(): void
+    {
+        $barber = Employee::factory()->withPortal('2240000055')->create();
+
+        // Login first, while this client is still a guest: actingAs() below
+        // persists, and the login screen sends a signed-in barber onwards.
+        foreach (['login', 'today'] as $screen) {
+            $body = $screen === 'login'
+                ? $this->get(route('portal.login'))->getContent()
+                : $this->actingAs($barber, 'employee')->get(route('portal.today'))->getContent();
+
+            foreach (['portal_assets/css/portal.css', 'portal_assets/js/portal.js'] as $path) {
+                // Of the contents, not of the clock: a deploy that copies an
+                // unchanged file must not make every phone fetch it again.
+                $expected = substr(md5_file(public_path($path)), 0, 8);
+
+                $this->assertStringContainsString($path.'?v='.$expected, $body, sprintf(
+                    'The %s screen asks for %s without its fingerprint.', $screen, $path
+                ));
+            }
+        }
+    }
+
+    public function test_a_fingerprint_is_per_file_and_survives_a_missing_one(): void
+    {
+        $css = \App\Support\Portal::asset('portal_assets/css/portal.css');
+        $js = \App\Support\Portal::asset('portal_assets/js/portal.js');
+
+        $this->assertNotSame(
+            parse_url($css, PHP_URL_QUERY),
+            parse_url($js, PHP_URL_QUERY),
+            'Two different files were given the same fingerprint.'
+        );
+
+        // A stylesheet that is not there must still render a URL. A 404 is a
+        // bad page; an exception in a layout is no page at all.
+        $this->assertStringEndsWith(
+            '?v=missing',
+            \App\Support\Portal::asset('portal_assets/css/nope.css')
+        );
+    }
+
+    /**
+     * The cache name still has one job: evicting what an older worker left
+     * behind. It must never go back to v1, whose entries were written by the
+     * cache-first worker and would otherwise be served forever.
      */
     public function test_the_shell_cache_is_versioned(): void
     {

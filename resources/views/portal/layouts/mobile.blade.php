@@ -31,6 +31,6 @@
 
     @include('portal.partials.tabbar')
 
-    <script src="{{ asset('portal_assets/js/portal.js') }}" defer></script>
+    <script src="{{ \App\Support\Portal::asset('portal_assets/js/portal.js') }}" defer></script>
 </body>
 </html>

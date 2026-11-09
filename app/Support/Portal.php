@@ -135,6 +135,44 @@ class Portal
         return null;
     }
 
+    /**
+     * A portal asset URL with the file's own fingerprint on it.
+     *
+     * This host serves static files with `Cache-Control: public,
+     * max-age=604800`. Seven days, no revalidation — so a browser that loaded
+     * portal.css this morning will go on using it for a week, whatever the
+     * server now holds, and the service worker inherits the same stale copy
+     * because its own fetches go through that cache too. On 9 Nov 2026 that
+     * was about to ship a manager's screen whose stylesheet nobody could see.
+     *
+     * The answer is to make the URL change when the file does. A new URL is a
+     * cache miss everywhere at once — browser, service worker and CDN — and
+     * seven days of caching becomes the right thing rather than a trap. The
+     * hash is of the content, not the mtime, so a deploy that copies an
+     * unchanged file does not make every phone download it again.
+     *
+     * Memoised per request: a page asks for three of these and they must not
+     * cost three hashes of the same bytes.
+     *
+     * @var array<string, string>
+     */
+    private static array $fingerprints = [];
+
+    public static function asset(string $path): string
+    {
+        if (! isset(self::$fingerprints[$path])) {
+            $file = public_path($path);
+
+            // A missing file still has to render a URL — a 404 on the
+            // stylesheet is a bad page, an exception is no page at all.
+            self::$fingerprints[$path] = is_file($file)
+                ? substr(md5_file($file), 0, 8)
+                : 'missing';
+        }
+
+        return asset($path).'?v='.self::$fingerprints[$path];
+    }
+
     /** Every URL path prefix the portal answers on, for middleware matching. */
     public static function pathPatterns(): array
     {

@@ -16,25 +16,26 @@
  */
 
 /*
- * THE OTHER RULE: bump this whenever a shell file changes.
+ * The cache's version. activate() deletes every cache that is not this one,
+ * so changing the name is what evicts the files cached under the old one.
  *
- * The name is the cache's version. activate() deletes every cache that is not
- * this one, so a new name is what evicts the old files; a name that never
- * changes means a stylesheet cached once is served for as long as the phone
- * is never cleared. A dev browser proved it on 9 Nov 2026 — still being
- * served the first portal.css, 8KB against the 17KB the server was sending,
- * with the manager's chips rendering as bare links. On a phone that had
- * opened /me there would have been no way back at all.
- *
- * The revalidation below is the belt to this braces: it heals the next load
- * by itself. Bumping here is what makes THIS load right.
+ * It is no longer the thing that keeps the portal current, and it must not be
+ * relied on for that again: the stylesheet and the script carry a fingerprint
+ * of their own contents in their URL (App\Support\Portal::asset), so a change
+ * to either is a different URL and a miss in every cache there is. This name
+ * is only for evicting what an older worker left behind.
  */
-const CACHE = 'nexo-portal-shell-v2';
+const CACHE = 'nexo-portal-shell-v3';
 
+/*
+ * Precached: the icons, which an installed app wants on hand and which are
+ * the only shell files whose URL does not change when they do.
+ *
+ * The stylesheet, the script and the manifest are deliberately NOT here. They
+ * arrive fingerprinted, so precaching them from this fixed list would cache
+ * a URL the page never asks for.
+ */
 const SHELL = [
-    '/portal_assets/css/portal.css',
-    '/portal_assets/js/portal.js',
-    '/portal_assets/manifest.webmanifest',
     '/portal_assets/icons/icon-192.png',
     '/portal_assets/icons/icon-512.png',
 ];
@@ -44,8 +45,14 @@ self.addEventListener('install', (event) => {
         caches.open(CACHE)
             // Individually, so one missing file cannot fail the whole install
             // and leave the portal with no worker at all.
+            //
+            // 'reload' bypasses the browser's own HTTP cache. Without it this
+            // fetch is served from the same seven-day cache entry everything
+            // else is, and a fresh install faithfully copies a stale file.
             .then((cache) => Promise.all(
-                SHELL.map((url) => cache.add(url).catch(() => null))
+                SHELL.map((url) => cache
+                    .add(new Request(url, { cache: 'reload' }))
+                    .catch(() => null))
             ))
             .then(() => self.skipWaiting())
     );
@@ -87,11 +94,16 @@ self.addEventListener('fetch', (event) => {
      * screen anyway. The cache buys a fast first paint and a shell that
      * survives a flaky connection; it must not buy last month's stylesheet.
      *
+     * 'no-cache' on the revalidation, for the same reason as on install: a
+     * plain fetch() here is answered by the browser's seven-day HTTP cache
+     * and revalidates nothing. This makes it a conditional request to the
+     * origin, which is a 304 and a few bytes when nothing has changed.
+     *
      * Both waitUntil() and respondWith() are called straight from the handler,
      * never from inside a then(): called later they throw, and the update
      * would silently stop happening.
      */
-    const fresh = fetch(request)
+    const fresh = fetch(new Request(request.url, { cache: 'no-cache' }))
         .then((response) => {
             // Only store a clean same-origin 200.
             if (response && response.ok && response.type === 'basic') {
