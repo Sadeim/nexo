@@ -38,12 +38,42 @@
         return;
     }
 
-    // Only when the page is already scrolled to the top, so it never fights
-    // with normal scrolling.
+    /*
+     * ONLY on screens that also show a Refresh button, and never from a
+     * touch that begins in a form.
+     *
+     * This gesture throws away whatever is on the screen. That is harmless on
+     * a list of today's bookings and ruinous on a form: it was armed on every
+     * mobile screen, including the password form, which never scrolls — so
+     * window.scrollY was always 0, every touch armed it, and the downward
+     * swipe an iPhone user makes to dismiss the keyboard and reach the Save
+     * button reloaded the page and emptied all three fields. A barber spent
+     * the afternoon of 9 Nov 2026 unable to get past it, with nothing in the
+     * server logs, because the request was never made.
+     *
+     * So the gesture now has to be asked for twice over: the screen opts in
+     * by carrying the Refresh control, and the touch has to start somewhere
+     * that is not an input. A reload has to be something the barber wanted.
+     */
+    if (!refresh) {
+        return;
+    }
+
     var startY = null;
 
     window.addEventListener('touchstart', function (event) {
-        startY = window.scrollY === 0 ? event.touches[0].clientY : null;
+        var from = event.target;
+
+        // closest() rather than a tagName check: the touch can land on a
+        // label, or on padding inside the field's own wrapper.
+        var inAForm = from && from.closest
+            && from.closest('form, input, textarea, select, button');
+
+        // Only when the page is already scrolled to the top, so it never
+        // fights with normal scrolling.
+        startY = (!inAForm && window.scrollY === 0)
+            ? event.touches[0].clientY
+            : null;
     }, { passive: true });
 
     window.addEventListener('touchmove', function (event) {

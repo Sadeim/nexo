@@ -454,6 +454,67 @@ class PortalScreensTest extends TestCase
         );
     }
 
+    // ---------- the gesture that ate the password form ----------
+
+    /**
+     * Pull-to-refresh throws away whatever is on the screen, so it may only
+     * be armed where the screen asks for it.
+     *
+     * It used to run on every mobile screen. The password form never scrolls,
+     * so window.scrollY was always 0 and every touch armed it; the downward
+     * swipe an iPhone user makes to dismiss the keyboard and reach the Save
+     * button then reloaded the page and emptied all three fields. Nothing
+     * reached the server, so nothing was in the logs, and a barber spent the
+     * afternoon of 9 Nov 2026 unable to sign in properly.
+     */
+    public function test_pull_to_refresh_is_only_armed_where_a_refresh_button_is(): void
+    {
+        $source = file_get_contents(public_path('portal_assets/js/portal.js'));
+
+        // The gesture is behind the same control the screen shows.
+        $this->assertMatchesRegularExpression(
+            '/if\s*\(\s*!\s*refresh\s*\)\s*\{\s*return;/',
+            $source,
+            'The reload gesture is no longer gated on the Refresh control.'
+        );
+
+        // ...and a touch that starts in a form never arms it at all.
+        $this->assertStringContainsString(
+            "closest('form, input, textarea, select, button')",
+            $source,
+            'A touch starting inside a form can arm the reload gesture again.'
+        );
+
+        // That gating has to come before the listeners, or it gates nothing.
+        $this->assertLessThan(
+            strpos($source, "addEventListener('touchstart'"),
+            strpos($source, 'if (!refresh)'),
+            'The guard sits after the gesture is already bound.'
+        );
+    }
+
+    /**
+     * The screens the gesture must never be armed on, stated as the pages
+     * themselves: no Refresh control means no reload gesture.
+     */
+    public function test_the_screens_with_forms_carry_no_refresh_control(): void
+    {
+        $barber = Employee::factory()->withPortal('2240000077')->create();
+
+        foreach (['profile', 'bookings'] as $screen) {
+            $this->actingAs($barber, 'employee')
+                ->get(route('portal.'.$screen))
+                ->assertOk()
+                ->assertDontSee('data-portal-refresh', false);
+        }
+
+        // Today is the one that does, and still does.
+        $this->actingAs($barber, 'employee')
+            ->get(route('portal.today'))
+            ->assertOk()
+            ->assertSee('data-portal-refresh', false);
+    }
+
     /**
      * The cache name still has one job: evicting what an older worker left
      * behind. It must never go back to v1, whose entries were written by the
