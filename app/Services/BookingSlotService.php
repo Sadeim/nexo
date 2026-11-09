@@ -7,6 +7,8 @@ use App\Models\Booking;
 use App\Models\Employee;
 use Carbon\Carbon;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 /**
  * The single authority on when the shop can take a booking.
@@ -37,12 +39,18 @@ use Illuminate\Database\QueryException;
  *     what isolation level the server runs. Wrap such a write in
  *     guardSlotUniqueness() to turn the collision into a plain refusal.
  *
- *   - capacity ("any available barber"): LOCK-protected. A count against a
- *     limit cannot be a unique index, so this half is a read followed by a
- *     write and relies on running inside a transaction with $forUpdate set,
- *     which holds the slot's existing rows for the duration. That is a narrow
- *     window rather than a closed one; under REPEATABLE READ InnoDB's gap
- *     locks also block a competing insert, under READ COMMITTED they do not.
+ *   - capacity ("any available barber"): SERIALISED by a named lock. A count
+ *     against a limit cannot be a unique index, so this half is a read
+ *     followed by a write. withSlotLock() gives one slot's worth of work a
+ *     named advisory lock, so two requests for the same date and time take
+ *     their turn instead of both passing the count.
+ *
+ *     It is a named lock rather than lockForUpdate alone because production
+ *     runs READ-COMMITTED (MariaDB 11.8, global), where InnoDB takes no gap
+ *     locks on a ranged SELECT ... FOR UPDATE — so nothing stops a competing
+ *     INSERT into a slot whose existing rows are locked. A named lock does
+ *     not depend on the isolation level at all. lockForUpdate stays: it still
+ *     protects the rows that do exist.
  *
  * OCCUPANCY
  * "Occupied" means any booking whose status is not `cancelled` — matching
@@ -64,6 +72,14 @@ class BookingSlotService
 
     /** A booking in this state frees its slot again. */
     public const STATUS_CANCELLED = 'cancelled';
+
+    /**
+     * How long to wait for another request to finish with the same slot.
+     *
+     * Long enough to outlast a slow write on a loaded box, short enough that
+     * a customer is told "taken" rather than left watching a spinner.
+     */
+    public const SLOT_LOCK_TIMEOUT_SECONDS = 5;
 
     // ---------- Opening hours ----------
 
@@ -200,6 +216,97 @@ class BookingSlotService
         }
 
         return $slots;
+    }
+
+    /**
+     * Serialise everything touching one slot behind a named lock.
+     *
+     * The lock covers the SLOT, not the table: two customers booking
+     * different times never wait on each other, and the shop can still take
+     * concurrent bookings all day. Only the same date and time queue up.
+     *
+     * Acquired before the transaction and released in a finally, because a
+     * lock held past a failure would wedge that slot for every later request
+     * until the connection closed.
+     *
+     * Failing to get the lock is treated as the slot being unavailable: the
+     * only thing that holds it is another booking for the same slot getting
+     * there first, which is exactly what the customer needs to be told.
+     *
+     * @template T
+     * @param  callable():T  $work
+     * @return T
+     *
+     * @throws SlotUnavailableException
+     */
+    public function withSlotLock(string $date, string $time, callable $work): mixed
+    {
+        $connection = DB::connection();
+
+        // Named locks are a MySQL/MariaDB feature. SQLite has no equivalent
+        // and no concurrency to protect against in the test suite, so there
+        // the lock is simply not taken.
+        if (!in_array($connection->getDriverName(), ['mysql', 'mariadb'], true)) {
+            return $work();
+        }
+
+        $name = $this->slotLockName($date, $time);
+
+        if (!$this->acquireSlotLock($name)) {
+            throw SlotUnavailableException::forShop();
+        }
+
+        try {
+            return $work();
+        } finally {
+            $this->releaseSlotLock($name);
+        }
+    }
+
+    /**
+     * The lock name for one slot, normalised the same way slot_key is.
+     *
+     * '10:00' and '10:00:00' are one appointment; if they produced two lock
+     * names the two requests would not queue and the lock would be decorative.
+     */
+    public function slotLockName(string $date, string $time): string
+    {
+        return sprintf(
+            'booking:%s|%s',
+            Carbon::parse($date)->toDateString(),
+            Carbon::parse($time)->format('H:i:s')
+        );
+    }
+
+    /** GET_LOCK: 1 acquired, 0 timed out, NULL on error. Only 1 will do. */
+    protected function acquireSlotLock(string $name): bool
+    {
+        $row = DB::connection()->selectOne(
+            'SELECT GET_LOCK(?, ?) AS acquired',
+            [$name, self::SLOT_LOCK_TIMEOUT_SECONDS]
+        );
+
+        return (int) ($row->acquired ?? 0) === 1;
+    }
+
+    /**
+     * Released on the same connection that took it, which is why this uses
+     * DB::connection() rather than a new one.
+     *
+     * A failure here must not replace whatever the caller was already
+     * throwing, so it is logged rather than raised; the lock would be freed
+     * when the connection closes in any case.
+     */
+    protected function releaseSlotLock(string $name): void
+    {
+        try {
+            DB::connection()->statement('SELECT RELEASE_LOCK(?)', [$name]);
+        } catch (\Throwable $e) {
+            Log::warning('Could not release booking slot lock', [
+                'lock' => $name,
+                'err'  => $e->getMessage(),
+            ]);
+        }
     }
 
     /**

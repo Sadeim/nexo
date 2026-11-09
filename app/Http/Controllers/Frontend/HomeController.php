@@ -167,29 +167,34 @@ class HomeController extends Controller
         $validated['time']      = Carbon::parse($validated['time'])->format('H:i:s');
 
         try {
-            // One transaction covers both halves of the availability rule.
-            // The re-check runs with $forUpdate so the capacity count holds
-            // for the length of the write, and the insert goes through
-            // guardSlotUniqueness so the per-barber constraint — which no
-            // lock is needed for — reads back as the same refusal.
-            $booking = DB::transaction(function () use ($slotService, $validated, $barberId) {
-                $available = $slotService->isSlotValidAndAvailable(
-                    $validated['date'],
-                    $validated['time'],
-                    $barberId,
-                    forUpdate: true
-                );
+            // Everything touching this slot is serialised by a named lock, so
+            // two customers racing for the same time take their turn rather
+            // than both passing the capacity count. Inside it, one transaction
+            // covers both halves of the rule: the re-check runs with
+            // $forUpdate, and the insert goes through guardSlotUniqueness so
+            // the per-barber constraint reads back as the same refusal.
+            $booking = $slotService->withSlotLock(
+                $validated['date'],
+                $validated['time'],
+                fn () => DB::transaction(function () use ($slotService, $validated, $barberId) {
+                    $available = $slotService->isSlotValidAndAvailable(
+                        $validated['date'],
+                        $validated['time'],
+                        $barberId,
+                        forUpdate: true
+                    );
 
-                if (!$available) {
-                    throw $barberId === null
-                        ? SlotUnavailableException::forShop()
-                        : SlotUnavailableException::forBarber();
-                }
+                    if (!$available) {
+                        throw $barberId === null
+                            ? SlotUnavailableException::forShop()
+                            : SlotUnavailableException::forBarber();
+                    }
 
-                return $slotService->guardSlotUniqueness(
-                    fn () => Booking::create($validated)
-                );
-            });
+                    return $slotService->guardSlotUniqueness(
+                        fn () => Booking::create($validated)
+                    );
+                })
+            );
         } catch (SlotUnavailableException $e) {
             return response()->json([
                 'success' => false,

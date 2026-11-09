@@ -77,11 +77,18 @@ class BookingController extends Controller
         $slots    = app(BookingSlotService::class);
 
         try {
-            DB::transaction(function () use ($slots, $booking, $barberId) {
-                $slots->guardSlotUniqueness(
-                    fn () => $booking->update(['barber_id' => $barberId])
-                );
-            });
+            // Same named lock as a customer booking, keyed on this booking's
+            // own slot — so assigning from the dashboard queues behind a
+            // customer booking the same time rather than racing it.
+            $slots->withSlotLock(
+                $booking->date->toDateString(),
+                (string) $booking->time,
+                fn () => DB::transaction(function () use ($slots, $booking, $barberId) {
+                    $slots->guardSlotUniqueness(
+                        fn () => $booking->update(['barber_id' => $barberId])
+                    );
+                })
+            );
         } catch (SlotUnavailableException $e) {
             // The row is untouched: the collision rolled the transaction back.
             return $this->response_api(422, 'Barber already booked at this time');
