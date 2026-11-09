@@ -37,20 +37,18 @@
 
          Inline and blocking, before anything paints, so a phone that lands on
          a /work link never flashes a desktop layout it cannot use.
-         location.replace keeps the dead width out of the back history. --}}
+         location.replace keeps the dead width out of the back history.
+
+         Checked once, on load, and never again. There is deliberately NO
+         resize listener: a barber half-way through the change-password form
+         must not be thrown onto another URL — losing what they had typed —
+         because they dragged a window edge or a tiling manager moved them.
+         The width that matters is the one the page was opened at. --}}
     <script>
         (function () {
-            var min = {{ $portalMinWidth }};
-            var mobile = @json($portalCounterpart);
-
-            function handOver() {
-                if (window.innerWidth < min) {
-                    window.location.replace(mobile);
-                }
+            if (window.innerWidth < {{ $portalMinWidth }}) {
+                window.location.replace(@json($portalCounterpart));
             }
-
-            handOver();
-            window.addEventListener('resize', handOver);
         })();
     </script>
 @endif

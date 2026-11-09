@@ -152,6 +152,44 @@ class PortalBothVersionsTest extends TestCase
         );
     }
 
+    /**
+     * The handover fires on load and never again.
+     *
+     * A resize listener would navigate a barber away mid-form — dragging a
+     * window edge, or a tiling manager rearranging things, would throw away
+     * whatever they had typed into the change-password screen. The width the
+     * page opened at is the one that decides.
+     */
+    #[DataProvider('portals')]
+    public function test_no_screen_hands_over_on_resize(string $p): void
+    {
+        $barber = Employee::factory()->withPortal()->create();
+
+        foreach (['today', 'bookings', 'earnings', 'profile', 'password.edit'] as $screen) {
+            $body = $this->actingAs($barber, 'employee')
+                ->get(route($p.$screen))
+                ->assertOk()
+                ->getContent();
+
+            // Both the inline handover and the shared script are in play here.
+            $this->assertStringNotContainsString("addEventListener('resize'", $body,
+                "The $p$screen page attaches a resize listener.");
+            $this->assertStringNotContainsString('addEventListener("resize"', $body,
+                "The $p$screen page attaches a resize listener.");
+            $this->assertStringNotContainsString('onresize', $body,
+                "The $p$screen page attaches a resize handler.");
+        }
+    }
+
+    /** The same, for the script both versions load from disk. */
+    public function test_the_shared_script_has_no_resize_handler(): void
+    {
+        $source = file_get_contents(public_path('portal_assets/js/portal.js'));
+
+        $this->assertStringNotContainsString('resize', $source,
+            'portal.js reacts to resize; the handover is a load-time decision only.');
+    }
+
     public function test_the_phone_version_has_no_handover(): void
     {
         $barber = Employee::factory()->withPortal()->create();
