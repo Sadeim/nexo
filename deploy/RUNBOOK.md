@@ -100,6 +100,29 @@ overwriting it with the stock `public/index.php` took the site down on
 If you add a static asset by hand, put it in **both** places, or just run the
 deploy script.
 
+### The portal shell is cached on people's phones
+
+`public/portal_assets/` — `portal.css`, `portal.js`, the icons, the manifest —
+is cached by the portal's service worker under a name that it also uses to
+evict the old copies:
+
+```js
+const CACHE = 'nexo-portal-shell-v2';
+```
+
+**Changing any file in `portal_assets/` means bumping that version.** A test
+asserts it is at least v2, which is not the same as asserting you bumped it
+this time; nothing can check that for you.
+
+Since 9 Nov 2026 the worker also re-fetches every shell asset in the
+background while serving the cached copy, so a release you forget to bump
+corrects itself on the *next* load rather than never. Bumping is what makes
+the *first* load right — which, on the day someone opens a new screen for the
+first time, is the one that matters.
+
+The worker still caches no `/me` HTML or JSON, ever. See the comment at the
+top of `public/portal_assets/sw.js` for why.
+
 ### This host has no `/dev/fd`
 
 So `while read ... done < <(some command)` — process substitution — **fails**,
