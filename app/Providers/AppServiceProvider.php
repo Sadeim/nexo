@@ -40,10 +40,10 @@ class AppServiceProvider extends ServiceProvider
             // The booking modal lives in the footer, so it renders on every
             // page and needs the barber list everywhere — not only on the
             // pages whose controller happens to pass it.
-            $shared_barbers = Employee::publicBarbers()
-                ->orderBy('sort_order')
-                ->orderBy('name')
-                ->get(['id', 'name', 'slug']);
+            //
+            // Which also means this query runs on every page, so it is cached
+            // and cannot throw: see Employee::publicBarbersCached().
+            $shared_barbers = Employee::publicBarbersCached();
 
             $view->with([
                 'settings' => $settings,

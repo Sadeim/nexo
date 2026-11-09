@@ -2,10 +2,16 @@
 
 namespace App\Models;
 
+use App\Observers\EmployeeObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
+#[ObservedBy(EmployeeObserver::class)]
 class Employee extends Model
 {
     use HasFactory;
@@ -84,6 +90,61 @@ class Employee extends Model
     public function scopePublicBarbers($q)
     {
         return $q->where('public_profile', true)->where('is_active', true);
+    }
+
+    public const PUBLIC_BARBERS_CACHE_KEY = 'barbers.public';
+    public const PUBLIC_BARBERS_CACHE_TTL = 600; // 10 minutes
+
+    /**
+     * The published barbers, for the booking modal in the footer.
+     *
+     * Cached and defended, because a View::composer('*') runs this on EVERY
+     * page — which makes the whole site only as available as this one query.
+     * On 8 Nov 2026 it took the site down: the deploy pulled code that filters
+     * on `public_profile` minutes before the migration that adds the column,
+     * and every request 500'd in the gap.
+     *
+     * So a failure here returns an empty collection and logs. The modal then
+     * offers "any available barber" and nothing else, which is the behaviour
+     * the site had before barbers existed — a degraded booking form beats no
+     * site at all. Deploy order is still the real fix; this is the seatbelt.
+     *
+     * Catches Throwable rather than QueryException on purpose: a missing
+     * column, an unreachable database and an unwritable cache store all have
+     * the same correct answer, and the point is that nothing escapes.
+     */
+    public static function publicBarbersCached(): Collection
+    {
+        try {
+            return Cache::remember(
+                self::PUBLIC_BARBERS_CACHE_KEY,
+                self::PUBLIC_BARBERS_CACHE_TTL,
+                fn () => static::publicBarbers()
+                    ->orderBy('sort_order')
+                    ->orderBy('name')
+                    ->get(['id', 'name', 'slug'])
+            );
+        } catch (\Throwable $e) {
+            Log::warning('Could not load public barbers; serving an empty list', [
+                'err' => $e->getMessage(),
+            ]);
+
+            return collect();
+        }
+    }
+
+    /** Called by EmployeeObserver whenever an employee is saved or deleted. */
+    public static function forgetPublicBarbersCache(): void
+    {
+        try {
+            Cache::forget(self::PUBLIC_BARBERS_CACHE_KEY);
+        } catch (\Throwable $e) {
+            // A cache store that cannot forget will expire the entry within
+            // the TTL anyway. Never let this break saving an employee.
+            Log::warning('Could not clear the public barbers cache', [
+                'err' => $e->getMessage(),
+            ]);
+        }
     }
 
     public function scopeSearch($query, $request)
