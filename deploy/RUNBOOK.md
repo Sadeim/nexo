@@ -18,6 +18,20 @@ DEPLOY_SECRET=$(openssl rand -hex 16) bash .../deploy/deploy.sh
 
 ---
 
+## First run on a server that does not have the script yet
+
+`deploy.sh` lives in the repository, so it arrives by the very pull it
+performs. To bootstrap it once:
+
+```bash
+git -C /home/u171331366/domains/nexobarbers.com/nexo pull --ff-only
+```
+
+After that the script is present and pulls subsequent versions itself. It
+copies itself to `/tmp` and re-executes before doing anything, because bash
+reads a script incrementally and a `git pull` that rewrites the running file
+would otherwise resume at a byte offset that now means something else.
+
 ## The one thing to understand first
 
 **This account hosts eighteen websites.** `ls ~/domains/` on 8 Nov 2026 showed:

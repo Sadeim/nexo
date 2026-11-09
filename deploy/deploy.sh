@@ -12,6 +12,24 @@
 #
 set -euo pipefail
 
+# Run from a copy, always.
+#
+# This script does `git pull`, and the pull can change THIS FILE. Bash reads a
+# script incrementally as it executes, so a file that changes underneath it
+# resumes at a byte offset that now means something else — silently running
+# half of one version and half of another. Copying to /tmp and re-executing
+# from there makes the running script immutable for the duration.
+if [ "${DEPLOY_DETACHED:-0}" != "1" ]; then
+    SELF_COPY=$(mktemp /tmp/nexo-deploy-XXXXXX.sh)
+    cp "$0" "$SELF_COPY"
+    chmod +x "$SELF_COPY"
+    export DEPLOY_DETACHED=1
+    bash "$SELF_COPY" "$@"
+    STATUS=$?
+    rm -f "$SELF_COPY"
+    exit $STATUS
+fi
+
 APP_DIR=/home/u171331366/domains/nexobarbers.com/nexo
 DOCROOT=/home/u171331366/domains/nexobarbers.com/public_html
 SITE=https://nexobarbers.com
