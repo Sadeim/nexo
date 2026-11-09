@@ -136,13 +136,22 @@ class Employee extends Model implements AuthenticatableContract
      * The owner types whatever is in their contacts — "(224) 669-8063",
      * "+1 224 669 8063" — and the barber, months later, types something else.
      * Both land on the same stored value, so login does not fail on
-     * punctuation. A leading country code is NOT stripped: 12246698063 and
-     * 2246698063 are different numbers as far as this is concerned, and
-     * guessing which one was meant would be worse than matching exactly.
+     * punctuation.
+     *
+     * A US country code is dropped too: eleven digits beginning with 1 is
+     * "+1" in front of a ten-digit number, so 12246698063 and 2246698063 are
+     * the same phone. The length check is what keeps this safe — it only ever
+     * fires on 11 digits, so a genuine ten-digit number starting with 1
+     * (which the NANP does not issue as an area code anyway) is untouched,
+     * and so is any other country's number of a different length.
      */
     public static function normalizePhone(?string $phone): ?string
     {
         $digits = preg_replace('/\D+/', '', (string) $phone);
+
+        if (strlen($digits) === 11 && str_starts_with($digits, '1')) {
+            $digits = substr($digits, 1);
+        }
 
         return $digits === '' ? null : $digits;
     }

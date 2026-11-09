@@ -45,6 +45,60 @@ class PortalAuthTest extends TestCase
         $this->assertAuthenticated('employee');
     }
 
+    /**
+     * The same barber, written the three ways a phone number gets written.
+     * The owner saves one of them and the barber types another months later;
+     * all of them have to reach the same account.
+     */
+    public function test_the_us_country_code_is_optional(): void
+    {
+        $barber = Employee::factory()->withPortal('2246698063')->create();
+
+        foreach (['1-224-669-8063', '+1 (224) 669-8063', '2246698063'] as $typed) {
+            $this->post(route('portal.login.post'), [
+                'phone' => $typed,
+                'password' => 'portal-pass-1',
+            ])->assertRedirect(route('portal.today'));
+
+            $this->assertAuthenticatedAs($barber, 'employee',
+                "Signing in with \"$typed\" did not reach the barber stored as 2246698063.");
+
+            $this->post(route('portal.logout'));
+            $this->flushSession();
+        }
+    }
+
+    /**
+     * And it is dropped on the way in too, so the owner may save the number
+     * in any of those forms and still be saving one number.
+     */
+    public function test_the_country_code_is_dropped_on_storage(): void
+    {
+        $this->assertSame('2246698063', Employee::normalizePhone('1-224-669-8063'));
+        $this->assertSame('2246698063', Employee::normalizePhone('+1 (224) 669-8063'));
+        $this->assertSame('2246698063', Employee::normalizePhone('2246698063'));
+    }
+
+    /**
+     * Only eleven digits starting with 1 are a +1 prefix. Anything else keeps
+     * every digit it was given.
+     */
+    public function test_only_an_eleven_digit_leading_one_is_treated_as_a_country_code(): void
+    {
+        // Ten digits that happen to start with 1 are a whole number.
+        $this->assertSame('1234567890', Employee::normalizePhone('123-456-7890'));
+
+        // Twelve digits is somebody else's country code; leave it alone.
+        $this->assertSame('441224669806', Employee::normalizePhone('+44 1224 669806'));
+
+        // Eleven digits not starting with 1 is not a +1 number.
+        $this->assertSame('22466980631', Employee::normalizePhone('22466980631'));
+
+        $this->assertNull(Employee::normalizePhone(''));
+        $this->assertNull(Employee::normalizePhone('---'));
+        $this->assertNull(Employee::normalizePhone(null));
+    }
+
     public function test_a_wrong_password_is_rejected(): void
     {
         Employee::factory()->withPortal('2246698063')->create();
