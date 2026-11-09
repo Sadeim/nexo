@@ -9,6 +9,13 @@ bash /home/u171331366/domains/nexobarbers.com/nexo/deploy/deploy.sh
 It logs to `storage/logs/deploy-<timestamp>.log` and prints HEAD before and
 after, the migrations it ran, and a smoke check of eight URLs.
 
+To know the maintenance bypass URL in advance — so you can keep viewing the
+site while it is down for everyone else — supply the secret:
+
+```bash
+DEPLOY_SECRET=$(openssl rand -hex 16) bash .../deploy/deploy.sh
+```
+
 ---
 
 ## The one thing to understand first

@@ -8,6 +8,8 @@
 #
 # Usage:  bash /home/u171331366/domains/nexobarbers.com/nexo/deploy/deploy.sh
 #
+#         DEPLOY_SECRET=<hex> bash .../deploy.sh   # to fix the bypass URL
+#
 set -euo pipefail
 
 APP_DIR=/home/u171331366/domains/nexobarbers.com/nexo
@@ -49,7 +51,9 @@ run php "$APP_DIR/artisan" db:show --json 2>/dev/null \
 
 # ------------------------------------------------------------ maintenance ----
 
-SECRET=$(openssl rand -hex 16 2>/dev/null || date +%s%N | sha256sum | cut -c1-32)
+# Honour a secret supplied by the operator, so the bypass URL can be known
+# and shared before the site goes down rather than scraped from the output.
+SECRET=${DEPLOY_SECRET:-$(openssl rand -hex 16 2>/dev/null || date +%s%N | sha256sum | cut -c1-32)}
 say "Maintenance mode"
 run php "$APP_DIR/artisan" down --secret="$SECRET" --render="errors::503"
 MAINTENANCE_ON=1
