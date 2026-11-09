@@ -60,6 +60,7 @@
                     <ul class="flex items-center gap-8 text-ivory font-league-gothic text-xl tracking-wider">
                         <li><a href="{{ route('home') }}" class="hover:text-white transition-colors border-b-4">HOME</a>
                         </li>
+                        <li><a href="{{ route('home') }}#barbers" class="hover:text-white transition-colors">BARBERS</a></li>
                         <li><a href="{{ route('services') }}" class="hover:text-white transition-colors">SERVICES</a>
                         </li>
                         <li><a href="{{ route('gallery') }} " class="hover:text-white transition-colors">GALLERY</a></li>
@@ -87,6 +88,12 @@
                             <a href="{{ route('home') }}"
                                 class="hover:text-white transition-colors {{ request()->routeIs('home') ? 'border-b-4 border-ivory' : '' }}">
                                 HOME
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('home') }}#barbers"
+                                class="hover:text-white transition-colors">
+                                BARBERS
                             </a>
                         </li>
                         <li>
@@ -155,6 +162,12 @@
                         <a href="{{ route('home') }}"
                             class="block py-3 px-4 hover:text-white hover:bg-ivory/10 transition-colors {{ request()->routeIs('home') ? 'border-l-4 border-ivory' : '' }}">
                             HOME
+                        </a>
+                    </li>
+                    <li class="border-b border-ivory/10">
+                        <a href="{{ route('home') }}#barbers"
+                            class="block py-3 px-4 hover:text-white hover:bg-ivory/10 transition-colors">
+                            BARBERS
                         </a>
                     </li>
                     <li class="border-b border-ivory/10">

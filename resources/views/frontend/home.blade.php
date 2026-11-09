@@ -372,6 +372,66 @@
             </div>
         </section>
 
+
+        <!-- Our Barbers Start -->
+        @if ($barbers->isNotEmpty())
+            <section id="barbers" class="relative py-16 lg:py-24 overflow-hidden bg-evergreen">
+                <!-- Background Pattern -->
+                <div class="absolute inset-0">
+                    <img src="{{ asset($settings->valueOf('green_background')) }}" alt="Background pattern"
+                        class="w-full h-full object-cover">
+                </div>
+
+                <div class="container mx-auto px-4 md:px-8 lg:px-12 xl:px-32 relative z-10">
+                    <!-- Section Header: same barber pole + rule + League Gothic as About -->
+                    <div class="flex items-center justify-between gap-4 mb-10">
+                        <svg width="42" height="71" viewBox="0 0 42 71" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M19.773 4.4375H25.2727C28.7461 4.4375 31.5516 7.25531 31.5516 10.6944V10.7388H31.6406C34.6465 10.7388 37.0734 13.1572 37.0734 16.1525C37.0734 19.1478 34.6465 21.5663 31.6406 21.5663H24.293L13.6055 26.7138V21.5663H13.4719C10.466 21.5663 8.03906 19.1478 8.03906 16.1525C8.03906 13.1572 10.466 10.7388 13.4719 10.7388H13.4941V10.6944C13.4941 7.23313 16.2996 4.4375 19.773 4.4375ZM31.6629 30.4413L13.6055 39.1609V43.9534L31.6629 35.2559V30.4413ZM31.6406 55.7794H24.7984L31.6629 52.4734V47.6809L14.8501 55.7794H13.4719C10.466 55.7794 8.03906 58.1978 8.03906 61.1931C8.03906 64.1884 10.466 66.6069 13.4719 66.6069H31.6406C34.6465 66.6069 37.0734 64.1884 37.0734 61.1931C37.0734 58.1978 34.6465 55.7794 31.6406 55.7794Z"
+                                fill="#F8EDD2" />
+                            <path
+                                d="M13.6055 30.53L31.6629 21.8325V26.625L13.6055 35.3225V30.53ZM13.6055 47.7697L31.6629 39.0722V43.8647L13.6055 52.5622V47.7697Z"
+                                fill="#F8EDD2" />
+                        </svg>
+                        <div class="h-px bg-ivory grow max-w-full"></div>
+                        <h2 class="font-league-gothic text-ivory text-[40px] tracking-widest">OUR BARBERS</h2>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                        @foreach ($barbers as $barber)
+                            <div class="group">
+                                <a href="{{ route('barbers.show', $barber->slug) }}" class="block overflow-hidden">
+                                    @include('frontend.partials.barber-photo', [
+                                        'barber'  => $barber,
+                                        'classes' => 'aspect-[4/5] transition-transform duration-300 group-hover:scale-105',
+                                    ])
+                                </a>
+
+                                <div class="mt-4">
+                                    <a href="{{ route('barbers.show', $barber->slug) }}">
+                                        <h3 class="font-league-gothic text-ivory text-3xl tracking-wide">
+                                            {{ $barber->name }}
+                                        </h3>
+                                    </a>
+                                    @if ($barber->title)
+                                        <p class="font-inter text-ivory/70 text-sm mt-1">{{ $barber->title }}</p>
+                                    @endif
+
+                                    <a href="{{ route('home') }}?barber={{ $barber->slug }}#barbers"
+                                       class="book-now-btn mt-4 inline-block bg-crimson text-ivory font-inter text-sm uppercase tracking-wider px-5 py-3 hover:bg-crimson/90 transition-colors"
+                                       data-barber-id="{{ $barber->id }}"
+                                       data-barber-name="{{ $barber->name }}">
+                                        Book with {{ $barber->first_name }}
+                                    </a>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </section>
+        @endif
+        <!-- Our Barbers End -->
+
         <!-- Higher Standard Section -->
         <section class="relative bg-evergreen py-10 overflow-hidden px-4 md:px-8">
             <!-- Background Pattern -->

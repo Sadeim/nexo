@@ -38,6 +38,14 @@
                     {{ $booking->service?->name ?? '-' }}
                 </td>
             </tr>
+            <tr>
+                <td style="padding: 8px 0; border-bottom: 1px solid #eee;">
+                    <strong>{{ __('Barber') }}:</strong>
+                </td>
+                <td style="padding: 8px 0; border-bottom: 1px solid #eee;">
+                    {{ $booking->barber?->name ?? __('Any available barber') }}
+                </td>
+            </tr>
         </table>
         <p>{{ __('Please make sure to arrive on time. We look forward to seeing you!') }}</p>
         <p>— {{ config('mail.from.name') }}</p>

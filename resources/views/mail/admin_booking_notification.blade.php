@@ -14,6 +14,7 @@
             <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>{{ __('Date') }}:</strong></td><td style="padding: 8px 0; border-bottom: 1px solid #eee;">{{ $booking->date->format('l, F j, Y') }}</td></tr>
             <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>{{ __('Time') }}:</strong></td><td style="padding: 8px 0; border-bottom: 1px solid #eee;">{{ \Carbon\Carbon::parse($booking->time)->format('g:i A') }}</td></tr>
             <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>{{ __('Service') }}:</strong></td><td style="padding: 8px 0; border-bottom: 1px solid #eee;">{{ $booking->service?->name ?? '-' }}</td></tr>
+            <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>{{ __('Barber') }}:</strong></td><td style="padding: 8px 0; border-bottom: 1px solid #eee;">{{ $booking->barber?->name ?? __('Any available barber') }}</td></tr>
         </table>
         <p>{{ __('Please check your admin panel for more options.') }}</p>
     </div>

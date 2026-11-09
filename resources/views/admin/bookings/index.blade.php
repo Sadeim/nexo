@@ -81,6 +81,7 @@
                                                 <th>{{ __('admin.form.name') }}</th>
                                                 <th>Email</th>
                                                 <th>Service</th>
+                                                <th>Barber</th>
                                                 <th>Date</th>
                                                 <th>Time</th>
                                                 <th>{{ __('admin.form.created_at') }}</th>
@@ -110,10 +111,72 @@
 @push('scripts')
     <script>
         window.datatable_url = "{{ route('admin.bookings.datatable') }}";
+
+        // Defined inline rather than in admin_assets/js_resources/bookings.js:
+        // those files have 404'd on the server before, and a missing column
+        // list silently empties the table.
+        window.columns = [
+            { data: 'id' },
+            { data: 'name' },
+            { data: 'email' },
+            { data: 'service' },
+            { data: 'barber' },
+            { data: 'date' },
+            { data: 'time' },
+            { data: 'created_at' },
+            { data: 'operations' }
+        ];
+        window.columnDefs = [
+            { targets: 0, orderable: false, sorting: false },
+            { targets: 4, orderable: false, sorting: false },
+            { targets: -1, orderable: false },
+        ];
     </script>
     <script src="{{ asset('admin_assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
-    <script src="{{ asset('admin_assets/js_resources/bookings.js') }}"></script>
     <script src="{{ asset('admin_assets/js/dashboard/handleDataTable.js') }}"></script>
+    <script>
+        // Inline barber assignment. Delegated, because DataTables replaces the
+        // rows on every draw and bound handlers would not survive a redraw.
+        document.addEventListener('change', function (event) {
+            const select = event.target.closest('.js-assign-barber');
+            if (!select) return;
+
+            const previous = select.dataset.current || '';
+            const chosen   = select.value;
+
+            select.disabled = true;
+
+            fetch(select.dataset.url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    // This layout publishes the token as <meta name="_token"
+                    // id="csrf_token">, which is what the working admin
+                    // scripts read. meta[name="csrf-token"] matches nothing.
+                    'X-CSRF-TOKEN': document.getElementById('csrf_token')?.content || ''
+                },
+                body: JSON.stringify({ barber_id: chosen === '' ? null : chosen })
+            })
+                .then(response => response.json().then(body => ({ ok: response.ok, body })))
+                .then(({ ok, body }) => {
+                    if (!ok) {
+                        // Put the dropdown back: the booking did not change.
+                        select.value = previous;
+                        alert(body.message || 'Could not assign that barber.');
+                        return;
+                    }
+                    select.dataset.current = chosen;
+                })
+                .catch(() => {
+                    select.value = previous;
+                    alert('Could not reach the server.');
+                })
+                .finally(() => {
+                    select.disabled = false;
+                });
+        });
+    </script>
 @endpush
 @push('modals')
 @endpush

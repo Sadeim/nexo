@@ -4,9 +4,10 @@ namespace Tests\Feature\Admin;
 
 use App\Models\Admin;
 use App\Models\Role;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\PermissionRegistrar;
+use Tests\Concerns\SeedsAccessControl;
 use Tests\TestCase;
 
 /**
@@ -18,7 +19,15 @@ use Tests\TestCase;
  */
 class DashboardAccessTest extends TestCase
 {
-    use DatabaseTransactions;
+    use RefreshDatabase;
+    use SeedsAccessControl;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->seedAccessControl();
+    }
 
     private function makeAccount(string $role, int $status = 1): Admin
     {

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Frontend\BarberController;
 use App\Http\Controllers\Frontend\BlogController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\MessageController;
@@ -32,6 +33,8 @@ Route::post('webhooks/nexo-pos-plutopay', [NexoPosWebhookController::class, 'han
 Route::get('/', [HomeController::class, 'home'])->name('home');
 Route::get('/service', [HomeController::class, 'services'])->name('services');
 Route::get('/gallery', [HomeController::class, 'gallery'])->name('gallery');
+
+Route::get('/barbers/{slug}', [BarberController::class, 'show'])->name('barbers.show');
 
 Route::get('contact_us', [HomeController::class, 'contactUs'])->name('contact');
 Route::post('contact_us/store', [HomeController::class, 'contactStore'])->name('contact.submit');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Exceptions\SlotUnavailableException;
 use App\Http\Controllers\Controller;
 use App\Mail\AdminNotification;
 use App\Mail\AdminBookingNotification;
@@ -10,6 +11,7 @@ use App\Models\About;
 use App\Models\Achievement;
 use App\Models\Blog;
 use App\Models\Booking;
+use App\Models\Employee;
 use App\Models\Category;
 use App\Models\Client;
 use App\Models\Consultation;
@@ -32,16 +34,31 @@ use App\Services\BookingSlotService;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 use App\Jobs\SendBookingReminderJob;
 
 
 class HomeController extends Controller
 {
-    public function home()
+    public function home(Request $request)
     {
+        // Barbers published for the website, in the owner's chosen order.
+        $data['barbers'] = Employee::publicBarbers()
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get();
+
+        // ?barber=slug arrives from a "Book with X" button. Resolved to an id
+        // here so the form only ever deals in ids and a slug can never reach
+        // the validator or the database.
+        $data['preselectedBarber'] = $request->filled('barber')
+            ? $data['barbers']->firstWhere('slug', $request->query('barber'))
+            : null;
+
         $data['slider'] = Slider::first();
         $data['about'] = About::first();
         $data['works'] = Work::where('is_featured', 1)->get();
@@ -131,22 +148,61 @@ class HomeController extends Controller
             'date'       => 'required|date|after_or_equal:today',
             'service_id' => 'required|exists:services,id',
             'time'       => 'required|string',
+            // Absent or null means "any available barber". Only a published
+            // barber may be requested — an unpublished employee is not on
+            // offer, and accepting one would book a chair the customer was
+            // never shown.
+            'barber_id'  => ['nullable', Rule::exists('employees', 'id')->where(
+                fn ($q) => $q->where('public_profile', true)->where('is_active', true)
+            )],
         ]);
 
         $slotService = app(BookingSlotService::class);
-        if (!$slotService->isSlotValidAndAvailable($validated['date'], $validated['time'])) {
+
+        $barberId = isset($validated['barber_id']) ? (int) $validated['barber_id'] : null;
+
+        $validated['barber_id'] = $barberId;
+        $validated['persons']   = 1;
+        $validated['status']    = 'pending';
+        $validated['time']      = Carbon::parse($validated['time'])->format('H:i:s');
+
+        try {
+            // Everything touching this slot is serialised by a named lock, so
+            // two customers racing for the same time take their turn rather
+            // than both passing the capacity count. Inside it, one transaction
+            // covers both halves of the rule: the re-check runs with
+            // $forUpdate, and the insert goes through guardSlotUniqueness so
+            // the per-barber constraint reads back as the same refusal.
+            $booking = $slotService->withSlotLock(
+                $validated['date'],
+                $validated['time'],
+                fn () => DB::transaction(function () use ($slotService, $validated, $barberId) {
+                    $available = $slotService->isSlotValidAndAvailable(
+                        $validated['date'],
+                        $validated['time'],
+                        $barberId,
+                        forUpdate: true
+                    );
+
+                    if (!$available) {
+                        throw $barberId === null
+                            ? SlotUnavailableException::forShop()
+                            : SlotUnavailableException::forBarber();
+                    }
+
+                    return $slotService->guardSlotUniqueness(
+                        fn () => Booking::create($validated)
+                    );
+                })
+            );
+        } catch (SlotUnavailableException $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'The selected time is not available. Please choose another slot.',
+                'message' => $e->getMessage(),
             ], 422);
         }
 
-        $validated['persons'] = 1;
-        $validated['status']  = 'pending';
-        $validated['time']    = \Carbon\Carbon::parse($validated['time'])->format('H:i:s');
-
-        $booking = Booking::create($validated);
-        $booking->load('service');
+        $booking->load(['service', 'barber']);
 
         // إرسال إيميل التأكيد
         try {
@@ -157,7 +213,7 @@ class HomeController extends Controller
         }
 
         // جدولة إشعار التذكير قبل الموعد بـ 30 دقيقة
-        $appointmentDateTime = \Carbon\Carbon::parse(
+        $appointmentDateTime = Carbon::parse(
             $booking->date->format('Y-m-d') . ' ' . $booking->time
         );
         $reminderTime = $appointmentDateTime->subMinutes(30);
@@ -177,18 +233,28 @@ class HomeController extends Controller
     // Get available time slots for a specific date
     public function getAvailableSlots(Request $request)
     {
-        $date = $request->query('date');
+        $validated = $request->validate([
+            'date'      => 'nullable|date',
+            // Narrows availability to one barber. Omitted means "any".
+            'barber_id' => ['nullable', Rule::exists('employees', 'id')->where(
+                fn ($q) => $q->where('public_profile', true)->where('is_active', true)
+            )],
+        ]);
 
-        if (!$date) {
+        if (empty($validated['date'])) {
             return response()->json(['success' => true, 'slots' => []], 200);
         }
 
-        $slotService = app(BookingSlotService::class);
-        $slots = $slotService->getAvailableSlots($date);
+        $slots = app(BookingSlotService::class)->getAvailableSlots(
+            $validated['date'],
+            isset($validated['barber_id']) ? (int) $validated['barber_id'] : null
+        );
 
+        // Each slot carries `disabled` so the UI can grey out a taken time
+        // rather than hiding it, which reads as the shop being shut.
         return response()->json([
             'success' => true,
-            'slots' => $slots,
+            'slots'   => $slots,
         ], 200);
     }
 
