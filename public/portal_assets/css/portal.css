@@ -752,5 +752,16 @@ a { color: inherit; }
 
 .v-desktop .p-group-name { font-size: 26px; }
 
-/* The block's own table carries its heading, so it needs no top border. */
-.v-desktop .p-group .d-table tr:first-child th { border-top: 0; }
+/*
+ * One grid across every block. Each barber's bookings are their own <table>,
+ * so without this the columns land wherever that block's longest name puts
+ * them and the day reads as a stack of unrelated lists.
+ */
+.v-desktop .p-group .d-table { table-layout: fixed; }
+
+.v-desktop .p-group .d-table td:nth-child(1) { width: 130px; }
+.v-desktop .p-group .d-table td:nth-child(2) { width: 220px; }
+.v-desktop .p-group .d-table td:nth-child(4) { width: 170px; }
+
+/* The block heading is the table's heading; the first row needs no rule. */
+.v-desktop .p-group .d-table tr:first-child td { border-top: 0; }

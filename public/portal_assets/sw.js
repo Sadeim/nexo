@@ -15,7 +15,21 @@
  * Chrome needs before it will treat /me as installable.
  */
 
-const CACHE = 'nexo-portal-shell-v1';
+/*
+ * THE OTHER RULE: bump this whenever a shell file changes.
+ *
+ * The name is the cache's version. activate() deletes every cache that is not
+ * this one, so a new name is what evicts the old files; a name that never
+ * changes means a stylesheet cached once is served for as long as the phone
+ * is never cleared. A dev browser proved it on 9 Nov 2026 — still being
+ * served the first portal.css, 8KB against the 17KB the server was sending,
+ * with the manager's chips rendering as bare links. On a phone that had
+ * opened /me there would have been no way back at all.
+ *
+ * The revalidation below is the belt to this braces: it heals the next load
+ * by itself. Bumping here is what makes THIS load right.
+ */
+const CACHE = 'nexo-portal-shell-v2';
 
 const SHELL = [
     '/portal_assets/css/portal.css',
@@ -63,21 +77,39 @@ self.addEventListener('fetch', (event) => {
         return; // no respondWith: the browser handles it normally
     }
 
-    event.respondWith(
-        caches.match(request).then((hit) => {
-            if (hit) {
-                return hit;
+    /*
+     * Stale while revalidate: answer from the cache if there is anything
+     * there, and ask the network every time regardless.
+     *
+     * Not cache-first. A hit that is never checked is a file the phone keeps
+     * forever, and the portal has no offline mode to pay for that with — no
+     * /me HTML is ever cached, so the network is required to see a single
+     * screen anyway. The cache buys a fast first paint and a shell that
+     * survives a flaky connection; it must not buy last month's stylesheet.
+     *
+     * Both waitUntil() and respondWith() are called straight from the handler,
+     * never from inside a then(): called later they throw, and the update
+     * would silently stop happening.
+     */
+    const fresh = fetch(request)
+        .then((response) => {
+            // Only store a clean same-origin 200.
+            if (response && response.ok && response.type === 'basic') {
+                const copy = response.clone();
+                caches.open(CACHE).then((cache) => cache.put(request, copy));
             }
 
-            return fetch(request).then((response) => {
-                // Only store a clean same-origin 200.
-                if (response && response.ok && response.type === 'basic') {
-                    const copy = response.clone();
-                    caches.open(CACHE).then((cache) => cache.put(request, copy));
-                }
-
-                return response;
-            });
+            return response;
         })
+        .catch(() => null);
+
+    // Keeps the worker alive long enough to finish writing the update even
+    // when the cached copy was served instantly.
+    event.waitUntil(fresh);
+
+    event.respondWith(
+        caches.match(request).then(
+            (hit) => hit || fresh.then((response) => response || Response.error())
+        )
     );
 });

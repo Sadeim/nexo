@@ -354,6 +354,13 @@ class PortalManagerTest extends TestCase
                     ->assertOk()
                     ->getContent();
 
+                // Ignored in both directions: the parameter may not narrow
+                // their own day away either. 'Alpha' is booked today, which
+                // is upcoming, so it belongs on both screens.
+                $this->assertStringContainsString('Alpha', $body, sprintf(
+                    '%s lost the barber\'s own day to %s', $screen, json_encode($query)
+                ));
+
                 $this->assertStringNotContainsString('Bravo', $body, sprintf(
                     '%s leaked another barber with %s', $screen, json_encode($query)
                 ));
@@ -371,6 +378,40 @@ class PortalManagerTest extends TestCase
             ->get(route($p.'today', ['barber' => $this->zaid->id]))
             ->assertOk()
             ->assertSee('Alpha');
+    }
+
+    /**
+     * The guard, read directly. ?barber= is dropped for anyone who is not a
+     * manager before it is so much as looked at, so the screens below are
+     * never filtered — which is also why nothing further down can misapply
+     * it. Asserted on the resolved value rather than on the rendered page,
+     * because a value that never reaches the view still reaches a query.
+     */
+    #[DataProvider('portals')]
+    public function test_a_barber_is_never_filtered(string $p): void
+    {
+        $this->aNormalDay();
+
+        foreach (['today', 'bookings'] as $screen) {
+            foreach ([$this->zaid->id, 'unassigned', 'all', '', 'nonsense'] as $asked) {
+                $response = $this->actingAs($this->adam, 'employee')
+                    ->get(route($p.$screen, ['barber' => $asked]));
+
+                $response->assertOk();
+
+                $this->assertSame('all', $response->viewData('filter'), sprintf(
+                    '%s resolved a filter for a barber from %s', $screen, var_export($asked, true)
+                ));
+            }
+        }
+
+        // And the same parameter does resolve, for the manager it belongs to.
+        $this->assertSame(
+            (string) $this->zaid->id,
+            $this->actingAs($this->boss, 'employee')
+                ->get(route($p.'bookings', ['barber' => $this->zaid->id]))
+                ->viewData('filter')
+        );
     }
 
     #[DataProvider('portals')]

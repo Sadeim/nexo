@@ -18,15 +18,11 @@
 
     @elseif ($portalIsDesktop)
 
+        {{-- No header row. Five barbers would mean five of them down one
+             page, and the columns label themselves: a time in the display
+             face, a name, a service, a badge. The widths are pinned in CSS so
+             the blocks still line up with each other. --}}
         <table class="d-table">
-            <thead>
-                <tr>
-                    <th>Time</th>
-                    <th>Customer</th>
-                    <th>Service</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
             <tbody>
                 @foreach ($group['bookings'] as $booking)
                     @include('portal.partials.booking-row', ['booking' => $booking, 'showDate' => false, 'showBarber' => false])

@@ -355,4 +355,56 @@ class PortalScreensTest extends TestCase
                 'A /me path appears in the service worker cache list.');
         }
     }
+
+    /**
+     * A cache hit must never be the end of the story.
+     *
+     * The worker used to answer shell requests from the cache and stop there,
+     * under a cache name that never changed — so the first portal.css a
+     * browser saw was the last one it would see, whatever the server sent
+     * afterwards, with no way back short of clearing the browser. A dev
+     * browser was caught doing exactly that on 9 Nov 2026, serving an 8KB
+     * stylesheet against the 17KB live one. The portal caches no HTML, so
+     * there is no offline mode being bought with that; the only thing it
+     * bought was staleness.
+     */
+    public function test_the_service_worker_revalidates_what_it_serves(): void
+    {
+        $source = file_get_contents(public_path('portal_assets/sw.js'));
+
+        // The network is asked on every shell request, hit or miss...
+        $this->assertMatchesRegularExpression(
+            '/const\s+fresh\s*=\s*fetch\(/',
+            $source,
+            'The worker no longer fetches on a cache hit.'
+        );
+
+        // ...and the result is written back, so the next load is current.
+        $this->assertStringContainsString('cache.put(request, copy)', $source);
+
+        // The fetch is started from the handler itself. Moved inside a then(),
+        // waitUntil() throws and the update quietly stops happening.
+        $this->assertStringContainsString('event.waitUntil(fresh);', $source);
+    }
+
+    /**
+     * The cache name is the only thing that evicts a stale shell, so it has to
+     * move when the shell does. Pinned to the version the current assets were
+     * released with: changing portal.css without changing this is the mistake
+     * that produced the test above it.
+     */
+    public function test_the_shell_cache_is_versioned(): void
+    {
+        $source = file_get_contents(public_path('portal_assets/sw.js'));
+
+        $this->assertMatchesRegularExpression(
+            "/const CACHE = 'nexo-portal-shell-v(\d+)';/",
+            $source
+        );
+
+        preg_match("/const CACHE = 'nexo-portal-shell-v(\d+)';/", $source, $m);
+
+        $this->assertGreaterThanOrEqual(2, (int) $m[1],
+            'The shell cache name is still the one that was never bumped.');
+    }
 }
