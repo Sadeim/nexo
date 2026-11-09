@@ -18,7 +18,36 @@
 @endsection
 
 @section('content')
-    @if ($portalIsDesktop)
+    @if ($portalIsManager)
+
+        {{-- The whole shop's day, one block per barber in roster order, with
+             the unassigned bookings named rather than counted: deciding who
+             takes them is the manager's job, so they need to see them. --}}
+        @include('portal.partials.barber-filter')
+
+        @if (! $portalIsDesktop)
+            <div class="p-note" data-unassigned="{{ $unassigned }}">
+                <strong>Unassigned today: {{ $unassigned }}</strong><br>
+                @if ($unassigned === 0)
+                    Every booking today has a barber.
+                @elseif (in_array($filter, ['all', 'unassigned'], true))
+                    Listed below, under Unassigned.
+                @else
+                    Pick Unassigned above to see them.
+                @endif
+            </div>
+        @endif
+
+        @forelse ($groups as $group)
+            @include('portal.partials.barber-block', ['group' => $group])
+        @empty
+            <div class="p-empty">
+                <div class="p-empty-title">Nothing booked</div>
+                No appointments in the shop today.
+            </div>
+        @endforelse
+
+    @elseif ($portalIsDesktop)
 
         {{-- A timeline down the whole working day. The empty slots are the
              point as much as the full ones: a barber reading this wants to

@@ -44,6 +44,97 @@ class PortalSetupTest extends TestCase
         );
     }
 
+    // ---------- portal role ----------
+
+    public function test_the_form_offers_the_portal_role(): void
+    {
+        $barber = Employee::factory()->create();
+
+        $this->actingAs($this->owner, 'admin')
+            ->get(route('admin.employees.edit', $barber->id))
+            ->assertOk()
+            ->assertSee('Portal role')
+            ->assertSee('name="portal_role"', false)
+            ->assertSee('value="manager"', false);
+    }
+
+    public function test_the_owner_can_make_a_barber_a_manager(): void
+    {
+        $barber = Employee::factory()->create();
+
+        // fresh(), because a just-created row carries the column's default
+        // in the database but not yet on the instance in memory.
+        $this->assertSame(Employee::ROLE_BARBER, $barber->fresh()->portal_role);
+
+        $this->actingAs($this->owner, 'admin')
+            ->patchJson(route('admin.employees.update', $barber->id), [
+                'name' => $barber->name,
+                'portal_role' => 'manager',
+            ])->assertSuccessful();
+
+        $this->assertTrue($barber->fresh()->isManager());
+    }
+
+    public function test_a_manager_can_be_made_a_barber_again(): void
+    {
+        $barber = Employee::factory()->manager()->create();
+
+        $this->actingAs($this->owner, 'admin')
+            ->patchJson(route('admin.employees.update', $barber->id), [
+                'name' => $barber->name,
+                'portal_role' => 'barber',
+            ])->assertSuccessful();
+
+        $this->assertFalse($barber->fresh()->isManager());
+    }
+
+    public function test_a_role_the_column_does_not_have_is_refused(): void
+    {
+        $barber = Employee::factory()->create();
+
+        foreach (['admin', 'owner', 'MANAGER', '1'] as $nonsense) {
+            $this->actingAs($this->owner, 'admin')
+                ->patchJson(route('admin.employees.update', $barber->id), [
+                    'name' => $barber->name,
+                    'portal_role' => $nonsense,
+                ])->assertStatus(422);
+        }
+
+        $this->assertSame(Employee::ROLE_BARBER, $barber->fresh()->portal_role);
+    }
+
+    /**
+     * The same lesson as the phone field: a save that does not carry the
+     * field must not be a destructive write. An unrelated edit from a form
+     * without the select — or from the POS side — would otherwise demote the
+     * owner back to a barber.
+     */
+    public function test_a_save_without_the_role_field_keeps_the_existing_role(): void
+    {
+        $manager = Employee::factory()->manager()->create();
+
+        $this->actingAs($this->owner, 'admin')
+            ->patchJson(route('admin.employees.update', $manager->id), [
+                'name' => 'Renamed Owner',
+            ])->assertSuccessful();
+
+        $this->assertTrue($manager->fresh()->isManager());
+        $this->assertSame('Renamed Owner', $manager->fresh()->name);
+    }
+
+    public function test_an_empty_role_keeps_the_existing_one(): void
+    {
+        $manager = Employee::factory()->manager()->create();
+
+        $this->actingAs($this->owner, 'admin')
+            ->patchJson(route('admin.employees.update', $manager->id), [
+                'name' => $manager->name,
+                'portal_role' => '',
+            ])->assertSuccessful();
+
+        $this->assertTrue($manager->fresh()->isManager());
+    }
+
     // ---------- phone ----------
 
     public function test_the_owner_can_give_a_barber_a_phone_number(): void

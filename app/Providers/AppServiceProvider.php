@@ -90,6 +90,7 @@ class AppServiceProvider extends ServiceProvider
          */
         View::composer('portal.*', function ($view) {
             $variant = Portal::variant();
+            $employee = Auth::guard('employee')->user();
 
             $view->with([
                 'portalVariant' => $variant,
@@ -108,7 +109,13 @@ class AppServiceProvider extends ServiceProvider
                 // version's prefix, so nav highlighting is written once.
                 'portalScreen' => Portal::screenFrom(request()->route()?->getName() ?? ''),
 
-                'portalUser' => Auth::guard('employee')->user(),
+                'portalUser' => $employee,
+
+                // Whether this employee reads the whole shop or their own
+                // chair. Here rather than in each view so a screen cannot
+                // accidentally ask a different question than the controller
+                // that filled it did.
+                'portalIsManager' => (bool) $employee?->isManager(),
             ]);
         });
     }

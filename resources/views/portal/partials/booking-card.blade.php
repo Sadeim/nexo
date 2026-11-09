@@ -1,5 +1,8 @@
 {{-- One booking, as it appears on both Today and Bookings.
-     $booking is required; $showDate adds the day for the Bookings list. --}}
+
+     $booking is required; $showDate adds the day for the Bookings list, and
+     $showBarber adds whose it is — only a manager sees that, and only where
+     the surrounding block does not already say. --}}
 @php
     $status = $booking->status ?: 'pending';
     // Only the customer's first name. A barber needs to know who is in the
@@ -12,6 +15,9 @@
         <div>
             <div class="p-name">{{ $firstName !== '' ? $firstName : 'Walk-in' }}</div>
             <div class="p-service">{{ $booking->service->name ?? 'Service not set' }}</div>
+            @if (! empty($showBarber))
+                <div class="p-who">{{ $booking->barber->name ?? 'Unassigned' }}</div>
+            @endif
             @if (! empty($showDate))
                 <div class="p-date">{{ \Carbon\Carbon::parse($booking->date)->format('D j M Y') }}</div>
             @endif

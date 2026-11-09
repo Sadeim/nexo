@@ -47,6 +47,7 @@ class Employee extends Model implements AuthenticatableContract
         // Settable by the owner in the dashboard. `password` is deliberately
         // absent: it is only ever written through setPortalPassword().
         'phone',
+        'portal_role',
         'avatar',
         'is_active',
         'sort_order',
@@ -129,6 +130,31 @@ class Employee extends Model implements AuthenticatableContract
     }
 
     // ---------- portal access ----------
+
+    /** Their own day, and nothing else. */
+    public const ROLE_BARBER = 'barber';
+
+    /** The whole shop's day. The owner reads the portal as one of these. */
+    public const ROLE_MANAGER = 'manager';
+
+    /** The roles the dashboard offers, keyed by the stored value. */
+    public const PORTAL_ROLES = [
+        self::ROLE_BARBER => 'Barber',
+        self::ROLE_MANAGER => 'Manager',
+    ];
+
+    /**
+     * Whether the portal shows this employee the whole shop.
+     *
+     * Compared against the constant rather than tested for truthiness, so an
+     * unloaded attribute, a null left by some other write path or a value
+     * nobody recognises all answer "no". Widening what someone can see must
+     * take an explicit, exact value in the column.
+     */
+    public function isManager(): bool
+    {
+        return $this->portal_role === self::ROLE_MANAGER;
+    }
 
     /**
      * Phone numbers reduced to their digits, for storage and for lookup.

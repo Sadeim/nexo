@@ -129,6 +129,100 @@ a { color: inherit; }
 .p-badge-completed { color: var(--muted); }
 .p-badge-cancelled { color: #E08A80; }
 
+/*
+ * The manager badge. Ivory rather than a status colour: it is not a state a
+ * booking is in, it is who is reading the page.
+ */
+.p-badge-manager {
+    color: var(--evergreen);
+    background: var(--ivory);
+    border-color: var(--ivory);
+}
+
+/* The heading and whatever badge sits beside it, on one line. */
+.p-heading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* ---------- barber filter (manager) ---------- */
+
+/*
+ * A scrolling row on a phone, because a shop with six barbers has eight
+ * chips and they must not wrap the header off the screen. The negative
+ * margins let it bleed to the edges so the last chip does not look cut off
+ * by the page padding.
+ */
+.p-chips {
+    display: flex;
+    gap: 8px;
+    margin: 0 -16px 14px;
+    padding: 0 16px 2px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.p-chips::-webkit-scrollbar { display: none; }
+
+.p-chip {
+    flex: 0 0 auto;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--evergreen-line);
+    color: var(--muted);
+    white-space: nowrap;
+}
+
+.p-chip-on {
+    background: var(--ivory);
+    border-color: var(--ivory);
+    color: var(--evergreen);
+}
+
+/* ---------- one barber's block (manager) ---------- */
+
+.p-group { margin-bottom: 22px; }
+
+.p-group-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 8px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--evergreen-line);
+}
+
+.p-group-name {
+    font-family: var(--font-display);
+    font-size: 22px;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.p-group-count {
+    font-size: 12px;
+    color: var(--muted);
+    white-space: nowrap;
+}
+
+.p-group-empty {
+    color: var(--muted-dim);
+    font-size: 14px;
+    padding: 6px 0 10px;
+}
+
+/* Whose booking it is, on the manager's cards. */
+.p-who { color: var(--muted); font-size: 13px; margin-top: 4px; }
+
 /* ---------- notices ---------- */
 
 .p-note {
@@ -643,3 +737,20 @@ a { color: inherit; }
 .v-desktop .p-btn { max-width: 320px; }
 
 .v-desktop .p-empty { padding: 64px 20px; }
+
+/* ---------- manager, at a desk ---------- */
+
+/* Room to breathe, and no edge-bleed: the desk has no page gutter to escape. */
+.v-desktop .p-chips {
+    margin: 0 0 24px;
+    padding: 0;
+    overflow: visible;
+    flex-wrap: wrap;
+}
+
+.v-desktop .p-group { margin-bottom: 36px; }
+
+.v-desktop .p-group-name { font-size: 26px; }
+
+/* The block's own table carries its heading, so it needs no top border. */
+.v-desktop .p-group .d-table tr:first-child th { border-top: 0; }

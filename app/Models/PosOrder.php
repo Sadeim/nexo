@@ -101,6 +101,28 @@ class PosOrder extends Model
         return $query->where('employee_id', $id);
     }
 
+    /**
+     * What one employee may see in the portal.
+     *
+     * The portal asks this and never forEmployee() directly, so there is a
+     * single place where "whose work is this?" is decided. A barber sees their
+     * own and nothing else; a manager — the owner — sees the shop, which for
+     * orders means no employee restriction at all.
+     *
+     * The manager branch returns the query untouched, so the only thing
+     * standing between a barber and the whole shop is the exact value in
+     * employees.portal_role. Employee::isManager() compares against the
+     * constant for that reason, and the test suite asserts both directions.
+     */
+    public function scopeVisibleTo($query, Employee $employee)
+    {
+        if ($employee->isManager()) {
+            return $query;
+        }
+
+        return $query->forEmployee($employee->id);
+    }
+
     public const TERMINAL_STATUSES = ['completed', 'failed', 'canceled'];
 
     public function isTerminal(): bool

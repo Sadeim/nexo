@@ -11,18 +11,29 @@
 @section('content')
     <div class="{{ $portalIsDesktop ? 'd-tabs' : 'p-tabs' }}">
         <a class="p-tab {{ $tab === 'upcoming' ? 'p-tab-on' : '' }}"
-           href="{{ $portalRoute('bookings') }}">Upcoming</a>
+           href="{{ $portalRoute('bookings', $filter === 'all' ? [] : ['barber' => $filter]) }}">Upcoming</a>
         <a class="p-tab {{ $tab === 'past' ? 'p-tab-on' : '' }}"
-           href="{{ $portalRoute('bookings', ['tab' => 'past']) }}">Past</a>
+           href="{{ $portalRoute('bookings', $filter === 'all' ? ['tab' => 'past'] : ['tab' => 'past', 'barber' => $filter]) }}">Past</a>
     </div>
+
+    {{-- Manager only; the partial is not rendered at all for a barber. --}}
+    @if ($portalIsManager)
+        @include('portal.partials.barber-filter')
+    @endif
 
     @if ($bookings->isEmpty())
 
         <div class="p-empty">
             <div class="p-empty-title">{{ $tab === 'past' ? 'No history yet' : 'Nothing coming up' }}</div>
-            {{ $tab === 'past'
-                ? 'Appointments you have finished will show here.'
-                : 'You have no upcoming appointments.' }}
+            @if ($portalIsManager)
+                {{ $tab === 'past'
+                    ? 'Nothing matching this filter has happened yet.'
+                    : 'Nothing matching this filter is booked.' }}
+            @else
+                {{ $tab === 'past'
+                    ? 'Appointments you have finished will show here.'
+                    : 'You have no upcoming appointments.' }}
+            @endif
         </div>
 
     @elseif ($portalIsDesktop)
@@ -32,32 +43,33 @@
                 <tr>
                     <th>Time</th>
                     <th>
-                        {{-- The one sortable column. Carries the tab with it so
-                             sorting does not quietly drop you back to Upcoming. --}}
-                        <a class="d-sort" href="{{ $portalRoute('bookings', ['tab' => $tab, 'dir' => $flip]) }}">
+                        {{-- The one sortable column. Carries the tab and the
+                             barber filter with it, so sorting does not quietly
+                             drop you back to everyone's Upcoming. --}}
+                        <a class="d-sort"
+                           href="{{ $portalRoute('bookings', array_filter([
+                                'tab' => $tab,
+                                'dir' => $flip,
+                                'barber' => $filter === 'all' ? null : $filter,
+                           ])) }}">
                             Date {!! $dir === 'asc' ? '&uarr;' : '&darr;' !!}
                         </a>
                     </th>
                     <th>Customer</th>
                     <th>Service</th>
+                    @if ($portalIsManager)
+                        <th>Barber</th>
+                    @endif
                     <th>Status</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($bookings as $booking)
-                    @php
-                        // First name only: a barber needs to know who is in the
-                        // chair, not to carry the shop's customer list around.
-                        $firstName = trim(explode(' ', trim((string) $booking->name))[0] ?? '');
-                        $status = $booking->status ?: 'pending';
-                    @endphp
-                    <tr>
-                        <td class="d-cell-time">{{ \Carbon\Carbon::parse($booking->time)->format('g:i A') }}</td>
-                        <td>{{ \Carbon\Carbon::parse($booking->date)->format('D j M Y') }}</td>
-                        <td>{{ $firstName !== '' ? $firstName : 'Walk-in' }}</td>
-                        <td>{{ $booking->service->name ?? 'Service not set' }}</td>
-                        <td><span class="p-badge p-badge-{{ $status }}">{{ $status }}</span></td>
-                    </tr>
+                    @include('portal.partials.booking-row', [
+                        'booking' => $booking,
+                        'showDate' => true,
+                        'showBarber' => $portalIsManager,
+                    ])
                 @endforeach
             </tbody>
         </table>
@@ -65,7 +77,11 @@
     @else
 
         @foreach ($bookings as $booking)
-            @include('portal.partials.booking-card', ['booking' => $booking, 'showDate' => true])
+            @include('portal.partials.booking-card', [
+                'booking' => $booking,
+                'showDate' => true,
+                'showBarber' => $portalIsManager,
+            ])
         @endforeach
 
     @endif

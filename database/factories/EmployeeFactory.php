@@ -53,6 +53,12 @@ class EmployeeFactory extends Factory
         ]);
     }
 
+    /** Sees the whole shop in the portal, not just their own chair. */
+    public function manager(): static
+    {
+        return $this->state(fn () => ['portal_role' => \App\Models\Employee::ROLE_MANAGER]);
+    }
+
     /** Portal set up, but the password is still the one the owner typed. */
     public function mustChangePassword(): static
     {

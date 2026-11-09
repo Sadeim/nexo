@@ -284,6 +284,11 @@ class PortalScreensTest extends TestCase
             ['booking_id' => $theirs->id],
             ['user_id' => $this->other->id],
             ['tab' => 'past', 'barber_id' => $this->other->id],
+            // The manager's own filter parameter, in a barber's hands.
+            ['barber' => $this->other->id],
+            ['barber' => 'unassigned'],
+            // And an attempt to claim the role the filter belongs to.
+            ['portal_role' => 'manager'],
         ];
 
         foreach (['today', 'bookings', 'earnings', 'profile'] as $screen) {

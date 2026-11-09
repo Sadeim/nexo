@@ -69,6 +69,43 @@ class Booking extends Model
         return $query->where('barber_id', $id);
     }
 
+    /**
+     * What one employee may see in the portal.
+     *
+     * The portal asks this and never forEmployee() directly, so there is a
+     * single place where "whose work is this?" is decided. A barber sees their
+     * own and nothing else; a manager — the owner — sees the shop, which for
+     * bookings means no barber restriction at all, including the ones nobody
+     * has been assigned yet.
+     *
+     * The manager branch returns the query untouched, so the only thing
+     * standing between a barber and the whole shop is the exact value in
+     * employees.portal_role. Employee::isManager() compares against the
+     * constant for that reason, and the test suite asserts both directions.
+     */
+    public function scopeVisibleTo($query, Employee $employee)
+    {
+        if ($employee->isManager()) {
+            return $query;
+        }
+
+        return $query->forEmployee($employee->id);
+    }
+
+    /**
+     * Bookings nobody is assigned to, that still need doing.
+     *
+     * The cancelled ones are not waiting work, so they are not here. One
+     * definition, used by the count a barber sees and by the list a manager
+     * sees, because those two numbers disagreeing would be worse than either
+     * being wrong.
+     */
+    public function scopeUnassigned($query)
+    {
+        return $query->whereNull('barber_id')
+            ->where('status', '!=', self::STATUS_CANCELLED);
+    }
+
     public const STATUS_CANCELLED = 'cancelled';
 
     /**

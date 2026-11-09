@@ -39,7 +39,7 @@
                 </div>
 
                 <div class="row g-9 mb-7">
-                    <div class="col-md-4 fv-row">
+                    <div class="col-md-3 fv-row">
                         <label class="fs-6 fw-semibold mb-2">Commission rate (% of sales)</label>
                         <div class="input-group">
                             <input type="number" step="0.01" min="0" max="100" class="form-control"
@@ -53,7 +53,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-4 fv-row">
+                    <div class="col-md-3 fv-row">
                         <label class="fs-6 fw-semibold mb-2">Phone (portal sign-in)</label>
                         <input class="form-control" name="phone" placeholder="2246698063" inputmode="tel"
                                value="{{ isset($employee) ? $employee->phone : '' }}">
@@ -63,7 +63,28 @@
                         </div>
                     </div>
 
-                    <div class="col-md-4 fv-row">
+                    <div class="col-md-3 fv-row">
+                        <label class="fs-6 fw-semibold mb-2">Portal role</label>
+                        @php
+                            $currentRole = isset($employee)
+                                ? ($employee->portal_role ?: \App\Models\Employee::ROLE_BARBER)
+                                : \App\Models\Employee::ROLE_BARBER;
+                        @endphp
+                        <select class="form-select" name="portal_role">
+                            @foreach (\App\Models\Employee::PORTAL_ROLES as $value => $label)
+                                <option value="{{ $value }}" {{ $currentRole === $value ? 'selected' : '' }}>
+                                    {{ $label }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <div class="text-muted fs-8 mt-1">
+                            A <strong>Barber</strong> sees their own bookings in the portal.
+                            A <strong>Manager</strong> sees every barber's, grouped by barber,
+                            plus the bookings nobody has been assigned. Read-only either way.
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 fv-row">
                         <label class="fs-6 fw-semibold mb-2">Portal</label>
                         @if (isset($employee) && $employee->hasPortalAccess())
                             <div><span class="badge badge-light-success fs-7">Active</span></div>

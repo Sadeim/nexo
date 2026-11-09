@@ -162,6 +162,9 @@ class EmployeeController extends Controller
         $data = $request->validate([
             'name'            => ['required', 'string', 'max:120', Rule::unique('employees', 'name')->ignore($id)],
             'phone'           => ['nullable', 'string', 'digits_between:7,15', Rule::unique('employees', 'phone')->ignore($id)],
+            // What they see in the portal. A column with two values, so the
+            // rule is the column: anything else must not reach an enum.
+            'portal_role'     => ['nullable', Rule::in(array_keys(Employee::PORTAL_ROLES))],
             'sort_order'      => 'nullable|integer|min:0|max:9999',
             'commission_rate' => 'nullable|numeric|min:0|max:100',
             'avatar'          => 'nullable|image|max:4096',
@@ -183,6 +186,7 @@ class EmployeeController extends Controller
             'slug.unique' => 'Another barber already uses that URL.',
             'phone.unique' => 'Another barber already uses that phone number.',
             'phone.digits_between' => 'Enter a phone number with 7 to 15 digits.',
+            'portal_role.in' => 'Choose either Barber or Manager for the portal role.',
         ]);
 
         // A published barber with no slug has no reachable page, so one is
@@ -200,6 +204,18 @@ class EmployeeController extends Controller
             'intval',
             $request->input('specialties', [])
         )));
+
+        /*
+         * A null portal_role means "not submitted" — an empty select, or a
+         * form that does not carry the field at all, since the web group
+         * converts empty strings to null before validation. The column is not
+         * nullable and defaults to 'barber', so the stored value is left
+         * alone rather than overwritten with null. Same lesson as the phone
+         * field above: an absent field must never be a destructive write.
+         */
+        if (array_key_exists('portal_role', $data) && $data['portal_role'] === null) {
+            unset($data['portal_role']);
+        }
 
         // Not columns.
         unset($data['photo'], $data['remove_photo']);

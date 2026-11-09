@@ -8,7 +8,15 @@
 
     <header class="p-header">
         <div>
-            <h1>@yield('heading')</h1>
+            <div class="p-heading">
+                <h1>@yield('heading')</h1>
+                {{-- Who the portal thinks you are. The one piece of chrome
+                     that differs between a barber and the owner, and the
+                     reason the screens below look different. --}}
+                @if ($portalIsManager)
+                    <span class="p-badge p-badge-manager">Manager</span>
+                @endif
+            </div>
             @hasSection('meta')
                 <div class="p-sub">@yield('meta')</div>
             @endif
