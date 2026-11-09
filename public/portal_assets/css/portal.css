@@ -390,3 +390,256 @@ a { color: inherit; }
 @media (prefers-reduced-motion: reduce) {
     * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
 }
+
+/* ==========================================================================
+   Desktop (/work)
+   --------------------------------------------------------------------------
+   One stylesheet serves both versions; everything below is scoped to
+   .v-desktop so the phone never pays for it. No media queries here on
+   purpose: /work hands narrow windows over to /me rather than reflowing, so
+   the width these rules run at is guaranteed by the redirect, not hoped for.
+   ========================================================================== */
+
+.v-desktop { padding-bottom: 0; }
+
+.d-shell {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr);
+    min-height: 100vh;
+}
+
+/* ---------- sidebar ---------- */
+
+.d-sidebar {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    padding: 24px 20px;
+    background: var(--evergreen);
+    border-right: 1px solid var(--evergreen-line);
+}
+
+.d-mark {
+    font-family: var(--font-display);
+    font-size: 34px;
+    line-height: 1;
+    letter-spacing: 0.04em;
+}
+
+.d-who { display: flex; align-items: center; gap: 12px; }
+
+.d-avatar {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex: 0 0 auto;
+}
+
+.d-avatar-blank {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--crimson);
+    font-family: var(--font-display);
+    font-size: 22px;
+    text-transform: uppercase;
+}
+
+.d-who-text { min-width: 0; }
+
+.d-who-name {
+    font-weight: 600;
+    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.d-who-title { font-size: 12px; color: var(--muted); }
+
+.d-nav { display: flex; flex-direction: column; gap: 2px; }
+
+.d-nav a {
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 11px 12px;
+    border-radius: var(--radius);
+}
+
+.d-nav a:hover { color: var(--ivory); background: rgba(248, 237, 210, 0.05); }
+
+.d-nav a.on { background: var(--ivory); color: var(--evergreen); }
+
+/* Pushed to the bottom of the column. */
+.d-logout { margin-top: auto; }
+
+.d-logout button {
+    width: 100%;
+    background: transparent;
+    color: var(--muted);
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 11px;
+    border: 1px solid var(--evergreen-line);
+    border-radius: var(--radius);
+    cursor: pointer;
+}
+
+.d-logout button:hover { color: var(--ivory); border-color: var(--ivory); }
+
+/* ---------- content ---------- */
+
+.d-content { min-width: 0; }
+
+.d-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 24px 32px;
+    background: var(--evergreen);
+    border-bottom: 1px solid var(--evergreen-line);
+}
+
+.d-header h1 {
+    font-family: var(--font-display);
+    font-size: 36px;
+    line-height: 1;
+}
+
+.d-sub { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+.d-header-actions { display: flex; align-items: center; gap: 18px; }
+
+.d-stat { text-align: right; }
+
+.d-stat-value {
+    font-family: var(--font-display);
+    font-size: 30px;
+    line-height: 1;
+}
+
+.d-stat-label {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 3px;
+}
+
+.d-main { padding: 24px 32px 48px; max-width: 1100px; }
+
+/* ---------- timeline ---------- */
+
+.d-timeline { border-left: 1px solid var(--evergreen-line); }
+
+.d-slot {
+    display: grid;
+    grid-template-columns: 110px minmax(0, 1fr);
+    gap: 16px;
+    align-items: start;
+    padding: 0 0 2px 18px;
+    position: relative;
+    min-height: 46px;
+}
+
+/* The tick on the rail. */
+.d-slot::before {
+    content: '';
+    position: absolute;
+    left: -4px;
+    top: 14px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--evergreen-line);
+}
+
+.d-slot:not(.is-free)::before { background: var(--crimson); }
+
+.d-slot-time {
+    font-family: var(--font-display);
+    font-size: 19px;
+    letter-spacing: 0.03em;
+    color: var(--muted);
+    padding-top: 7px;
+}
+
+.d-slot:not(.is-free) .d-slot-time { color: var(--ivory); }
+
+.d-slot-body { min-width: 0; }
+
+.d-slot-free {
+    color: var(--muted-dim);
+    font-size: 13px;
+    padding: 9px 0;
+}
+
+.v-desktop .p-card { margin-bottom: 6px; }
+
+/* ---------- table ---------- */
+
+.d-tabs { display: flex; gap: 8px; margin-bottom: 18px; max-width: 360px; }
+
+.d-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.d-table th, .d-table td {
+    text-align: left;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--evergreen-line);
+}
+
+.d-table th {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.d-table tbody tr:hover { background: rgba(248, 237, 210, 0.04); }
+
+.d-table .d-cell-time {
+    font-family: var(--font-display);
+    font-size: 19px;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+}
+
+.d-sort { text-decoration: none; color: inherit; }
+.d-sort:hover { color: var(--ivory); }
+
+.v-desktop .p-pager { max-width: 360px; }
+
+/* ---------- profile ---------- */
+
+.d-profile {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: 32px;
+    align-items: start;
+}
+
+.v-desktop .p-profile-photo { max-width: 260px; margin: 0; }
+
+.v-desktop .p-btn { max-width: 320px; }
+
+.v-desktop .p-empty { padding: 64px 20px; }

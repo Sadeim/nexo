@@ -1,51 +1,90 @@
-@extends('portal.layout')
+@extends($portalLayout)
 @section('title', 'Bookings')
+@section('heading', 'Bookings')
+@section('meta', $bookings->total().' '.Str::plural('booking', $bookings->total()))
 
-@section('body')
-    <header class="p-header">
-        <div>
-            <h1>Bookings</h1>
-            <div class="p-sub">{{ $bookings->total() }} {{ Str::plural('booking', $bookings->total()) }}</div>
+@php
+    // The other direction, for the sortable date column.
+    $flip = $dir === 'asc' ? 'desc' : 'asc';
+@endphp
+
+@section('content')
+    <div class="{{ $portalIsDesktop ? 'd-tabs' : 'p-tabs' }}">
+        <a class="p-tab {{ $tab === 'upcoming' ? 'p-tab-on' : '' }}"
+           href="{{ $portalRoute('bookings') }}">Upcoming</a>
+        <a class="p-tab {{ $tab === 'past' ? 'p-tab-on' : '' }}"
+           href="{{ $portalRoute('bookings', ['tab' => 'past']) }}">Past</a>
+    </div>
+
+    @if ($bookings->isEmpty())
+
+        <div class="p-empty">
+            <div class="p-empty-title">{{ $tab === 'past' ? 'No history yet' : 'Nothing coming up' }}</div>
+            {{ $tab === 'past'
+                ? 'Appointments you have finished will show here.'
+                : 'You have no upcoming appointments.' }}
         </div>
-    </header>
 
-    <main class="p-main">
-        <div class="p-tabs">
-            <a class="p-tab {{ $tab === 'upcoming' ? 'p-tab-on' : '' }}"
-               href="{{ route('portal.bookings') }}">Upcoming</a>
-            <a class="p-tab {{ $tab === 'past' ? 'p-tab-on' : '' }}"
-               href="{{ route('portal.bookings', ['tab' => 'past']) }}">Past</a>
-        </div>
+    @elseif ($portalIsDesktop)
 
-        @forelse ($bookings as $booking)
+        <table class="d-table">
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>
+                        {{-- The one sortable column. Carries the tab with it so
+                             sorting does not quietly drop you back to Upcoming. --}}
+                        <a class="d-sort" href="{{ $portalRoute('bookings', ['tab' => $tab, 'dir' => $flip]) }}">
+                            Date {!! $dir === 'asc' ? '&uarr;' : '&darr;' !!}
+                        </a>
+                    </th>
+                    <th>Customer</th>
+                    <th>Service</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($bookings as $booking)
+                    @php
+                        // First name only: a barber needs to know who is in the
+                        // chair, not to carry the shop's customer list around.
+                        $firstName = trim(explode(' ', trim((string) $booking->name))[0] ?? '');
+                        $status = $booking->status ?: 'pending';
+                    @endphp
+                    <tr>
+                        <td class="d-cell-time">{{ \Carbon\Carbon::parse($booking->time)->format('g:i A') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($booking->date)->format('D j M Y') }}</td>
+                        <td>{{ $firstName !== '' ? $firstName : 'Walk-in' }}</td>
+                        <td>{{ $booking->service->name ?? 'Service not set' }}</td>
+                        <td><span class="p-badge p-badge-{{ $status }}">{{ $status }}</span></td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+
+    @else
+
+        @foreach ($bookings as $booking)
             @include('portal.partials.booking-card', ['booking' => $booking, 'showDate' => true])
-        @empty
-            <div class="p-empty">
-                <div class="p-empty-title">{{ $tab === 'past' ? 'No history yet' : 'Nothing coming up' }}</div>
-                {{ $tab === 'past'
-                    ? 'Appointments you have finished will show here.'
-                    : 'You have no upcoming appointments.' }}
-            </div>
-        @endforelse
+        @endforeach
 
-        {{-- Hand-rolled rather than $bookings->links(): Laravel's paginator
-             views are Tailwind/Bootstrap markup, and the portal has neither. --}}
-        @if ($bookings->hasPages())
-            <div class="p-pager">
-                @if ($bookings->onFirstPage())
-                    <span>Newer</span>
-                @else
-                    <a href="{{ $bookings->previousPageUrl() }}" rel="prev">Newer</a>
-                @endif
+    @endif
 
-                @if ($bookings->hasMorePages())
-                    <a href="{{ $bookings->nextPageUrl() }}" rel="next">Older</a>
-                @else
-                    <span>Older</span>
-                @endif
-            </div>
-        @endif
-    </main>
+    {{-- Hand-rolled rather than $bookings->links(): Laravel's paginator views
+         are Tailwind/Bootstrap markup, and the portal has neither. --}}
+    @if ($bookings->hasPages())
+        <div class="p-pager">
+            @if ($bookings->onFirstPage())
+                <span>Newer</span>
+            @else
+                <a href="{{ $bookings->previousPageUrl() }}" rel="prev">Newer</a>
+            @endif
 
-    @include('portal.partials.tabbar')
+            @if ($bookings->hasMorePages())
+                <a href="{{ $bookings->nextPageUrl() }}" rel="next">Older</a>
+            @else
+                <span>Older</span>
+            @endif
+        </div>
+    @endif
 @endsection

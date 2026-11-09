@@ -7,7 +7,12 @@
 
     // ---------- service worker ----------
 
-    if ('serviceWorker' in navigator) {
+    // Phones only. /work is a desk browser: it is not installable, has no
+    // manifest, and must not quietly register a worker for the other version
+    // of the portal just because it loads the same script.
+    var isMobile = document.body.classList.contains('v-mobile');
+
+    if (isMobile && 'serviceWorker' in navigator) {
         window.addEventListener('load', function () {
             // Registered at /me/sw.js so its scope covers the portal.
             navigator.serviceWorker.register('/me/sw.js', { scope: '/me/' })
@@ -27,6 +32,11 @@
     }
 
     // ---------- pull to refresh ----------
+
+    // A touch gesture, so a phone affordance only.
+    if (!isMobile) {
+        return;
+    }
 
     // Only when the page is already scrolled to the top, so it never fights
     // with normal scrolling.

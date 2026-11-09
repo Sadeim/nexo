@@ -6,6 +6,8 @@ use App\Models\Admin;
 use App\Models\Employee;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
+use PHPUnit\Framework\Attributes\DataProvider;
+use Tests\Concerns\RunsOnBothPortals;
 use Tests\TestCase;
 
 /**
@@ -14,17 +16,19 @@ use Tests\TestCase;
 class PortalAuthTest extends TestCase
 {
     use RefreshDatabase;
+    use RunsOnBothPortals;
 
     // ---------- signing in ----------
 
-    public function test_a_barber_signs_in_with_phone_and_password(): void
+    #[DataProvider('portals')]
+    public function test_a_barber_signs_in_with_phone_and_password(string $p): void
     {
         $barber = Employee::factory()->withPortal('2246698063')->create();
 
-        $this->post(route('portal.login.post'), [
+        $this->post(route($p.'login.post'), [
             'phone' => '2246698063',
             'password' => 'portal-pass-1',
-        ])->assertRedirect(route('portal.today'));
+        ])->assertRedirect(route($p.'today'));
 
         $this->assertAuthenticatedAs($barber, 'employee');
     }
@@ -33,14 +37,15 @@ class PortalAuthTest extends TestCase
      * The owner types the number one way and the barber another. Both have to
      * land on the same account or the portal is unusable in practice.
      */
-    public function test_punctuation_in_the_phone_number_does_not_matter(): void
+    #[DataProvider('portals')]
+    public function test_punctuation_in_the_phone_number_does_not_matter(string $p): void
     {
         Employee::factory()->withPortal('2246698063')->create();
 
-        $this->post(route('portal.login.post'), [
+        $this->post(route($p.'login.post'), [
             'phone' => '(224) 669-8063',
             'password' => 'portal-pass-1',
-        ])->assertRedirect(route('portal.today'));
+        ])->assertRedirect(route($p.'today'));
 
         $this->assertAuthenticated('employee');
     }
@@ -50,20 +55,21 @@ class PortalAuthTest extends TestCase
      * The owner saves one of them and the barber types another months later;
      * all of them have to reach the same account.
      */
-    public function test_the_us_country_code_is_optional(): void
+    #[DataProvider('portals')]
+    public function test_the_us_country_code_is_optional(string $p): void
     {
         $barber = Employee::factory()->withPortal('2246698063')->create();
 
         foreach (['1-224-669-8063', '+1 (224) 669-8063', '2246698063'] as $typed) {
-            $this->post(route('portal.login.post'), [
+            $this->post(route($p.'login.post'), [
                 'phone' => $typed,
                 'password' => 'portal-pass-1',
-            ])->assertRedirect(route('portal.today'));
+            ])->assertRedirect(route($p.'today'));
 
             $this->assertAuthenticatedAs($barber, 'employee',
                 "Signing in with \"$typed\" did not reach the barber stored as 2246698063.");
 
-            $this->post(route('portal.logout'));
+            $this->post(route($p.'logout'));
             $this->flushSession();
         }
     }
@@ -99,11 +105,12 @@ class PortalAuthTest extends TestCase
         $this->assertNull(Employee::normalizePhone(null));
     }
 
-    public function test_a_wrong_password_is_rejected(): void
+    #[DataProvider('portals')]
+    public function test_a_wrong_password_is_rejected(string $p): void
     {
         Employee::factory()->withPortal('2246698063')->create();
 
-        $this->post(route('portal.login.post'), [
+        $this->post(route($p.'login.post'), [
             'phone' => '2246698063',
             'password' => 'not-the-password',
         ])->assertSessionHasErrors('phone');
@@ -116,7 +123,8 @@ class PortalAuthTest extends TestCase
      * number" would turn the login into a way of asking whether a given phone
      * belongs to someone who works here.
      */
-    public function test_every_failure_gives_the_same_message(): void
+    #[DataProvider('portals')]
+    public function test_every_failure_gives_the_same_message(string $p): void
     {
         Employee::factory()->withPortal('2246698063')->create();
         Employee::factory()->create(['phone' => '2240000000', 'password' => null]);
@@ -130,7 +138,7 @@ class PortalAuthTest extends TestCase
             ['phone' => '2240000000', 'password' => 'anything'],   // portal not set up
             ['phone' => '2241111111', 'password' => 'portal-pass-1'], // deactivated
         ] as $attempt) {
-            $messages[] = $this->post(route('portal.login.post'), $attempt)
+            $messages[] = $this->post(route($p.'login.post'), $attempt)
                 ->assertSessionHasErrors('phone')
                 ->getSession()->get('errors')->first('phone');
 
@@ -142,11 +150,12 @@ class PortalAuthTest extends TestCase
             .implode(' / ', array_unique($messages)));
     }
 
-    public function test_an_employee_with_no_password_cannot_sign_in(): void
+    #[DataProvider('portals')]
+    public function test_an_employee_with_no_password_cannot_sign_in(string $p): void
     {
         Employee::factory()->create(['phone' => '2240000000', 'password' => null]);
 
-        $this->post(route('portal.login.post'), [
+        $this->post(route($p.'login.post'), [
             'phone' => '2240000000',
             'password' => '',
         ])->assertSessionHasErrors();
@@ -154,32 +163,34 @@ class PortalAuthTest extends TestCase
         $this->assertGuest('employee');
     }
 
-    public function test_login_is_throttled(): void
+    #[DataProvider('portals')]
+    public function test_login_is_throttled(string $p): void
     {
         Employee::factory()->withPortal('2246698063')->create();
 
         // The route allows five a minute; the sixth must be turned away.
         for ($i = 0; $i < 5; $i++) {
-            $this->post(route('portal.login.post'), [
+            $this->post(route($p.'login.post'), [
                 'phone' => '2246698063',
                 'password' => 'wrong',
             ]);
             $this->flushSession();
         }
 
-        $this->post(route('portal.login.post'), [
+        $this->post(route($p.'login.post'), [
             'phone' => '2246698063',
             'password' => 'wrong',
         ])->assertStatus(429);
     }
 
-    public function test_signing_in_records_the_time(): void
+    #[DataProvider('portals')]
+    public function test_signing_in_records_the_time(string $p): void
     {
         $barber = Employee::factory()->withPortal('2246698063')->create();
 
         $this->assertNull($barber->last_login_at);
 
-        $this->post(route('portal.login.post'), [
+        $this->post(route($p.'login.post'), [
             'phone' => '2246698063',
             'password' => 'portal-pass-1',
         ]);
@@ -187,31 +198,33 @@ class PortalAuthTest extends TestCase
         $this->assertNotNull($barber->fresh()->last_login_at);
     }
 
-    public function test_logging_out_ends_the_session(): void
+    #[DataProvider('portals')]
+    public function test_logging_out_ends_the_session(string $p): void
     {
         $barber = Employee::factory()->withPortal()->create();
 
         $this->actingAs($barber, 'employee')
-            ->post(route('portal.logout'))
-            ->assertRedirect(route('portal.login'));
+            ->post(route($p.'logout'))
+            ->assertRedirect(route($p.'login'));
 
         $this->assertGuest('employee');
     }
 
     // ---------- inactive ----------
 
-    public function test_an_inactive_barber_is_logged_out_and_refused(): void
+    #[DataProvider('portals')]
+    public function test_an_inactive_barber_is_logged_out_and_refused(string $p): void
     {
         // Active at sign-in, switched off afterwards — the case a session-only
         // check would miss until the session expired.
         $barber = Employee::factory()->withPortal()->create();
 
-        $this->actingAs($barber, 'employee')->get(route('portal.today'))->assertOk();
+        $this->actingAs($barber, 'employee')->get(route($p.'today'))->assertOk();
 
         $barber->forceFill(['is_active' => false])->save();
 
         $this->actingAs($barber, 'employee')
-            ->get(route('portal.today'))
+            ->get(route($p.'today'))
             ->assertForbidden();
 
         $this->assertGuest('employee');
@@ -219,48 +232,51 @@ class PortalAuthTest extends TestCase
 
     // ---------- forced password change ----------
 
-    public function test_a_barber_who_must_change_their_password_is_held_there(): void
+    #[DataProvider('portals')]
+    public function test_a_barber_who_must_change_their_password_is_held_there(string $p): void
     {
         $barber = Employee::factory()->withPortal()->mustChangePassword()->create();
 
-        foreach (['portal.today', 'portal.bookings', 'portal.earnings', 'portal.profile'] as $route) {
+        foreach (['today', 'bookings', 'earnings', 'profile'] as $screen) {
             $this->actingAs($barber, 'employee')
-                ->get(route($route))
-                ->assertRedirect(route('portal.password.edit'));
+                ->get(route($p.$screen))
+                ->assertRedirect(route($p.'password.edit'));
         }
 
         // The one screen they are allowed to reach.
         $this->actingAs($barber, 'employee')
-            ->get(route('portal.password.edit'))
+            ->get(route($p.'password.edit'))
             ->assertOk();
     }
 
-    public function test_changing_the_password_releases_them(): void
+    #[DataProvider('portals')]
+    public function test_changing_the_password_releases_them(string $p): void
     {
         $barber = Employee::factory()->withPortal()->mustChangePassword()->create();
 
         $this->actingAs($barber, 'employee')
-            ->post(route('portal.password.update'), [
+            ->post(route($p.'password.update'), [
                 'current_password' => 'portal-pass-1',
                 'password' => 'my-own-password',
                 'password_confirmation' => 'my-own-password',
             ])
-            ->assertRedirect(route('portal.today'));
+            ->assertRedirect(route($p.'today'));
 
         $barber->refresh();
 
         $this->assertFalse($barber->must_change_password);
         $this->assertTrue(Hash::check('my-own-password', $barber->password));
 
-        $this->actingAs($barber, 'employee')->get(route('portal.today'))->assertOk();
+        $this->actingAs($barber, 'employee')->get(route($p.'today'))->assertOk();
     }
 
-    public function test_the_current_password_must_be_right_to_change_it(): void
+    #[DataProvider('portals')]
+    public function test_the_current_password_must_be_right_to_change_it(string $p): void
     {
         $barber = Employee::factory()->withPortal()->mustChangePassword()->create();
 
         $this->actingAs($barber, 'employee')
-            ->post(route('portal.password.update'), [
+            ->post(route($p.'password.update'), [
                 'current_password' => 'not-it',
                 'password' => 'my-own-password',
                 'password_confirmation' => 'my-own-password',
@@ -270,12 +286,13 @@ class PortalAuthTest extends TestCase
         $this->assertTrue($barber->fresh()->must_change_password);
     }
 
-    public function test_the_new_password_cannot_be_the_temporary_one(): void
+    #[DataProvider('portals')]
+    public function test_the_new_password_cannot_be_the_temporary_one(string $p): void
     {
         $barber = Employee::factory()->withPortal()->mustChangePassword()->create();
 
         $this->actingAs($barber, 'employee')
-            ->post(route('portal.password.update'), [
+            ->post(route($p.'password.update'), [
                 'current_password' => 'portal-pass-1',
                 'password' => 'portal-pass-1',
                 'password_confirmation' => 'portal-pass-1',
@@ -287,10 +304,11 @@ class PortalAuthTest extends TestCase
 
     // ---------- guard isolation ----------
 
-    public function test_a_guest_is_sent_to_the_portal_login(): void
+    #[DataProvider('portals')]
+    public function test_a_guest_is_sent_to_the_portal_login(string $p): void
     {
-        foreach (['portal.today', 'portal.bookings', 'portal.earnings', 'portal.profile'] as $route) {
-            $this->get(route($route))->assertRedirect(route('portal.login'));
+        foreach (['today', 'bookings', 'earnings', 'profile'] as $screen) {
+            $this->get(route($p.$screen))->assertRedirect(route($p.'login'));
         }
     }
 
@@ -298,7 +316,8 @@ class PortalAuthTest extends TestCase
      * The owner's admin session must not be a portal session. If it were, the
      * portal would show them an employee's screens with no employee behind it.
      */
-    public function test_an_admin_session_cannot_reach_the_portal(): void
+    #[DataProvider('portals')]
+    public function test_an_admin_session_cannot_reach_the_portal(string $p): void
     {
         $admin = Admin::create([
             'name' => 'Owner',
@@ -307,10 +326,10 @@ class PortalAuthTest extends TestCase
             'status' => 1,
         ]);
 
-        foreach (['portal.today', 'portal.bookings', 'portal.profile'] as $route) {
+        foreach (['today', 'bookings', 'profile'] as $screen) {
             $this->actingAs($admin, 'admin')
-                ->get(route($route))
-                ->assertRedirect(route('portal.login'));
+                ->get(route($p.$screen))
+                ->assertRedirect(route($p.'login'));
         }
     }
 

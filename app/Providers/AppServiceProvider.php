@@ -9,6 +9,10 @@ use App\Models\Setting;
 use App\Services\CheckoutService;
 use App\Services\Payment\PaymentGateways\PaymentGatewayManager;
 use App\Services\Payment\PaymentGateways\TelrGateway;
+use App\Support\Portal;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -50,6 +54,61 @@ class AppServiceProvider extends ServiceProvider
                 'shared_categories' => $shared_categories,
                 'shared_services' => $shared_services,
                 'shared_barbers' => $shared_barbers,
+            ]);
+        });
+
+        $this->bootPortal();
+    }
+
+    /**
+     * The employee portal's shared wiring.
+     *
+     * Kept apart from the composer above because none of it touches the
+     * database, and the portal should not acquire a dependency on the CMS
+     * tables by accident.
+     */
+    private function bootPortal(): void
+    {
+        /*
+         * One login bucket per IP for the whole portal.
+         *
+         * `throttle:5,1` would key on the request fingerprint, which includes
+         * the URI — so /me/login and /work/login would get five attempts each
+         * and the real limit would be ten. Keying on the IP alone makes the
+         * two mounts share one allowance, which is what "5 a minute" meant.
+         */
+        RateLimiter::for('portal-login', function ($request) {
+            return Limit::perMinute(5)->by($request->ip());
+        });
+
+        /*
+         * Everything a portal view needs to know about which version it is in.
+         *
+         * Scoped to portal.* views, and deliberately free of queries: the one
+         * model read here is the already-authenticated employee, which the
+         * guard has resolved before any view renders.
+         */
+        View::composer('portal.*', function ($view) {
+            $variant = Portal::variant();
+
+            $view->with([
+                'portalVariant' => $variant,
+                'portalIsDesktop' => $variant === Portal::DESKTOP,
+                'portalLayout' => Portal::layout(),
+
+                // Builds links that stay in the version the barber is using.
+                'portalRoute' => fn (string $screen, array $parameters = []) => Portal::route($screen, $parameters),
+
+                // The same screen in the other version — the handover target
+                // when a /work window is too narrow for it.
+                'portalCounterpart' => Portal::counterpartUrl(),
+                'portalMinWidth' => Portal::MIN_DESKTOP_WIDTH,
+
+                // 'today', 'bookings', ... — the screen without either
+                // version's prefix, so nav highlighting is written once.
+                'portalScreen' => Portal::screenFrom(request()->route()?->getName() ?? ''),
+
+                'portalUser' => Auth::guard('employee')->user(),
             ]);
         });
     }

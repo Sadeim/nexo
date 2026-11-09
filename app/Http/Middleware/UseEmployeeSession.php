@@ -2,12 +2,13 @@
 
 namespace App\Http\Middleware;
 
+use App\Support\Portal;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Gives the portal its own session cookie.
+ * Gives the portal its own session cookie, shared by both of its mounts.
  *
  * Laravel keeps one session per browser per cookie name, and all guards share
  * it. With a single cookie, the owner signing in to a barber's portal to check
@@ -30,7 +31,9 @@ class UseEmployeeSession
 
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->is('me', 'me/*')) {
+        // Both mounts of the portal, so /me and /work share one session:
+        // signing in on a phone signs you in at the desk and vice versa.
+        if ($request->is(...Portal::pathPatterns())) {
             config(['session.cookie' => self::COOKIE]);
         }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Support\Portal;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,7 +30,7 @@ class EnsureEmployeePasswordChanged
                 return response()->json(['message' => 'Password change required.'], 403);
             }
 
-            return redirect()->route('portal.password.edit');
+            return redirect()->to(Portal::route('password.edit'));
         }
 
         return $next($request);

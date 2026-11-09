@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Portal;
 
 use App\Http\Controllers\Controller;
 use App\Models\Employee;
+use App\Support\Portal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -22,7 +23,7 @@ class AuthController extends Controller
     public function showLogin()
     {
         if (Auth::guard('employee')->check()) {
-            return redirect()->route('portal.today');
+            return redirect()->to(Portal::route('today'));
         }
 
         return view('portal.login');
@@ -69,10 +70,10 @@ class AuthController extends Controller
         $employee->recordLogin();
 
         if ($employee->must_change_password) {
-            return redirect()->route('portal.password.edit');
+            return redirect()->to(Portal::route('password.edit'));
         }
 
-        return redirect()->intended(route('portal.today'));
+        return redirect()->intended(Portal::route('today'));
     }
 
     public function logout(Request $request)
@@ -81,7 +82,7 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('portal.login');
+        return redirect()->to(Portal::route('login'));
     }
 
     // ---------- password ----------
@@ -120,7 +121,7 @@ class AuthController extends Controller
         // the session id means any other session opened with it is orphaned.
         $request->session()->regenerate();
 
-        return redirect()->route('portal.today')
+        return redirect()->to(Portal::route('today'))
             ->with('portal_status', 'Your password has been changed.');
     }
 }

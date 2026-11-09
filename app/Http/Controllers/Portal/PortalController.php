@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Portal;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Services\BookingSlotService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -45,6 +46,10 @@ class PortalController extends Controller
             'bookings' => $bookings,
             'unassigned' => $unassigned,
             'today' => $today,
+            // Desktop draws a timeline; the phone ignores this and lists the
+            // bookings straight. Built here rather than in the view because it
+            // is the shop's opening hours, not presentation.
+            'timeline' => $this->timeline($today, $bookings),
         ]);
     }
 
@@ -58,19 +63,26 @@ class PortalController extends Controller
 
         $query = Booking::forEmployee($me->id)->with('service');
 
-        if ($tab === 'past') {
-            $query->where('date', '<', $today)
-                ->orderByDesc('date')
-                ->orderByDesc('time');
-        } else {
-            $query->where('date', '>=', $today)
-                ->orderBy('date')
-                ->orderBy('time');
-        }
+        /*
+         * Each tab has the order that makes sense for it — the next
+         * appointment first, the most recent one first — and `dir` overrides
+         * that for the desktop table's sortable date column. Anything else in
+         * the parameter falls back to the tab's own default rather than
+         * reaching the query.
+         */
+        $default = $tab === 'past' ? 'desc' : 'asc';
+        $dir = in_array($request->query('dir'), ['asc', 'desc'], true)
+            ? $request->query('dir')
+            : $default;
+
+        $query->where('date', $tab === 'past' ? '<' : '>=', $today)
+            ->orderBy('date', $dir)
+            ->orderBy('time', $dir);
 
         return view('portal.bookings', [
             'bookings' => $query->paginate(self::PER_PAGE)->withQueryString(),
             'tab' => $tab,
+            'dir' => $dir,
         ]);
     }
 
@@ -116,6 +128,42 @@ class PortalController extends Controller
         return view('portal.profile', [
             'me' => Auth::guard('employee')->user(),
         ]);
+    }
+
+    /**
+     * The shop's slots for a day, each with the bookings that start in it.
+     *
+     * The timeline is the whole working day, not only the hours with work in
+     * them: a barber reading it needs to see the gaps as much as the
+     * appointments. Opening hours come from BookingSlotService so this cannot
+     * drift from what the booking form offers customers.
+     *
+     * @return list<array{label: string, minute: int, bookings: \Illuminate\Support\Collection}>
+     */
+    private function timeline(Carbon $day, $bookings): array
+    {
+        $slots = app(BookingSlotService::class);
+
+        [$open, $lastStart] = $slots->workingWindow($day->toDateString());
+
+        // Grouped once, so the loop below is a lookup rather than a scan.
+        $byMinute = collect($bookings)->groupBy(function ($booking) {
+            $at = Carbon::parse($booking->time);
+
+            return $at->hour * 60 + $at->minute;
+        });
+
+        $rows = [];
+
+        for ($minute = $open; $minute <= $lastStart; $minute += BookingSlotService::BOOKING_DURATION_MINUTES) {
+            $rows[] = [
+                'minute' => $minute,
+                'label' => Carbon::createFromTime(intdiv($minute, 60), $minute % 60)->format('g:i A'),
+                'bookings' => $byMinute->get($minute, collect()),
+            ];
+        }
+
+        return $rows;
     }
 
     /**

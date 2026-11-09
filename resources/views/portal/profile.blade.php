@@ -1,46 +1,46 @@
-@extends('portal.layout')
+@extends($portalLayout)
 @section('title', 'Profile')
+@section('heading', $me->name)
+@section('meta', $me->title ?: 'Barber')
 
-@section('body')
-    <header class="p-header">
-        <div>
-            <h1>{{ $me->name }}</h1>
-            <div class="p-sub">{{ $me->title ?: 'Barber' }}</div>
-        </div>
-    </header>
+@section('content')
+    {{-- Exactly what the public page shows, and read-only here. The dashboard
+         owns this content; showing it means a barber can see what customers
+         see without being able to change it from a phone. --}}
+    {{-- Two columns only when there is a photo to put in the first one;
+         otherwise the grid reserves an empty 260px gutter. --}}
+    <div class="{{ $portalIsDesktop && $me->photo_path ? 'd-profile' : '' }}">
 
-    <main class="p-main">
-        @if (session('portal_status'))
-            <div class="p-flash">{{ session('portal_status') }}</div>
-        @endif
-
-        {{-- Exactly what the public page shows, and read-only here. The
-             dashboard owns this content; showing it means a barber can see
-             what customers see without being able to change it from a phone. --}}
         @if ($me->photo_path)
-            <img class="p-profile-photo" src="{{ asset($me->photo_path) }}" alt="{{ $me->name }}">
-        @endif
-
-        @if ($me->bio)
-            <div class="p-bio">{{ $me->bio }}</div>
-        @endif
-
-        @if (! $me->public_profile)
-            <div class="p-note" style="margin-top:14px">
-                Your profile is not shown on the website at the moment.
+            <div class="d-profile-media">
+                <img class="p-profile-photo" src="{{ asset($me->photo_path) }}" alt="{{ $me->name }}">
             </div>
         @endif
 
-        <div class="p-section-title">Account</div>
+        <div class="d-profile-text">
+            @if ($me->bio)
+                <div class="p-bio">{{ $me->bio }}</div>
+            @endif
 
-        <a class="p-btn p-btn-quiet" style="text-decoration:none; text-align:center"
-           href="{{ route('portal.password.edit') }}">Change password</a>
+            @if (! $me->public_profile)
+                <div class="p-note" style="margin-top:14px">
+                    Your profile is not shown on the website at the moment.
+                </div>
+            @endif
 
-        <form method="POST" action="{{ route('portal.logout') }}" style="margin-top:10px">
-            @csrf
-            <button class="p-btn p-btn-quiet" type="submit">Log out</button>
-        </form>
-    </main>
+            <div class="p-section-title">Account</div>
 
-    @include('portal.partials.tabbar')
+            <a class="p-btn p-btn-quiet" style="text-decoration:none; text-align:center"
+               href="{{ $portalRoute('password.edit') }}">Change password</a>
+
+            {{-- The desktop sidebar already carries a log out, so the button
+                 here would be a second one on the same screen. --}}
+            @unless ($portalIsDesktop)
+                <form method="POST" action="{{ $portalRoute('logout') }}" style="margin-top:10px">
+                    @csrf
+                    <button class="p-btn p-btn-quiet" type="submit">Log out</button>
+                </form>
+            @endunless
+        </div>
+    </div>
 @endsection

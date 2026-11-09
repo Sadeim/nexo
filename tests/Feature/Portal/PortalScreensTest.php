@@ -7,6 +7,8 @@ use App\Models\Employee;
 use App\Models\Service;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use Tests\Concerns\RunsOnBothPortals;
 use Tests\TestCase;
 
 /**
@@ -16,6 +18,7 @@ use Tests\TestCase;
 class PortalScreensTest extends TestCase
 {
     use RefreshDatabase;
+    use RunsOnBothPortals;
 
     private Employee $me;
     private Employee $other;
@@ -48,7 +51,8 @@ class PortalScreensTest extends TestCase
 
     // ---------- Today ----------
 
-    public function test_today_shows_my_bookings_for_today(): void
+    #[DataProvider('portals')]
+    public function test_today_shows_my_bookings_for_today(string $p): void
     {
         $today = Carbon::today()->toDateString();
 
@@ -56,7 +60,7 @@ class PortalScreensTest extends TestCase
         $this->bookingFor($this->me, $today, '14:20:00', 'Sami Customer');
 
         $this->actingAs($this->me, 'employee')
-            ->get(route('portal.today'))
+            ->get(route($p.'today'))
             ->assertOk()
             ->assertSee('Tariq')
             ->assertSee('Sami')
@@ -65,15 +69,17 @@ class PortalScreensTest extends TestCase
             ->assertSee('Skin Fade');
     }
 
-    public function test_today_has_an_empty_state(): void
+    #[DataProvider('portals')]
+    public function test_today_has_an_empty_state(string $p): void
     {
         $this->actingAs($this->me, 'employee')
-            ->get(route('portal.today'))
+            ->get(route($p.'today'))
             ->assertOk()
             ->assertSee('Nothing booked');
     }
 
-    public function test_today_excludes_other_days_and_other_barbers(): void
+    #[DataProvider('portals')]
+    public function test_today_excludes_other_days_and_other_barbers(string $p): void
     {
         $today = Carbon::today()->toDateString();
         $tomorrow = Carbon::tomorrow()->toDateString();
@@ -83,7 +89,7 @@ class PortalScreensTest extends TestCase
         $this->bookingFor($this->other, $today, '11:00:00', 'Theirs Today');
 
         $this->actingAs($this->me, 'employee')
-            ->get(route('portal.today'))
+            ->get(route($p.'today'))
             ->assertOk()
             ->assertSee('Mine')
             ->assertDontSee('MineTomorrow')
@@ -94,7 +100,8 @@ class PortalScreensTest extends TestCase
      * The unassigned line is a count and only a count: a barber should know
      * there is unclaimed work without being handed other people's customers.
      */
-    public function test_today_counts_unassigned_bookings_without_naming_them(): void
+    #[DataProvider('portals')]
+    public function test_today_counts_unassigned_bookings_without_naming_them(string $p): void
     {
         $today = Carbon::today()->toDateString();
 
@@ -112,47 +119,51 @@ class PortalScreensTest extends TestCase
         ]);
 
         $this->actingAs($this->me, 'employee')
-            ->get(route('portal.today'))
+            ->get(route($p.'today'))
             ->assertOk()
-            ->assertSee('Unassigned today: 2')
+            ->assertSee('data-unassigned="2"', false)
+            ->assertSee('Unassigned today')
             ->assertDontSee('Unclaimed')
             ->assertDontSee('Gone Away');
     }
 
     // ---------- Bookings ----------
 
-    public function test_bookings_upcoming_and_past_split_on_today(): void
+    #[DataProvider('portals')]
+    public function test_bookings_upcoming_and_past_split_on_today(string $p): void
     {
         $this->bookingFor($this->me, Carbon::today()->addDays(3)->toDateString(), '10:00:00', 'Future Customer');
         $this->bookingFor($this->me, Carbon::today()->subDays(3)->toDateString(), '10:00:00', 'Previous Customer');
 
         $this->actingAs($this->me, 'employee')
-            ->get(route('portal.bookings'))
+            ->get(route($p.'bookings'))
             ->assertOk()
             ->assertSee('Future')
             ->assertDontSee('Previous');
 
         $this->actingAs($this->me, 'employee')
-            ->get(route('portal.bookings', ['tab' => 'past']))
+            ->get(route($p.'bookings', ['tab' => 'past']))
             ->assertOk()
             ->assertSee('Previous')
             ->assertDontSee('Future');
     }
 
-    public function test_bookings_has_empty_states_on_both_tabs(): void
+    #[DataProvider('portals')]
+    public function test_bookings_has_empty_states_on_both_tabs(string $p): void
     {
         $this->actingAs($this->me, 'employee')
-            ->get(route('portal.bookings'))
+            ->get(route($p.'bookings'))
             ->assertOk()
             ->assertSee('Nothing coming up');
 
         $this->actingAs($this->me, 'employee')
-            ->get(route('portal.bookings', ['tab' => 'past']))
+            ->get(route($p.'bookings', ['tab' => 'past']))
             ->assertOk()
             ->assertSee('No history yet');
     }
 
-    public function test_bookings_paginates(): void
+    #[DataProvider('portals')]
+    public function test_bookings_paginates(string $p): void
     {
         for ($i = 1; $i <= 20; $i++) {
             $this->bookingFor(
@@ -163,32 +174,34 @@ class PortalScreensTest extends TestCase
             );
         }
 
-        $first = $this->actingAs($this->me, 'employee')->get(route('portal.bookings'));
+        $first = $this->actingAs($this->me, 'employee')->get(route($p.'bookings'));
         $first->assertOk()->assertSee('Older');
 
         // Page two exists and carries the rest.
         $this->actingAs($this->me, 'employee')
-            ->get(route('portal.bookings', ['page' => 2]))
+            ->get(route($p.'bookings', ['page' => 2]))
             ->assertOk()
             ->assertSee('Newer');
     }
 
-    public function test_the_status_is_shown_as_a_badge(): void
+    #[DataProvider('portals')]
+    public function test_the_status_is_shown_as_a_badge(string $p): void
     {
         $this->bookingFor($this->me, Carbon::today()->toDateString(), '10:00:00', 'Someone', 'confirmed');
 
         $this->actingAs($this->me, 'employee')
-            ->get(route('portal.today'))
+            ->get(route($p.'today'))
             ->assertOk()
             ->assertSee('p-badge-confirmed', false);
     }
 
     // ---------- Earnings ----------
 
-    public function test_earnings_is_a_placeholder_and_computes_nothing(): void
+    #[DataProvider('portals')]
+    public function test_earnings_is_a_placeholder_and_computes_nothing(string $p): void
     {
         $this->actingAs($this->me, 'employee')
-            ->get(route('portal.earnings'))
+            ->get(route($p.'earnings'))
             ->assertOk()
             ->assertSee('Coming soon')
             // No money anywhere on the screen.
@@ -197,7 +210,8 @@ class PortalScreensTest extends TestCase
 
     // ---------- Profile ----------
 
-    public function test_profile_shows_my_public_details_read_only(): void
+    #[DataProvider('portals')]
+    public function test_profile_shows_my_public_details_read_only(string $p): void
     {
         $this->me->forceFill([
             'title' => 'Master Barber',
@@ -206,7 +220,7 @@ class PortalScreensTest extends TestCase
         ])->save();
 
         $response = $this->actingAs($this->me, 'employee')
-            ->get(route('portal.profile'))
+            ->get(route($p.'profile'))
             ->assertOk()
             ->assertSee('Omar Haddad')
             ->assertSee('Master Barber')
@@ -219,22 +233,24 @@ class PortalScreensTest extends TestCase
         $this->assertStringNotContainsString('name="title"', $response->getContent());
     }
 
-    public function test_profile_renders_for_a_barber_with_nothing_filled_in(): void
+    #[DataProvider('portals')]
+    public function test_profile_renders_for_a_barber_with_nothing_filled_in(string $p): void
     {
         $bare = Employee::factory()->withPortal('2240000009')->create([
             'name' => 'New Starter', 'title' => null, 'bio' => null, 'photo_path' => null,
         ]);
 
         $this->actingAs($bare, 'employee')
-            ->get(route('portal.profile'))
+            ->get(route($p.'profile'))
             ->assertOk()
             ->assertSee('New Starter')
             ->assertSee('Barber');
     }
 
-    public function test_profile_never_renders_the_password_hash(): void
+    #[DataProvider('portals')]
+    public function test_profile_never_renders_the_password_hash(string $p): void
     {
-        $response = $this->actingAs($this->me, 'employee')->get(route('portal.profile'));
+        $response = $this->actingAs($this->me, 'employee')->get(route($p.'profile'));
 
         $this->assertStringNotContainsString(
             $this->me->fresh()->password,
@@ -250,7 +266,8 @@ class PortalScreensTest extends TestCase
      * hope something reads it. Every known shape is tried against every
      * screen; none of them may surface the other barber's customer.
      */
-    public function test_no_query_parameter_can_make_the_portal_show_another_barber(): void
+    #[DataProvider('portals')]
+    public function test_no_query_parameter_can_make_the_portal_show_another_barber(string $p): void
     {
         $today = Carbon::today()->toDateString();
 
@@ -269,20 +286,20 @@ class PortalScreensTest extends TestCase
             ['tab' => 'past', 'barber_id' => $this->other->id],
         ];
 
-        foreach (['portal.today', 'portal.bookings', 'portal.earnings', 'portal.profile'] as $route) {
+        foreach (['today', 'bookings', 'earnings', 'profile'] as $screen) {
             foreach ($tampered as $query) {
                 $response = $this->actingAs($this->me, 'employee')
-                    ->get(route($route, $query));
+                    ->get(route($p.$screen, $query));
 
                 $response->assertOk();
 
                 $body = $response->getContent();
 
                 $this->assertStringNotContainsString('Theirs', $body, sprintf(
-                    '%s leaked the other barber with %s', $route, json_encode($query)
+                    '%s leaked the other barber with %s', $p.$screen, json_encode($query)
                 ));
                 $this->assertStringNotContainsString('Eddie Nasser', $body, sprintf(
-                    '%s leaked the other barber\'s name with %s', $route, json_encode($query)
+                    '%s leaked the other barber\'s name with %s', $p.$screen, json_encode($query)
                 ));
             }
         }

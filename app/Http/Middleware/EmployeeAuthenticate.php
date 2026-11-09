@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Support\Portal;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -27,7 +28,7 @@ class EmployeeAuthenticate
                 return response()->json(['message' => 'Unauthenticated.'], 401);
             }
 
-            return redirect()->guest(route('portal.login'));
+            return redirect()->guest(Portal::route('login'));
         }
 
         if (! $guard->user()->is_active) {
