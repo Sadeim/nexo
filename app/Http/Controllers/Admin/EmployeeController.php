@@ -114,10 +114,54 @@ class EmployeeController extends Controller
         return $this->response_api(200, __('admin.form.deleted_successfully'), '');
     }
 
+    /**
+     * Give a barber a temporary portal password.
+     *
+     * The owner types it and passes it on however they like. It is a one-time
+     * credential by construction: setPortalPassword() always sets
+     * must_change_password, so the barber is held on the change-password
+     * screen until the password is theirs alone.
+     *
+     * Deliberately not part of the employee form. A password is not a profile
+     * field, and saving the form should never silently reset one.
+     */
+    public function setPassword(Request $request, $id)
+    {
+        $employee = Employee::findOrFail($id);
+
+        $data = $request->validate([
+            'password' => ['required', 'string', 'min:8', 'max:72'],
+        ], [
+            'password.min' => 'The temporary password must be at least 8 characters.',
+        ]);
+
+        if (! $employee->phone) {
+            return $this->response_api(422, 'Give this barber a phone number first — it is how they sign in.', '');
+        }
+
+        $employee->setPortalPassword($data['password']);
+
+        return $this->response_api(200, 'Portal password set. They will be asked to change it when they sign in.', '');
+    }
+
     protected function validateData(Request $request, ?int $id = null): array
     {
+        // Normalise before validating, so the unique rule compares the value
+        // that will actually be stored rather than the punctuation typed.
+        //
+        // Only when the field was actually submitted. merge() always sets the
+        // key, so doing this unconditionally would put phone => null into every
+        // request that does not carry one — and validate() would then hand it
+        // to update() and wipe a barber's number on an unrelated save.
+        if ($request->has('phone')) {
+            $request->merge([
+                'phone' => Employee::normalizePhone($request->input('phone')),
+            ]);
+        }
+
         $data = $request->validate([
             'name'            => ['required', 'string', 'max:120', Rule::unique('employees', 'name')->ignore($id)],
+            'phone'           => ['nullable', 'string', 'digits_between:7,15', Rule::unique('employees', 'phone')->ignore($id)],
             'sort_order'      => 'nullable|integer|min:0|max:9999',
             'commission_rate' => 'nullable|numeric|min:0|max:100',
             'avatar'          => 'nullable|image|max:4096',
@@ -137,6 +181,8 @@ class EmployeeController extends Controller
             'slug.regex'  => 'The URL must be lowercase letters, numbers and single hyphens.',
             'photo.max'   => 'The photo may not be larger than 5MB.',
             'slug.unique' => 'Another barber already uses that URL.',
+            'phone.unique' => 'Another barber already uses that phone number.',
+            'phone.digits_between' => 'Enter a phone number with 7 to 15 digits.',
         ]);
 
         // A published barber with no slug has no reachable page, so one is

@@ -59,6 +59,17 @@ return [
             'driver' => 'passport',
             'provider' => 'users',
         ],
+
+        /*
+         * Barbers, on the /me portal. Session-based like the others, but its
+         * session rides a different cookie (see UseEmployeeSession), so the
+         * owner can be signed in to /admin and to a barber's portal in the
+         * same browser without either session displacing the other.
+         */
+        'employee' => [
+            'driver' => 'session',
+            'provider' => 'employees',
+        ],
     ],
 
     /*
@@ -86,6 +97,11 @@ return [
         'admins' => [
             'driver' => 'eloquent',
             'model' => App\Models\Admin::class,
+        ],
+
+        'employees' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Employee::class,
         ],
 
     ],

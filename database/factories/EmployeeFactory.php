@@ -37,4 +37,25 @@ class EmployeeFactory extends Factory
     {
         return $this->state(fn () => ['is_active' => false]);
     }
+
+    /**
+     * A barber who can sign in to /me and is past the forced password change.
+     *
+     * The default password is the one the portal tests sign in with. The cast
+     * on the model hashes it, so this is the plaintext, not a hash.
+     */
+    public function withPortal(?string $phone = null, string $password = 'portal-pass-1'): static
+    {
+        return $this->state(fn () => [
+            'phone' => $phone ?? (string) $this->faker->unique()->numerify('224#######'),
+            'password' => $password,
+            'must_change_password' => false,
+        ]);
+    }
+
+    /** Portal set up, but the password is still the one the owner typed. */
+    public function mustChangePassword(): static
+    {
+        return $this->state(fn () => ['must_change_password' => true]);
+    }
 }

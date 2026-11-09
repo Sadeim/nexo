@@ -52,6 +52,40 @@
                             Set to 0 for tips-only.
                         </div>
                     </div>
+
+                    <div class="col-md-4 fv-row">
+                        <label class="fs-6 fw-semibold mb-2">Phone (portal sign-in)</label>
+                        <input class="form-control" name="phone" placeholder="2246698063" inputmode="tel"
+                               value="{{ isset($employee) ? $employee->phone : '' }}">
+                        <div class="text-muted fs-8 mt-1">
+                            How this barber signs in to their portal. Punctuation is ignored —
+                            (224) 669-8063 and 2246698063 are stored the same way.
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 fv-row">
+                        <label class="fs-6 fw-semibold mb-2">Portal</label>
+                        @if (isset($employee) && $employee->hasPortalAccess())
+                            <div><span class="badge badge-light-success fs-7">Active</span></div>
+                            <div class="text-muted fs-8 mt-1">
+                                @if ($employee->must_change_password)
+                                    Password set, not yet changed by them.
+                                @else
+                                    Password chosen by them.
+                                @endif
+                                @if ($employee->last_login_at)
+                                    Last signed in {{ $employee->last_login_at->diffForHumans() }}.
+                                @else
+                                    Has not signed in yet.
+                                @endif
+                            </div>
+                        @else
+                            <div><span class="badge badge-light-warning fs-7">Not set up</span></div>
+                            <div class="text-muted fs-8 mt-1">
+                                Needs a phone number and a password before they can sign in.
+                            </div>
+                        @endif
+                    </div>
                 </div>
 
                 <div class="row g-9">
@@ -206,7 +240,109 @@
             </div>
         </div>
     </form>
+
+    @isset($employee)
+        {{-- Outside the form above on purpose: this posts to its own endpoint,
+             and saving the profile must never quietly reset a password. --}}
+        <div class="card card-flush mt-7">
+            <div class="card-header">
+                <div class="card-title">
+                    <h3>Barber portal password</h3>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-light-primary d-flex align-items-center p-5 mb-7">
+                    <div class="d-flex flex-column">
+                        <span class="fw-semibold">You type a temporary password and pass it to them.</span>
+                        <span class="fs-7 text-muted">
+                            They are asked to choose their own the first time they sign in, so the one you
+                            type here stops working as soon as they do. Setting a new one here resets that.
+                        </span>
+                    </div>
+                </div>
+
+                <form id="portal_password_form" class="form"
+                      action="{{ route('admin.employees.portal_password', $employee->id) }}">
+                    @csrf
+                    <div class="row g-9">
+                        <div class="col-md-6 fv-row">
+                            <label class="required fs-6 fw-semibold mb-2">Temporary password</label>
+                            <input type="text" class="form-control" name="password" autocomplete="off"
+                                   placeholder="At least 8 characters">
+                            <div class="text-muted fs-8 mt-1">
+                                Shown as plain text so you can read it out. It is stored hashed.
+                            </div>
+                        </div>
+                        <div class="col-md-6 fv-row d-flex align-items-end">
+                            <button type="submit" class="btn btn-light-primary">
+                                <span class="indicator-label">
+                                    {{ $employee->hasPortalAccess() ? 'Reset password' : 'Set password' }}
+                                </span>
+                                <span class="indicator-progress">Please wait
+                                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    @endisset
 @endsection
 @push('scripts')
     <script src="{{ asset('admin_assets/js/dashboard/handleSubmitForm.js') }}"></script>
+    @isset($employee)
+        <script>
+            // handleSubmitForm.js is bound to #kt_form alone. This form posts to
+            // its own endpoint and must not redirect away from the page, so it
+            // gets its own small handler rather than a second copy of that file.
+            (function () {
+                const form = document.getElementById('portal_password_form');
+                if (!form) return;
+
+                form.addEventListener('submit', function (event) {
+                    event.preventDefault();
+
+                    const button = form.querySelector('button[type="submit"]');
+                    button.setAttribute('data-kt-indicator', 'on');
+                    button.disabled = true;
+
+                    axios.post(form.getAttribute('action'), new FormData(form))
+                        .then(function (response) {
+                            const ok = response.data.status === 200;
+                            Swal.fire({
+                                text: response.data.message,
+                                icon: ok ? 'success' : 'error',
+                                buttonsStyling: false,
+                                confirmButtonText: 'Done',
+                                customClass: { confirmButton: ok ? 'btn btn-primary' : 'btn btn-danger' }
+                            }).then(function () {
+                                // Reload so the Portal status badge reflects the change.
+                                if (ok) window.location.reload();
+                            });
+                        })
+                        .catch(function (error) {
+                            // Laravel validation answers with {errors:{field:[msg]}};
+                            // response_api() answers with {message}. Both arrive here
+                            // because axios rejects any non-2xx.
+                            const body = (error.response && error.response.data) || {};
+                            const bag = body.errors;
+                            Swal.fire({
+                                text: bag
+                                    ? Object.values(bag)[0][0]
+                                    : (body.message || 'Something went wrong.'),
+                                icon: 'error',
+                                buttonsStyling: false,
+                                confirmButtonText: 'Done',
+                                customClass: { confirmButton: 'btn btn-danger' }
+                            });
+                        })
+                        .then(function () {
+                            button.removeAttribute('data-kt-indicator');
+                            button.disabled = false;
+                        });
+                });
+            })();
+        </script>
+    @endisset
 @endpush

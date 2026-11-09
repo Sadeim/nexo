@@ -79,6 +79,28 @@ class PosOrder extends Model
     }
 
     /** Card status flow: awaiting_payment → processing → completed | failed | canceled. */
+    /**
+     * Everything belonging to one employee, and nothing else.
+     *
+     * The portal's isolation rests entirely on this scope: every /me query
+     * goes through it, and no portal route ever takes an id from the request.
+     * It refuses an empty id rather than quietly matching nothing, because the
+     * failure mode of a scope that silently no-ops is a screen that looks
+     * merely empty while a bug hands someone a query with no filter at all.
+     */
+    public function scopeForEmployee($query, $employeeId)
+    {
+        $id = (int) $employeeId;
+
+        if ($id <= 0) {
+            throw new \InvalidArgumentException(
+                'forEmployee() needs a real employee id; got: '.var_export($employeeId, true)
+            );
+        }
+
+        return $query->where('employee_id', $id);
+    }
+
     public const TERMINAL_STATUSES = ['completed', 'failed', 'canceled'];
 
     public function isTerminal(): bool

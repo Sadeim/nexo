@@ -22,6 +22,9 @@ return Application::configure(basePath: dirname(__DIR__))
             Route::middleware('web')
                 ->group(base_path('routes/pos.php'));
 
+            Route::middleware('web')
+                ->group(base_path('routes/portal.php'));
+
             Route::middleware('api')
                 ->group(base_path('routes/api.php'));
         },
@@ -38,6 +41,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => \App\Http\Middleware\Admin::class,
             'admin.role' => \App\Http\Middleware\EnsureAdminRole::class,
             'pos' => \App\Http\Middleware\PosAuthenticate::class,
+            'employee' => \App\Http\Middleware\EmployeeAuthenticate::class,
+            'employee.password' => \App\Http\Middleware\EnsureEmployeePasswordChanged::class,
             'pos.api' => \App\Http\Middleware\PosApiAuth::class,
             // 'OAuth2'    => \App\Http\Middleware\OAuth2::class,
             'Image' => Intervention\Image\Facades\Image::class,
@@ -46,6 +51,11 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         $middleware->web(append: [
         ]);
+
+        // Must run before StartSession, so the portal's session is opened
+        // under its own cookie rather than the app's. Prepending to the group
+        // is the only place early enough; a route middleware is far too late.
+        $middleware->prependToGroup('web', \App\Http\Middleware\UseEmployeeSession::class);
 
         // Inbound PlutoPay webhooks carry no session/CSRF token; they are
         // authenticated by their HMAC signature instead.

@@ -1,0 +1,392 @@
+/*
+ * Nexo barbers' portal.
+ *
+ * Hand-written rather than Tailwind: the public site ships a pre-compiled
+ * output.css with no build in the repo, so any utility class not already in
+ * that file silently does nothing (ring-red-500 is the standing example).
+ * The portal owns its stylesheet so what is written here is what renders.
+ *
+ * The tokens are copied from output.css so both surfaces stay one brand.
+ */
+
+:root {
+    --evergreen: #283326;
+    --evergreen-soft: #334030;
+    --evergreen-line: #3f4d3b;
+    --ivory: #F8EDD2;
+    --crimson: #8C1C13;
+
+    --muted: rgba(248, 237, 210, 0.62);
+    --muted-dim: rgba(248, 237, 210, 0.38);
+
+    --font-display: 'League Gothic', 'Oswald', Impact, sans-serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+    --tabbar-height: 64px;
+    --radius: 10px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+    margin: 0;
+    background: var(--evergreen);
+    color: var(--ivory);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.5;
+    /* Room for the fixed tab bar, plus the iPhone home indicator. */
+    padding-bottom: calc(var(--tabbar-height) + env(safe-area-inset-bottom, 0px) + 16px);
+    -webkit-font-smoothing: antialiased;
+}
+
+body.is-plain { padding-bottom: 0; }
+
+h1, h2, h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+a { color: inherit; }
+
+/* ---------- shell ---------- */
+
+.p-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: var(--evergreen);
+    border-bottom: 1px solid var(--evergreen-line);
+    padding: calc(env(safe-area-inset-top, 0px) + 14px) 16px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.p-header h1 { font-size: 28px; line-height: 1; }
+
+.p-header .p-sub {
+    font-size: 12px;
+    color: var(--muted);
+    text-transform: none;
+    letter-spacing: 0;
+    margin-top: 2px;
+}
+
+.p-main { padding: 16px; max-width: 640px; margin: 0 auto; }
+
+/* ---------- cards ---------- */
+
+.p-card {
+    background: var(--evergreen-soft);
+    border: 1px solid var(--evergreen-line);
+    border-radius: var(--radius);
+    padding: 14px;
+    margin-bottom: 10px;
+}
+
+.p-card-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.p-time {
+    font-family: var(--font-display);
+    font-size: 26px;
+    line-height: 1;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+}
+
+.p-name { font-weight: 600; font-size: 16px; }
+.p-service { color: var(--muted); font-size: 14px; margin-top: 2px; }
+.p-date { color: var(--muted); font-size: 13px; margin-top: 6px; }
+
+/* ---------- badges ---------- */
+
+.p-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 999px;
+    border: 1px solid currentColor;
+    white-space: nowrap;
+}
+
+.p-badge-pending   { color: #E8C56A; }
+.p-badge-confirmed { color: #8FCB81; }
+.p-badge-completed { color: var(--muted); }
+.p-badge-cancelled { color: #E08A80; }
+
+/* ---------- notices ---------- */
+
+.p-note {
+    background: rgba(248, 237, 210, 0.07);
+    border: 1px solid var(--evergreen-line);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    font-size: 14px;
+    margin-bottom: 14px;
+}
+
+.p-note strong { font-weight: 600; }
+
+.p-empty {
+    text-align: center;
+    color: var(--muted);
+    padding: 48px 20px;
+}
+
+.p-empty-title {
+    font-family: var(--font-display);
+    font-size: 24px;
+    color: var(--ivory);
+    margin-bottom: 6px;
+}
+
+.p-flash {
+    background: rgba(143, 203, 129, 0.14);
+    border: 1px solid #8FCB81;
+    color: #CDE8C4;
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    font-size: 14px;
+    margin-bottom: 14px;
+}
+
+.p-error {
+    background: rgba(224, 138, 128, 0.14);
+    border: 1px solid #E08A80;
+    color: #F3C9C4;
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    font-size: 14px;
+    margin-bottom: 14px;
+}
+
+/* ---------- forms ---------- */
+
+.p-field { margin-bottom: 14px; }
+
+.p-label {
+    display: block;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+}
+
+.p-input {
+    width: 100%;
+    /* 16px keeps iOS Safari from zooming the page on focus. */
+    font-size: 16px;
+    font-family: var(--font-body);
+    color: var(--ivory);
+    background: var(--evergreen);
+    border: 1px solid var(--evergreen-line);
+    border-radius: var(--radius);
+    padding: 13px 14px;
+}
+
+.p-input:focus {
+    outline: none;
+    border-color: var(--ivory);
+}
+
+.p-input-invalid { border-color: #E08A80; }
+
+.p-btn {
+    display: block;
+    width: 100%;
+    font-family: var(--font-display);
+    font-size: 22px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ivory);
+    background: var(--crimson);
+    border: 0;
+    border-radius: var(--radius);
+    padding: 14px;
+    cursor: pointer;
+    -webkit-appearance: none;
+}
+
+.p-btn:active { opacity: 0.85; }
+
+.p-btn-quiet {
+    background: transparent;
+    border: 1px solid var(--evergreen-line);
+}
+
+/* ---------- tabs (Upcoming / Past) ---------- */
+
+.p-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.p-tab {
+    flex: 1;
+    text-align: center;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 10px;
+    border-radius: var(--radius);
+    border: 1px solid var(--evergreen-line);
+    color: var(--muted);
+}
+
+.p-tab-on {
+    background: var(--ivory);
+    border-color: var(--ivory);
+    color: var(--evergreen);
+}
+
+/* ---------- refresh ---------- */
+
+/*
+ * A <button>, so it needs the background and font reset explicitly: the
+ * browser's default button styling is a light fill, which rendered the
+ * muted ivory label invisible against it.
+ */
+.p-refresh {
+    flex: 0 0 auto;
+    background: transparent;
+    color: var(--muted);
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 9px 14px;
+    border: 1px solid var(--evergreen-line);
+    border-radius: var(--radius);
+    cursor: pointer;
+    -webkit-appearance: none;
+}
+
+.p-refresh:active { color: var(--ivory); }
+.p-refresh[disabled] { opacity: 0.5; }
+
+/* ---------- pagination ---------- */
+
+.p-pager {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.p-pager a, .p-pager span {
+    flex: 1;
+    text-align: center;
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 12px;
+    border-radius: var(--radius);
+    border: 1px solid var(--evergreen-line);
+}
+
+.p-pager span { color: var(--muted-dim); }
+
+/* ---------- bottom tab bar ---------- */
+
+.p-tabbar {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 30;
+    display: flex;
+    background: var(--evergreen);
+    border-top: 1px solid var(--evergreen-line);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.p-tabbar a {
+    flex: 1;
+    height: var(--tabbar-height);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.p-tabbar a.on { color: var(--ivory); }
+.p-tabbar svg { width: 22px; height: 22px; fill: currentColor; }
+
+/* ---------- profile ---------- */
+
+.p-profile-photo {
+    width: 100%;
+    max-width: 220px;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    border-radius: var(--radius);
+    display: block;
+    margin: 0 auto 16px;
+}
+
+.p-bio { color: var(--muted); font-size: 15px; white-space: pre-line; }
+
+.p-section-title {
+    font-family: var(--font-display);
+    font-size: 20px;
+    margin: 22px 0 10px;
+}
+
+/* ---------- centred screens (login, password) ---------- */
+
+.p-centre {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 24px 20px calc(24px + env(safe-area-inset-bottom, 0px));
+    max-width: 420px;
+    margin: 0 auto;
+}
+
+.p-brand {
+    font-family: var(--font-display);
+    font-size: 44px;
+    line-height: 1;
+    text-align: center;
+    margin-bottom: 4px;
+}
+
+.p-brand-sub {
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+}
+
+/* Honour a reduced-motion preference; the refresh spinner is the only motion. */
+@media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}

@@ -83,6 +83,7 @@ Route::group(['middleware' => ['auth:admin', 'admin', 'admin.role'], 'prefix' =>
     Route::group(['prefix' => 'employees', 'as' => 'employees.'], function () {
         Route::get('data/datatables', [EmployeeController::class, 'datatable'])->name('datatable');
         Route::post('activate/{id}', [EmployeeController::class, 'activate'])->name('active');
+        Route::post('{id}/portal-password', [EmployeeController::class, 'setPassword'])->name('portal_password');
     });
     Route::resource('employees', EmployeeController::class)->except(['show']);
 
