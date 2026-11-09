@@ -274,10 +274,11 @@
             <div class="card-body">
                 <div class="alert alert-light-primary d-flex align-items-center p-5 mb-7">
                     <div class="d-flex flex-column">
-                        <span class="fw-semibold">You type a temporary password and pass it to them.</span>
+                        <span class="fw-semibold">You type a password and pass it to them.</span>
                         <span class="fs-7 text-muted">
-                            They are asked to choose their own the first time they sign in, so the one you
-                            type here stops working as soon as they do. Setting a new one here resets that.
+                            They can change it themselves under Profile in the portal, and the status
+                            above tells you whether they have. They are not forced to — they sign in and
+                            land on their day. Setting a new one here replaces whatever they chose.
                         </span>
                     </div>
                 </div>
@@ -287,7 +288,7 @@
                     @csrf
                     <div class="row g-9">
                         <div class="col-md-6 fv-row">
-                            <label class="required fs-6 fw-semibold mb-2">Temporary password</label>
+                            <label class="required fs-6 fw-semibold mb-2">Password</label>
                             <input type="text" class="form-control" name="password" autocomplete="off"
                                    placeholder="At least 8 characters">
                             <div class="text-muted fs-8 mt-1">

@@ -28,15 +28,48 @@
                 </div>
             @endif
 
-            <div class="p-section-title">Account</div>
+            <div class="p-section-title">Change password</div>
 
-            <a class="p-btn p-btn-quiet" style="text-decoration:none; text-align:center"
-               href="{{ $portalRoute('password.edit') }}">Change password</a>
+            {{-- The only place a password is changed. There used to be a
+                 screen of its own, reached by a link from here and forced on
+                 a barber before they could see anything else; both are gone.
+                 One form, in the one place somebody goes looking for it. --}}
+            @if ($errors->any())
+                <div class="p-error">{{ $errors->first() }}</div>
+            @endif
+
+            <form method="POST" action="{{ $portalRoute('password.update') }}">
+                @csrf
+
+                <div class="p-field">
+                    <label class="p-label" for="current_password">Current password</label>
+                    <input class="p-input @error('current_password') p-input-invalid @enderror"
+                           id="current_password" name="current_password" type="password"
+                           autocomplete="current-password">
+                </div>
+
+                <div class="p-field">
+                    <label class="p-label" for="password">New password</label>
+                    <input class="p-input @error('password') p-input-invalid @enderror"
+                           id="password" name="password" type="password"
+                           autocomplete="new-password">
+                </div>
+
+                <div class="p-field">
+                    <label class="p-label" for="password_confirmation">Repeat new password</label>
+                    <input class="p-input" id="password_confirmation" name="password_confirmation"
+                           type="password" autocomplete="new-password">
+                </div>
+
+                <button class="p-btn" type="submit">Save password</button>
+            </form>
 
             {{-- The desktop sidebar already carries a log out, so the button
                  here would be a second one on the same screen. --}}
             @unless ($portalIsDesktop)
-                <form method="POST" action="{{ $portalRoute('logout') }}" style="margin-top:10px">
+                <div class="p-section-title">Account</div>
+
+                <form method="POST" action="{{ $portalRoute('logout') }}">
                     @csrf
                     <button class="p-btn p-btn-quiet" type="submit">Log out</button>
                 </form>

@@ -19,7 +19,8 @@ use Illuminate\Support\Facades\Route;
 | The route group hands each mount a `portal_layout` attribute, which is all
 | the views need to pick their chrome — see App\Support\Portal.
 |
-| Read-only in this phase: no route changes a booking.
+| Read-only in this phase: no route changes a booking — the one POST that
+| changes anything changes the signed-in barber's own password.
 */
 
 $screens = function (string $variant) {
@@ -49,17 +50,23 @@ $screens = function (string $variant) {
 
         Route::middleware('employee')->group(function () {
 
-            // Reachable while must_change_password is still set — this is the
-            // one screen the forced-change gate deliberately does not cover.
-            Route::get('password', [AuthController::class, 'editPassword'])->name('password.edit');
-            Route::post('password', [AuthController::class, 'updatePassword'])->name('password.update');
+            Route::get('/', [PortalController::class, 'today'])->name('today');
+            Route::get('bookings', [PortalController::class, 'bookings'])->name('bookings');
+            Route::get('earnings', [PortalController::class, 'earnings'])->name('earnings');
+            Route::get('profile', [PortalController::class, 'profile'])->name('profile');
 
-            Route::middleware('employee.password')->group(function () {
-                Route::get('/', [PortalController::class, 'today'])->name('today');
-                Route::get('bookings', [PortalController::class, 'bookings'])->name('bookings');
-                Route::get('earnings', [PortalController::class, 'earnings'])->name('earnings');
-                Route::get('profile', [PortalController::class, 'profile'])->name('profile');
-            });
+            /*
+             * Changing a password. There is no screen of its own: the form
+             * lives on Profile, which is the only place it is offered from.
+             *
+             * Nothing gates the screens above on having changed it. A barber
+             * who has only ever had the password the shop typed still lands
+             * on Today — being made to choose a new one before seeing a
+             * single booking cost one barber his first afternoon with the
+             * portal on 9 Nov 2026, and the gate bought nothing the owner
+             * could not already see in the dashboard.
+             */
+            Route::post('password', [AuthController::class, 'updatePassword'])->name('password.update');
         });
     };
 };

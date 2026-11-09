@@ -115,12 +115,12 @@ class EmployeeController extends Controller
     }
 
     /**
-     * Give a barber a temporary portal password.
+     * Give a barber a portal password.
      *
-     * The owner types it and passes it on however they like. It is a one-time
-     * credential by construction: setPortalPassword() always sets
-     * must_change_password, so the barber is held on the change-password
-     * screen until the password is theirs alone.
+     * The owner types it and passes it on however they like. The barber is
+     * free to change it under Profile and is no longer made to: the flag
+     * setPortalPassword() writes records who chose the password, which the
+     * form shows the owner, rather than gating anything.
      *
      * Deliberately not part of the employee form. A password is not a profile
      * field, and saving the form should never silently reset one.
@@ -132,7 +132,7 @@ class EmployeeController extends Controller
         $data = $request->validate([
             'password' => ['required', 'string', 'min:8', 'max:72'],
         ], [
-            'password.min' => 'The temporary password must be at least 8 characters.',
+            'password.min' => 'The password must be at least 8 characters.',
         ]);
 
         if (! $employee->phone) {
@@ -141,7 +141,7 @@ class EmployeeController extends Controller
 
         $employee->setPortalPassword($data['password']);
 
-        return $this->response_api(200, 'Portal password set. They will be asked to change it when they sign in.', '');
+        return $this->response_api(200, 'Portal password set. Pass it on — they can change it under Profile.', '');
     }
 
     protected function validateData(Request $request, ?int $id = null): array

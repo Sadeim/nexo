@@ -195,13 +195,18 @@ class Employee extends Model implements AuthenticatableContract
     }
 
     /**
-     * Set a password and require it to be changed on next sign-in.
+     * Set a password on a barber's behalf, and record that somebody else
+     * chose it.
      *
      * Every path that writes a password goes through here, so there is one
      * place where "a password was set by someone other than its owner" is
-     * recorded. The owner typing a temporary password and a barber choosing
-     * their own differ only in this flag, which is why changePasswordTo()
-     * exists separately rather than taking a boolean.
+     * recorded. The owner typing one and a barber choosing their own differ
+     * only in this flag, which is why changePasswordTo() exists separately
+     * rather than taking a boolean.
+     *
+     * The flag is reporting, not a gate. It is shown in the dashboard so the
+     * owner can see whose password is still the one they handed over; nothing
+     * in the portal stands in a barber's way because of it.
      */
     public function setPortalPassword(string $plain): void
     {

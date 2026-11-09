@@ -230,27 +230,84 @@ class PortalAuthTest extends TestCase
         $this->assertGuest('employee');
     }
 
-    // ---------- forced password change ----------
+    // ---------- changing a password ----------
 
+    /**
+     * Nothing stands between a barber and their day.
+     *
+     * The portal used to hold anyone whose password had been typed by the
+     * shop on a "Choose your password" screen until they changed it. On
+     * 9 Nov 2026 a barber signed in at 13:15 and was still stuck on it hours
+     * later — the screen's own pull-to-refresh gesture emptied the form every
+     * time he reached for the Save button. The gate is gone; the flag it read
+     * is still written, and still shown to the owner in the dashboard.
+     */
     #[DataProvider('portals')]
-    public function test_a_barber_who_must_change_their_password_is_held_there(string $p): void
+    public function test_a_barber_whose_password_was_set_for_them_still_lands_on_today(string $p): void
     {
-        $barber = Employee::factory()->withPortal()->mustChangePassword()->create();
+        $barber = Employee::factory()->withPortal('2240000031')->mustChangePassword()->create();
 
+        $this->post(route($p.'login.post'), [
+            'phone' => '2240000031',
+            'password' => 'portal-pass-1',
+        ])->assertRedirect(route($p.'today'));
+
+        // And every screen is reachable, not just the one.
         foreach (['today', 'bookings', 'earnings', 'profile'] as $screen) {
             $this->actingAs($barber, 'employee')
                 ->get(route($p.$screen))
-                ->assertRedirect(route($p.'password.edit'));
+                ->assertOk();
         }
 
-        // The one screen they are allowed to reach.
-        $this->actingAs($barber, 'employee')
-            ->get(route($p.'password.edit'))
-            ->assertOk();
+        // The flag is untouched by any of that: it is a record of who chose
+        // the password, which the dashboard reports.
+        $this->assertTrue($barber->fresh()->must_change_password);
+    }
+
+    /** The form is on Profile, and it is the only place it is offered. */
+    #[DataProvider('portals')]
+    public function test_the_change_password_form_lives_on_profile(string $p): void
+    {
+        $barber = Employee::factory()->withPortal('2240000032')->create();
+
+        $body = $this->actingAs($barber, 'employee')
+            ->get(route($p.'profile'))
+            ->assertOk()
+            ->assertSee('Change password')
+            ->getContent();
+
+        $this->assertStringContainsString('action="'.route($p.'password.update').'"', $body);
+
+        foreach (['current_password', 'password', 'password_confirmation'] as $field) {
+            $this->assertStringContainsString('name="'.$field.'"', $body);
+        }
+
+        // No screen of its own left to link to. The form POSTs to
+        // .../password, so this looks at links, not at every mention of it.
+        preg_match_all('/href="([^"]*)"/', $body, $links);
+
+        $this->assertSame(
+            [],
+            array_values(array_filter($links[1], fn ($href) => str_contains($href, 'password'))),
+            'Profile still links out to a password screen.'
+        );
+    }
+
+    public function test_there_is_no_separate_password_screen_on_either_mount(): void
+    {
+        foreach (['portal.', 'work.'] as $p) {
+            $this->assertFalse(
+                \Illuminate\Support\Facades\Route::has($p.'password.edit'),
+                $p.'password.edit still exists.'
+            );
+        }
+
+        $this->get('/me/password')->assertStatus(405);
+        $this->get('/work/password')->assertStatus(405);
     }
 
     #[DataProvider('portals')]
-    public function test_changing_the_password_releases_them(string $p): void
+    public function test_changing_the_password_works_and_clears_the_flag(string $p): void
     {
         $barber = Employee::factory()->withPortal()->mustChangePassword()->create();
 
@@ -260,7 +317,8 @@ class PortalAuthTest extends TestCase
                 'password' => 'my-own-password',
                 'password_confirmation' => 'my-own-password',
             ])
-            ->assertRedirect(route($p.'today'));
+            // Back to the form's own screen, not to Today.
+            ->assertRedirect(route($p.'profile'));
 
         $barber->refresh();
 
@@ -287,7 +345,7 @@ class PortalAuthTest extends TestCase
     }
 
     #[DataProvider('portals')]
-    public function test_the_new_password_cannot_be_the_temporary_one(string $p): void
+    public function test_the_new_password_cannot_be_the_one_they_already_have(string $p): void
     {
         $barber = Employee::factory()->withPortal()->mustChangePassword()->create();
 
@@ -300,6 +358,28 @@ class PortalAuthTest extends TestCase
             ->assertSessionHasErrors('password');
 
         $this->assertTrue($barber->fresh()->must_change_password);
+    }
+
+    /** A rejected change sends them back to the screen the form is on. */
+    #[DataProvider('portals')]
+    public function test_a_rejected_change_returns_to_profile(string $p): void
+    {
+        $barber = Employee::factory()->withPortal()->create();
+
+        $this->actingAs($barber, 'employee')
+            ->from(route($p.'profile'))
+            ->post(route($p.'password.update'), [
+                'current_password' => 'not-it',
+                'password' => 'my-own-password',
+                'password_confirmation' => 'my-own-password',
+            ])
+            ->assertRedirect(route($p.'profile'));
+
+        // And the error is rendered where it lands.
+        $this->actingAs($barber, 'employee')
+            ->get(route($p.'profile'))
+            ->assertOk()
+            ->assertSee('That is not your current password.');
     }
 
     // ---------- guard isolation ----------

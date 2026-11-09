@@ -165,7 +165,7 @@ class PortalBothVersionsTest extends TestCase
     {
         $barber = Employee::factory()->withPortal()->create();
 
-        foreach (['today', 'bookings', 'earnings', 'profile', 'password.edit'] as $screen) {
+        foreach (['today', 'bookings', 'earnings', 'profile'] as $screen) {
             $body = $this->actingAs($barber, 'employee')
                 ->get(route($p.$screen))
                 ->assertOk()
@@ -241,7 +241,7 @@ class PortalBothVersionsTest extends TestCase
         $here = $p === 'work.' ? '/work' : '/me';
         $there = $p === 'work.' ? '/me' : '/work';
 
-        foreach (['today', 'bookings', 'earnings', 'profile', 'password.edit'] as $screen) {
+        foreach (['today', 'bookings', 'earnings', 'profile'] as $screen) {
             $body = $this->actingAs($barber, 'employee')
                 ->get(route($p.$screen))
                 ->assertOk()

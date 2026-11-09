@@ -69,10 +69,15 @@ class AuthController extends Controller
 
         $employee->recordLogin();
 
-        if ($employee->must_change_password) {
-            return redirect()->to(Portal::route('password.edit'));
-        }
-
+        /*
+         * Straight to Today, whoever issued the password.
+         *
+         * must_change_password is still written and still shown in the
+         * dashboard — the owner can see at a glance whose password is still
+         * the one they typed — but it no longer stands between a barber and
+         * their day. A gate in front of the first screen is a gate in front
+         * of the only thing that makes the barber want to be there.
+         */
         return redirect()->intended(Portal::route('today'));
     }
 
@@ -87,13 +92,10 @@ class AuthController extends Controller
 
     // ---------- password ----------
 
-    public function editPassword()
-    {
-        return view('portal.password', [
-            'forced' => (bool) Auth::guard('employee')->user()->must_change_password,
-        ]);
-    }
-
+    /**
+     * Change a password. Posted from the form on Profile; there is no screen
+     * of its own and nothing redirects anyone here.
+     */
     public function updatePassword(Request $request)
     {
         $employee = Auth::guard('employee')->user();
@@ -121,7 +123,9 @@ class AuthController extends Controller
         // the session id means any other session opened with it is orphaned.
         $request->session()->regenerate();
 
-        return redirect()->to(Portal::route('today'))
+        // Back to the screen the form is on, which is also where a validation
+        // failure lands — one address for the whole exchange.
+        return redirect()->to(Portal::route('profile'))
             ->with('portal_status', 'Your password has been changed.');
     }
 }

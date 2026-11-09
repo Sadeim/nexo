@@ -736,6 +736,10 @@ a { color: inherit; }
 
 .v-desktop .p-btn { max-width: 320px; }
 
+/* Fields match the button they sit above; a password box 870px wide is not
+   a wider password box, it is a worse one. */
+.v-desktop .p-field { max-width: 320px; }
+
 .v-desktop .p-empty { padding: 64px 20px; }
 
 /* ---------- manager, at a desk ---------- */
