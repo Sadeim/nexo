@@ -120,6 +120,79 @@ else
     say "composer.lock unchanged — skipping composer install"
 fi
 
+# ----------------------------------------------------------------- assets ----
+
+# The document root is a SIBLING of the app, not $APP_DIR/public. Apache
+# serves $DOCROOT and never reaches Laravel's public/ directory, so a static
+# file added to the repo gets pulled into public/ and is then silently never
+# served. That is how frontend_assets/js/booking.js 404'd for a day while the
+# script tag sat in every rendered page and all five Book Now buttons on the
+# site did nothing.
+#
+# Mirror the tracked contents of public/ into the document root. The file
+# list comes from `git ls-files`, so an asset a future branch adds is carried
+# over without anyone remembering to edit this script.
+#
+# Five things are deliberately never copied:
+#
+#   index.php    the document root's copy is customised for this split layout
+#                and points at ../nexo/bootstrap. Overwriting it with the
+#                stock public/index.php took the site down on 6 Oct 2026.
+#   .htaccess    hand-tuned on the host.
+#   robots.txt   maintained on the host.
+#   favicon.ico  maintained on the host.
+#   uploads/     user data. Not in the repo, never mirrored, never removed.
+#
+# There is no --delete. On an account hosting eighteen sites, a sync that can
+# remove files is a sync that can remove someone's uploads.
+
+# The file list goes through a temp file, NOT `done < <(git ls-files)`. This
+# host has no /dev/fd, so process substitution fails outright — and it fails
+# by running the loop zero times, which looks exactly like "nothing to copy".
+# A silent no-op here is the bug this whole section exists to prevent.
+say "Assets"
+ASSET_LIST=$(mktemp /tmp/nexo-assets.XXXXXX) || { echo "FATAL: cannot create temp file"; exit 1; }
+git -C "$APP_DIR" ls-files -z public/ > "$ASSET_LIST"
+
+if [ ! -s "$ASSET_LIST" ]; then
+    echo "  FATAL: git listed no files under public/ — refusing to continue" | tee -a "$LOG"
+    rm -f "$ASSET_LIST"
+    exit 1
+fi
+
+ASSETS_COPIED=0
+ASSETS_SEEN=0
+while IFS= read -r -d '' tracked; do
+    rel=${tracked#public/}
+    ASSETS_SEEN=$((ASSETS_SEEN + 1))
+    case "$rel" in
+        index.php|.htaccess|robots.txt|favicon.ico|uploads/*|downloads/*) continue ;;
+    esac
+
+    src=$APP_DIR/$tracked
+    dst=$DOCROOT/$rel
+
+    [ -f "$src" ] || continue
+    if [ ! -f "$dst" ] || ! cmp -s "$src" "$dst"; then
+        mkdir -p "$(dirname "$dst")"
+        cp -p "$src" "$dst"
+        printf '  copy  %s\n' "$rel" | tee -a "$LOG"
+        ASSETS_COPIED=$((ASSETS_COPIED + 1))
+    fi
+done < "$ASSET_LIST"
+rm -f "$ASSET_LIST"
+
+if [ "$ASSETS_SEEN" = "0" ]; then
+    echo "  FATAL: read nothing from the file list — not copying blind" | tee -a "$LOG"
+    exit 1
+fi
+
+if [ "$ASSETS_COPIED" = "0" ]; then
+    echo "  $ASSETS_SEEN tracked, document root already matches — nothing to copy" | tee -a "$LOG"
+else
+    echo "  $ASSETS_SEEN tracked, $ASSETS_COPIED copied into $DOCROOT" | tee -a "$LOG"
+fi
+
 # ------------------------------------------------------------- migrations ----
 
 # Runs while the site is down, on purpose. Code that reads a column added by
@@ -172,6 +245,42 @@ check "/admin/login"                             200
 check "/barbers/definitely-not-a-barber"         404
 check "/bookings/available-slots?date=$(date -u +%Y-%m-%d)" 200
 check "/api/pos/v1/health"                       200
+
+# A 200 on "/" proves the page renders, not that it works. The outage on
+# 9 Nov 2026 served a perfect 200 homepage whose booking script was a 404,
+# so every Book Now button was inert. Check what the page actually pulls in.
+say "Referenced assets"
+HOME_HTML=$(curl -sS -m 25 "$SITE/" || true)
+ASSET_URLS=$(printf '%s' "$HOME_HTML" \
+    | grep -oE '(src|href)="[^"]+\.(js|css)(\?[^"]*)?"' \
+    | sed -E 's/^(src|href)="//; s/"$//' \
+    | sort -u)
+
+if [ -z "$ASSET_URLS" ]; then
+    echo "  FAIL  homepage references no js/css at all" | tee -a "$LOG"
+    FAILED=1
+else
+    while IFS= read -r url; do
+        [ -n "$url" ] || continue
+        case "$url" in
+            "$SITE"/*) check "${url#"$SITE"}" 200 ;;
+            /*)        check "$url" 200 ;;
+            *)         printf '  skip  %-44s (third party)\n' "$url" | tee -a "$LOG" ;;
+        esac
+    done <<< "$ASSET_URLS"
+fi
+
+# The booking modal and its script are the whole booking funnel. Assert the
+# contract the page depends on, not just that the file exists.
+say "Booking funnel"
+for needle in 'id="booking-modal"' 'frontend_assets/js/booking.js' 'book-now-btn'; do
+    if printf '%s' "$HOME_HTML" | grep -qF "$needle"; then
+        printf '  ok    homepage contains %s\n' "$needle" | tee -a "$LOG"
+    else
+        printf '  FAIL  homepage is missing %s\n' "$needle" | tee -a "$LOG"
+        FAILED=1
+    fi
+done
 
 say "Summary"
 echo "  $HEAD_BEFORE -> $HEAD_AFTER" | tee -a "$LOG"

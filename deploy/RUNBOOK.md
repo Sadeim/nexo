@@ -67,6 +67,55 @@ Only `nexobarbers.com` is ours. A command run from the wrong directory, or a
 
 ---
 
+## The document root is not `public/`
+
+Apache serves
+
+```
+/home/u171331366/domains/nexobarbers.com/public_html
+```
+
+which is a **sibling** of the app, not `nexo/public`. Laravel's `public/`
+directory is never reached by a request. `public_html/index.php` is a
+customised bootstrap pointing at `../nexo/bootstrap`.
+
+The consequence is easy to miss and cost a morning of bookings on
+**9 Nov 2026**: a static file committed to the repo is pulled into
+`nexo/public/` and then **never served**. The barber-profiles release added
+`public/frontend_assets/js/booking.js`, every rendered page carried its
+`<script>` tag, and the file 404'd. The homepage returned a clean 200, the
+modal markup was present and correct, and all five Book Now controls on the
+site did nothing at all. Nothing in the logs; nothing in the smoke checks.
+
+`deploy.sh` now mirrors the tracked contents of `public/` into the document
+root on every deploy, and then asserts that every asset the homepage
+*references* returns 200 — because a 200 on `/` says nothing about whether the
+JavaScript that page depends on exists.
+
+Five paths are never copied: `index.php` (the customised bootstrap —
+overwriting it with the stock `public/index.php` took the site down on
+6 Oct 2026), `.htaccess`, `robots.txt`, `favicon.ico`, and `uploads/`
+(user data, not in the repo). There is no `--delete`.
+
+If you add a static asset by hand, put it in **both** places, or just run the
+deploy script.
+
+### This host has no `/dev/fd`
+
+So `while read ... done < <(some command)` — process substitution — **fails**,
+under bash 4.4.20, in a plain script:
+
+```
+/tmp/script.sh: line 6: /dev/fd/62: No such file or directory
+```
+
+It fails by executing the loop body zero times, which is indistinguishable
+from "there was nothing to do". The asset sync reads its file list from a
+`mktemp` file for exactly this reason, and aborts loudly if that list is
+empty rather than reporting success. Herestrings (`<<<`) do work.
+
+---
+
 ## Before you deploy
 
 **Back up nexo's database.** Not optional, and not in the script because it
