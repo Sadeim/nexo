@@ -208,6 +208,14 @@ run php "$APP_DIR/artisan" config:clear
 run php "$APP_DIR/artisan" route:clear
 run php "$APP_DIR/artisan" view:clear
 
+# Precompile every Blade view before the site takes traffic again. view:clear
+# leaves them cold, and on 9 Nov 2026 the first requests after it raced each
+# other to compile the same templates on a box at load 17: the homepage came
+# back 200 with its header and booking modal missing, because a concurrent
+# reader picked up a half-written compiled view. Compiling up front, while
+# nobody can reach the site, removes the race rather than tolerating it.
+run php "$APP_DIR/artisan" view:cache
+
 if [ "$CONFIG_CACHED_BEFORE" = "1" ]; then
     echo "  config was cached before — restoring that state" | tee -a "$LOG"
     run php "$APP_DIR/artisan" config:cache
@@ -248,11 +256,46 @@ check "/api/pos/v1/health"                       200
 
 # A 200 on "/" proves the page renders, not that it works. The outage on
 # 9 Nov 2026 served a perfect 200 homepage whose booking script was a 404,
-# so every Book Now button was inert. Check what the page actually pulls in.
+# so every Book Now button was inert.
+#
+# Fetch the page once, confirm it is whole, and run both checks against that
+# one body. The fetch is retried because a single sample cannot tell a broken
+# deploy from a page caught mid-render: failing the deploy on one bad read
+# cries wolf, and passing on one good read is how this got shipped.
+say "Booking funnel"
+HOME_BODY=$(mktemp /tmp/nexo-home.XXXXXX) || { echo "FATAL: cannot create temp file"; exit 1; }
+MISSING=""
+ATTEMPT=0
+
+for ATTEMPT in 1 2 3; do
+    MISSING=""
+    STATUS=$(curl -sS -m 25 -o "$HOME_BODY" -w '%{http_code}' "$SITE/" || echo ERR)
+
+    if [ "$STATUS" != "200" ]; then
+        MISSING=" homepage returned $STATUS"
+    else
+        for needle in 'id="booking-modal"' 'frontend_assets/js/booking.js' 'book-now-btn'; do
+            grep -qF "$needle" "$HOME_BODY" || MISSING="$MISSING $needle"
+        done
+    fi
+
+    [ -z "$MISSING" ] && break
+
+    printf '  attempt %d incomplete:%s\n' "$ATTEMPT" "$MISSING" | tee -a "$LOG"
+    sleep 3
+done
+
+if [ -z "$MISSING" ]; then
+    printf '  ok    modal, script tag and trigger class all present (attempt %d)\n' "$ATTEMPT" | tee -a "$LOG"
+else
+    printf '  FAIL  homepage still missing after %d attempts:%s\n' "$ATTEMPT" "$MISSING" | tee -a "$LOG"
+    FAILED=1
+fi
+
+# Every js/css the page actually pulls in has to load. This is the assertion
+# that was missing: booking.js was a 404 behind a 200 homepage for a day.
 say "Referenced assets"
-HOME_HTML=$(curl -sS -m 25 "$SITE/" || true)
-ASSET_URLS=$(printf '%s' "$HOME_HTML" \
-    | grep -oE '(src|href)="[^"]+\.(js|css)(\?[^"]*)?"' \
+ASSET_URLS=$(grep -oE '(src|href)="[^"]+\.(js|css)(\?[^"]*)?"' "$HOME_BODY" \
     | sed -E 's/^(src|href)="//; s/"$//' \
     | sort -u)
 
@@ -270,17 +313,7 @@ else
     done <<< "$ASSET_URLS"
 fi
 
-# The booking modal and its script are the whole booking funnel. Assert the
-# contract the page depends on, not just that the file exists.
-say "Booking funnel"
-for needle in 'id="booking-modal"' 'frontend_assets/js/booking.js' 'book-now-btn'; do
-    if printf '%s' "$HOME_HTML" | grep -qF "$needle"; then
-        printf '  ok    homepage contains %s\n' "$needle" | tee -a "$LOG"
-    else
-        printf '  FAIL  homepage is missing %s\n' "$needle" | tee -a "$LOG"
-        FAILED=1
-    fi
-done
+rm -f "$HOME_BODY"
 
 say "Summary"
 echo "  $HEAD_BEFORE -> $HEAD_AFTER" | tee -a "$LOG"
