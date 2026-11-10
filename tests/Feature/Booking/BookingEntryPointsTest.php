@@ -350,4 +350,28 @@ class BookingEntryPointsTest extends TestCase
 
         return $found;
     }
+
+    /**
+     * The booking script is fingerprinted, and this release is why it has to
+     * be.
+     *
+     * This host serves static files with `Cache-Control: public,
+     * max-age=604800` and no revalidation. The two-step modal changes both
+     * the server contract and booking.js at once, so a visitor still holding
+     * last week's script would post a `name` field to an endpoint that now
+     * wants `first_name` and `phone` — and be unable to book, for up to seven
+     * days, with nothing in any log to say why.
+     */
+    public function test_the_booking_script_is_requested_with_its_fingerprint(): void
+    {
+        $body = $this->get('/')->assertOk()->getContent();
+
+        $expected = substr(md5_file(public_path(self::SCRIPT_PATH)), 0, 8);
+
+        $this->assertStringContainsString(
+            self::SCRIPT_PATH.'?v='.$expected,
+            $body,
+            'The homepage asks for booking.js without a fingerprint, so a cached copy will be served instead.'
+        );
+    }
 }

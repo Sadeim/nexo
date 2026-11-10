@@ -190,4 +190,7 @@
 
  {{-- Booking behaviour lives in its own file. It used to be ~420 lines
       inline here, in the partial that renders on every page. --}}
- <script src="{{ asset('frontend_assets/js/booking.js') }}"></script>
+ {{-- Fingerprinted: this host caches static files for seven days without
+      revalidating, so a plain asset() URL would leave visitors running the
+      previous booking.js against a server that has moved on. --}}
+ <script src="{{ \App\Support\Asset::url('frontend_assets/js/booking.js') }}"></script>

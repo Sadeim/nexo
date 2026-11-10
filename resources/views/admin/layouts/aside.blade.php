@@ -469,6 +469,28 @@
                     </div>
                 @endif
 
+                {{-- Customers sits next to Bookings and on the same permission:
+                     it is the same data seen as people rather than as
+                     appointments, and view_bookings already exists on this
+                     installation. --}}
+                @if (auth()->user()->can('view_bookings'))
+                    <div class="menu-item menu-accordion {{ $is_active_parent == 'customers' ? 'here show' : '' }}">
+                        <span class="menu-link {{ $is_active == 'customers' ? 'active' : '' }}">
+                            <span class="menu-icon">
+                                <span class="svg-icon svg-icon-2">
+                                    <i class="fa-solid fa-address-book"></i>
+                                </span>
+                            </span>
+                            <span class="menu-title">
+                                <a class="{{ $is_active == 'customers' ? 'active' : '' }}"
+                                    href="{{ route('admin.customers.index') }}">
+                                    <span class="menu-title">Customers</span>
+                                </a>
+                            </span>
+                        </span>
+                    </div>
+                @endif
+
                 {{-- @if (auth()->user()->can('view_contacts'))
                     <div class="menu-item menu-accordion {{ $is_active_parent == 'contacts' ? 'here show' : '' }}">
                         <span class="menu-link {{ $is_active == 'contacts' ? 'active' : '' }}">

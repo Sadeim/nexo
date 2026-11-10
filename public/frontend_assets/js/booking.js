@@ -19,7 +19,62 @@
 
     const modal        = document.getElementById('booking-modal');
     const form         = document.getElementById('booking-form');
-    if (!modal || !form) return;
+    const identifyForm = document.getElementById('booking-identify-form');
+    if (!modal || !form || !identifyForm) return;
+
+    // ---------- step one: the phone ----------
+
+    const phoneInput   = document.getElementById('booking-phone');
+    const consentBox   = document.getElementById('booking-consent');
+    const phoneShown   = document.getElementById('booking-phone-shown');
+    const phoneChange  = document.getElementById('booking-phone-change');
+
+    // The number step one accepted. Posted with the booking so the server
+    // identifies the same customer from both halves of the form.
+    let identifiedPhone = '';
+
+    /*
+     * The last number used on this device.
+     *
+     * A returning customer should not have to type it again. Every access is
+     * wrapped: localStorage throws outright in a Safari private window, and
+     * comes back empty whenever site data has been cleared, so the modal has
+     * to work exactly as well without it.
+     */
+    const REMEMBERED = 'nexo.booking.phone';
+
+    function remember(value) {
+        try { window.localStorage.setItem(REMEMBERED, value); } catch (e) { /* not worth a broken form */ }
+    }
+
+    function remembered() {
+        try { return window.localStorage.getItem(REMEMBERED) || ''; } catch (e) { return ''; }
+    }
+
+    function forget() {
+        try { window.localStorage.removeItem(REMEMBERED); } catch (e) { /* as above */ }
+    }
+
+    function pretty(digits) {
+        const d = String(digits || '').replace(/\D+/g, '');
+        return d.length === 10
+            ? '(' + d.slice(0, 3) + ') ' + d.slice(3, 6) + '-' + d.slice(6)
+            : d;
+    }
+
+    function showStep(which) {
+        identifyForm.classList.toggle('hidden', which !== 'phone');
+        form.classList.toggle('hidden', which === 'phone');
+    }
+
+    /** Back to step one, keeping what they typed so nothing is retyped. */
+    function backToPhone() {
+        forget();
+        showStep('phone');
+        phoneInput.focus();
+    }
+
+    phoneChange.addEventListener('click', backToPhone);
 
     const closeBtn     = document.getElementById('close-modal');
     const barberSelect = document.getElementById('booking-barber');
@@ -42,6 +97,13 @@
         }
         modal.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
+
+        // Always start at step one. The number is prefilled from last time,
+        // but it is still shown and still confirmed — the device may have
+        // changed hands, and the consent box must never arrive pre-ticked.
+        showStep('phone');
+        phoneInput.value = remembered();
+        consentBox.checked = false;
         refreshSlots();
     }
 
@@ -254,6 +316,79 @@
         if (el) el.classList.add('ring-2', 'ring-red-500');
     }
 
+    // ---------- step one: continue ----------
+
+    identifyForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        clearFieldErrors();
+
+        const digits = String(phoneInput.value || '').replace(/\D+/g, '');
+
+        // Checked here as well as on the server, so an obvious typo costs a
+        // message rather than a round trip.
+        if (digits.length < 7) {
+            markField('booking-phone');
+            notify('Enter a phone number we can reach you on.', 'error');
+            return;
+        }
+
+        const button = document.getElementById('booking-continue');
+        const label = button.textContent;
+        button.disabled = true;
+        button.textContent = 'ONE MOMENT…';
+
+        axios.post(config.identifyUrl, {
+            phone: phoneInput.value,
+            sms_marketing_consent: consentBox.checked ? 1 : 0
+        })
+            .then(function (response) {
+                const data = response.data || {};
+
+                identifiedPhone = phoneInput.value;
+                remember(phoneInput.value);
+
+                phoneShown.textContent = pretty(phoneInput.value);
+
+                // Prefilled only for a number the shop already knows. Fields
+                // are not overwritten if the customer has already typed into
+                // them — going back and forth must not undo their work.
+                if (data.known) {
+                    setIfEmpty('booking-first-name', data.first_name);
+                    setIfEmpty('booking-last-name', data.last_name);
+                    setIfEmpty('booking-email', data.email);
+                }
+
+                showStep('booking');
+                refreshSlots();
+            })
+            .catch(function (error) {
+                const data = (error.response && error.response.data) || {};
+                const status = error.response && error.response.status;
+
+                if (status === 429) {
+                    notify('Too many tries. Give it a minute and start again.', 'error');
+                    return;
+                }
+
+                markField('booking-phone');
+                notify(
+                    (data.errors && data.errors.phone && data.errors.phone[0])
+                        || data.message
+                        || 'Something went wrong. Please try again.',
+                    'error'
+                );
+            })
+            .finally(function () {
+                button.disabled = false;
+                button.textContent = label;
+            });
+    });
+
+    function setIfEmpty(id, value) {
+        const el = document.getElementById(id);
+        if (el && !el.value && value) el.value = value;
+    }
+
     // ---------- submit ----------
 
     form.addEventListener('submit', function (event) {
@@ -266,8 +401,12 @@
         submit.textContent = 'BOOKING…';
 
         axios.post(config.storeUrl, {
-            name: document.getElementById('booking-name').value,
+            first_name: document.getElementById('booking-first-name').value,
+            last_name: document.getElementById('booking-last-name').value,
             email: document.getElementById('booking-email').value,
+            // The number step one accepted, not whatever is in the box now:
+            // the two halves of the form must reach the same customer.
+            phone: identifiedPhone || phoneInput.value,
             date: dateInput.value,
             time: timeSelect.value,
             service_id: serviceSelect.value,
@@ -275,8 +414,12 @@
             barber_id: barberSelect.value || null
         })
             .then(function (response) {
-                notify(response.data.message || 'Booking confirmed. Check your email.', 'success');
+                notify(response.data.message || 'Booking confirmed.', 'success');
                 form.reset();
+                identifyForm.reset();
+                // The number stays remembered for next time; the consent box
+                // does not, and step one is where the modal opens again.
+                showStep('phone');
                 placeholder('Select a date first');
                 setTimeHint('');
                 if (config.lockedBarberId) lockBarber(config.lockedBarberId, config.lockedBarberName);

@@ -77,6 +77,16 @@ class AppServiceProvider extends ServiceProvider
          * and the real limit would be ten. Keying on the IP alone makes the
          * two mounts share one allowance, which is what "5 a minute" meant.
          */
+        /*
+         * The booking modal's phone lookup. Ten a minute per IP: enough for a
+         * customer who mistypes their number a few times, little enough that
+         * walking a range of numbers to see which ones the shop knows is not
+         * worth anyone's afternoon.
+         */
+        RateLimiter::for('booking-identify', function ($request) {
+            return Limit::perMinute(10)->by($request->ip());
+        });
+
         RateLimiter::for('portal-login', function ($request) {
             return Limit::perMinute(5)->by($request->ip());
         });

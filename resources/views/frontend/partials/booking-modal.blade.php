@@ -34,7 +34,54 @@
              Book an appointment
          </h2>
 
-         <form class="space-y-6" id="booking-form">
+         {{-- STEP ONE — the phone number, and nothing else.
+
+              Asked first and on its own because it is the detail the shop
+              actually reaches people on, and because posting it before the
+              rest of the form means a number is kept even from somebody who
+              gets this far and then changes their mind. --}}
+         <form class="space-y-6" id="booking-identify-form">
+             <div>
+                 <label for="booking-phone" class="block text-white text-base mb-2 uppercase">Mobile number</label>
+                 <div class="field-container">
+                     <input type="tel" id="booking-phone" name="phone" placeholder="(224) 669-8063"
+                         inputmode="tel" autocomplete="tel"
+                         class="w-full px-4 py-3 rounded bg-white text-[#080B16]">
+                 </div>
+                 <p class="text-ivory/60 text-sm mt-2">
+                     We use it to confirm your appointment and to reach you if anything changes.
+                 </p>
+             </div>
+
+             {{-- Unticked, always. The exact wording is the consent record:
+                  what they agreed to has to be what they were shown. --}}
+             <label class="booking-consent" for="booking-consent">
+                 <input type="checkbox" id="booking-consent" name="sms_marketing_consent" value="1">
+                 <span>
+                     Yes, text me appointment updates and offers from Nexo Barbershop.
+                     Msg &amp; data rates may apply. Reply STOP to opt out.
+                 </span>
+             </label>
+
+             <button type="submit" id="booking-continue"
+                 class="w-full bg-ivory text-black font-league-gothic text-xl md:text-2xl tracking-wider py-3 rounded hover:bg-opacity-90 transition-colors font-bold uppercase">
+                 CONTINUE
+             </button>
+         </form>
+
+         {{-- STEP TWO — everything else. Hidden until step one has answered. --}}
+         <form class="space-y-6 hidden" id="booking-form">
+
+             {{-- The number they just gave, shown so they can see it is right,
+                  and a way back to step one that does not lose the rest. --}}
+             <div class="flex items-center gap-2">
+                 <span class="text-ivory/80 text-sm">
+                     Booking for <strong id="booking-phone-shown" class="text-ivory"></strong>
+                 </span>
+                 <button type="button" id="booking-phone-change"
+                         class="text-crimson text-sm underline hover:no-underline">change</button>
+             </div>
+
              <!-- Barber -->
              <div>
                  <label for="booking-barber" class="block text-white text-base mb-2 uppercase">Barber</label>
@@ -110,21 +157,36 @@
              </div>
 
              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                 <!-- Name -->
+                 <!-- First name -->
                  <div>
-                     <label for="booking-name" class="block text-white text-base mb-2 uppercase">Name</label>
+                     <label for="booking-first-name" class="block text-white text-base mb-2 uppercase">First name</label>
                      <div class="field-container">
-                         <input type="text" id="booking-name" name="name" placeholder="Name"
+                         <input type="text" id="booking-first-name" name="first_name" placeholder="Omar"
+                             autocomplete="given-name"
                              class="w-full px-4 py-3 rounded bg-white text-[#080B16]">
                      </div>
                  </div>
-                 <!-- Email -->
+                 <!-- Last name -->
                  <div>
-                     <label for="booking-email" class="block text-white text-base mb-2 uppercase">Email</label>
+                     <label for="booking-last-name" class="block text-white text-base mb-2 uppercase">Last name</label>
                      <div class="field-container">
-                         <input type="email" id="booking-email" name="email" placeholder="your@email.com"
+                         <input type="text" id="booking-last-name" name="last_name" placeholder="Haddad"
+                             autocomplete="family-name"
                              class="w-full px-4 py-3 rounded bg-white text-[#080B16]">
                      </div>
+                 </div>
+             </div>
+
+             {{-- Optional since 10 Nov 2026. The phone is what the shop needs;
+                  an email only buys a confirmation message. --}}
+             <div>
+                 <label for="booking-email" class="block text-white text-base mb-2 uppercase">
+                     Email <span class="text-ivory/60 normal-case">(optional)</span>
+                 </label>
+                 <div class="field-container">
+                     <input type="email" id="booking-email" name="email" placeholder="your@email.com"
+                         autocomplete="email"
+                         class="w-full px-4 py-3 rounded bg-white text-[#080B16]">
                  </div>
              </div>
 
@@ -136,6 +198,31 @@
      </div>
 
      <style>
+         /*
+          * The consent row. Written out rather than assembled from utility
+          * classes: this project ships a pre-built output.css with no build
+          * step, so a Tailwind class that is not already in that file does
+          * nothing at all, silently.
+          */
+         .booking-consent {
+             display: flex;
+             align-items: flex-start;
+             gap: 10px;
+             cursor: pointer;
+             color: rgba(248, 237, 210, 0.85);
+             font-size: 14px;
+             line-height: 1.5;
+         }
+
+         .booking-consent input[type="checkbox"] {
+             flex: 0 0 auto;
+             width: 20px;
+             height: 20px;
+             margin-top: 1px;
+             accent-color: #8C1C13;
+             cursor: pointer;
+         }
+
          /* Custom styling for ALL form inputs and selects */
          .field-container input[type="text"],
          .field-container input[type="email"],
@@ -287,6 +374,7 @@
      window.NexoBooking = {
          slotsUrl: @json(route('bookings.booked-slots')),
          storeUrl: @json(route('bookings.store')),
+         identifyUrl: @json(route('bookings.identify')),
          servicesUrl: @json(route('services.get')),
          lockedBarberId: {{ $lockedBarber?->id ?? 'null' }},
          lockedBarberName: @json($lockedBarber->name ?? null)

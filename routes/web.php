@@ -43,5 +43,18 @@ Route::post('subscribe', [HomeController::class, 'storeNewsletter'])->name('news
 
 Route::get('services', [HomeController::class, 'getServices'])->name('services.get');
 Route::post('bookings', [HomeController::class, 'storeBooking'])->name('bookings.store');
+
+/*
+ * Step one of the booking modal. Keeps the phone number of somebody who may
+ * never finish, and tells a returning customer's browser what it already
+ * knows about them.
+ *
+ * The named limiter keys on the IP alone. A bare throttle:10,1 would key on
+ * the request fingerprint, which is fine here today but has bitten this
+ * codebase before when the same action was mounted at two paths.
+ */
+Route::post('bookings/identify', [HomeController::class, 'identifyCustomer'])
+    ->middleware('throttle:booking-identify')
+    ->name('bookings.identify');
 Route::get('/bookings/available-slots', [HomeController::class, 'getAvailableSlots'])->name('bookings.booked-slots');
 

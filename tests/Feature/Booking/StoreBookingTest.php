@@ -40,10 +40,16 @@ class StoreBookingTest extends TestCase
         return Employee::factory()->published()->create();
     }
 
+    /**
+     * What the modal posts since 10 Nov 2026: a phone and a first name are
+     * required, the name is two fields, and the email is optional.
+     */
     private function payload(array $overrides = []): array
     {
         return array_merge([
-            'name'       => 'Walk In',
+            'first_name' => 'Walk',
+            'last_name'  => 'In',
+            'phone'      => '2246698063',
             'email'      => 'walkin@example.com',
             'date'       => self::WEDNESDAY,
             'time'       => '10:00',

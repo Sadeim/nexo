@@ -8,6 +8,7 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Support\Phone;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -159,27 +160,14 @@ class Employee extends Model implements AuthenticatableContract
     /**
      * Phone numbers reduced to their digits, for storage and for lookup.
      *
-     * The owner types whatever is in their contacts — "(224) 669-8063",
-     * "+1 224 669 8063" — and the barber, months later, types something else.
-     * Both land on the same stored value, so login does not fail on
-     * punctuation.
-     *
-     * A US country code is dropped too: eleven digits beginning with 1 is
-     * "+1" in front of a ten-digit number, so 12246698063 and 2246698063 are
-     * the same phone. The length check is what keeps this safe — it only ever
-     * fires on 11 digits, so a genuine ten-digit number starting with 1
-     * (which the NANP does not issue as an area code anyway) is untouched,
-     * and so is any other country's number of a different length.
+     * Kept as a method on the model because every call site in the portal and
+     * the dashboard already reads this way, but the rule itself now lives in
+     * App\Support\Phone — customers are identified by phone too, and the two
+     * halves of the system must agree on what "the same number" means.
      */
     public static function normalizePhone(?string $phone): ?string
     {
-        $digits = preg_replace('/\D+/', '', (string) $phone);
-
-        if (strlen($digits) === 11 && str_starts_with($digits, '1')) {
-            $digits = substr($digits, 1);
-        }
-
-        return $digits === '' ? null : $digits;
+        return Phone::normalize($phone);
     }
 
     /**

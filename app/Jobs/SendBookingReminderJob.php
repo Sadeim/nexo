@@ -31,6 +31,13 @@ class SendBookingReminderJob implements ShouldQueue
       return;
     }
 
+    // An email address is optional on a booking since 10 Nov 2026 — the
+    // phone number is what the shop asks for now. Mail::to(null) throws,
+    // and a reminder nobody can receive is not worth a failed job.
+    if (blank($this->booking->email)) {
+      return;
+    }
+
     try {
       Mail::to($this->booking->email)->send(new BookingReminderMail($this->booking));
     } catch (\Throwable $e) {

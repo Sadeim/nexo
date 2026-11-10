@@ -36,6 +36,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\HowWorkController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\AccountController;
+use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Admin\EmployeeReportController;
 use App\Http\Controllers\Admin\ReportsController;
@@ -86,6 +87,15 @@ Route::group(['middleware' => ['auth:admin', 'admin', 'admin.role'], 'prefix' =>
         Route::post('{id}/portal-password', [EmployeeController::class, 'setPassword'])->name('portal_password');
     });
     Route::resource('employees', EmployeeController::class)->except(['show']);
+
+    /* ------------------------------------- Customers (people, as opposed to bookings) --------------------------------- */
+    Route::group(['prefix' => 'customers', 'as' => 'customers.'], function () {
+        Route::get('/',                [CustomerController::class, 'index'])->name('index');
+        Route::get('data/datatables',  [CustomerController::class, 'datatable'])->name('datatable');
+        // Consented numbers only — see the controller.
+        Route::get('export',           [CustomerController::class, 'export'])->name('export');
+        Route::get('{id}',             [CustomerController::class, 'show'])->name('show');
+    });
 
     /* ------------------------------------- POS Services (separate catalog for the tablet) --------------------------------- */
     Route::group(['prefix' => 'pos-services', 'as' => 'pos_services.'], function () {

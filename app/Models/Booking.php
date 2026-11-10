@@ -27,6 +27,7 @@ class Booking extends Model
         'status',
         'service_id',
         'barber_id',
+        'customer_id',
         'reminder_sent_at',
     ];
 
@@ -38,6 +39,18 @@ class Booking extends Model
     public function service()
     {
         return $this->belongsTo(Service::class);
+    }
+
+    /**
+     * The person who made it, where we know them.
+     *
+     * Null for every booking taken before 10 Nov 2026 — the form had no phone
+     * field, so there is nothing to match them on. The name, email and phone
+     * on the booking itself stay the record of what was typed that day.
+     */
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
     }
 
     /** The requested barber, or null for "any available barber". */

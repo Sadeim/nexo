@@ -10,7 +10,10 @@
         <p>{{ __('A new appointment has been booked with the following details:') }}</p>
         <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
             <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>{{ __('Name') }}:</strong></td><td style="padding: 8px 0; border-bottom: 1px solid #eee;">{{ $booking->name }}</td></tr>
-            <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>{{ __('Email') }}:</strong></td><td style="padding: 8px 0; border-bottom: 1px solid #eee;">{{ $booking->email }}</td></tr>
+            {{-- The phone comes first now: it is the detail the shop actually
+                 reaches people on, and the one every booking has. --}}
+            <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>{{ __('Phone') }}:</strong></td><td style="padding: 8px 0; border-bottom: 1px solid #eee;">{{ \App\Support\Phone::pretty($booking->phone) ?: '—' }}</td></tr>
+            <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>{{ __('Email') }}:</strong></td><td style="padding: 8px 0; border-bottom: 1px solid #eee;">{{ $booking->email ?: '—' }}</td></tr>
             <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>{{ __('Date') }}:</strong></td><td style="padding: 8px 0; border-bottom: 1px solid #eee;">{{ $booking->date->format('l, F j, Y') }}</td></tr>
             <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>{{ __('Time') }}:</strong></td><td style="padding: 8px 0; border-bottom: 1px solid #eee;">{{ \Carbon\Carbon::parse($booking->time)->format('g:i A') }}</td></tr>
             <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>{{ __('Service') }}:</strong></td><td style="padding: 8px 0; border-bottom: 1px solid #eee;">{{ $booking->service?->name ?? '-' }}</td></tr>
