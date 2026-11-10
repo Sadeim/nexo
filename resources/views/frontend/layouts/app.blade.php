@@ -12,6 +12,21 @@
 
     @stack('meta')
 
+    {{-- Google Ads, on the public site only.
+         Not in admin.layouts.head and not in portal.layouts.head: those are
+         private pages and a marketing tag does not belong on them. Rendered
+         only when an id is configured, so local and staging stay clean. --}}
+    @if (config('services.google_ads.id'))
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id={{ config('services.google_ads.id') }}"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '{{ config('services.google_ads.id') }}');
+        </script>
+    @endif
+
 
 
     @stack('styles')
