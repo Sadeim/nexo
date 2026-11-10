@@ -59,7 +59,7 @@ class CustomerIdentifyTest extends TestCase
 
     // ---------- what comes back ----------
 
-    public function test_a_known_number_comes_back_with_what_we_have(): void
+    public function test_a_known_number_comes_back_with_a_name(): void
     {
         Customer::factory()->create([
             'phone' => '2246698063',
@@ -74,8 +74,40 @@ class CustomerIdentifyTest extends TestCase
                 'known' => true,
                 'first_name' => 'Omar',
                 'last_name' => 'Haddad',
-                'email' => 'omar@example.com',
             ]);
+    }
+
+    /**
+     * And never an address.
+     *
+     * This endpoint answers questions about people to anyone who can post to
+     * it. A name makes step two friendlier; an email address is the thing
+     * somebody walking a range of phone numbers would actually be collecting,
+     * and step two does not need it — the field is optional and a returning
+     * customer can retype it.
+     */
+    public function test_a_known_customers_email_is_never_returned(): void
+    {
+        Customer::factory()->create([
+            'phone' => '2246698063',
+            'first_name' => 'Omar',
+            'email' => 'omar@example.com',
+        ]);
+
+        $response = $this->identify(['phone' => '2246698063'])->assertOk();
+
+        $this->assertArrayNotHasKey('email', $response->json());
+
+        // Not merely absent from that one key — nowhere in the body at all.
+        $this->assertStringNotContainsString('omar@example.com', $response->getContent());
+    }
+
+    public function test_the_script_does_not_try_to_prefill_an_email(): void
+    {
+        $source = file_get_contents(public_path('frontend_assets/js/booking.js'));
+
+        $this->assertStringNotContainsString('data.email', $source,
+            'booking.js still expects an email from the identify endpoint.');
     }
 
     /**
@@ -88,7 +120,7 @@ class CustomerIdentifyTest extends TestCase
     {
         $this->identify(['phone' => '2246698063'])
             ->assertOk()
-            ->assertJson(['known' => false, 'first_name' => null, 'email' => null]);
+            ->assertJson(['known' => false, 'first_name' => null, 'last_name' => null]);
 
         // ...and the second time, it is.
         $this->identify(['phone' => '2246698063'])

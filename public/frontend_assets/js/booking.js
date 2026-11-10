@@ -352,10 +352,12 @@
                 // Prefilled only for a number the shop already knows. Fields
                 // are not overwritten if the customer has already typed into
                 // them — going back and forth must not undo their work.
+                // Name only. The endpoint does not return an email and must
+                // not start: see the comment on identifyCustomer(). A
+                // returning customer retypes it, or leaves it blank.
                 if (data.known) {
                     setIfEmpty('booking-first-name', data.first_name);
                     setIfEmpty('booking-last-name', data.last_name);
-                    setIfEmpty('booking-email', data.email);
                 }
 
                 showStep('booking');

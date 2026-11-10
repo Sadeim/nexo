@@ -351,12 +351,22 @@ class HomeController extends Controller
             ], 422);
         }
 
+        /*
+         * A name, and never an address.
+         *
+         * This endpoint answers questions about people to anybody who can
+         * post to it, so what it gives away is kept to what step two cannot
+         * do without: the name, so a returning customer is greeted rather
+         * than re-interrogated. An email address is optional on a booking
+         * anyway — leaving the field blank costs a returning customer one
+         * line of typing, and costs a stranger with a list of phone numbers
+         * the thing actually worth harvesting.
+         */
         return response()->json([
             'success' => true,
             'known' => (bool) $known,
             'first_name' => $known?->first_name,
             'last_name' => $known?->last_name,
-            'email' => $known?->email,
         ]);
     }
 
