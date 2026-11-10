@@ -97,6 +97,118 @@ class CustomerService
         $customer->forceFill([
             'bookings_count' => (clone $bookings)->count(),
             'last_booked_at' => (clone $bookings)->max('created_at'),
+            'last_visit_at' => $this->lastVisitFor($customer->id),
         ])->save();
+    }
+
+    /**
+     * When this customer was last in the chair, from their own bookings.
+     *
+     * The most recent appointment that has already happened and was not
+     * cancelled. "Already happened" is measured against the appointment's own
+     * date AND time rather than the date alone, so a haircut at ten this
+     * morning counts this afternoon rather than tomorrow — and a booking made
+     * today for next week never counts, which is the entire reason this
+     * column exists alongside last_booked_at.
+     *
+     * Returns null for somebody who has only ever booked ahead. That is a
+     * real answer, not a missing one: they have not been in yet.
+     */
+    public function lastVisitFor(int $customerId): ?Carbon
+    {
+        $now = Carbon::now();
+
+        $booking = Booking::query()
+            ->where('customer_id', $customerId)
+            ->where('status', '!=', Booking::STATUS_CANCELLED)
+            /*
+             * Half-open, and NOT `<= today`.
+             *
+             * The `date` cast writes a full datetime, so the column holds
+             * '2026-11-10 00:00:00'. Compared against the string '2026-11-10'
+             * that is GREATER, and today's appointments vanish. The exact cut
+             * is made below anyway, where the time of day is available; this
+             * is only here to keep the result set small.
+             */
+            ->where('date', '<', $now->copy()->addDay()->toDateString())
+            ->orderByDesc('date')
+            ->orderByDesc('time')
+            ->get(['date', 'time'])
+            ->map(fn ($row) => Carbon::parse(
+                Carbon::parse($row->date)->format('Y-m-d').' '.$row->time
+            ))
+            ->filter(fn (Carbon $at) => $at->lessThanOrEqualTo($now))
+            ->sortDesc()
+            ->first();
+
+        return $booking;
+    }
+
+    /**
+     * The nightly sweep: every customer's last_visit_at, brought up to date.
+     *
+     * Needed because the value goes stale on its own. Nothing happens when an
+     * appointment arrives — the booking was written weeks earlier — so
+     * without a sweep a customer's last visit would only ever update on the
+     * day they booked again, which is precisely the customer this column is
+     * meant to find.
+     *
+     * One pass over the bookings rather than one query per customer: a shop
+     * with five thousand customers would otherwise run five thousand queries
+     * at three in the morning on a box that is already busy.
+     *
+     * @return int how many customers changed
+     */
+    public function refreshAllVisits(): int
+    {
+        $now = Carbon::now();
+        $latest = [];
+
+        Booking::query()
+            ->whereNotNull('customer_id')
+            ->where('status', '!=', Booking::STATUS_CANCELLED)
+            // Half-open, for the reason spelled out in lastVisitFor().
+            ->where('date', '<', $now->copy()->addDay()->toDateString())
+            ->orderBy('id')
+            ->select(['id', 'customer_id', 'date', 'time'])
+            ->chunkById(1000, function ($chunk) use (&$latest, $now) {
+                foreach ($chunk as $booking) {
+                    $at = Carbon::parse(
+                        Carbon::parse($booking->date)->format('Y-m-d').' '.$booking->time
+                    );
+
+                    if ($at->greaterThan($now)) {
+                        continue;
+                    }
+
+                    $id = $booking->customer_id;
+
+                    if (! isset($latest[$id]) || $at->greaterThan($latest[$id])) {
+                        $latest[$id] = $at;
+                    }
+                }
+            });
+
+        $changed = 0;
+
+        Customer::query()->orderBy('id')->chunkById(500, function ($chunk) use ($latest, &$changed) {
+            foreach ($chunk as $customer) {
+                $value = $latest[$customer->id] ?? null;
+
+                // Compared as strings so an unchanged customer is not written
+                // every night just to set the same timestamp again.
+                $before = optional($customer->last_visit_at)->toDateTimeString();
+                $after = optional($value)->toDateTimeString();
+
+                if ($before === $after) {
+                    continue;
+                }
+
+                $customer->forceFill(['last_visit_at' => $value])->save();
+                $changed++;
+            }
+        });
+
+        return $changed;
     }
 }

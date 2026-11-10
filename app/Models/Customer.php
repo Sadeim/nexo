@@ -32,6 +32,7 @@ class Customer extends Model
         'sms_marketing_consent' => 'boolean',
         'sms_consent_at' => 'datetime',
         'last_booked_at' => 'datetime',
+        'last_visit_at' => 'datetime',
         'bookings_count' => 'integer',
     ];
 
