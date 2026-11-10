@@ -17,7 +17,12 @@
 @endphp
 
  <!-- Booking Modal -->
+ {{-- The Google Ads conversion target, for booking.js. Both halves are
+      needed before anything is reported: with no label configured the
+      attribute is empty and the script sends nothing. --}}
  <div id="booking-modal"
+     data-ads-id="{{ config('services.google_ads.id') }}"
+     data-ads-label="{{ config('services.google_ads.booking_label') }}"
      class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/70 bg-opacity-50 p-4 font-poppins">
      <div class="bg-evergreen p-8 max-w-2xl w-full relative max-h-[90vh] overflow-y-auto">
          <!-- Close Button -->

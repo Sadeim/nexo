@@ -99,7 +99,11 @@ class HomeController extends Controller
     // Get all active services for the booking form
     public function getServices()
     {
-        $services = Service::get(['id', 'name']);
+        // The price comes along so the booking modal can put a value on a
+        // Google Ads conversion. It is already public — every one of these is
+        // printed on the services page — so this discloses nothing new.
+        $services = Service::get(['id', 'name', 'price']);
+
         return response()->json(['services' => $services]);
     }
 

@@ -72,4 +72,18 @@ return [
         'min_amount_cents' => 50,
     ],
 
+    /*
+     * Google Ads. The public website only — never the dashboard and never
+     * the barbers' portal, which are private pages where a third-party tag
+     * has no business being.
+     *
+     * Both nullable: with no id configured nothing is rendered at all, which
+     * is what every non-production environment wants. The label comes from
+     * the conversion action in Google Ads and is pending.
+     */
+    'google_ads' => [
+        'id' => env('GOOGLE_ADS_ID'),
+        'booking_label' => env('GOOGLE_ADS_BOOKING_LABEL'),
+    ],
+
 ];

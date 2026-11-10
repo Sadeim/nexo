@@ -288,6 +288,11 @@
                 const option = document.createElement('option');
                 option.value = service.id;
                 option.textContent = service.name;
+                // Kept for the conversion value; absent for a service with
+                // no price set, which stays absent rather than becoming 0.
+                if (service.price !== null && service.price !== undefined) {
+                    option.dataset.price = service.price;
+                }
                 serviceSelect.appendChild(option);
             });
         })
@@ -314,6 +319,44 @@
     function markField(id) {
         const el = document.getElementById(id);
         if (el) el.classList.add('ring-2', 'ring-red-500');
+    }
+
+    // ---------- conversion reporting ----------
+
+    /**
+     * Tell Google Ads a booking happened.
+     *
+     * Everything here is optional and nothing here may break a booking that
+     * has already succeeded. gtag is absent whenever an ad blocker, a privacy
+     * setting or a network failure stopped the tag loading — which is a large
+     * minority of visitors — and the label is empty until the conversion
+     * action exists in Google Ads. In every one of those cases this does
+     * nothing at all, quietly.
+     */
+    function reportConversion() {
+        try {
+            const adsId = modal.dataset.adsId;
+            const label = modal.dataset.adsLabel;
+
+            if (!adsId || !label || typeof window.gtag !== 'function') {
+                return;
+            }
+
+            const payload = { send_to: adsId + '/' + label, currency: 'USD' };
+
+            const chosen = serviceSelect.options[serviceSelect.selectedIndex];
+            const price = chosen && chosen.dataset ? parseFloat(chosen.dataset.price) : NaN;
+
+            // Only when the service actually has a price. A conversion
+            // reported as worth nothing is worse than one with no value.
+            if (!isNaN(price)) {
+                payload.value = price;
+            }
+
+            window.gtag('event', 'conversion', payload);
+        } catch (e) {
+            // A booking is confirmed either way; this is bookkeeping.
+        }
     }
 
     // ---------- step one: continue ----------
@@ -416,6 +459,10 @@
             barber_id: barberSelect.value || null
         })
             .then(function (response) {
+                // Before the form is reset, while the chosen service is still
+                // selected and its price still readable.
+                reportConversion();
+
                 notify(response.data.message || 'Booking confirmed.', 'success');
                 form.reset();
                 identifyForm.reset();
