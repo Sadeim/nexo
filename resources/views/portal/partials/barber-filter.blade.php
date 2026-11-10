@@ -7,15 +7,15 @@
      always points at the screen you are on, in the version you are in. --}}
 @php
     /*
-     * Carries the Upcoming/Past tab and the sort direction across a filter
-     * change. Without this, picking a barber while reading Past would quietly
-     * drop the manager back onto Upcoming.
+     * Carries the day across a filter change. Picking a barber while looking
+     * at Thursday must not silently drop the manager back onto today — the
+     * chips answer "whose", not "when".
+     *
+     * Taken from the controller's resolved day rather than the raw query, so
+     * a nonsense ?date= cannot be propagated through every chip.
      */
     $keep = array_filter([
-        'tab' => request()->query('tab') === 'past' ? 'past' : null,
-        'dir' => in_array(request()->query('dir'), ['asc', 'desc'], true)
-            ? request()->query('dir')
-            : null,
+        'date' => isset($day) ? $day->toDateString() : null,
     ]);
 @endphp
 

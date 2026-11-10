@@ -21,11 +21,20 @@
         {{-- No header row. Five barbers would mean five of them down one
              page, and the columns label themselves: a time in the display
              face, a name, a service, a badge. The widths are pinned in CSS so
-             the blocks still line up with each other. --}}
+             the blocks still line up with each other.
+
+             The Barber column repeats the block's own heading on every row,
+             which is redundant by design — it was asked for so that a row
+             read or copied on its own still says whose it is. Flip
+             $showBarber here to drop it. --}}
         <table class="d-table">
             <tbody>
                 @foreach ($group['bookings'] as $booking)
-                    @include('portal.partials.booking-row', ['booking' => $booking, 'showDate' => false, 'showBarber' => false])
+                    @include('portal.partials.booking-row', [
+                        'booking' => $booking,
+                        'showDate' => false,
+                        'showBarber' => true,
+                    ])
                 @endforeach
             </tbody>
         </table>

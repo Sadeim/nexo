@@ -28,12 +28,16 @@
             @endif
 
             <nav class="d-nav">
-                @foreach ([
+                {{-- All Bookings only for a manager: it is the one screen
+                     that reads beyond the signed-in barber's own work, and
+                     the route refuses anyone else anyway. --}}
+                @foreach (array_filter([
                     'today' => 'Today',
                     'bookings' => 'Bookings',
+                    'team' => $portalIsManager ? 'All Bookings' : null,
                     'earnings' => 'Earnings',
                     'profile' => 'Profile',
-                ] as $screen => $label)
+                ]) as $screen => $label)
                     <a href="{{ $portalRoute($screen) }}"
                        class="{{ $portalScreen === $screen ? 'on' : '' }}">{{ $label }}</a>
                 @endforeach

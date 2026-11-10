@@ -147,6 +147,49 @@ a { color: inherit; }
     flex-wrap: wrap;
 }
 
+/* ---------- day navigation (All Bookings) ---------- */
+
+.p-daynav {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: stretch;
+    gap: 6px;
+}
+
+.p-daystep {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    padding: 8px 10px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border: 1px solid var(--evergreen-line);
+    border-radius: var(--radius);
+    white-space: nowrap;
+}
+
+.p-daystep:active { color: var(--ivory); }
+
+/* The day already being shown; pressing it again changes nothing. */
+.p-daystep.is-on {
+    background: var(--ivory);
+    border-color: var(--ivory);
+    color: var(--evergreen);
+}
+
+.p-daypick { margin-bottom: 14px; }
+
+.p-daypick .p-input {
+    /* A date field sized to its content rather than the whole column: it
+       holds ten characters and a picker icon, not a sentence. */
+    max-width: 220px;
+}
+
 /* ---------- barber filter (manager) ---------- */
 
 /*
@@ -429,6 +472,19 @@ a { color: inherit; }
 }
 
 .p-tabbar a.on { color: var(--ivory); }
+
+/*
+ * A manager's bar has five destinations instead of four, and "All Bookings"
+ * is twice the length of every other label. Without this it wraps to two
+ * lines while its neighbours stay on one, and the row reads as broken rather
+ * than full. Smaller type and no letter-spacing buy the width back.
+ */
+.p-tabbar.is-five a {
+    font-size: 9px;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    gap: 2px;
+}
 .p-tabbar svg { width: 22px; height: 22px; fill: currentColor; }
 
 /* ---------- profile ---------- */
@@ -753,6 +809,8 @@ a { color: inherit; }
 }
 
 .v-desktop .p-group { margin-bottom: 36px; }
+
+.v-desktop .p-daypick { margin-bottom: 20px; }
 
 .v-desktop .p-group-name { font-size: 26px; }
 

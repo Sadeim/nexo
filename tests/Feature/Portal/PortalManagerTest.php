@@ -13,19 +13,17 @@ use Tests\Concerns\RunsOnBothPortals;
 use Tests\TestCase;
 
 /**
- * The manager's half of the portal: the owner reading the whole shop.
+ * The manager's half of the portal.
  *
- * Two things are being tested at once, and the second matters more. One is
- * that a manager sees everyone — blocks per barber, the unassigned bookings by
- * name, a filter that narrows. The other is that NOTHING here reaches a
- * barber: the role lives in the employee's own row, the ?barber= parameter is
- * dropped before it is read for anyone who is not a manager, and the barber
- * tests in PortalScreensTest still bite unchanged.
+ * Eddie owns the shop and also cuts hair. So Today and Bookings are HIS —
+ * exactly what a barber sees, no grouping, no chips, no other people's
+ * customers — and the whole shop lives on a screen of its own, All Bookings,
+ * which only a manager may open.
  *
- * Names are chosen so that sort_order can be told apart from id order and
- * from alphabetical order, and so that every narrowing assertion can be made
- * on a customer's name — the barbers' own names appear in the filter chips,
- * which would make assertDontSee() on a barber's name meaningless.
+ * Names are chosen so sort_order can be told apart from id order and from
+ * alphabetical order, and so every narrowing assertion can be made on a
+ * customer's name: the barbers' own names appear in the filter chips, which
+ * would make assertDontSee() on a barber's name meaningless.
  */
 class PortalManagerTest extends TestCase
 {
@@ -71,7 +69,7 @@ class PortalManagerTest extends TestCase
         ]);
     }
 
-    /** The shop's day: one booking each, plus one nobody has claimed. */
+    /** The shop's day: one each, plus one nobody has claimed. */
     private function aNormalDay(): void
     {
         $this->booking($this->adam, 'Alpha Customer', null, '09:00:00');
@@ -79,15 +77,125 @@ class PortalManagerTest extends TestCase
         $this->booking(null, 'Charlie Walkin', null, '13:00:00', 'pending');
     }
 
-    // ---------- Today ----------
+    // ---------- Today and Bookings belong to whoever is signed in ----------
+
+    /**
+     * The change this screen exists to prove. A manager opening Today is a
+     * barber looking at their own chair.
+     */
+    #[DataProvider('portals')]
+    public function test_a_managers_today_is_their_own_day(string $p): void
+    {
+        $this->aNormalDay();
+        $this->booking($this->boss, 'Mine Customer', null, '15:00:00');
+
+        $body = $this->actingAs($this->boss, 'employee')
+            ->get(route($p.'today'))
+            ->assertOk()
+            ->assertSee('Mine')
+            ->getContent();
+
+        foreach (['Alpha', 'Bravo', 'Charlie', 'Adam Bakri', 'Zaid Abed'] as $theirs) {
+            $this->assertStringNotContainsString($theirs, $body,
+                'Today showed a manager somebody else\'s work: '.$theirs);
+        }
+
+        // ...and none of the whole-shop furniture.
+        $this->assertStringNotContainsString('p-chips', $body);
+        $this->assertStringNotContainsString('p-group', $body);
+    }
 
     #[DataProvider('portals')]
-    public function test_a_manager_sees_every_barbers_bookings_today(string $p): void
+    public function test_a_managers_today_still_only_counts_the_unassigned(string $p): void
+    {
+        $this->booking(null, 'Charlie Walkin', null, '13:00:00', 'pending');
+
+        $this->actingAs($this->boss, 'employee')
+            ->get(route($p.'today'))
+            ->assertOk()
+            ->assertSee('data-unassigned="1"', false)
+            ->assertDontSee('Charlie');
+    }
+
+    #[DataProvider('portals')]
+    public function test_a_managers_bookings_list_is_their_own(string $p): void
+    {
+        $soon = Carbon::today()->addDays(2)->toDateString();
+
+        $this->booking($this->adam, 'Alpha Customer', $soon);
+        $this->booking($this->boss, 'Mine Customer', $soon);
+
+        $body = $this->actingAs($this->boss, 'employee')
+            ->get(route($p.'bookings'))
+            ->assertOk()
+            ->assertSee('Mine')
+            ->getContent();
+
+        $this->assertStringNotContainsString('Alpha', $body);
+        // No Barber column and no chips: this is one person's list.
+        $this->assertStringNotContainsString('<th>Barber</th>', $body);
+        $this->assertStringNotContainsString('p-chips', $body);
+    }
+
+    /** A barber's screens are untouched by any of this. */
+    #[DataProvider('portals')]
+    public function test_a_barbers_today_and_bookings_are_unchanged(string $p): void
+    {
+        $this->aNormalDay();
+
+        $body = $this->actingAs($this->adam, 'employee')
+            ->get(route($p.'today'))
+            ->assertOk()
+            ->assertSee('Alpha')
+            ->getContent();
+
+        $this->assertStringNotContainsString('Bravo', $body);
+        $this->assertStringNotContainsString('Charlie', $body);
+        $this->assertStringNotContainsString('p-badge-manager', $body);
+    }
+
+    // ---------- All Bookings: who may open it ----------
+
+    #[DataProvider('portals')]
+    public function test_a_barber_is_refused_all_bookings(string $p): void
+    {
+        $this->aNormalDay();
+
+        $this->actingAs($this->adam, 'employee')
+            ->get(route($p.'team'))
+            ->assertForbidden();
+
+        // Including with a filter or a date on it — the gate is the route,
+        // not anything in the request.
+        $this->actingAs($this->adam, 'employee')
+            ->get(route($p.'team', ['barber' => $this->zaid->id, 'date' => $this->today]))
+            ->assertForbidden();
+    }
+
+    #[DataProvider('portals')]
+    public function test_a_guest_is_sent_to_the_login_not_refused(string $p): void
+    {
+        $this->get(route($p.'team'))->assertRedirect(route($p.'login'));
+    }
+
+    #[DataProvider('portals')]
+    public function test_a_manager_may_open_all_bookings(string $p): void
+    {
+        $this->actingAs($this->boss, 'employee')
+            ->get(route($p.'team'))
+            ->assertOk()
+            ->assertSee('All Bookings');
+    }
+
+    // ---------- All Bookings: what is on it ----------
+
+    #[DataProvider('portals')]
+    public function test_it_shows_every_barber_and_the_unassigned(string $p): void
     {
         $this->aNormalDay();
 
         $this->actingAs($this->boss, 'employee')
-            ->get(route($p.'today'))
+            ->get(route($p.'team'))
             ->assertOk()
             // The blocks, by their headings.
             ->assertSee('Adam Bakri')
@@ -102,67 +210,30 @@ class PortalManagerTest extends TestCase
             ->assertSee('1:00 PM');
     }
 
-    /**
-     * The difference from a barber's screen. A barber is told a number; the
-     * manager is the person who decides who takes the work, so they get the
-     * bookings themselves.
-     */
     #[DataProvider('portals')]
-    public function test_the_unassigned_are_listed_for_a_manager_and_counted_for_a_barber(string $p): void
-    {
-        $this->booking(null, 'Charlie Walkin', null, '13:00:00', 'pending');
-
-        $this->actingAs($this->boss, 'employee')
-            ->get(route($p.'today'))
-            ->assertOk()
-            ->assertSee('data-unassigned="1"', false)
-            ->assertSee('Charlie');
-
-        // The same day, read by a barber: the count, and no names.
-        $this->actingAs($this->adam, 'employee')
-            ->get(route($p.'today'))
-            ->assertOk()
-            ->assertSee('data-unassigned="1"', false)
-            ->assertDontSee('Charlie');
-    }
-
-    #[DataProvider('portals')]
-    public function test_the_blocks_follow_sort_order(string $p): void
+    public function test_the_blocks_follow_sort_order_and_the_unassigned_come_last(string $p): void
     {
         $this->aNormalDay();
 
         $body = $this->actingAs($this->boss, 'employee')
-            ->get(route($p.'today'))
+            ->get(route($p.'team'))
             ->assertOk()
             ->getContent();
 
         // Zaid sorts at 1, Adam at 9 — the opposite of both id order and
         // alphabetical order, so this can only be sort_order.
-        $this->assertLessThan(
-            strpos($body, 'Adam Bakri'),
-            strpos($body, 'Zaid Abed'),
-            'The blocks are not in roster order.'
-        );
-
-        // And the unclaimed work comes after the people, not among them.
-        $this->assertGreaterThan(
-            strpos($body, 'Adam Bakri'),
-            strpos($body, 'Charlie'),
-            'The unassigned block is not last.'
-        );
+        $this->assertLessThan(strpos($body, 'Adam Bakri'), strpos($body, 'Zaid Abed'));
+        $this->assertGreaterThan(strpos($body, 'Adam Bakri'), strpos($body, 'Charlie'));
     }
 
     #[DataProvider('portals')]
     public function test_a_cancelled_unassigned_booking_is_not_waiting_work(string $p): void
     {
         $this->booking(null, 'Charlie Walkin', null, '13:00:00', 'pending');
-        Booking::factory()->cancelled()->create([
-            'barber_id' => null, 'service_id' => $this->service->id,
-            'date' => $this->today, 'time' => '14:00:00', 'name' => 'Delta GoneAway',
-        ]);
+        $this->booking(null, 'Delta GoneAway', null, '14:00:00', 'cancelled');
 
         $this->actingAs($this->boss, 'employee')
-            ->get(route($p.'today'))
+            ->get(route($p.'team'))
             ->assertOk()
             ->assertSee('data-unassigned="1"', false)
             ->assertSee('Charlie')
@@ -170,34 +241,29 @@ class PortalManagerTest extends TestCase
     }
 
     #[DataProvider('portals')]
-    public function test_a_manager_with_an_empty_shop_day_gets_an_empty_state(string $p): void
-    {
-        $this->actingAs($this->boss, 'employee')
-            ->get(route($p.'today'))
-            ->assertOk()
-            ->assertSee('Nothing booked')
-            ->assertSee('No appointments in the shop today.');
-    }
-
-    /**
-     * A barber who stops working mid-morning still has people in the diary.
-     * Their block has to survive being taken off the active roster, or the one
-     * screen whose job is the whole day quietly loses part of it.
-     */
-    #[DataProvider('portals')]
-    public function test_a_deactivated_barber_keeps_their_block_for_todays_work(string $p): void
+    public function test_a_deactivated_barber_keeps_their_block_for_that_days_work(string $p): void
     {
         $this->booking($this->adam, 'Alpha Customer');
         $this->adam->forceFill(['is_active' => false])->save();
 
         $this->actingAs($this->boss, 'employee')
-            ->get(route($p.'today'))
+            ->get(route($p.'team'))
             ->assertOk()
             ->assertSee('Adam Bakri')
             ->assertSee('Alpha');
     }
 
-    // ---------- the filter ----------
+    #[DataProvider('portals')]
+    public function test_an_empty_day_says_so(string $p): void
+    {
+        $this->actingAs($this->boss, 'employee')
+            ->get(route($p.'team'))
+            ->assertOk()
+            ->assertSee('Nothing booked')
+            ->assertSee('No appointments in the shop on');
+    }
+
+    // ---------- All Bookings: the filter ----------
 
     #[DataProvider('portals')]
     public function test_the_filter_narrows_to_one_barber(string $p): void
@@ -205,7 +271,7 @@ class PortalManagerTest extends TestCase
         $this->aNormalDay();
 
         $this->actingAs($this->boss, 'employee')
-            ->get(route($p.'today', ['barber' => $this->adam->id]))
+            ->get(route($p.'team', ['barber' => $this->adam->id]))
             ->assertOk()
             ->assertSee('Alpha')
             ->assertDontSee('Bravo')
@@ -218,7 +284,7 @@ class PortalManagerTest extends TestCase
         $this->aNormalDay();
 
         $this->actingAs($this->boss, 'employee')
-            ->get(route($p.'today', ['barber' => 'unassigned']))
+            ->get(route($p.'team', ['barber' => 'unassigned']))
             ->assertOk()
             ->assertSee('Charlie')
             ->assertDontSee('Alpha')
@@ -226,33 +292,30 @@ class PortalManagerTest extends TestCase
     }
 
     #[DataProvider('portals')]
-    public function test_filtering_to_a_quiet_barber_says_so_rather_than_showing_nothing(string $p): void
+    public function test_filtering_to_a_quiet_barber_says_so(string $p): void
     {
         $this->aNormalDay();
 
         $this->actingAs($this->boss, 'employee')
-            ->get(route($p.'today', ['barber' => $this->boss->id]))
+            ->get(route($p.'team', ['barber' => $this->boss->id]))
             ->assertOk()
             ->assertSee('Ahmed Owner')
             ->assertSee('Nothing today.')
             ->assertDontSee('Alpha');
     }
 
-    /**
-     * An id that is not on the roster must not reach a query. Falling back to
-     * All is the same shape as the tab and sort parameters already use.
-     */
     #[DataProvider('portals')]
     public function test_an_unrecognised_filter_falls_back_to_everyone(string $p): void
     {
         $this->aNormalDay();
 
-        foreach (['999999', 'abc', '', '0', 'null', $this->adam->slug] as $nonsense) {
-            $this->actingAs($this->boss, 'employee')
-                ->get(route($p.'today', ['barber' => $nonsense]))
-                ->assertOk()
-                ->assertSee('Alpha')
-                ->assertSee('Bravo');
+        foreach (['999999', 'abc', '', '0', $this->adam->slug] as $nonsense) {
+            $response = $this->actingAs($this->boss, 'employee')
+                ->get(route($p.'team', ['barber' => $nonsense]))
+                ->assertOk();
+
+            $this->assertSame('all', $response->viewData('filter'), var_export($nonsense, true).' reached the query.');
+            $response->assertSee('Alpha')->assertSee('Bravo');
         }
     }
 
@@ -260,179 +323,147 @@ class PortalManagerTest extends TestCase
     public function test_the_chips_offer_the_roster_and_the_unassigned(string $p): void
     {
         $body = $this->actingAs($this->boss, 'employee')
-            ->get(route($p.'today'))
+            ->get(route($p.'team'))
             ->assertOk()
             ->getContent();
 
         foreach ([$this->boss, $this->adam, $this->zaid] as $barber) {
-            $this->assertStringContainsString(
-                'barber='.$barber->id,
-                $body,
-                $barber->name.' is not offered as a filter.'
-            );
+            $this->assertStringContainsString('barber='.$barber->id, $body, $barber->name.' is not offered as a filter.');
         }
 
         $this->assertStringContainsString('barber=unassigned', $body);
     }
 
-    // ---------- Bookings ----------
+    // ---------- All Bookings: the day ----------
 
     #[DataProvider('portals')]
-    public function test_a_manager_sees_every_barbers_bookings_in_the_list(string $p): void
+    public function test_it_opens_on_today(string $p): void
     {
-        $soon = Carbon::today()->addDays(2)->toDateString();
-
-        $this->booking($this->adam, 'Alpha Customer', $soon);
-        $this->booking($this->zaid, 'Bravo Customer', $soon);
-        $this->booking(null, 'Charlie Walkin', $soon, '12:00:00', 'pending');
+        $this->aNormalDay();
+        $this->booking($this->adam, 'Tomorrow Customer', Carbon::tomorrow()->toDateString());
 
         $this->actingAs($this->boss, 'employee')
-            ->get(route($p.'bookings'))
+            ->get(route($p.'team'))
             ->assertOk()
             ->assertSee('Alpha')
-            ->assertSee('Bravo')
-            ->assertSee('Charlie')
-            // Whose each one is, which a barber's own list has no column for.
-            ->assertSee('Barber')
-            ->assertSee('Adam Bakri')
-            ->assertSee('Zaid Abed');
+            ->assertDontSee('Tomorrow');
     }
 
     #[DataProvider('portals')]
-    public function test_the_bookings_filter_narrows_and_keeps_the_tab(string $p): void
+    public function test_a_date_shows_that_day_and_nothing_else(string $p): void
     {
-        $past = Carbon::today()->subDays(2)->toDateString();
+        $tomorrow = Carbon::tomorrow()->toDateString();
 
-        $this->booking($this->adam, 'Alpha Customer', $past);
-        $this->booking($this->zaid, 'Bravo Customer', $past);
+        $this->aNormalDay();
+        $this->booking($this->adam, 'Tomorrow Customer', $tomorrow);
 
         $this->actingAs($this->boss, 'employee')
-            ->get(route($p.'bookings', ['tab' => 'past', 'barber' => $this->adam->id]))
+            ->get(route($p.'team', ['date' => $tomorrow]))
             ->assertOk()
-            ->assertSee('Alpha')
-            ->assertDontSee('Bravo');
-
-        // The filter did not quietly move them back to Upcoming.
-        $this->actingAs($this->boss, 'employee')
-            ->get(route($p.'bookings', ['tab' => 'past', 'barber' => $this->zaid->id]))
-            ->assertOk()
-            ->assertSee('Bravo')
-            ->assertDontSee('Alpha');
+            ->assertSee('Tomorrow')
+            ->assertDontSee('Alpha')
+            ->assertDontSee('Charlie');
     }
 
     #[DataProvider('portals')]
-    public function test_a_manager_with_nothing_matching_gets_an_empty_state(string $p): void
+    public function test_the_arrows_step_one_day_at_a_time(string $p): void
     {
-        $this->actingAs($this->boss, 'employee')
-            ->get(route($p.'bookings'))
-            ->assertOk()
-            ->assertSee('Nothing coming up');
+        $response = $this->actingAs($this->boss, 'employee')
+            ->get(route($p.'team', ['date' => '2026-11-15']))
+            ->assertOk();
+
+        $this->assertSame('2026-11-14', $response->viewData('previousDay'));
+        $this->assertSame('2026-11-16', $response->viewData('nextDay'));
+        $this->assertFalse($response->viewData('isToday'));
+
+        // And they are actually rendered as links to those days.
+        $body = $response->getContent();
+        $this->assertStringContainsString('date=2026-11-14', $body);
+        $this->assertStringContainsString('date=2026-11-16', $body);
     }
 
-    // ---------- a barber is unaffected ----------
-
-    /**
-     * The whole point. ?barber= is a manager's control; in a barber's hands it
-     * must do nothing at all — not widen the view, not narrow it onto someone
-     * else, not empty it.
-     */
     #[DataProvider('portals')]
-    public function test_a_barber_passing_the_filter_is_ignored(string $p): void
+    public function test_a_nonsense_date_falls_back_to_today(string $p): void
     {
         $this->aNormalDay();
 
-        foreach (['today', 'bookings'] as $screen) {
-            foreach ([
-                ['barber' => $this->zaid->id],
-                ['barber' => 'unassigned'],
-                ['barber' => 'all'],
-                ['portal_role' => 'manager'],
-                ['role' => 'manager'],
-            ] as $query) {
-                $body = $this->actingAs($this->adam, 'employee')
-                    ->get(route($p.$screen, $query))
-                    ->assertOk()
-                    ->getContent();
+        foreach (['', 'tomorrow', '2026-13-45', '15-11-2026', '2026-1-1', 'DROP TABLE', '0000-00-00'] as $nonsense) {
+            $response = $this->actingAs($this->boss, 'employee')
+                ->get(route($p.'team', ['date' => $nonsense]))
+                ->assertOk();
 
-                // Ignored in both directions: the parameter may not narrow
-                // their own day away either. 'Alpha' is booked today, which
-                // is upcoming, so it belongs on both screens.
-                $this->assertStringContainsString('Alpha', $body, sprintf(
-                    '%s lost the barber\'s own day to %s', $screen, json_encode($query)
-                ));
-
-                $this->assertStringNotContainsString('Bravo', $body, sprintf(
-                    '%s leaked another barber with %s', $screen, json_encode($query)
-                ));
-                $this->assertStringNotContainsString('Charlie', $body, sprintf(
-                    '%s leaked an unassigned booking with %s', $screen, json_encode($query)
-                ));
-                $this->assertStringNotContainsString('Zaid Abed', $body, sprintf(
-                    '%s named another barber with %s', $screen, json_encode($query)
-                ));
-            }
+            $this->assertSame(
+                Carbon::today()->toDateString(),
+                $response->viewData('day')->toDateString(),
+                var_export($nonsense, true).' was accepted as a date.'
+            );
         }
+    }
 
-        // And their own day is still there, not narrowed away.
-        $this->actingAs($this->adam, 'employee')
-            ->get(route($p.'today', ['barber' => $this->zaid->id]))
+    #[DataProvider('portals')]
+    public function test_a_date_far_outside_the_shops_life_falls_back_to_today(string $p): void
+    {
+        foreach (['1901-01-01', '2099-12-31'] as $faraway) {
+            $response = $this->actingAs($this->boss, 'employee')
+                ->get(route($p.'team', ['date' => $faraway]))
+                ->assertOk();
+
+            $this->assertSame(Carbon::today()->toDateString(), $response->viewData('day')->toDateString());
+        }
+    }
+
+    /** Picking a barber while looking at Thursday keeps Thursday. */
+    #[DataProvider('portals')]
+    public function test_the_chips_carry_the_day(string $p): void
+    {
+        $tomorrow = Carbon::tomorrow()->toDateString();
+
+        $body = $this->actingAs($this->boss, 'employee')
+            ->get(route($p.'team', ['date' => $tomorrow]))
             ->assertOk()
-            ->assertSee('Alpha');
+            ->getContent();
+
+        $this->assertStringContainsString('date='.$tomorrow.'&amp;barber='.$this->adam->id, $body);
     }
 
-    /**
-     * The guard, read directly. ?barber= is dropped for anyone who is not a
-     * manager before it is so much as looked at, so the screens below are
-     * never filtered — which is also why nothing further down can misapply
-     * it. Asserted on the resolved value rather than on the rendered page,
-     * because a value that never reaches the view still reaches a query.
-     */
+    /** ...and stepping a day keeps the barber. */
     #[DataProvider('portals')]
-    public function test_a_barber_is_never_filtered(string $p): void
+    public function test_the_arrows_carry_the_filter(string $p): void
     {
-        $this->aNormalDay();
+        $body = $this->actingAs($this->boss, 'employee')
+            ->get(route($p.'team', ['date' => '2026-11-15', 'barber' => $this->adam->id]))
+            ->assertOk()
+            ->getContent();
 
-        foreach (['today', 'bookings'] as $screen) {
-            foreach ([$this->zaid->id, 'unassigned', 'all', '', 'nonsense'] as $asked) {
-                $response = $this->actingAs($this->adam, 'employee')
-                    ->get(route($p.$screen, ['barber' => $asked]));
-
-                $response->assertOk();
-
-                $this->assertSame('all', $response->viewData('filter'), sprintf(
-                    '%s resolved a filter for a barber from %s', $screen, var_export($asked, true)
-                ));
-            }
-        }
-
-        // And the same parameter does resolve, for the manager it belongs to.
-        $this->assertSame(
-            (string) $this->zaid->id,
-            $this->actingAs($this->boss, 'employee')
-                ->get(route($p.'bookings', ['barber' => $this->zaid->id]))
-                ->viewData('filter')
-        );
+        $this->assertStringContainsString('date=2026-11-16&amp;barber='.$this->adam->id, $body);
     }
 
+    // ---------- the navigation ----------
+
     #[DataProvider('portals')]
-    public function test_a_barber_gets_no_filter_chips_and_no_badge(string $p): void
+    public function test_a_manager_is_offered_the_screen_and_a_barber_is_not(string $p): void
     {
-        $body = $this->actingAs($this->adam, 'employee')
+        $managerBody = $this->actingAs($this->boss, 'employee')
             ->get(route($p.'today'))
             ->assertOk()
             ->getContent();
 
-        $this->assertStringNotContainsString('p-chips', $body);
-        $this->assertStringNotContainsString('p-badge-manager', $body);
-        $this->assertStringNotContainsString('barber=', $body);
+        $this->assertStringContainsString('All Bookings', $managerBody);
+        $this->assertStringContainsString(route($p.'team'), $managerBody);
+
+        $barberBody = $this->actingAs($this->adam, 'employee')
+            ->get(route($p.'today'))
+            ->assertOk()
+            ->getContent();
+
+        $this->assertStringNotContainsString('All Bookings', $barberBody);
+        $this->assertStringNotContainsString(route($p.'team'), $barberBody);
     }
 
-    // ---------- chrome ----------
-
     #[DataProvider('portals')]
-    public function test_the_header_shows_a_manager_badge(string $p): void
+    public function test_the_header_still_badges_a_manager(string $p): void
     {
-        foreach (['today', 'bookings', 'earnings', 'profile'] as $screen) {
+        foreach (['today', 'bookings', 'earnings', 'profile', 'team'] as $screen) {
             $this->actingAs($this->boss, 'employee')
                 ->get(route($p.$screen))
                 ->assertOk()
@@ -441,44 +472,26 @@ class PortalManagerTest extends TestCase
         }
     }
 
-    #[DataProvider('portals')]
-    public function test_earnings_computes_nothing_for_a_manager_either(string $p): void
-    {
-        $this->actingAs($this->boss, 'employee')
-            ->get(route($p.'earnings'))
-            ->assertOk()
-            ->assertSee('Coming soon')
-            ->assertDontSee('$');
-    }
+    // ---------- still read-only ----------
 
-    /**
-     * Read-only, still. The only thing a manager can submit is a log out —
-     * there is no assign, no cancel, no complete in this phase, and a screen
-     * that grew one by accident would show up here as a second form action.
-     */
     #[DataProvider('portals')]
-    public function test_the_manager_portal_is_read_only(string $p): void
+    public function test_all_bookings_is_read_only(string $p): void
     {
         $this->aNormalDay();
 
-        foreach (['today', 'bookings'] as $screen) {
-            $body = $this->actingAs($this->boss, 'employee')
-                ->get(route($p.$screen))
-                ->assertOk()
-                ->getContent();
+        $body = $this->actingAs($this->boss, 'employee')
+            ->get(route($p.'team'))
+            ->assertOk()
+            ->getContent();
 
-            preg_match_all('/<form[^>]*action="([^"]*)"/', $body, $matches);
+        preg_match_all('/<form[^>]*method="POST"[^>]*action="([^"]*)"/i', $body, $matches);
 
-            $actions = array_values(array_unique(array_diff($matches[1], [route($p.'logout')])));
+        $actions = array_values(array_unique(array_diff($matches[1], [route($p.'logout')])));
 
-            $this->assertSame([], $actions, sprintf(
-                'The %s %s screen posts somewhere other than logout: %s',
-                $p, $screen, implode(', ', $actions)
-            ));
+        $this->assertSame([], $actions, 'All Bookings posts somewhere other than logout: '.implode(', ', $actions));
 
-            foreach (['Assign', 'Cancel booking', 'Mark complete'] as $action) {
-                $this->assertStringNotContainsString($action, $body);
-            }
+        foreach (['Assign', 'Cancel booking', 'Mark complete'] as $action) {
+            $this->assertStringNotContainsString($action, $body);
         }
     }
 
@@ -488,55 +501,48 @@ class PortalManagerTest extends TestCase
     {
         $this->aNormalDay();
 
-        // A barber: their own, and not the unassigned one either.
         $this->assertSame(1, Booking::visibleTo($this->adam)->count());
-        $this->assertSame(
-            'Alpha Customer',
-            Booking::visibleTo($this->adam)->first()->name
-        );
-
-        // A manager: everything, the unclaimed booking included.
+        $this->assertSame('Alpha Customer', Booking::visibleTo($this->adam)->first()->name);
         $this->assertSame(3, Booking::visibleTo($this->boss)->count());
     }
 
     public function test_visible_to_applies_to_pos_orders_the_same_way(): void
     {
-        PosOrder::create([
-            'order_number' => 'T-1', 'employee_id' => $this->adam->id, 'status' => 'completed',
-        ]);
-        PosOrder::create([
-            'order_number' => 'T-2', 'employee_id' => $this->zaid->id, 'status' => 'completed',
-        ]);
+        PosOrder::create(['order_number' => 'T-1', 'employee_id' => $this->adam->id, 'status' => 'completed']);
+        PosOrder::create(['order_number' => 'T-2', 'employee_id' => $this->zaid->id, 'status' => 'completed']);
 
         $this->assertSame(1, PosOrder::visibleTo($this->adam)->count());
         $this->assertSame(2, PosOrder::visibleTo($this->boss)->count());
     }
 
     /**
-     * The role is a value in a column, not a truthy flag. Anything that is not
-     * exactly 'manager' must read as a barber, because the manager branch of
-     * visibleTo() is the one that returns an unfiltered query.
+     * The role is a value in a column, not a truthy flag. Anything that is
+     * not exactly 'manager' must read as a barber — both for the scope and
+     * for the gate in front of All Bookings.
      */
     public function test_only_the_exact_role_value_widens_what_is_visible(): void
     {
         $this->aNormalDay();
 
         foreach ([null, '', 'barber', 'Manager', 'managers', 'admin', '1', 'true'] as $value) {
-            $this->adam->setRawAttributes(
-                array_merge($this->adam->getAttributes(), ['portal_role' => $value])
-            );
+            $this->adam->setRawAttributes(array_merge($this->adam->getAttributes(), ['portal_role' => $value]));
 
-            $this->assertFalse(
-                $this->adam->isManager(),
-                var_export($value, true).' was treated as the manager role.'
-            );
-
-            $this->assertSame(
-                1,
-                Booking::visibleTo($this->adam)->count(),
-                var_export($value, true).' widened what a barber can see.'
-            );
+            $this->assertFalse($this->adam->isManager(), var_export($value, true).' was treated as the manager role.');
+            $this->assertSame(1, Booking::visibleTo($this->adam)->count(), var_export($value, true).' widened what a barber sees.');
         }
+
+        /*
+         * And the gate agrees. Asserted on an in-memory value rather than a
+         * stored one: the column is an enum, so the database itself refuses
+         * anything but 'barber' or 'manager' — which is the first line of
+         * this defence, not a reason to skip testing the second.
+         */
+        $impostor = Employee::factory()->withPortal('2240000103')->create();
+        $impostor->setRawAttributes(array_merge($impostor->getAttributes(), ['portal_role' => 'Manager']));
+
+        $this->actingAs($impostor, 'employee')
+            ->get(route('portal.team'))
+            ->assertForbidden();
     }
 
     public function test_an_employee_is_a_barber_unless_made_otherwise(): void

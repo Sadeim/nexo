@@ -26,123 +26,48 @@ class PortalController extends Controller
 {
     private const PER_PAGE = 15;
 
-    public function today(Request $request)
+    /**
+     * The signed-in employee's own day — a manager's included.
+     *
+     * Managers used to see the whole shop here. They no longer do: Eddie owns
+     * the place and also cuts hair, and when he opens Today he is a barber
+     * looking at his own chair. The shop's day lives on its own screen, All
+     * Bookings, which is a different question asked deliberately rather than
+     * one that quietly replaces his.
+     */
+    public function today()
     {
         $me = Auth::guard('employee')->user();
         $today = Carbon::today();
 
-        $bookings = $this->onDay(Booking::visibleTo($me), $today)
-            ->with(['service', 'barber'])
+        $bookings = $this->onDay(Booking::forEmployee($me->id), $today)
+            ->with('service')
             ->orderBy('time')
             ->get();
 
         /*
-         * Bookings nobody is assigned to yet.
-         *
-         * A barber gets a bare count: it tells them the shop has unclaimed
-         * work today without turning the portal into a place where they can
-         * see, or take, someone else's customers. A manager gets the bookings
-         * themselves, because deciding who takes them is their job.
+         * Bookings nobody is assigned to yet. A bare count: it tells anyone
+         * the shop has unclaimed work today without turning this screen into
+         * a place to see, or take, someone else's customers. A manager who
+         * wants the detail has All Bookings.
          */
         $unassigned = $this->onDay(Booking::unassigned(), $today)->count();
 
-        if (! $me->isManager()) {
-            return view('portal.today', $this->todayPayload($today, $unassigned, [
-                'bookings' => $bookings,
-                // Desktop draws a timeline; the phone ignores this and lists
-                // the bookings straight. Built here rather than in the view
-                // because it is the shop's opening hours, not presentation.
-                'timeline' => $this->timeline($today, $bookings),
-            ]));
-        }
-
-        /*
-         * The manager's day, as one block per barber.
-         *
-         * The roster drives the order — sort_order, the same order the POS
-         * panel and the website use — rather than whatever order the bookings
-         * came back in, so the blocks are in the same place every morning.
-         */
-        $roster = $this->roster($bookings->pluck('barber_id')->filter()->unique()->all());
-        $filter = $this->barberFilter($request, $me, $roster);
-
-        $byBarber = $bookings->groupBy('barber_id');
-        $groups = [];
-
-        foreach ($roster as $barber) {
-            if ($filter !== 'all' && $filter !== (string) $barber->id) {
-                continue;
-            }
-
-            $theirs = $byBarber->get($barber->id, collect());
-
-            /*
-             * An empty block is noise on the All view and the whole point of
-             * a filtered one: "Ziad, nothing today" is the answer to the
-             * question the chip just asked.
-             */
-            if ($theirs->isEmpty() && $filter === 'all') {
-                continue;
-            }
-
-            $groups[] = [
-                'key' => (string) $barber->id,
-                'label' => $barber->name,
-                'bookings' => $theirs->values(),
-            ];
-        }
-
-        if ($filter === 'all' || $filter === 'unassigned') {
-            // Same rule as the count above, so the header and the block can
-            // never disagree about what "unassigned" means.
-            $waiting = $bookings
-                ->whereNull('barber_id')
-                ->where('status', '!=', Booking::STATUS_CANCELLED)
-                ->values();
-
-            if ($waiting->isNotEmpty() || $filter === 'unassigned') {
-                $groups[] = [
-                    'key' => 'unassigned',
-                    'label' => 'Unassigned',
-                    'bookings' => $waiting,
-                ];
-            }
-        }
-
-        return view('portal.today', $this->todayPayload($today, $unassigned, [
-            'groups' => $groups,
-            'barbers' => $roster,
-            'filter' => $filter,
-            // Derived from the blocks rather than counted separately: the
-            // header's "N today" is then the sum of what is on the screen.
-            'bookings' => collect($groups)->flatMap(fn ($group) => $group['bookings']),
-        ]));
+        return view('portal.today', [
+            'bookings' => $bookings,
+            'unassigned' => $unassigned,
+            'today' => $today,
+            // Desktop draws a timeline; the phone ignores this and lists the
+            // bookings straight. Built here rather than in the view because
+            // it is the shop's opening hours, not presentation.
+            'timeline' => $this->timeline($today, $bookings),
+        ]);
     }
 
     /**
-     * Today's view data, with every key always present.
-     *
-     * The screen renders two quite different things — a barber's timeline, a
-     * manager's blocks — and a Blade branch that is not taken still has to
-     * compile. Defaulting them here means the view never has to guess which
-     * variables it was given.
-     *
-     * @param  array<string, mixed>  $overrides
-     * @return array<string, mixed>
+     * The signed-in employee's own bookings. No manager branch here either —
+     * see today().
      */
-    private function todayPayload(Carbon $today, int $unassigned, array $overrides): array
-    {
-        return array_replace([
-            'today' => $today,
-            'unassigned' => $unassigned,
-            'bookings' => collect(),
-            'timeline' => [],
-            'groups' => [],
-            'barbers' => collect(),
-            'filter' => 'all',
-        ], $overrides);
-    }
-
     public function bookings(Request $request)
     {
         $me = Auth::guard('employee')->user();
@@ -151,21 +76,7 @@ class PortalController extends Controller
         $tab = $request->query('tab') === 'past' ? 'past' : 'upcoming';
         $today = Carbon::today()->toDateString();
 
-        $query = Booking::visibleTo($me)->with('service');
-
-        /*
-         * The chips list the active roster only. Unlike Today, nothing is
-         * hidden by that: an inactive barber's bookings still appear under
-         * All, with their name in the Barber column — they are just not
-         * offered as a filter.
-         */
-        $roster = $me->isManager() ? $this->roster() : collect();
-        $filter = $this->barberFilter($request, $me, $roster);
-
-        if ($me->isManager()) {
-            $query->with('barber');
-            $this->narrowToBarber($query, $filter);
-        }
+        $query = Booking::forEmployee($me->id)->with('service');
 
         /*
          * Each tab has the order that makes sense for it — the next
@@ -187,9 +98,124 @@ class PortalController extends Controller
             'bookings' => $query->paginate(self::PER_PAGE)->withQueryString(),
             'tab' => $tab,
             'dir' => $dir,
+        ]);
+    }
+
+    /**
+     * All Bookings: the whole shop on one day, for a manager.
+     *
+     * This is where Booking::visibleTo() earns its keep — it is now the only
+     * portal screen that asks for anything beyond the signed-in employee's
+     * own work, and the manager middleware in front of the route is what
+     * decides who may ask.
+     */
+    public function team(Request $request)
+    {
+        $me = Auth::guard('employee')->user();
+
+        $day = $this->dayFrom($request);
+
+        $bookings = $this->onDay(Booking::visibleTo($me), $day)
+            ->with(['service', 'barber'])
+            ->orderBy('time')
+            ->get();
+
+        // The roster includes anyone holding work that day even if they have
+        // since been deactivated: the screen whose job is the whole day must
+        // not quietly lose part of it.
+        $roster = $this->roster($bookings->pluck('barber_id')->filter()->unique()->all());
+        $filter = $this->barberFilter($request, $me, $roster);
+
+        $byBarber = $bookings->groupBy('barber_id');
+        $groups = [];
+
+        foreach ($roster as $barber) {
+            if ($filter !== 'all' && $filter !== (string) $barber->id) {
+                continue;
+            }
+
+            $theirs = $byBarber->get($barber->id, collect());
+
+            // An empty block is noise on the All view and the whole point of
+            // a filtered one: "Ziad, nothing today" answers the chip.
+            if ($theirs->isEmpty() && $filter === 'all') {
+                continue;
+            }
+
+            $groups[] = [
+                'key' => (string) $barber->id,
+                'label' => $barber->name,
+                'bookings' => $theirs->values(),
+            ];
+        }
+
+        if ($filter === 'all' || $filter === 'unassigned') {
+            // Same rule as the count on Today, so the two screens can never
+            // disagree about what "unassigned" means.
+            $waiting = $bookings
+                ->whereNull('barber_id')
+                ->where('status', '!=', Booking::STATUS_CANCELLED)
+                ->values();
+
+            if ($waiting->isNotEmpty() || $filter === 'unassigned') {
+                $groups[] = [
+                    'key' => 'unassigned',
+                    'label' => 'Unassigned',
+                    'bookings' => $waiting,
+                ];
+            }
+        }
+
+        return view('portal.team', [
+            'day' => $day,
+            'groups' => $groups,
             'barbers' => $roster,
             'filter' => $filter,
+            // Derived from the blocks, so the header count is the sum of what
+            // is actually on the screen.
+            'bookings' => collect($groups)->flatMap(fn ($group) => $group['bookings']),
+            'unassigned' => $this->onDay(Booking::unassigned(), $day)->count(),
+            // For the previous/next arrows, so the view does no date maths.
+            'previousDay' => $day->copy()->subDay()->toDateString(),
+            'nextDay' => $day->copy()->addDay()->toDateString(),
+            'isToday' => $day->isSameDay(Carbon::today()),
         ]);
+    }
+
+    /**
+     * The day All Bookings is showing: ?date=, or today.
+     *
+     * Anything unparseable falls back to today rather than erroring — a
+     * mistyped URL should show the shop's day, not an error. Clamped to a
+     * sane range so the arrows cannot be used to walk the table a decade at
+     * a time.
+     */
+    private function dayFrom(Request $request): Carbon
+    {
+        $asked = (string) $request->query('date', '');
+
+        if ($asked === '') {
+            return Carbon::today();
+        }
+
+        try {
+            $day = Carbon::createFromFormat('Y-m-d', $asked);
+        } catch (\Throwable $e) {
+            return Carbon::today();
+        }
+
+        // createFromFormat is forgiving; comparing the round trip is what
+        // rejects '2026-13-45' and '2026-1-1'.
+        if (! $day || $day->format('Y-m-d') !== $asked) {
+            return Carbon::today();
+        }
+
+        $day = $day->startOfDay();
+
+        return $day->between(
+            Carbon::today()->subYears(5),
+            Carbon::today()->addYears(2)
+        ) ? $day : Carbon::today();
     }
 
     /**
@@ -245,16 +271,6 @@ class PortalController extends Controller
         $known = $roster->contains(fn ($barber) => (string) $barber->id === $asked);
 
         return $known ? $asked : 'all';
-    }
-
-    /** Applies a resolved filter. Only ever called with a manager's value. */
-    private function narrowToBarber($query, string $filter): void
-    {
-        if ($filter === 'unassigned') {
-            $query->unassigned();
-        } elseif ($filter !== 'all') {
-            $query->forEmployee($filter);
-        }
     }
 
     /**

@@ -56,6 +56,18 @@ $screens = function (string $variant) {
             Route::get('profile', [PortalController::class, 'profile'])->name('profile');
 
             /*
+             * All Bookings — the whole shop's day, for a manager.
+             *
+             * The only portal screen that reads beyond the signed-in
+             * employee's own work, and the only one with a gate in front of
+             * it. Mounted in both versions like everything else, so the
+             * desk and the phone cannot drift apart.
+             */
+            Route::get('team', [PortalController::class, 'team'])
+                ->middleware('employee.manager')
+                ->name('team');
+
+            /*
              * Changing a password. There is no screen of its own: the form
              * lives on Profile, which is the only place it is offered from.
              *

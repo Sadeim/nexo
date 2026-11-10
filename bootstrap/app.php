@@ -42,6 +42,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin.role' => \App\Http\Middleware\EnsureAdminRole::class,
             'pos' => \App\Http\Middleware\PosAuthenticate::class,
             'employee' => \App\Http\Middleware\EmployeeAuthenticate::class,
+            'employee.manager' => \App\Http\Middleware\EnsureEmployeeIsManager::class,
             'pos.api' => \App\Http\Middleware\PosApiAuth::class,
             // 'OAuth2'    => \App\Http\Middleware\OAuth2::class,
             'Image' => Intervention\Image\Facades\Image::class,

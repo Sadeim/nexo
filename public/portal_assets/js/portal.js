@@ -31,6 +31,25 @@
         });
     }
 
+    // ---------- day picker (All Bookings) ----------
+
+    /*
+     * Jump to the chosen day as soon as one is picked.
+     *
+     * The field lives in a plain GET form, so without this it still works —
+     * there is a submit button behind <noscript> and Enter submits. This only
+     * removes the second gesture.
+     */
+    var dayJump = document.querySelector('[data-portal-dayjump]');
+
+    if (dayJump && dayJump.form) {
+        dayJump.addEventListener('change', function () {
+            if (dayJump.value) {
+                dayJump.form.submit();
+            }
+        });
+    }
+
     // ---------- pull to refresh ----------
 
     // A touch gesture, so a phone affordance only.

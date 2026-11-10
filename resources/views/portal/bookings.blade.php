@@ -11,29 +11,18 @@
 @section('content')
     <div class="{{ $portalIsDesktop ? 'd-tabs' : 'p-tabs' }}">
         <a class="p-tab {{ $tab === 'upcoming' ? 'p-tab-on' : '' }}"
-           href="{{ $portalRoute('bookings', $filter === 'all' ? [] : ['barber' => $filter]) }}">Upcoming</a>
+           href="{{ $portalRoute('bookings') }}">Upcoming</a>
         <a class="p-tab {{ $tab === 'past' ? 'p-tab-on' : '' }}"
-           href="{{ $portalRoute('bookings', $filter === 'all' ? ['tab' => 'past'] : ['tab' => 'past', 'barber' => $filter]) }}">Past</a>
+           href="{{ $portalRoute('bookings', ['tab' => 'past']) }}">Past</a>
     </div>
-
-    {{-- Manager only; the partial is not rendered at all for a barber. --}}
-    @if ($portalIsManager)
-        @include('portal.partials.barber-filter')
-    @endif
 
     @if ($bookings->isEmpty())
 
         <div class="p-empty">
             <div class="p-empty-title">{{ $tab === 'past' ? 'No history yet' : 'Nothing coming up' }}</div>
-            @if ($portalIsManager)
-                {{ $tab === 'past'
-                    ? 'Nothing matching this filter has happened yet.'
-                    : 'Nothing matching this filter is booked.' }}
-            @else
-                {{ $tab === 'past'
-                    ? 'Appointments you have finished will show here.'
-                    : 'You have no upcoming appointments.' }}
-            @endif
+            {{ $tab === 'past'
+                ? 'Appointments you have finished will show here.'
+                : 'You have no upcoming appointments.' }}
         </div>
 
     @elseif ($portalIsDesktop)
@@ -46,20 +35,12 @@
                         {{-- The one sortable column. Carries the tab and the
                              barber filter with it, so sorting does not quietly
                              drop you back to everyone's Upcoming. --}}
-                        <a class="d-sort"
-                           href="{{ $portalRoute('bookings', array_filter([
-                                'tab' => $tab,
-                                'dir' => $flip,
-                                'barber' => $filter === 'all' ? null : $filter,
-                           ])) }}">
+                        <a class="d-sort" href="{{ $portalRoute('bookings', ['tab' => $tab, 'dir' => $flip]) }}">
                             Date {!! $dir === 'asc' ? '&uarr;' : '&darr;' !!}
                         </a>
                     </th>
                     <th>Customer</th>
                     <th>Service</th>
-                    @if ($portalIsManager)
-                        <th>Barber</th>
-                    @endif
                     <th>Status</th>
                 </tr>
             </thead>
@@ -68,7 +49,7 @@
                     @include('portal.partials.booking-row', [
                         'booking' => $booking,
                         'showDate' => true,
-                        'showBarber' => $portalIsManager,
+                        'showBarber' => false,
                     ])
                 @endforeach
             </tbody>
@@ -80,7 +61,7 @@
             @include('portal.partials.booking-card', [
                 'booking' => $booking,
                 'showDate' => true,
-                'showBarber' => $portalIsManager,
+                'showBarber' => false,
             ])
         @endforeach
 
