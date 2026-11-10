@@ -110,13 +110,39 @@ abstract class Controller extends BaseController
         }
     }
 
+    /**
+     * The message a dashboard user is shown when something blew up.
+     *
+     * Reads config(), not env(). Once config is cached — which it is on
+     * production, and which the deploy script restores on every release —
+     * the .env file is never loaded, so env() outside a config file returns
+     * NULL. This read `env('APP_ENV') == 'production'`, which was therefore
+     * `null == 'production'`, which is false: the raw exception message was
+     * handed to the browser on every failure, whatever APP_ENV said.
+     * Verified on 10 Nov 2026 — env('APP_ENV') was NULL while
+     * config('app.env') was 'local'.
+     *
+     * The detail is logged before it is hidden. Several callers catch, call
+     * this and return, so without that line production would trade a leaked
+     * message for no record of the failure at all.
+     *
+     * config('app.env') rather than app()->isProduction(): the latter reads a
+     * value bound once at bootstrap, which is right in production and opaque
+     * everywhere else. This reads the same value config:cache wrote, which is
+     * the thing that was being got wrong in the first place.
+     */
     function exMessage($e)
     {
-        if (env('APP_ENV')  == 'production') {
+        if (config('app.env') === 'production') {
+            Log::error('Dashboard failure: '.$e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
+
             return __('admin.form.some_errors');
-        } else {
-            return $e->getMessage();
         }
+
+        return $e->getMessage();
     }
 
     // public function sendResponse($result, $message)
