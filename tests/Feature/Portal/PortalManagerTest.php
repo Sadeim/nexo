@@ -210,6 +210,41 @@ class PortalManagerTest extends TestCase
             ->assertSee('1:00 PM');
     }
 
+    /**
+     * The block heading names the barber, so the rows do not.
+     *
+     * A Barber column inside a block grouped by barber repeats the same
+     * value on every row, and reads "Unassigned" all the way down the last
+     * one.
+     *
+     * Asserted on the cell rather than on the word: "Unassigned" rightly
+     * appears as a filter chip and, at a desk, as the header stat — it is
+     * only a <td> of it, once per booking, that is the thing being removed.
+     */
+    #[DataProvider('portals')]
+    public function test_a_block_names_its_barber_once(string $p): void
+    {
+        $this->booking($this->adam, 'Alpha Customer', null, '09:00:00');
+        $this->booking($this->adam, 'Bravo Customer', null, '11:00:00');
+        $this->booking(null, 'Charlie Walkin', null, '13:00:00', 'pending');
+
+        $body = $this->actingAs($this->boss, 'employee')
+            ->get(route($p.'team'))
+            ->assertOk()
+            ->getContent();
+
+        // Two bookings in Adam's block, and his full name on neither row —
+        // it appears once, as the heading above them.
+        $this->assertSame(1, substr_count($body, 'Adam Bakri'),
+            'The barber is named more than once per block.');
+
+        $this->assertStringNotContainsString('<td>Adam Bakri</td>', $body,
+            'The rows carry a Barber column repeating the block heading.');
+
+        $this->assertStringNotContainsString('<td>Unassigned</td>', $body,
+            'The unassigned block repeats its own heading in every row.');
+    }
+
     #[DataProvider('portals')]
     public function test_the_blocks_follow_sort_order_and_the_unassigned_come_last(string $p): void
     {

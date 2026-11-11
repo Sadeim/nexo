@@ -23,17 +23,16 @@
              face, a name, a service, a badge. The widths are pinned in CSS so
              the blocks still line up with each other.
 
-             The Barber column repeats the block's own heading on every row,
-             which is redundant by design — it was asked for so that a row
-             read or copied on its own still says whose it is. Flip
-             $showBarber here to drop it. --}}
+             No Barber column either: the block heading above already names
+             them, so a column of it would repeat the same value on every
+             row — and read "Unassigned" all the way down the last block. --}}
         <table class="d-table">
             <tbody>
                 @foreach ($group['bookings'] as $booking)
                     @include('portal.partials.booking-row', [
                         'booking' => $booking,
                         'showDate' => false,
-                        'showBarber' => true,
+                        'showBarber' => false,
                     ])
                 @endforeach
             </tbody>
