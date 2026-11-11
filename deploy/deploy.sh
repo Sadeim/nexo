@@ -94,6 +94,23 @@ if [ "$HEAD_BEFORE" = "$HEAD_AFTER" ]; then
     echo "  (nothing new — continuing anyway so caches and migrations are reconciled)" | tee -a "$LOG"
 fi
 
+# --------------------------------------------------------- build version ----
+
+# The id the portal's service worker is named after, written from the commit
+# we just pulled. An installed PWA has no reload button; this is how it finds
+# out there is a newer shell. See deploy/write-build-version.sh.
+#
+# Not fatal. A portal that cannot name its build falls back to hashing its own
+# assets (App\Support\BuildVersion) and still works — taking the whole deploy
+# down over a version string would be the cure being worse.
+say "Build version"
+if BUILD_VERSION=$(bash "$APP_DIR/deploy/write-build-version.sh" "$APP_DIR" 2>&1); then
+    echo "  build: $BUILD_VERSION" | tee -a "$LOG"
+else
+    echo "  WARNING: could not write the build version: $BUILD_VERSION" | tee -a "$LOG"
+    echo "  (the portal will fall back to hashing portal_assets)" | tee -a "$LOG"
+fi
+
 # -------------------------------------------------------------- composer ----
 
 # Only when the lock file actually moved. Dependencies are unchanged in most
@@ -253,6 +270,14 @@ check "/admin/login"                             200
 check "/barbers/definitely-not-a-barber"         404
 check "/bookings/available-slots?date=$(date -u +%Y-%m-%d)" 200
 check "/api/pos/v1/health"                       200
+
+# The portal's shell. sw.js and the manifest are public on purpose and are
+# what an installed phone fetches before anything else; /app is the short link
+# the shop hands out, and a 200 there would mean the portal had quietly
+# acquired a second mount.
+check "/me/sw.js"                                200
+check "/me/manifest.webmanifest"                 200
+check "/app"                                     302
 
 # A 200 on "/" proves the page renders, not that it works. The outage on
 # 9 Nov 2026 served a perfect 200 homepage whose booking script was a 404,

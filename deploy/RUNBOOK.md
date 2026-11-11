@@ -131,6 +131,53 @@ fetches with `cache: 'reload'` / `'no-cache'` so it cannot inherit a stale
 copy, and still caches no `/me` HTML or JSON, ever. See the comment at the top
 of `public/portal_assets/sw.js`.
 
+### The portal updates itself
+
+An installed PWA has no address bar, no reload button and nothing to pull down
+on. Whatever shell it registered on the day it was installed is the shell it
+keeps — so the portal has to notice a new release on its own, and then ask.
+
+How that works, end to end:
+
+1. `deploy/write-build-version.sh` writes the pulled commit to
+   `storage/app/build-version` (git-ignored, written per server).
+2. `App\Support\BuildVersion` reads it, falling back to an md5 of everything
+   under `public/portal_assets/` if the file is missing.
+3. `/me/sw.js` is **served by a route**, not as a static file, and that route
+   substitutes the commit for `__BUILD_VERSION__` in the source. Every deploy
+   is therefore a different worker script, which is the only thing a browser
+   looks at when deciding whether there is an update. It is sent
+   `Cache-Control: no-cache, no-store, must-revalidate`, because this is the
+   one file that must never be answered from the seven-day cache above.
+4. `portal.js` registers with `updateViaCache: 'none'` and calls
+   `registration.update()` on load and whenever the app returns to the
+   foreground, at most once a minute.
+5. The new worker installs and **waits** — `sw.js` deliberately does not call
+   `skipWaiting()` on install. A bar appears at the bottom of the screen
+   offering **Update**; tapping it posts `SKIP_WAITING`, and the page reloads
+   when `controllerchange` fires.
+
+**The portal never reloads itself.** Only the barber's tap does. The last time
+a screen reloaded on its own, a pull-to-refresh gesture emptied the password
+form every time an iPhone user reached for the keyboard, and it cost a barber
+an afternoon.
+
+To check it on the server:
+
+```
+curl -sSD - -o /dev/null https://nexobarbers.com/me/sw.js | grep -i cache-control
+curl -sS https://nexobarbers.com/me/sw.js | grep "const VERSION"
+cat /home/u171331366/domains/nexobarbers.com/nexo/storage/app/build-version
+```
+
+The version in the worker and the one in the file must match, and neither may
+be `__BUILD_VERSION__`.
+
+The manifest is served by a route for a related reason: the icon URLs inside
+it need the same fingerprints the stylesheet gets, or a phone keeps last
+week's app icon for a week. The JSON on disk is still the source of truth —
+the route only rewrites the `src` of each icon.
+
 ### This host has no `/dev/fd`
 
 So `while read ... done < <(some command)` — process substitution — **fails**,
@@ -176,12 +223,13 @@ poll — an SSH drop mid-dump leaves a 0-byte file that looks like a backup.
 |---|---|
 | `php artisan down --secret=…` | See "the gap" below. The secret URL lets you view the live site while everyone else gets a 503. |
 | `git pull --ff-only` | Refuses to merge. If it fails, someone committed on the server — stop and look. |
+| `deploy/write-build-version.sh` | Writes the pulled commit to `storage/app/build-version`. The portal's service worker is named after it — see "The portal updates itself". Warns and continues if it fails. |
 | `composer install` **only if `composer.lock` changed** | Most releases change no dependencies, and this box cannot resolve them anyway (see below). |
 | `migrate --force` | Runs while down, deliberately. |
 | `config:clear` / `route:clear` / `view:clear` | Stale compiled views and cached config survive a pull and will serve yesterday's code. |
 | `config:cache` **only if it was cached before** | Matching the prior state. Caching config when it wasn't, or leaving it uncached when it was, is a behaviour change smuggled in by a deploy. |
 | `php artisan up` | Also runs from an `EXIT`/`INT`/`TERM` trap, so a crashed deploy cannot leave the site in maintenance mode. |
-| Smoke checks | Eight URLs; non-zero exit if any is wrong. |
+| Smoke checks | Eleven URLs, including the portal's `sw.js`, its manifest and the `/app` short link; non-zero exit if any is wrong. |
 
 ### The gap between pull and migrate
 

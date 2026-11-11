@@ -11,16 +11,25 @@
 <meta name="theme-color" content="#283326">
 
 @if (! $portalIsDesktop)
-    {{-- Installable on phones only. /work has no manifest and no worker. --}}
-    <link rel="manifest" href="{{ \App\Support\Portal::asset('portal_assets/manifest.webmanifest') }}">
+    {{-- Installable on phones only. /work has no manifest and no worker.
+
+         Served by a route rather than read from /portal_assets, so the icon
+         URLs inside it can carry fingerprints — see
+         PortalController::manifest. --}}
+    <link rel="manifest" href="{{ route('portal.manifest') }}">
 
     {{-- iOS Safari ignores the manifest for "Add to Home Screen" and reads
          these instead. Without them the installed app opens in browser chrome
-         with a screenshot for an icon. --}}
+         with a screenshot for an icon.
+
+         Fingerprinted, like everything else the portal serves: this host
+         holds a static file for seven days without revalidating, and an
+         apple-touch-icon is fetched once and then kept by the home screen
+         until something makes the URL different. --}}
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Nexo">
-    <link rel="apple-touch-icon" href="{{ asset('portal_assets/icons/apple-touch-icon.png') }}">
+    <link rel="apple-touch-icon" href="{{ \App\Support\Portal::asset('portal_assets/icons/apple-touch-icon.png') }}">
 @endif
 
 <link rel="preconnect" href="https://fonts.googleapis.com">

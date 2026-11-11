@@ -1,9 +1,9 @@
 {
-  "name": "Nexo Barbers — My Portal",
+  "name": "Nexo Barbershop",
   "short_name": "Nexo",
   "description": "Your schedule at Nexo Barbershop.",
   "start_url": "/me",
-  "scope": "/me/",
+  "scope": "/me",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#283326",

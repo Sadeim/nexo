@@ -334,7 +334,7 @@ class PortalScreensTest extends TestCase
         $response = $this->get('/me/sw.js');
 
         $response->assertOk();
-        $response->assertHeader('Service-Worker-Allowed', '/me/');
+        $response->assertHeader('Service-Worker-Allowed', '/me');
         $this->assertStringContainsString('javascript', $response->headers->get('Content-Type'));
     }
 
@@ -516,22 +516,26 @@ class PortalScreensTest extends TestCase
     }
 
     /**
-     * The cache name still has one job: evicting what an older worker left
-     * behind. It must never go back to v1, whose entries were written by the
-     * cache-first worker and would otherwise be served forever.
+     * The cache is named after the build, not after a number someone has to
+     * remember to raise.
+     *
+     * It used to be 'nexo-portal-shell-vN', bumped by hand — which meant it
+     * was bumped when someone thought of it, and the first portal.css a
+     * phone saw was the last one it would see. The name now carries the
+     * deployed commit, so activate() evicts the previous build's shell by
+     * construction. Tests\Feature\Portal\PortalUpdateTest covers the rest
+     * of that chain.
      */
-    public function test_the_shell_cache_is_versioned(): void
+    public function test_the_shell_cache_is_named_after_the_build(): void
     {
         $source = file_get_contents(public_path('portal_assets/sw.js'));
 
-        $this->assertMatchesRegularExpression(
-            "/const CACHE = 'nexo-portal-shell-v(\d+)';/",
-            $source
-        );
+        $this->assertStringContainsString("const VERSION = '__BUILD_VERSION__';", $source,
+            'The worker on disk no longer carries the placeholder the route fills in.');
 
-        preg_match("/const CACHE = 'nexo-portal-shell-v(\d+)';/", $source, $m);
+        $this->assertStringContainsString("const CACHE = 'nexo-portal-' + VERSION;", $source);
 
-        $this->assertGreaterThanOrEqual(2, (int) $m[1],
-            'The shell cache name is still the one that was never bumped.');
+        // And nothing is left of the hand-bumped name.
+        $this->assertStringNotContainsString('nexo-portal-shell-v', $source);
     }
 }

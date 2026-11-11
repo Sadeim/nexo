@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Portal\AuthController;
 use App\Http\Controllers\Portal\PortalController;
+use App\Http\Controllers\Portal\ShortLinkController;
 use App\Support\Portal;
 use Illuminate\Support\Facades\Route;
 
@@ -42,10 +43,26 @@ $screens = function (string $variant) {
 
         Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
-        // Phones only. /work is not installable and has no worker, so there is
-        // nothing at /work/sw.js to find.
+        /*
+         * Phones only. /work is not installable and has no worker, so there
+         * is nothing at /work/sw.js or /work/manifest.webmanifest to find.
+         *
+         * Both are outside the `employee` group below on purpose. A worker
+         * that 302s to the login page is a worker that never registers, and a
+         * manifest behind a login is one the browser fetches, is redirected
+         * from, and silently ignores — leaving the portal uninstallable for
+         * anyone not already signed in. Neither file contains any data.
+         */
         if ($variant === Portal::MOBILE) {
             Route::get('sw.js', [PortalController::class, 'serviceWorker'])->name('sw');
+
+            /*
+             * Served here rather than as a static file so the icon URLs can
+             * carry their own fingerprints — see PortalController::manifest.
+             * Living under /me/ also puts it inside the scope it declares,
+             * which is one less thing for a browser to be fussy about.
+             */
+            Route::get('manifest.webmanifest', [PortalController::class, 'manifest'])->name('manifest');
         }
 
         Route::middleware('employee')->group(function () {
@@ -92,3 +109,16 @@ foreach (Portal::VERSIONS as $variant => $version) {
         'portal_layout' => $variant,
     ], $screens($variant));
 }
+
+/*
+ * The short link. Outside the loop because it belongs to neither mount: it is
+ * one URL that lands on the phone version, whoever follows it.
+ *
+ * The pattern is deliberately narrow rather than '.*'. Every portal path is
+ * letters, digits and the odd dot or dash — /app/bookings, /app/sw.js — so
+ * anything else is not a portal URL that lost its prefix, and a 404 is a
+ * better answer than a redirect built out of it.
+ */
+Route::get('app/{path?}', ShortLinkController::class)
+    ->where('path', '[A-Za-z0-9/_.-]*')
+    ->name('app.shortlink');

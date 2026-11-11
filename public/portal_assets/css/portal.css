@@ -444,6 +444,59 @@ a { color: inherit; }
 
 .p-pager span { color: var(--muted-dim); }
 
+/* ---------- the update bar ---------- */
+
+/*
+ * Offered by portal.js when a new build is installed and waiting. It sits
+ * ABOVE the tab bar rather than over it: an installed portal has no address
+ * bar to reach for, so the tab bar is the only way out of wherever the barber
+ * is, and an update notice must not be the thing standing in front of it.
+ *
+ * Crimson, because it is the one piece of chrome asking to be tapped.
+ */
+.p-update {
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    bottom: calc(var(--tabbar-height) + env(safe-area-inset-bottom, 0px) + 12px);
+    z-index: 40;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    padding: 12px 12px 12px 16px;
+    border-radius: var(--radius);
+    border: 1px solid var(--evergreen-line);
+    background: var(--evergreen-soft);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+
+    font-size: 14px;
+}
+
+/* No tab bar on the login screen, so nothing to clear. */
+body.is-plain .p-update {
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+}
+
+.p-update button {
+    flex: none;
+    padding: 9px 18px;
+    border: 0;
+    border-radius: var(--radius);
+    background: var(--crimson);
+    color: var(--ivory);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.p-update button[disabled] { opacity: 0.6; }
+
 /* ---------- bottom tab bar ---------- */
 
 .p-tabbar {

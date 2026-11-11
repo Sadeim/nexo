@@ -16,16 +16,32 @@
  */
 
 /*
- * The cache's version. activate() deletes every cache that is not this one,
- * so changing the name is what evicts the files cached under the old one.
+ * The build this worker belongs to.
  *
- * It is no longer the thing that keeps the portal current, and it must not be
- * relied on for that again: the stylesheet and the script carry a fingerprint
- * of their own contents in their URL (App\Support\Portal::asset), so a change
- * to either is a different URL and a miss in every cache there is. This name
- * is only for evicting what an older worker left behind.
+ * __BUILD_VERSION__ is a placeholder. The file is served by a Laravel route
+ * (App\Http\Controllers\Portal\PortalController::serviceWorker), and that
+ * route substitutes the deployed commit before the bytes leave the server —
+ * so the static file on disk is a template, and what a phone actually
+ * registers is one worker per build.
+ *
+ * That substitution is what makes auto-update work at all. A browser decides
+ * whether to install a new worker by comparing the script byte for byte with
+ * the one it has; a worker that never changes is never new, however much of
+ * the portal around it did. Carrying the commit means every deploy is a
+ * different file, an install, a waiting worker, and a prompt on the phone.
  */
-const CACHE = 'nexo-portal-shell-v3';
+const VERSION = '__BUILD_VERSION__';
+
+/*
+ * One cache per build, which is what lets activate() throw the last build's
+ * away wholesale.
+ *
+ * The fingerprinted URLs (App\Support\Asset) already make a changed file a
+ * changed URL, so nothing stale is ever SERVED from here. What the per-build
+ * name buys is that nothing stale is KEPT: without it a phone accumulates
+ * every stylesheet the portal has ever had.
+ */
+const CACHE = 'nexo-portal-' + VERSION;
 
 /*
  * Precached: the icons, which an installed app wants on hand and which are
@@ -54,10 +70,35 @@ self.addEventListener('install', (event) => {
                     .add(new Request(url, { cache: 'reload' }))
                     .catch(() => null))
             ))
-            .then(() => self.skipWaiting())
     );
 });
 
+/*
+ * Deliberately NO skipWaiting() in install.
+ *
+ * A worker that skips waiting takes over the page the moment it finishes
+ * installing, which means the portal can change under a barber mid-screen —
+ * and with the reload that follows, mid-form. So the new worker installs,
+ * sits in `waiting`, and portal.js offers an Update button. Taking over is
+ * the barber's decision, and this is the message that carries it.
+ *
+ * (A first-ever install still activates immediately: there is no controller
+ * to wait behind, so nothing is interrupted.)
+ */
+self.addEventListener('message', (event) => {
+    if (event.data && event.data.type === 'SKIP_WAITING') {
+        self.skipWaiting();
+    }
+});
+
+/*
+ * Every cache but this build's goes, and the worker takes the open pages.
+ *
+ * clients.claim() is what turns the barber's tap into a visible change: it
+ * fires controllerchange in the page, which is portal.js's cue to reload
+ * once. Without it the new worker would control nothing until the next
+ * navigation, and the Update button would appear to do nothing.
+ */
 self.addEventListener('activate', (event) => {
     event.waitUntil(
         caches.keys()

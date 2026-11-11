@@ -349,9 +349,11 @@ class PortalBothVersionsTest extends TestCase
         $phone = $screens('portal.');
         $desk = $screens('work.');
 
-        // sw.js is the one deliberate difference.
-        $this->assertSame(['sw'], array_values(array_diff($phone, $desk)),
-            'The mounts differ by something other than the service worker.');
+        // The PWA is the one deliberate difference: the worker and the
+        // manifest exist on the phone and nowhere else. Every SCREEN is on
+        // both, which is the thing this test is really about.
+        $this->assertSame(['manifest', 'sw'], array_values(array_diff($phone, $desk)),
+            'The mounts differ by something other than the PWA files.');
 
         $this->assertSame([], array_values(array_diff($desk, $phone)),
             '/work has a screen /me does not.');

@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\Employee;
 use App\Services\BookingSlotService;
+use App\Support\Asset;
+use App\Support\BuildVersion;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -282,6 +284,10 @@ class PortalController extends Controller
      * gives it the scope it needs, and Chrome needs the start_url to be in
      * scope before it will offer to install the portal at all.
      *
+     * Served from /me/, its scope would still stop at /me/ — which excludes
+     * /me itself, the screen the app starts on. Service-Worker-Allowed below
+     * is what lifts it the last character.
+     *
      * The file itself stays under public/ so deploy.sh mirrors it into the
      * document root with everything else.
      *
@@ -294,12 +300,83 @@ class PortalController extends Controller
 
         abort_unless(is_file($path), 404);
 
-        return response(file_get_contents($path), 200, [
+        /*
+         * The one thing the route does to the file: stamp the build on it.
+         *
+         * A browser installs a new worker only when the script's bytes differ
+         * from the one it holds. Without the stamp, sw.js is identical from
+         * one release to the next and an installed portal would go on running
+         * last month's shell forever. With it, every deploy is a new worker —
+         * see the comment at the top of sw.js.
+         */
+        $source = str_replace(
+            '__BUILD_VERSION__',
+            BuildVersion::current(),
+            file_get_contents($path)
+        );
+
+        return response($source, 200, [
             'Content-Type' => 'application/javascript; charset=utf-8',
-            // Lets the worker claim a scope broader than its own directory.
-            'Service-Worker-Allowed' => '/me/',
-            // The worker is how the shell gets updated; it must not be the
-            // one thing that cannot be.
+            /*
+             * Lets the worker claim a scope broader than its own directory.
+             *
+             * '/me', not '/me/'. A scope is a plain string prefix, and
+             * '/me/' does not match '/me' — so Today, the screen a barber
+             * sits on all day and the address the installed app starts at,
+             * was outside the worker's scope entirely. It was never
+             * controlled, never offered an update, and the shell cache did
+             * nothing for it.
+             */
+            'Service-Worker-Allowed' => '/me',
+            /*
+             * Never stored, anywhere. This is the file the portal checks to
+             * find out it is out of date, so it is the one file that must not
+             * be answered from a cache — not the browser's, and not this
+             * host's CDN, which holds static files for seven days without
+             * revalidating. portal.js asks for the same thing from its end
+             * with updateViaCache: 'none'.
+             */
+            'Cache-Control' => 'no-cache, no-store, must-revalidate',
+        ]);
+    }
+
+    /**
+     * The PWA manifest, served from /me/ rather than as a static file.
+     *
+     * It has to be rendered for one reason: the icon URLs. This host answers
+     * static files with a seven-day Cache-Control and no revalidation, so a
+     * phone that has fetched icon-192.png keeps that image for a week
+     * whatever the shop's logo now is — and an installed app keeps it until
+     * the manifest tells it otherwise. Running the paths through
+     * App\Support\Asset gives each one the fingerprint of its own contents,
+     * which makes a new icon a new URL and therefore a new download.
+     *
+     * The JSON on disk stays the source of truth; this only rewrites the
+     * srcs, so there is still one place to edit the app's name or colours.
+     *
+     * Public, like the worker: a manifest behind a login is a manifest the
+     * browser fetches and discards, and it contains nobody's data.
+     */
+    public function manifest()
+    {
+        $path = public_path('portal_assets/manifest.webmanifest');
+
+        abort_unless(is_file($path), 404);
+
+        $manifest = json_decode(file_get_contents($path), true);
+
+        abort_unless(is_array($manifest), 500);
+
+        foreach ($manifest['icons'] ?? [] as $i => $icon) {
+            if (isset($icon['src'])) {
+                $manifest['icons'][$i]['src'] = Asset::url(ltrim($icon['src'], '/'));
+            }
+        }
+
+        return response(json_encode($manifest, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT), 200, [
+            'Content-Type' => 'application/manifest+json; charset=utf-8',
+            // Re-read on every load, so a new icon arrives on the next visit
+            // rather than whenever the browser next feels like asking.
             'Cache-Control' => 'no-cache, must-revalidate',
         ]);
     }
