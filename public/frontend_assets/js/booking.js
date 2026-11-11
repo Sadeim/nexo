@@ -43,8 +43,10 @@
      */
     const REMEMBERED = 'nexo.booking.phone';
 
+    // Stored as the bare ten digits, so a change to how numbers are
+    // displayed never has to migrate what is already on somebody's phone.
     function remember(value) {
-        try { window.localStorage.setItem(REMEMBERED, value); } catch (e) { /* not worth a broken form */ }
+        try { window.localStorage.setItem(REMEMBERED, nationalDigits(value)); } catch (e) { /* not worth a broken form */ }
     }
 
     function remembered() {
@@ -55,12 +57,77 @@
         try { window.localStorage.removeItem(REMEMBERED); } catch (e) { /* as above */ }
     }
 
-    function pretty(digits) {
-        const d = String(digits || '').replace(/\D+/g, '');
-        return d.length === 10
-            ? '(' + d.slice(0, 3) + ') ' + d.slice(3, 6) + '-' + d.slice(6)
-            : d;
+    /**
+     * The ten national digits, from anything a person might type or paste.
+     *
+     * The country code is fixed and shown beside the field, so it is never
+     * part of the value — but people paste what their contacts app gives
+     * them, which is "+1 773-814-9061" as often as not. Eleven digits
+     * beginning with 1 is the same number as the last ten; anything longer
+     * is truncated rather than refused, because a trailing extension or a
+     * stray character should not cost somebody their booking.
+     */
+    function nationalDigits(value) {
+        let digits = String(value || '').replace(/\D+/g, '');
+
+        if (digits.length === 11 && digits.charAt(0) === '1') {
+            digits = digits.slice(1);
+        }
+
+        return digits.slice(0, 10);
     }
+
+    /** (773) 814-9061, growing as the digits arrive. */
+    function pretty(value) {
+        const d = nationalDigits(value);
+
+        if (d.length <= 3) return d;
+        if (d.length <= 6) return '(' + d.slice(0, 3) + ') ' + d.slice(3);
+
+        return '(' + d.slice(0, 3) + ') ' + d.slice(3, 6) + '-' + d.slice(6);
+    }
+
+    /**
+     * Reformat as they type, without the caret jumping to the end.
+     *
+     * The brackets and the dash are inserted around the digits, so the only
+     * stable thing to anchor the caret to is how many digits precede it.
+     * Count them before, count them back afterwards.
+     */
+    function reformatPhone() {
+        const start = phoneInput.selectionStart;
+        const atEnd = start === null || start >= phoneInput.value.length;
+        const digitsBefore = String(phoneInput.value.slice(0, start || 0)).replace(/\D+/g, '').length;
+
+        const formatted = pretty(phoneInput.value);
+
+        if (formatted === phoneInput.value) {
+            return;
+        }
+
+        phoneInput.value = formatted;
+
+        if (atEnd) {
+            return;
+        }
+
+        let position = 0;
+        let seen = 0;
+
+        while (position < formatted.length && seen < digitsBefore) {
+            if (/\d/.test(formatted.charAt(position))) seen++;
+            position++;
+        }
+
+        try {
+            phoneInput.setSelectionRange(position, position);
+        } catch (e) {
+            // Some browsers refuse this on a tel input; the value is still
+            // right, and the caret lands at the end.
+        }
+    }
+
+    phoneInput.addEventListener('input', reformatPhone);
 
     function showStep(which) {
         identifyForm.classList.toggle('hidden', which !== 'phone');
@@ -102,7 +169,9 @@
         // but it is still shown and still confirmed — the device may have
         // changed hands, and the consent box must never arrive pre-ticked.
         showStep('phone');
-        phoneInput.value = remembered();
+        // Formatted on the way in: what was stored is digits, what a person
+        // should see is their phone number.
+        phoneInput.value = pretty(remembered());
         consentBox.checked = false;
         refreshSlots();
     }
@@ -365,13 +434,17 @@
         event.preventDefault();
         clearFieldErrors();
 
-        const digits = String(phoneInput.value || '').replace(/\D+/g, '');
+        const digits = nationalDigits(phoneInput.value);
 
-        // Checked here as well as on the server, so an obvious typo costs a
-        // message rather than a round trip.
-        if (digits.length < 7) {
+        /*
+         * Ten, exactly. The field asks for a US national number with the
+         * country code already supplied, so anything shorter is half-typed.
+         * Checked here as well as on the server, so an obvious typo costs a
+         * message rather than a round trip.
+         */
+        if (digits.length !== 10) {
             markField('booking-phone');
-            notify('Enter a phone number we can reach you on.', 'error');
+            notify('Enter a 10-digit US mobile number.', 'error');
             return;
         }
 
@@ -381,16 +454,20 @@
         button.textContent = 'ONE MOMENT…';
 
         axios.post(config.identifyUrl, {
-            phone: phoneInput.value,
+            // Digits only. The server normalises anyway, but there is no
+            // reason to make it undo formatting this end put on.
+            phone: digits,
             sms_marketing_consent: consentBox.checked ? 1 : 0
         })
             .then(function (response) {
                 const data = response.data || {};
 
-                identifiedPhone = phoneInput.value;
-                remember(phoneInput.value);
+                identifiedPhone = digits;
+                remember(digits);
 
-                phoneShown.textContent = pretty(phoneInput.value);
+                // The read-only line in step two, with the same fixed code
+                // the field showed.
+                phoneShown.textContent = '+1 ' + pretty(digits);
 
                 // Prefilled only for a number the shop already knows. Fields
                 // are not overwritten if the customer has already typed into
@@ -451,7 +528,7 @@
             email: document.getElementById('booking-email').value,
             // The number step one accepted, not whatever is in the box now:
             // the two halves of the form must reach the same customer.
-            phone: identifiedPhone || phoneInput.value,
+            phone: identifiedPhone || nationalDigits(phoneInput.value),
             date: dateInput.value,
             time: timeSelect.value,
             service_id: serviceSelect.value,

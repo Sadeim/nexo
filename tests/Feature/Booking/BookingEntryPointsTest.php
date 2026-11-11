@@ -374,4 +374,70 @@ class BookingEntryPointsTest extends TestCase
             'The homepage asks for booking.js without a fingerprint, so a cached copy will be served instead.'
         );
     }
+
+    /**
+     * The phone field carries a fixed country code the customer never types.
+     *
+     * It is an adornment, not a value: the input holds the ten national
+     * digits and nothing else, which is why autocomplete asks for
+     * tel-national and the length allows for "(224) 669-8063" rather than
+     * for an international number.
+     */
+    public function test_the_phone_field_shows_a_fixed_country_code(): void
+    {
+        $body = $this->get('/')->assertOk()->getContent();
+
+        // The flag and the code, inside the field.
+        $this->assertStringContainsString('class="p-telprefix"', $body);
+        $this->assertStringContainsString('&#127482;&#127480; +1', $body);
+
+        // Hidden from assistive tech: the helper text says "US mobile
+        // number" in words, which a flag emoji does not.
+        $this->assertMatchesRegularExpression(
+            '/<span class="p-telprefix" aria-hidden="true">/',
+            $body
+        );
+
+        foreach (['autocomplete="tel-national"', 'maxlength="14"', 'inputmode="tel"'] as $attribute) {
+            $this->assertStringContainsString($attribute, $body, 'The phone field is missing '.$attribute);
+        }
+
+        /*
+         * And it is padded past the prefix, or the two overlap — which they
+         * did: the shared field rule sets the padding shorthand and comes
+         * later in the file, so the longhand needs the extra class to win on
+         * specificity rather than on order.
+         */
+        $this->assertStringContainsString(
+            '.field-container.p-telfield input[type="tel"] { padding-left:',
+            $body,
+            'The phone input is no longer padded clear of the country code.'
+        );
+    }
+
+    /**
+     * The script keeps the value to ten national digits, whatever is pasted.
+     *
+     * The behaviour itself is exercised in a browser; this is the guard that
+     * the two rules it rests on cannot quietly disappear.
+     */
+    public function test_the_script_strips_a_pasted_country_code(): void
+    {
+        $source = file_get_contents(public_path(self::SCRIPT_PATH));
+
+        $this->assertMatchesRegularExpression(
+            "/digits\.length === 11 && digits\.charAt\(0\) === '1'/",
+            $source,
+            'A pasted +1 is no longer stripped.'
+        );
+
+        $this->assertStringContainsString('digits.slice(0, 10)', $source,
+            'The value is no longer capped at ten national digits.');
+
+        // Formatting is applied as they type, not only on submit.
+        $this->assertStringContainsString("phoneInput.addEventListener('input', reformatPhone)", $source);
+
+        // And what is sent is the digits, not the formatting.
+        $this->assertStringContainsString('phone: digits,', $source);
+    }
 }

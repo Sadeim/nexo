@@ -48,13 +48,25 @@
          <form class="space-y-6" id="booking-identify-form">
              <div>
                  <label for="booking-phone" class="block text-white text-base mb-2 uppercase">Mobile number</label>
-                 <div class="field-container">
+
+                 {{-- The country code is fixed and not typed. It sits inside
+                      the field so the number reads as one thing, and it is
+                      aria-hidden because the helper text below already says
+                      "US mobile number" — a screen reader should not have to
+                      hear a flag emoji to understand the field. --}}
+                 <div class="field-container p-telfield">
+                     <span class="p-telprefix" aria-hidden="true">&#127482;&#127480; +1</span>
                      <input type="tel" id="booking-phone" name="phone" placeholder="(224) 669-8063"
-                         inputmode="tel" autocomplete="tel"
+                         inputmode="tel" autocomplete="tel-national"
+                         {{-- Ten digits, as "(224) 669-8063" — the formatting
+                              is part of the value, so the limit is 14. --}}
+                         maxlength="14"
+                         aria-describedby="booking-phone-help"
                          class="w-full px-4 py-3 rounded bg-white text-[#080B16]">
                  </div>
-                 <p class="text-ivory/60 text-sm mt-2">
-                     We use it to confirm your appointment and to reach you if anything changes.
+                 <p class="text-ivory/60 text-sm mt-2" id="booking-phone-help">
+                     US mobile number. We use it to confirm your appointment and to reach
+                     you if anything changes.
                  </p>
              </div>
 
@@ -228,8 +240,40 @@
              cursor: pointer;
          }
 
+         /*
+          * The fixed country code, inside the field.
+          *
+          * Absolutely positioned and pointer-events:none so it cannot be
+          * selected, focused or deleted — it is a label that happens to sit
+          * inside a box, not part of the value. The input is padded past it.
+          */
+         .p-telfield { position: relative; }
+
+         .p-telprefix {
+             position: absolute;
+             left: 16px;
+             top: 50%;
+             transform: translateY(-50%);
+             color: #080B16;
+             font-size: 16px;
+             font-weight: 600;
+             line-height: 1;
+             white-space: nowrap;
+             pointer-events: none;
+             z-index: 1;
+         }
+
+         /*
+          * Specific enough to win regardless of order. The shared rule below
+          * sets the padding shorthand on every field, which would otherwise
+          * reset this longhand simply by coming later in the file — and the
+          * value would sit underneath the prefix.
+          */
+         .field-container.p-telfield input[type="tel"] { padding-left: 74px; }
+
          /* Custom styling for ALL form inputs and selects */
          .field-container input[type="text"],
+         .field-container input[type="tel"],
          .field-container input[type="email"],
          .field-container input[type="date"],
          .field-container select,

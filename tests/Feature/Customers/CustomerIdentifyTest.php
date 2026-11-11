@@ -57,6 +57,41 @@ class CustomerIdentifyTest extends TestCase
         $this->assertSame(1, Customer::count());
     }
 
+    /**
+     * Every shape somebody might paste out of their contacts.
+     *
+     * The field strips these to ten digits before posting, but the server is
+     * the thing that has to be right: it is what an older cached script, a
+     * different client, or a person with JavaScript off would reach.
+     */
+    public function test_every_pasted_shape_reaches_the_same_customer(): void
+    {
+        $shapes = [
+            '+1 773-814-9061',
+            '+17738149061',
+            '1 773 814 9061',
+            '17738149061',
+            '(773) 814-9061',
+            '773.814.9061',
+            '773-814-9061',
+            '7738149061',
+            '  +1 (773) 814 9061  ',
+        ];
+
+        foreach ($shapes as $pasted) {
+            $this->identify(['phone' => $pasted])->assertOk();
+
+            $this->assertSame(
+                '7738149061',
+                Customer::sole()->phone,
+                var_export($pasted, true).' was stored as something else.'
+            );
+        }
+
+        // One person, however they wrote it down.
+        $this->assertSame(1, Customer::count());
+    }
+
     // ---------- what comes back ----------
 
     public function test_a_known_number_comes_back_with_a_name(): void
