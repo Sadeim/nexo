@@ -34,17 +34,31 @@ class BuildVersion
      */
     private const SHELL = 'portal_assets';
 
-    private static ?string $version = null;
+    /** Only the fallback is remembered — see current(). */
+    private static ?string $shellVersion = null;
 
+    /**
+     * The build file is read on every call, deliberately.
+     *
+     * Memoising the whole answer looked free and was not. PHP-FPM processes
+     * outlive a deploy, so a process that had already answered once would go
+     * on serving the previous build's version while its neighbours served the
+     * new one — and sw.js would flap between two scripts request by request,
+     * which to a phone is a new worker every time it asks. Thirteen bytes off
+     * the disk is cheaper than that.
+     *
+     * The fallback is the expensive one (it hashes every file in the shell),
+     * and it is the one with nothing to go stale, so it is cached.
+     */
     public static function current(): string
     {
-        return self::$version ??= self::fromFile() ?? self::fromShell();
+        return self::fromFile() ?? (self::$shellVersion ??= self::fromShell());
     }
 
-    /** For tests, which write the file and then expect to be believed. */
+    /** For tests, which change the shell and then expect to be believed. */
     public static function forget(): void
     {
-        self::$version = null;
+        self::$shellVersion = null;
     }
 
     public static function path(): string

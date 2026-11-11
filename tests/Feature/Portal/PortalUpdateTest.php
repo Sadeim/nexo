@@ -280,6 +280,32 @@ class PortalUpdateTest extends TestCase
             'The fallback is not stable, so every request would look like a new build.');
     }
 
+    /**
+     * A process that has already answered must not keep answering with the
+     * build it first saw.
+     *
+     * PHP-FPM processes outlive a deploy. If the version were remembered for
+     * the life of the process, half the server would serve the new worker
+     * and half the old one, and a phone asking twice would be told it was
+     * out of date twice — a different script every time. The file is read on
+     * every call for exactly this reason, and nothing here calls forget().
+     */
+    public function test_a_deploy_is_seen_without_restarting_anything(): void
+    {
+        $this->withBuild('aaaa11112222');
+        $this->assertSame('aaaa11112222', BuildVersion::current());
+
+        // No forget(): this is the deploy writing the file under a process
+        // that has already served sw.js once.
+        file_put_contents(BuildVersion::path(), 'bbbb33334444');
+
+        $this->assertSame('bbbb33334444', BuildVersion::current(),
+            'The build version is cached for the life of the process, so sw.js '
+            .'will flap between two builds after a deploy.');
+
+        $this->assertStringContainsString("const VERSION = 'bbbb33334444';", $this->worker());
+    }
+
     public function test_an_empty_build_file_falls_back_rather_than_naming_nothing(): void
     {
         $this->withBuild("   \n");
